@@ -4,10 +4,12 @@ add_definitions( -DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS )
 # Define the framework files.
 set(Testbed_Framework_SRCS
 	Framework/Main.cpp
-	Framework/Render.cpp
-	Framework/Render.h
+	Framework/RenderGL3.cpp
+	Framework/RenderGL3.h
 	Framework/Test.cpp
 	Framework/Test.h
+	Framework/DebugDraw.cpp
+	Framework/DebugDraw.h
 )
 
 #define the test files.
