@@ -22,39 +22,42 @@
 
 #include <Box2D/Common/b2Math.h>
 
-class b2Shape;
+namespace b2d11
+{
+
+class Shape;
 
 /// A distance proxy is used by the GJK algorithm.
 /// It encapsulates any shape.
-struct b2DistanceProxy
+struct DistanceProxy
 {
-	b2DistanceProxy() : m_vertices(NULL), m_count(0), m_radius(0.0f) {}
+	DistanceProxy() : m_vertices(NULL), m_count(0), m_radius(0.0f) {}
 
 	/// Initialize the proxy using the given shape. The shape
 	/// must remain in scope while the proxy is in use.
-	void Set(const b2Shape* shape, int32 index);
+	void Set(const Shape* shape, int32 index);
 
 	/// Get the supporting vertex index in the given direction.
-	int32 GetSupport(const b2Vec2& d) const;
+	int32 GetSupport(const Vec2& d) const;
 
 	/// Get the supporting vertex in the given direction.
-	const b2Vec2& GetSupportVertex(const b2Vec2& d) const;
+	const Vec2& GetSupportVertex(const Vec2& d) const;
 
 	/// Get the vertex count.
 	int32 GetVertexCount() const;
 
-	/// Get a vertex by index. Used by b2Distance.
-	const b2Vec2& GetVertex(int32 index) const;
+	/// Get a vertex by index. Used by Distance.
+	const Vec2& GetVertex(int32 index) const;
 
-	b2Vec2 m_buffer[2];
-	const b2Vec2* m_vertices;
+	Vec2 m_buffer[2];
+	const Vec2* m_vertices;
 	int32 m_count;
 	float32 m_radius;
 };
 
-/// Used to warm start b2Distance.
+/// Used to warm start Distance.
 /// Set count to zero on first call.
-struct b2SimplexCache
+struct SimplexCache
 {
 	float32 metric;		///< length or area
 	uint16 count;
@@ -62,55 +65,55 @@ struct b2SimplexCache
 	uint8 indexB[3];	///< vertices on shape B
 };
 
-/// Input for b2Distance.
+/// Input for Distance.
 /// You have to option to use the shape radii
 /// in the computation. Even 
-struct b2DistanceInput
+struct DistanceInput
 {
-	b2DistanceProxy proxyA;
-	b2DistanceProxy proxyB;
-	b2Transform transformA;
-	b2Transform transformB;
+	DistanceProxy proxyA;
+	DistanceProxy proxyB;
+	Transform transformA;
+	Transform transformB;
 	bool useRadii;
 };
 
-/// Output for b2Distance.
-struct b2DistanceOutput
+/// Output for Distance.
+struct DistanceOutput
 {
-	b2Vec2 pointA;		///< closest point on shapeA
-	b2Vec2 pointB;		///< closest point on shapeB
+	Vec2 pointA;		///< closest point on shapeA
+	Vec2 pointB;		///< closest point on shapeB
 	float32 distance;
 	int32 iterations;	///< number of GJK iterations used
 };
 
 /// Compute the closest points between two shapes. Supports any combination of:
-/// b2CircleShape, b2PolygonShape, b2EdgeShape. The simplex cache is input/output.
-/// On the first call set b2SimplexCache.count to zero.
-void b2Distance(b2DistanceOutput* output,
-				b2SimplexCache* cache, 
-				const b2DistanceInput* input);
+/// CircleShape, PolygonShape, EdgeShape. The simplex cache is input/output.
+/// On the first call set SimplexCache.count to zero.
+void Distance(DistanceOutput* output,
+				SimplexCache* cache, 
+				const DistanceInput* input);
 
 
 //////////////////////////////////////////////////////////////////////////
 
-inline int32 b2DistanceProxy::GetVertexCount() const
+inline int32 DistanceProxy::GetVertexCount() const
 {
 	return m_count;
 }
 
-inline const b2Vec2& b2DistanceProxy::GetVertex(int32 index) const
+inline const Vec2& DistanceProxy::GetVertex(int32 index) const
 {
-	b2Assert(0 <= index && index < m_count);
+	Assert(0 <= index && index < m_count);
 	return m_vertices[index];
 }
 
-inline int32 b2DistanceProxy::GetSupport(const b2Vec2& d) const
+inline int32 DistanceProxy::GetSupport(const Vec2& d) const
 {
 	int32 bestIndex = 0;
-	float32 bestValue = b2Dot(m_vertices[0], d);
+	float32 bestValue = Dot(m_vertices[0], d);
 	for (int32 i = 1; i < m_count; ++i)
 	{
-		float32 value = b2Dot(m_vertices[i], d);
+		float32 value = Dot(m_vertices[i], d);
 		if (value > bestValue)
 		{
 			bestIndex = i;
@@ -121,13 +124,13 @@ inline int32 b2DistanceProxy::GetSupport(const b2Vec2& d) const
 	return bestIndex;
 }
 
-inline const b2Vec2& b2DistanceProxy::GetSupportVertex(const b2Vec2& d) const
+inline const Vec2& DistanceProxy::GetSupportVertex(const Vec2& d) const
 {
 	int32 bestIndex = 0;
-	float32 bestValue = b2Dot(m_vertices[0], d);
+	float32 bestValue = Dot(m_vertices[0], d);
 	for (int32 i = 1; i < m_count; ++i)
 	{
-		float32 value = b2Dot(m_vertices[i], d);
+		float32 value = Dot(m_vertices[i], d);
 		if (value > bestValue)
 		{
 			bestIndex = i;
@@ -137,5 +140,7 @@ inline const b2Vec2& b2DistanceProxy::GetSupportVertex(const b2Vec2& d) const
 
 	return m_vertices[bestIndex];
 }
+
+} // End of namespace b2d11
 
 #endif

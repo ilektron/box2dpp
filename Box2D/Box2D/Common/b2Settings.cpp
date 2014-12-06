@@ -21,21 +21,23 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-b2Version b2_version = {2, 3, 2};
+using namespace b2d11;
+
+b2d11::Version b2_version = {3, 0, 0};
 
 // Memory allocators. Modify these to use your own allocator.
-void* b2Alloc(int32 size)
+void* b2d11::Alloc(int32 size)
 {
 	return malloc(size);
 }
 
-void b2Free(void* mem)
+void b2d11::Free(void* mem)
 {
 	free(mem);
 }
 
 // You can modify this to use your logging facility.
-void b2Log(const char* string, ...)
+void b2d11::Log(const char* string, ...)
 {
 	va_list args;
 	va_start(args, string);

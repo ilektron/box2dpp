@@ -50,8 +50,8 @@ struct Camera
 };
 
 // This class implements debug drawing callbacks that are invoked
-// inside b2World::Step.
-class DebugDraw : public b2Draw
+// inside b2d11::World::Step.
+class DebugDraw : public b2d11::Draw
 {
 public:
 	DebugDraw();
@@ -60,25 +60,25 @@ public:
 	void Create();
 	void Destroy();
 
-	void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
+	void DrawPolygon(const b2d11::Vec2* vertices, b2d11::int32 vertexCount, const b2d11::Color& color);
 
-	void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
+	void DrawSolidPolygon(const b2d11::Vec2* vertices, b2d11::int32 vertexCount, const b2d11::Color& color);
 
-	void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color);
+	void DrawCircle(const b2d11::Vec2& center, b2d11::float32 radius, const b2d11::Color& color);
 
-	void DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color);
+	void DrawSolidCircle(const b2d11::Vec2& center, b2d11::float32 radius, const b2Vec2& axis, const b2d11::Color& color);
 
-	void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color);
+	void DrawSegment(const b2d11::Vec2& p1, const b2d11::Vec2& p2, const b2d11::Color& color);
 
-	void DrawTransform(const b2Transform& xf);
+	void DrawTransform(const b2d11::Transform& xf);
 
-    void DrawPoint(const b2Vec2& p, float32 size, const b2Color& color);
+	void DrawPoint(const b2d11::Vec2& p, b2d11::float32 size, const b2d11::Color& color);
 
     void DrawString(int x, int y, const char* string, ...); 
 
-    void DrawString(const b2Vec2& p, const char* string, ...);
+	void DrawString(const b2d11::Vec2& p, const char* string, ...);
 
-    void DrawAABB(b2AABB* aabb, const b2Color& color);
+	void DrawAABB(b2d11::b2AABB* aabb, const b2d11::Color& color);
 
     void Flush();
     

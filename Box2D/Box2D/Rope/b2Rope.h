@@ -21,12 +21,15 @@
 
 #include <Box2D/Common/b2Math.h>
 
-class b2Draw;
+namespace b2d11
+{
+
+class Draw;
 
 /// 
-struct b2RopeDef
+struct RopeDef
 {
-	b2RopeDef()
+	RopeDef()
 	{
 		vertices = NULL;
 		count = 0;
@@ -38,7 +41,7 @@ struct b2RopeDef
 	}
 
 	///
-	b2Vec2* vertices;
+	Vec2* vertices;
 
 	///
 	int32 count;
@@ -47,7 +50,7 @@ struct b2RopeDef
 	float32* masses;
 
 	///
-	b2Vec2 gravity;
+	Vec2 gravity;
 
 	///
 	float32 damping;
@@ -60,14 +63,14 @@ struct b2RopeDef
 };
 
 /// 
-class b2Rope
+class Rope
 {
 public:
-	b2Rope();
-	~b2Rope();
+	Rope();
+	~Rope();
 
 	///
-	void Initialize(const b2RopeDef* def);
+	void Initialize(const RopeDef* def);
 
 	///
 	void Step(float32 timeStep, int32 iterations);
@@ -79,13 +82,13 @@ public:
 	}
 
 	///
-	const b2Vec2* GetVertices() const
+	const Vec2* GetVertices() const
 	{
 		return m_ps;
 	}
 
 	///
-	void Draw(b2Draw* draw) const;
+	void Draw(b2d11::Draw* adraw) const;
 
 	///
 	void SetAngle(float32 angle);
@@ -96,20 +99,22 @@ private:
 	void SolveC3();
 
 	int32 m_count;
-	b2Vec2* m_ps;
-	b2Vec2* m_p0s;
-	b2Vec2* m_vs;
+	Vec2* m_ps;
+	Vec2* m_p0s;
+	Vec2* m_vs;
 
 	float32* m_ims;
 
 	float32* m_Ls;
 	float32* m_as;
 
-	b2Vec2 m_gravity;
+	Vec2 m_gravity;
 	float32 m_damping;
 
 	float32 m_k2;
 	float32 m_k3;
 };
+
+} // End of namespace b2d11
 
 #endif

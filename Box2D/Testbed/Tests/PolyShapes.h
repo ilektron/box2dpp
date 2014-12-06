@@ -19,10 +19,10 @@
 #ifndef POLY_SHAPES_H
 #define POLY_SHAPES_H
 
-/// This tests stacking. It also shows how to use b2World::Query
+/// This tests stacking. It also shows how to use b2d11::World::Query
 /// and b2TestOverlap.
 
-/// This callback is called by b2World::QueryAABB. We find all the fixtures
+/// This callback is called by b2d11::World::QueryAABB. We find all the fixtures
 /// that overlap an AABB. Of those, we use b2TestOverlap to determine which fixtures
 /// overlap a circle. Up to 4 overlapped fixtures will be highlighted with a yellow border.
 class PolyShapesCallback : public b2QueryCallback
@@ -41,7 +41,7 @@ public:
 
 	void DrawFixture(b2Fixture* fixture)
 	{
-		b2Color color(0.95f, 0.95f, 0.6f);
+		b2d11::Color color(0.95f, 0.95f, 0.6f);
 		const b2Transform& xf = fixture->GetBody()->GetTransform();
 
 		switch (fixture->GetType())
@@ -61,8 +61,8 @@ public:
 			{
 				b2PolygonShape* poly = (b2PolygonShape*)fixture->GetShape();
 				int32 vertexCount = poly->m_count;
-				b2Assert(vertexCount <= b2_maxPolygonVertices);
-				b2Vec2 vertices[b2_maxPolygonVertices];
+				b2Assert(vertexCount <= b2MAX_POLYGON_VERTICES);
+				b2Vec2 vertices[b2MAX_POLYGON_VERTICES];
 
 				for (int32 i = 0; i < vertexCount; ++i)
 				{
@@ -103,7 +103,7 @@ public:
 
 	b2CircleShape m_circle;
 	b2Transform m_transform;
-	b2Draw* g_debugDraw;
+	b2d11::Draw* g_debugDraw;
 	int32 m_count;
 };
 
@@ -187,7 +187,7 @@ public:
 
 		float32 x = RandomFloat(-2.0f, 2.0f);
 		bd.position.Set(x, 10.0f);
-		bd.angle = RandomFloat(-b2_pi, b2_pi);
+		bd.angle = RandomFloat(-b2d11::PI, b2d11::PI);
 
 		if (index == 4)
 		{
@@ -274,7 +274,7 @@ public:
 
 		m_world->QueryAABB(&callback, aabb);
 
-		b2Color color(0.4f, 0.7f, 0.8f);
+		b2d11::Color color(0.4f, 0.7f, 0.8f);
 		g_debugDraw.DrawCircle(callback.m_circle.m_p, callback.m_circle.m_radius, color);
 
 		g_debugDraw.DrawString(5, m_textLine, "Press 1-5 to drop stuff");

@@ -21,23 +21,26 @@
 
 #include <Box2D/Common/b2Math.h>
 
-/// Color for debug drawing. Each value has the range [0,1].
-struct b2Color
+namespace b2d11
 {
-	b2Color() {}
-	b2Color(float32 r, float32 g, float32 b, float32 a = 1.0f) : r(r), g(g), b(b), a(a) {}
+
+/// Color for debug drawing. Each value has the range [0,1].
+struct Color
+{
+	Color() {}
+	Color(float32 r, float32 g, float32 b, float32 a = 1.0f) : r(r), g(g), b(b), a(a) {}
 	void Set(float32 ri, float32 gi, float32 bi, float32 ai = 1.0f) { r = ri; g = gi; b = bi; a = ai; }
 	float32 r, g, b, a;
 };
 
-/// Implement and register this class with a b2World to provide debug drawing of physics
+/// Implement and register this class with a b2d11::World to provide debug drawing of physics
 /// entities in your game.
-class b2Draw
+class Draw
 {
 public:
-	b2Draw();
+	Draw();
 
-	virtual ~b2Draw() {}
+	virtual ~Draw() {}
 
 	enum
 	{
@@ -61,26 +64,28 @@ public:
 	void ClearFlags(uint32 flags);
 
 	/// Draw a closed polygon provided in CCW order.
-	virtual void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) = 0;
+	virtual void DrawPolygon(const Vec2* vertices, int32 vertexCount, const Color& color) = 0;
 
 	/// Draw a solid closed polygon provided in CCW order.
-	virtual void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) = 0;
+	virtual void DrawSolidPolygon(const Vec2* vertices, int32 vertexCount, const Color& color) = 0;
 
 	/// Draw a circle.
-	virtual void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color) = 0;
+	virtual void DrawCircle(const Vec2& center, float32 radius, const Color& color) = 0;
 	
 	/// Draw a solid circle.
-	virtual void DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color) = 0;
+	virtual void DrawSolidCircle(const Vec2& center, float32 radius, const Vec2& axis, const Color& color) = 0;
 	
 	/// Draw a line segment.
-	virtual void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color) = 0;
+	virtual void DrawSegment(const Vec2& p1, const Vec2& p2, const Color& color) = 0;
 
 	/// Draw a transform. Choose your own length scale.
 	/// @param xf a transform.
-	virtual void DrawTransform(const b2Transform& xf) = 0;
+	virtual void DrawTransform(const Transform& xf) = 0;
 
 protected:
 	uint32 m_drawFlags;
 };
+
+} // End of b2d11 namespace
 
 #endif

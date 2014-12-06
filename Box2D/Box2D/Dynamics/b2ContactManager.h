@@ -21,32 +21,37 @@
 
 #include <Box2D/Collision/b2BroadPhase.h>
 
-class b2Contact;
-class b2ContactFilter;
-class b2ContactListener;
-class b2BlockAllocator;
+namespace b2d11
+{
+	
+class Contact;
+class ContactFilter;
+class ContactListener;
+class BlockAllocator;
 
-// Delegate of b2World.
-class b2ContactManager
+// Delegate of b2d11::World.
+class ContactManager
 {
 public:
-	b2ContactManager();
+	ContactManager();
 
 	// Broad-phase callback.
 	void AddPair(void* proxyUserDataA, void* proxyUserDataB);
 
 	void FindNewContacts();
 
-	void Destroy(b2Contact* c);
+	void Destroy(Contact* c);
 
 	void Collide();
             
-	b2BroadPhase m_broadPhase;
-	b2Contact* m_contactList;
+	BroadPhase m_broadPhase;
+	Contact* m_contactList;
 	int32 m_contactCount;
-	b2ContactFilter* m_contactFilter;
-	b2ContactListener* m_contactListener;
-	b2BlockAllocator* m_allocator;
+	ContactFilter* m_contactFilter;
+	ContactListener* m_contactListener;
+	BlockAllocator* m_allocator;
 };
+
+} // End of namespace b2d11
 
 #endif

@@ -21,6 +21,9 @@
 
 #include <Box2D/Dynamics/Joints/b2Joint.h>
 
+namespace b2d11
+{
+
 /// Revolute joint definition. This requires defining an
 /// anchor point where the bodies are joined. The definition
 /// uses local anchor points so that the initial configuration
@@ -32,9 +35,9 @@
 /// 1. you might not know where the center of mass will be.
 /// 2. if you add/remove shapes from a body and recompute the mass,
 ///    the joints will be broken.
-struct b2RevoluteJointDef : public b2JointDef
+struct RevoluteJointDef : public JointDef
 {
-	b2RevoluteJointDef()
+	RevoluteJointDef()
 	{
 		type = e_revoluteJoint;
 		localAnchorA.Set(0.0f, 0.0f);
@@ -50,13 +53,13 @@ struct b2RevoluteJointDef : public b2JointDef
 
 	/// Initialize the bodies, anchors, and reference angle using a world
 	/// anchor point.
-	void Initialize(b2Body* bodyA, b2Body* bodyB, const b2Vec2& anchor);
+	void Initialize(Body* bodyA, Body* bodyB, const Vec2& anchor);
 
 	/// The local anchor point relative to bodyA's origin.
-	b2Vec2 localAnchorA;
+	Vec2 localAnchorA;
 
 	/// The local anchor point relative to bodyB's origin.
-	b2Vec2 localAnchorB;
+	Vec2 localAnchorB;
 
 	/// The bodyB angle minus bodyA angle in the reference state (radians).
 	float32 referenceAngle;
@@ -87,17 +90,17 @@ struct b2RevoluteJointDef : public b2JointDef
 /// a joint limit that specifies a lower and upper angle. You can use a motor
 /// to drive the relative rotation about the shared point. A maximum motor torque
 /// is provided so that infinite forces are not generated.
-class b2RevoluteJoint : public b2Joint
+class RevoluteJoint : public Joint
 {
 public:
-	b2Vec2 GetAnchorA() const;
-	b2Vec2 GetAnchorB() const;
+	Vec2 GetAnchorA() const;
+	Vec2 GetAnchorB() const;
 
 	/// The local anchor point relative to bodyA's origin.
-	const b2Vec2& GetLocalAnchorA() const { return m_localAnchorA; }
+	const Vec2& GetLocalAnchorA() const { return m_localAnchorA; }
 
 	/// The local anchor point relative to bodyB's origin.
-	const b2Vec2& GetLocalAnchorB() const  { return m_localAnchorB; }
+	const Vec2& GetLocalAnchorB() const  { return m_localAnchorB; }
 
 	/// Get the reference angle.
 	float32 GetReferenceAngle() const { return m_referenceAngle; }
@@ -141,7 +144,7 @@ public:
 
 	/// Get the reaction force given the inverse time step.
 	/// Unit is N.
-	b2Vec2 GetReactionForce(float32 inv_dt) const;
+	Vec2 GetReactionForce(float32 inv_dt) const;
 
 	/// Get the reaction torque due to the joint limit given the inverse time step.
 	/// Unit is N*m.
@@ -151,24 +154,24 @@ public:
 	/// Unit is N*m.
 	float32 GetMotorTorque(float32 inv_dt) const;
 
-	/// Dump to b2Log.
+	/// Dump to Log.
 	void Dump();
 
 protected:
 	
-	friend class b2Joint;
-	friend class b2GearJoint;
+	friend class Joint;
+	friend class GearJoint;
 
-	b2RevoluteJoint(const b2RevoluteJointDef* def);
+	RevoluteJoint(const RevoluteJointDef* def);
 
-	void InitVelocityConstraints(const b2SolverData& data);
-	void SolveVelocityConstraints(const b2SolverData& data);
-	bool SolvePositionConstraints(const b2SolverData& data);
+	void InitVelocityConstraints(const SolverData& data);
+	void SolveVelocityConstraints(const SolverData& data);
+	bool SolvePositionConstraints(const SolverData& data);
 
 	// Solver shared
-	b2Vec2 m_localAnchorA;
-	b2Vec2 m_localAnchorB;
-	b2Vec3 m_impulse;
+	Vec2 m_localAnchorA;
+	Vec2 m_localAnchorB;
+	Vec3 m_impulse;
 	float32 m_motorImpulse;
 
 	bool m_enableMotor;
@@ -183,22 +186,24 @@ protected:
 	// Solver temp
 	int32 m_indexA;
 	int32 m_indexB;
-	b2Vec2 m_rA;
-	b2Vec2 m_rB;
-	b2Vec2 m_localCenterA;
-	b2Vec2 m_localCenterB;
+	Vec2 m_rA;
+	Vec2 m_rB;
+	Vec2 m_localCenterA;
+	Vec2 m_localCenterB;
 	float32 m_invMassA;
 	float32 m_invMassB;
 	float32 m_invIA;
 	float32 m_invIB;
-	b2Mat33 m_mass;			// effective mass for point-to-point constraint.
+	Mat33 m_mass;			// effective mass for point-to-point constraint.
 	float32 m_motorMass;	// effective mass for motor/limit angular constraint.
-	b2LimitState m_limitState;
+	LimitState m_limitState;
 };
 
-inline float32 b2RevoluteJoint::GetMotorSpeed() const
+inline float32 RevoluteJoint::GetMotorSpeed() const
 {
 	return m_motorSpeed;
 }
+
+} // End of namespace b2d11
 
 #endif

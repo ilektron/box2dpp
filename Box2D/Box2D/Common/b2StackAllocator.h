@@ -21,10 +21,13 @@
 
 #include <Box2D/Common/b2Settings.h>
 
-const int32 b2_stackSize = 100 * 1024;	// 100k
-const int32 b2_maxStackEntries = 32;
+namespace b2d11
+{
 
-struct b2StackEntry
+constexpr int32 STACK_SIZE = 100 * 1024;	// 100k
+constexpr int32 MAX_STACK_ENTRIES = 32;
+
+struct StackEntry
 {
 	char* data;
 	int32 size;
@@ -34,11 +37,11 @@ struct b2StackEntry
 // This is a stack allocator used for fast per step allocations.
 // You must nest allocate/free pairs. The code will assert
 // if you try to interleave multiple allocate/free pairs.
-class b2StackAllocator
+class StackAllocator
 {
 public:
-	b2StackAllocator();
-	~b2StackAllocator();
+	StackAllocator();
+	~StackAllocator();
 
 	void* Allocate(int32 size);
 	void Free(void* p);
@@ -47,14 +50,16 @@ public:
 
 private:
 
-	char m_data[b2_stackSize];
+	char m_data[STACK_SIZE];
 	int32 m_index;
 
 	int32 m_allocation;
 	int32 m_maxAllocation;
 
-	b2StackEntry m_entries[b2_maxStackEntries];
+	StackEntry m_entries[MAX_STACK_ENTRIES];
 	int32 m_entryCount;
 };
+
+} // End of namespace b2d11
 
 #endif

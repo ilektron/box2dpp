@@ -35,7 +35,7 @@ Test::Test()
 {
 	b2Vec2 gravity;
 	gravity.Set(0.0f, -10.0f);
-	m_world = new b2World(gravity);
+	m_world = new b2d11::World(gravity);
 	m_bomb = NULL;
 	m_textLine = 30;
 	m_mouseJoint = NULL;
@@ -76,10 +76,10 @@ void Test::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 	b2Fixture* fixtureA = contact->GetFixtureA();
 	b2Fixture* fixtureB = contact->GetFixtureB();
 
-	b2PointState state1[b2_maxManifoldPoints], state2[b2_maxManifoldPoints];
+	b2PointState state1[b2MAX_MANIFOLD_POINTS], state2[b2MAX_MANIFOLD_POINTS];
 	b2GetPointStates(state1, state2, oldManifold, manifold);
 
-	b2WorldManifold worldManifold;
+	b2d11::WorldManifold worldManifold;
 	contact->GetWorldManifold(&worldManifold);
 
 	for (int32 i = 0; i < manifold->pointCount && m_pointCount < k_maxContactPoints; ++i)
@@ -284,10 +284,10 @@ void Test::Step(Settings* settings)
 	}
 
 	uint32 flags = 0;
-	flags += settings->drawShapes			* b2Draw::e_shapeBit;
-	flags += settings->drawJoints			* b2Draw::e_jointBit;
-	flags += settings->drawAABBs			* b2Draw::e_aabbBit;
-	flags += settings->drawCOMs				* b2Draw::e_centerOfMassBit;
+	flags += settings->drawShapes			* b2d11::Draw::e_shapeBit;
+	flags += settings->drawJoints			* b2d11::Draw::e_jointBit;
+	flags += settings->drawAABBs			* b2d11::Draw::e_aabbBit;
+	flags += settings->drawCOMs				* b2d11::Draw::e_centerOfMassBit;
 	g_debugDraw.SetFlags(flags);
 
 	m_world->SetAllowSleeping(settings->enableSleep);
@@ -387,7 +387,7 @@ void Test::Step(Settings* settings)
 		b2Vec2 p1 = m_mouseJoint->GetAnchorB();
 		b2Vec2 p2 = m_mouseJoint->GetTarget();
 
-		b2Color c;
+		b2d11::Color c;
 		c.Set(0.0f, 1.0f, 0.0f);
 		g_debugDraw.DrawPoint(p1, 4.0f, c);
 		g_debugDraw.DrawPoint(p2, 4.0f, c);
@@ -398,7 +398,7 @@ void Test::Step(Settings* settings)
 	
 	if (m_bombSpawning)
 	{
-		b2Color c;
+		b2d11::Color c;
 		c.Set(0.0f, 0.0f, 1.0f);
 		g_debugDraw.DrawPoint(m_bombSpawnPoint, 4.0f, c);
 
@@ -418,25 +418,25 @@ void Test::Step(Settings* settings)
 			if (point->state == b2_addState)
 			{
 				// Add
-				g_debugDraw.DrawPoint(point->position, 10.0f, b2Color(0.3f, 0.95f, 0.3f));
+				g_debugDraw.DrawPoint(point->position, 10.0f, b2d11::Color(0.3f, 0.95f, 0.3f));
 			}
 			else if (point->state == b2_persistState)
 			{
 				// Persist
-				g_debugDraw.DrawPoint(point->position, 5.0f, b2Color(0.3f, 0.3f, 0.95f));
+				g_debugDraw.DrawPoint(point->position, 5.0f, b2d11::Color(0.3f, 0.3f, 0.95f));
 			}
 
 			if (settings->drawContactNormals == 1)
 			{
 				b2Vec2 p1 = point->position;
 				b2Vec2 p2 = p1 + k_axisScale * point->normal;
-				g_debugDraw.DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.9f));
+				g_debugDraw.DrawSegment(p1, p2, b2d11::Color(0.9f, 0.9f, 0.9f));
 			}
 			else if (settings->drawContactImpulse == 1)
 			{
 				b2Vec2 p1 = point->position;
 				b2Vec2 p2 = p1 + k_impulseScale * point->normalImpulse * point->normal;
-				g_debugDraw.DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
+				g_debugDraw.DrawSegment(p1, p2, b2d11::Color(0.9f, 0.9f, 0.3f));
 			}
 
 			if (settings->drawFrictionImpulse == 1)
@@ -444,7 +444,7 @@ void Test::Step(Settings* settings)
 				b2Vec2 tangent = b2Cross(point->normal, 1.0f);
 				b2Vec2 p1 = point->position;
 				b2Vec2 p2 = p1 + k_impulseScale * point->tangentImpulse * tangent;
-				g_debugDraw.DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
+				g_debugDraw.DrawSegment(p1, p2, b2d11::Color(0.9f, 0.9f, 0.3f));
 			}
 		}
 	}

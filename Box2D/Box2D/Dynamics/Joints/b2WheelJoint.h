@@ -21,15 +21,18 @@
 
 #include <Box2D/Dynamics/Joints/b2Joint.h>
 
+namespace b2d11
+{
+
 /// Wheel joint definition. This requires defining a line of
 /// motion using an axis and an anchor point. The definition uses local
 /// anchor points and a local axis so that the initial configuration
 /// can violate the constraint slightly. The joint translation is zero
 /// when the local anchor points coincide in world space. Using local
 /// anchors and a local axis helps when saving and loading a game.
-struct b2WheelJointDef : public b2JointDef
+struct WheelJointDef : public JointDef
 {
-	b2WheelJointDef()
+	WheelJointDef()
 	{
 		type = e_wheelJoint;
 		localAnchorA.SetZero();
@@ -44,16 +47,16 @@ struct b2WheelJointDef : public b2JointDef
 
 	/// Initialize the bodies, anchors, axis, and reference angle using the world
 	/// anchor and world axis.
-	void Initialize(b2Body* bodyA, b2Body* bodyB, const b2Vec2& anchor, const b2Vec2& axis);
+	void Initialize(Body* bodyA, Body* bodyB, const Vec2& anchor, const Vec2& axis);
 
 	/// The local anchor point relative to bodyA's origin.
-	b2Vec2 localAnchorA;
+	Vec2 localAnchorA;
 
 	/// The local anchor point relative to bodyB's origin.
-	b2Vec2 localAnchorB;
+	Vec2 localAnchorB;
 
 	/// The local translation axis in bodyA.
-	b2Vec2 localAxisA;
+	Vec2 localAxisA;
 
 	/// Enable/disable the joint motor.
 	bool enableMotor;
@@ -75,23 +78,23 @@ struct b2WheelJointDef : public b2JointDef
 /// along an axis fixed in bodyA and rotation in the plane. In other words, it is a point to
 /// line constraint with a rotational motor and a linear spring/damper.
 /// This joint is designed for vehicle suspensions.
-class b2WheelJoint : public b2Joint
+class WheelJoint : public Joint
 {
 public:
-	b2Vec2 GetAnchorA() const;
-	b2Vec2 GetAnchorB() const;
+	Vec2 GetAnchorA() const;
+	Vec2 GetAnchorB() const;
 
-	b2Vec2 GetReactionForce(float32 inv_dt) const;
+	Vec2 GetReactionForce(float32 inv_dt) const;
 	float32 GetReactionTorque(float32 inv_dt) const;
 
 	/// The local anchor point relative to bodyA's origin.
-	const b2Vec2& GetLocalAnchorA() const { return m_localAnchorA; }
+	const Vec2& GetLocalAnchorA() const { return m_localAnchorA; }
 
 	/// The local anchor point relative to bodyB's origin.
-	const b2Vec2& GetLocalAnchorB() const  { return m_localAnchorB; }
+	const Vec2& GetLocalAnchorB() const  { return m_localAnchorB; }
 
 	/// The local joint axis relative to bodyA.
-	const b2Vec2& GetLocalAxisA() const { return m_localXAxisA; }
+	const Vec2& GetLocalAxisA() const { return m_localXAxisA; }
 
 	/// Get the current joint translation, usually in meters.
 	float32 GetJointTranslation() const;
@@ -126,26 +129,26 @@ public:
 	void SetSpringDampingRatio(float32 ratio);
 	float32 GetSpringDampingRatio() const;
 
-	/// Dump to b2Log
+	/// Dump to Log
 	void Dump();
 
 protected:
 
-	friend class b2Joint;
-	b2WheelJoint(const b2WheelJointDef* def);
+	friend class Joint;
+	WheelJoint(const WheelJointDef* def);
 
-	void InitVelocityConstraints(const b2SolverData& data);
-	void SolveVelocityConstraints(const b2SolverData& data);
-	bool SolvePositionConstraints(const b2SolverData& data);
+	void InitVelocityConstraints(const SolverData& data);
+	void SolveVelocityConstraints(const SolverData& data);
+	bool SolvePositionConstraints(const SolverData& data);
 
 	float32 m_frequencyHz;
 	float32 m_dampingRatio;
 
 	// Solver shared
-	b2Vec2 m_localAnchorA;
-	b2Vec2 m_localAnchorB;
-	b2Vec2 m_localXAxisA;
-	b2Vec2 m_localYAxisA;
+	Vec2 m_localAnchorA;
+	Vec2 m_localAnchorB;
+	Vec2 m_localXAxisA;
+	Vec2 m_localYAxisA;
 
 	float32 m_impulse;
 	float32 m_motorImpulse;
@@ -158,14 +161,14 @@ protected:
 	// Solver temp
 	int32 m_indexA;
 	int32 m_indexB;
-	b2Vec2 m_localCenterA;
-	b2Vec2 m_localCenterB;
+	Vec2 m_localCenterA;
+	Vec2 m_localCenterB;
 	float32 m_invMassA;
 	float32 m_invMassB;
 	float32 m_invIA;
 	float32 m_invIB;
 
-	b2Vec2 m_ax, m_ay;
+	Vec2 m_ax, m_ay;
 	float32 m_sAx, m_sBx;
 	float32 m_sAy, m_sBy;
 
@@ -177,34 +180,36 @@ protected:
 	float32 m_gamma;
 };
 
-inline float32 b2WheelJoint::GetMotorSpeed() const
+inline float32 WheelJoint::GetMotorSpeed() const
 {
 	return m_motorSpeed;
 }
 
-inline float32 b2WheelJoint::GetMaxMotorTorque() const
+inline float32 WheelJoint::GetMaxMotorTorque() const
 {
 	return m_maxMotorTorque;
 }
 
-inline void b2WheelJoint::SetSpringFrequencyHz(float32 hz)
+inline void WheelJoint::SetSpringFrequencyHz(float32 hz)
 {
 	m_frequencyHz = hz;
 }
 
-inline float32 b2WheelJoint::GetSpringFrequencyHz() const
+inline float32 WheelJoint::GetSpringFrequencyHz() const
 {
 	return m_frequencyHz;
 }
 
-inline void b2WheelJoint::SetSpringDampingRatio(float32 ratio)
+inline void WheelJoint::SetSpringDampingRatio(float32 ratio)
 {
 	m_dampingRatio = ratio;
 }
 
-inline float32 b2WheelJoint::GetSpringDampingRatio() const
+inline float32 WheelJoint::GetSpringDampingRatio() const
 {
 	return m_dampingRatio;
 }
+
+} // End of namespace b2d11
 
 #endif

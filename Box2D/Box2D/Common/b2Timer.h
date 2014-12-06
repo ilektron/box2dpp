@@ -21,14 +21,17 @@
 
 #include <Box2D/Common/b2Settings.h>
 
+namespace b2d11
+{
+
 /// Timer for profiling. This has platform specific code and may
 /// not work on every platform.
-class b2Timer
+class Timer
 {
 public:
 
 	/// Constructor
-	b2Timer();
+	Timer();
 
 	/// Reset the timer.
 	void Reset();
@@ -46,5 +49,7 @@ private:
 	unsigned long m_start_usec;
 #endif
 };
+
+} // End of namespace b2d11
 
 #endif

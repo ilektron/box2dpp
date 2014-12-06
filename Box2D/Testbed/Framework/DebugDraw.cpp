@@ -35,6 +35,8 @@
 DebugDraw g_debugDraw;
 Camera g_camera;
 
+using namespace b2d11;
+
 //
 b2Vec2 Camera::ConvertScreenToWorld(const b2Vec2& ps)
 {
@@ -272,7 +274,7 @@ struct GLRenderPoints
 		}
 	}
     
-	void Vertex(const b2Vec2& v, const b2Color& c, float32 size)
+	void Vertex(const b2Vec2& v, const b2d11::Color& c, float32 size)
 	{
 		if (m_count == e_maxVertices)
 			Flush();
@@ -301,7 +303,7 @@ struct GLRenderPoints
 		glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(b2Vec2), m_vertices);
         
 		glBindBuffer(GL_ARRAY_BUFFER, m_vboIds[1]);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(b2Color), m_colors);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(b2d11::Color), m_colors);
         
 		glBindBuffer(GL_ARRAY_BUFFER, m_vboIds[2]);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(float32), m_sizes);
@@ -321,7 +323,7 @@ struct GLRenderPoints
     
 	enum { e_maxVertices = 512 };
 	b2Vec2 m_vertices[e_maxVertices];
-	b2Color m_colors[e_maxVertices];
+	b2d11::Color m_colors[e_maxVertices];
     float32 m_sizes[e_maxVertices];
 
 	int32 m_count;
@@ -408,7 +410,7 @@ struct GLRenderLines
 		}
 	}
     
-	void Vertex(const b2Vec2& v, const b2Color& c)
+	void Vertex(const b2Vec2& v, const b2d11::Color& c)
 	{
 		if (m_count == e_maxVertices)
 			Flush();
@@ -436,7 +438,7 @@ struct GLRenderLines
 		glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(b2Vec2), m_vertices);
         
 		glBindBuffer(GL_ARRAY_BUFFER, m_vboIds[1]);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(b2Color), m_colors);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(b2d11::Color), m_colors);
         
 		glDrawArrays(GL_LINES, 0, m_count);
         
@@ -451,7 +453,7 @@ struct GLRenderLines
     
 	enum { e_maxVertices = 2 * 512 };
 	b2Vec2 m_vertices[e_maxVertices];
-	b2Color m_colors[e_maxVertices];
+	b2d11::Color m_colors[e_maxVertices];
     
 	int32 m_count;
     
@@ -536,7 +538,7 @@ struct GLRenderTriangles
 		}
 	}
 
-	void Vertex(const b2Vec2& v, const b2Color& c)
+	void Vertex(const b2Vec2& v, const b2d11::Color& c)
 	{
 		if (m_count == e_maxVertices)
 			Flush();
@@ -564,7 +566,7 @@ struct GLRenderTriangles
 		glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(b2Vec2), m_vertices);
         
 		glBindBuffer(GL_ARRAY_BUFFER, m_vboIds[1]);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(b2Color), m_colors);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(b2d11::Color), m_colors);
         
         glEnable(GL_BLEND);
         glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -582,7 +584,7 @@ struct GLRenderTriangles
     
 	enum { e_maxVertices = 3 * 512 };
 	b2Vec2 m_vertices[e_maxVertices];
-	b2Color m_colors[e_maxVertices];
+	b2d11::Color m_colors[e_maxVertices];
 
 	int32 m_count;
 
@@ -638,7 +640,7 @@ void DebugDraw::Destroy()
 }
 
 //
-void DebugDraw::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
+void DebugDraw::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2d11::Color& color)
 {
     b2Vec2 p1 = vertices[vertexCount - 1];
 	for (int32 i = 0; i < vertexCount; ++i)
@@ -651,9 +653,9 @@ void DebugDraw::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2C
 }
 
 //
-void DebugDraw::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
+void DebugDraw::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2d11::Color& color)
 {
-	b2Color fillColor(0.5f * color.r, 0.5f * color.g, 0.5f * color.b, 0.5f);
+	b2d11::Color fillColor(0.5f * color.r, 0.5f * color.g, 0.5f * color.b, 0.5f);
 
     for (int32 i = 1; i < vertexCount - 1; ++i)
     {
@@ -673,10 +675,10 @@ void DebugDraw::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, cons
 }
 
 //
-void DebugDraw::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
+void DebugDraw::DrawCircle(const b2Vec2& center, float32 radius, const b2d11::Color& color)
 {
 	const float32 k_segments = 16.0f;
-	const float32 k_increment = 2.0f * b2_pi / k_segments;
+	const float32 k_increment = 2.0f * b2d11::PI / k_segments;
     float32 sinInc = sinf(k_increment);
     float32 cosInc = cosf(k_increment);
     b2Vec2 r1(1.0f, 0.0f);
@@ -696,16 +698,16 @@ void DebugDraw::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& 
 }
 
 //
-void DebugDraw::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
+void DebugDraw::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2d11::Color& color)
 {
 	const float32 k_segments = 16.0f;
-	const float32 k_increment = 2.0f * b2_pi / k_segments;
+	const float32 k_increment = 2.0f * b2d11::PI / k_segments;
     float32 sinInc = sinf(k_increment);
     float32 cosInc = cosf(k_increment);
     b2Vec2 v0 = center;
     b2Vec2 r1(cosInc, sinInc);
     b2Vec2 v1 = center + radius * r1;
-	b2Color fillColor(0.5f * color.r, 0.5f * color.g, 0.5f * color.b, 0.5f);
+	b2d11::Color fillColor(0.5f * color.r, 0.5f * color.g, 0.5f * color.b, 0.5f);
 	for (int32 i = 0; i < k_segments; ++i)
 	{
         // Perform rotation to avoid additional trigonometry.
@@ -741,7 +743,7 @@ void DebugDraw::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Ve
 }
 
 //
-void DebugDraw::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
+void DebugDraw::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2d11::Color& color)
 {
 	m_lines->Vertex(p1, color);
 	m_lines->Vertex(p2, color);
@@ -751,8 +753,8 @@ void DebugDraw::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& c
 void DebugDraw::DrawTransform(const b2Transform& xf)
 {
 	const float32 k_axisScale = 0.4f;
-    b2Color red(1.0f, 0.0f, 0.0f);
-    b2Color green(0.0f, 1.0f, 0.0f);
+    b2d11::Color red(1.0f, 0.0f, 0.0f);
+    b2d11::Color green(0.0f, 1.0f, 0.0f);
 	b2Vec2 p1 = xf.p, p2;
 
 	m_lines->Vertex(p1, red);
@@ -764,7 +766,7 @@ void DebugDraw::DrawTransform(const b2Transform& xf)
 	m_lines->Vertex(p2, green);
 }
 
-void DebugDraw::DrawPoint(const b2Vec2& p, float32 size, const b2Color& color)
+void DebugDraw::DrawPoint(const b2Vec2& p, float32 size, const b2d11::Color& color)
 {
     m_points->Vertex(p, color, size);
 }
@@ -798,7 +800,7 @@ void DebugDraw::DrawString(const b2Vec2& pw, const char *string, ...)
 	AddGfxCmdText(ps.x, h - ps.y, TEXT_ALIGN_LEFT, buffer, SetRGBA(230, 153, 153, 255));
 }
 
-void DebugDraw::DrawAABB(b2AABB* aabb, const b2Color& c)
+void DebugDraw::DrawAABB(b2AABB* aabb, const b2d11::Color& c)
 {
     b2Vec2 p1 = aabb->lowerBound;
     b2Vec2 p2 = b2Vec2(aabb->upperBound.x, aabb->lowerBound.y);

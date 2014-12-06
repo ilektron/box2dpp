@@ -21,19 +21,24 @@
 
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
 
-class b2BlockAllocator;
+namespace b2d11
+{
 
-class b2EdgeAndCircleContact : public b2Contact
+class BlockAllocator;
+
+class EdgeAndCircleContact : public Contact
 {
 public:
-	static b2Contact* Create(	b2Fixture* fixtureA, int32 indexA,
-								b2Fixture* fixtureB, int32 indexB, b2BlockAllocator* allocator);
-	static void Destroy(b2Contact* contact, b2BlockAllocator* allocator);
+	static Contact* Create(	Fixture* fixtureA, int32 indexA,
+								Fixture* fixtureB, int32 indexB, BlockAllocator* allocator);
+	static void Destroy(Contact* contact, BlockAllocator* allocator);
 
-	b2EdgeAndCircleContact(b2Fixture* fixtureA, b2Fixture* fixtureB);
-	~b2EdgeAndCircleContact() {}
+	EdgeAndCircleContact(Fixture* fixtureA, Fixture* fixtureB);
+	~EdgeAndCircleContact() {}
 
-	void Evaluate(b2Manifold* manifold, const b2Transform& xfA, const b2Transform& xfB);
+	void Evaluate(Manifold* manifold, const Transform& xfA, const Transform& xfB);
 };
+
+} // End of namespace b2d11
 
 #endif

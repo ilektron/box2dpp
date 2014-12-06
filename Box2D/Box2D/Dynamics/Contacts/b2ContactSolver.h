@@ -23,15 +23,17 @@
 #include <Box2D/Collision/b2Collision.h>
 #include <Box2D/Dynamics/b2TimeStep.h>
 
-class b2Contact;
-class b2Body;
-class b2StackAllocator;
-struct b2ContactPositionConstraint;
-
-struct b2VelocityConstraintPoint
+namespace b2d11
 {
-	b2Vec2 rA;
-	b2Vec2 rB;
+
+class Contact;
+class Body;
+class StackAllocator;
+
+struct VelocityConstraintPoint
+{
+	Vec2 rA;
+	Vec2 rB;
 	float32 normalImpulse;
 	float32 tangentImpulse;
 	float32 normalMass;
@@ -39,12 +41,12 @@ struct b2VelocityConstraintPoint
 	float32 velocityBias;
 };
 
-struct b2ContactVelocityConstraint
+struct ContactVelocityConstraint
 {
-	b2VelocityConstraintPoint points[b2_maxManifoldPoints];
-	b2Vec2 normal;
-	b2Mat22 normalMass;
-	b2Mat22 K;
+	VelocityConstraintPoint points[MAX_MANIFOLD_POINTS];
+	Vec2 normal;
+	Mat22 normalMass;
+	Mat22 K;
 	int32 indexA;
 	int32 indexB;
 	float32 invMassA, invMassB;
@@ -56,21 +58,36 @@ struct b2ContactVelocityConstraint
 	int32 contactIndex;
 };
 
-struct b2ContactSolverDef
+struct ContactPositionConstraint
 {
-	b2TimeStep step;
-	b2Contact** contacts;
-	int32 count;
-	b2Position* positions;
-	b2Velocity* velocities;
-	b2StackAllocator* allocator;
+	Vec2 localPoints[MAX_MANIFOLD_POINTS];
+	Vec2 localNormal;
+	Vec2 localPoint;
+	int32 indexA;
+	int32 indexB;
+	float32 invMassA, invMassB;
+	Vec2 localCenterA, localCenterB;
+	float32 invIA, invIB;
+	Manifold::Type type;
+	float32 radiusA, radiusB;
+	int32 pointCount;
 };
 
-class b2ContactSolver
+struct ContactSolverDef
+{
+	TimeStep step;
+	Contact** contacts;
+	int32 count;
+	Position* positions;
+	Velocity* velocities;
+	StackAllocator* allocator;
+};
+
+class ContactSolver
 {
 public:
-	b2ContactSolver(b2ContactSolverDef* def);
-	~b2ContactSolver();
+	ContactSolver(ContactSolverDef* def);
+	~ContactSolver();
 
 	void InitializeVelocityConstraints();
 
@@ -80,16 +97,20 @@ public:
 
 	bool SolvePositionConstraints();
 	bool SolveTOIPositionConstraints(int32 toiIndexA, int32 toiIndexB);
-
-	b2TimeStep m_step;
-	b2Position* m_positions;
-	b2Velocity* m_velocities;
-	b2StackAllocator* m_allocator;
-	b2ContactPositionConstraint* m_positionConstraints;
-	b2ContactVelocityConstraint* m_velocityConstraints;
-	b2Contact** m_contacts;
+	
+	ContactVelocityConstraint* m_velocityConstraints; // used outside of class
+private:
+	
+	TimeStep m_step;
+	Position* m_positions;
+	Velocity* m_velocities;
+	StackAllocator* m_allocator;
+	ContactPositionConstraint* m_positionConstraints;
+	Contact** m_contacts;
 	int m_count;
 };
+
+} // End of namespace b2d11
 
 #endif
 

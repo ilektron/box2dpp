@@ -22,24 +22,26 @@
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
 
-b2ContactFilter b2_defaultFilter;
-b2ContactListener b2_defaultListener;
+using namespace b2d11;
 
-b2ContactManager::b2ContactManager()
+ContactFilter _defaultFilter;
+ContactListener _defaultListener;
+
+ContactManager::ContactManager()
 {
 	m_contactList = NULL;
 	m_contactCount = 0;
-	m_contactFilter = &b2_defaultFilter;
-	m_contactListener = &b2_defaultListener;
+	m_contactFilter = &_defaultFilter;
+	m_contactListener = &_defaultListener;
 	m_allocator = NULL;
 }
 
-void b2ContactManager::Destroy(b2Contact* c)
+void ContactManager::Destroy(Contact* c)
 {
-	b2Fixture* fixtureA = c->GetFixtureA();
-	b2Fixture* fixtureB = c->GetFixtureB();
-	b2Body* bodyA = fixtureA->GetBody();
-	b2Body* bodyB = fixtureB->GetBody();
+	Fixture* fixtureA = c->GetFixtureA();
+	Fixture* fixtureB = c->GetFixtureB();
+	Body* bodyA = fixtureA->GetBody();
+	Body* bodyB = fixtureB->GetBody();
 
 	if (m_contactListener && c->IsTouching())
 	{
@@ -95,33 +97,33 @@ void b2ContactManager::Destroy(b2Contact* c)
 	}
 
 	// Call the factory.
-	b2Contact::Destroy(c, m_allocator);
+	Contact::Destroy(c, m_allocator);
 	--m_contactCount;
 }
 
 // This is the top level collision call for the time step. Here
 // all the narrow phase collision is processed for the world
 // contact list.
-void b2ContactManager::Collide()
+void ContactManager::Collide()
 {
 	// Update awake contacts.
-	b2Contact* c = m_contactList;
+	Contact* c = m_contactList;
 	while (c)
 	{
-		b2Fixture* fixtureA = c->GetFixtureA();
-		b2Fixture* fixtureB = c->GetFixtureB();
+		Fixture* fixtureA = c->GetFixtureA();
+		Fixture* fixtureB = c->GetFixtureB();
 		int32 indexA = c->GetChildIndexA();
 		int32 indexB = c->GetChildIndexB();
-		b2Body* bodyA = fixtureA->GetBody();
-		b2Body* bodyB = fixtureB->GetBody();
+		Body* bodyA = fixtureA->GetBody();
+		Body* bodyB = fixtureB->GetBody();
 		 
 		// Is this contact flagged for filtering?
-		if (c->m_flags & b2Contact::e_filterFlag)
+		if (c->m_flags & Contact::e_filterFlag)
 		{
 			// Should these bodies collide?
 			if (bodyB->ShouldCollide(bodyA) == false)
 			{
-				b2Contact* cNuke = c;
+				Contact* cNuke = c;
 				c = cNuke->GetNext();
 				Destroy(cNuke);
 				continue;
@@ -130,18 +132,18 @@ void b2ContactManager::Collide()
 			// Check user filtering.
 			if (m_contactFilter && m_contactFilter->ShouldCollide(fixtureA, fixtureB) == false)
 			{
-				b2Contact* cNuke = c;
+				Contact* cNuke = c;
 				c = cNuke->GetNext();
 				Destroy(cNuke);
 				continue;
 			}
 
 			// Clear the filtering flag.
-			c->m_flags &= ~b2Contact::e_filterFlag;
+			c->m_flags &= ~Contact::e_filterFlag;
 		}
 
-		bool activeA = bodyA->IsAwake() && bodyA->m_type != b2_staticBody;
-		bool activeB = bodyB->IsAwake() && bodyB->m_type != b2_staticBody;
+		bool activeA = bodyA->IsAwake() && bodyA->m_type != _staticBody;
+		bool activeB = bodyB->IsAwake() && bodyB->m_type != _staticBody;
 
 		// At least one body must be awake and it must be dynamic or kinematic.
 		if (activeA == false && activeB == false)
@@ -157,7 +159,7 @@ void b2ContactManager::Collide()
 		// Here we destroy contacts that cease to overlap in the broad-phase.
 		if (overlap == false)
 		{
-			b2Contact* cNuke = c;
+			Contact* cNuke = c;
 			c = cNuke->GetNext();
 			Destroy(cNuke);
 			continue;
@@ -169,24 +171,24 @@ void b2ContactManager::Collide()
 	}
 }
 
-void b2ContactManager::FindNewContacts()
+void ContactManager::FindNewContacts()
 {
 	m_broadPhase.UpdatePairs(this);
 }
 
-void b2ContactManager::AddPair(void* proxyUserDataA, void* proxyUserDataB)
+void ContactManager::AddPair(void* proxyUserDataA, void* proxyUserDataB)
 {
-	b2FixtureProxy* proxyA = (b2FixtureProxy*)proxyUserDataA;
-	b2FixtureProxy* proxyB = (b2FixtureProxy*)proxyUserDataB;
+	FixtureProxy* proxyA = (FixtureProxy*)proxyUserDataA;
+	FixtureProxy* proxyB = (FixtureProxy*)proxyUserDataB;
 
-	b2Fixture* fixtureA = proxyA->fixture;
-	b2Fixture* fixtureB = proxyB->fixture;
+	Fixture* fixtureA = proxyA->fixture;
+	Fixture* fixtureB = proxyB->fixture;
 
 	int32 indexA = proxyA->childIndex;
 	int32 indexB = proxyB->childIndex;
 
-	b2Body* bodyA = fixtureA->GetBody();
-	b2Body* bodyB = fixtureB->GetBody();
+	Body* bodyA = fixtureA->GetBody();
+	Body* bodyB = fixtureB->GetBody();
 
 	// Are the fixtures on the same body?
 	if (bodyA == bodyB)
@@ -197,13 +199,13 @@ void b2ContactManager::AddPair(void* proxyUserDataA, void* proxyUserDataB)
 	// TODO_ERIN use a hash table to remove a potential bottleneck when both
 	// bodies have a lot of contacts.
 	// Does a contact already exist?
-	b2ContactEdge* edge = bodyB->GetContactList();
+	ContactEdge* edge = bodyB->GetContactList();
 	while (edge)
 	{
 		if (edge->other == bodyA)
 		{
-			b2Fixture* fA = edge->contact->GetFixtureA();
-			b2Fixture* fB = edge->contact->GetFixtureB();
+			Fixture* fA = edge->contact->GetFixtureA();
+			Fixture* fB = edge->contact->GetFixtureB();
 			int32 iA = edge->contact->GetChildIndexA();
 			int32 iB = edge->contact->GetChildIndexB();
 
@@ -236,7 +238,7 @@ void b2ContactManager::AddPair(void* proxyUserDataA, void* proxyUserDataB)
 	}
 
 	// Call the factory.
-	b2Contact* c = b2Contact::Create(fixtureA, indexA, fixtureB, indexB, m_allocator);
+	Contact* c = Contact::Create(fixtureA, indexA, fixtureB, indexB, m_allocator);
 	if (c == NULL)
 	{
 		return;

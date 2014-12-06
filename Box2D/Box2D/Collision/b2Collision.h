@@ -22,20 +22,23 @@
 #include <Box2D/Common/b2Math.h>
 #include <limits.h>
 
+namespace b2d11
+{
+
 /// @file
 /// Structures and functions used for computing contact points, distance
 /// queries, and TOI queries.
 
-class b2Shape;
-class b2CircleShape;
-class b2EdgeShape;
-class b2PolygonShape;
+class Shape;
+class CircleShape;
+class EdgeShape;
+class PolygonShape;
 
-const uint8 b2_nullFeature = UCHAR_MAX;
+const uint8 _nullFeature = UCHAR_MAX;
 
 /// The features that intersect to form the contact point
 /// This must be 4 bytes or less.
-struct b2ContactFeature
+struct ContactFeature
 {
 	enum Type
 	{
@@ -50,9 +53,9 @@ struct b2ContactFeature
 };
 
 /// Contact ids to facilitate warm starting.
-union b2ContactID
+union ContactID
 {
-	b2ContactFeature cf;
+	ContactFeature cf;
 	uint32 key;					///< Used to quickly compare contact ids.
 };
 
@@ -66,12 +69,12 @@ union b2ContactID
 /// This structure is stored across time steps, so we keep it small.
 /// Note: the impulses are used for internal caching and may not
 /// provide reliable contact forces, especially for high speed collisions.
-struct b2ManifoldPoint
+struct ManifoldPoint
 {
-	b2Vec2 localPoint;		///< usage depends on manifold type
+	Vec2 localPoint;		///< usage depends on manifold type
 	float32 normalImpulse;	///< the non-penetration impulse
 	float32 tangentImpulse;	///< the friction impulse
-	b2ContactID id;			///< uniquely identifies a contact point between two shapes
+	ContactID id;			///< uniquely identifies a contact point between two shapes
 };
 
 /// A manifold for two touching convex shapes.
@@ -90,7 +93,7 @@ struct b2ManifoldPoint
 /// account for movement, which is critical for continuous physics.
 /// All contact scenarios must be expressed in one of these types.
 /// This structure is stored across time steps, so we keep it small.
-struct b2Manifold
+struct Manifold
 {
 	enum Type
 	{
@@ -99,79 +102,79 @@ struct b2Manifold
 		e_faceB
 	};
 
-	b2ManifoldPoint points[b2_maxManifoldPoints];	///< the points of contact
-	b2Vec2 localNormal;								///< not use for Type::e_points
-	b2Vec2 localPoint;								///< usage depends on manifold type
+	ManifoldPoint points[MAX_MANIFOLD_POINTS];	///< the points of contact
+	Vec2 localNormal;								///< not use for Type::e_points
+	Vec2 localPoint;								///< usage depends on manifold type
 	Type type;
 	int32 pointCount;								///< the number of manifold points
 };
 
 /// This is used to compute the current state of a contact manifold.
-struct b2WorldManifold
+struct WorldManifold
 {
 	/// Evaluate the manifold with supplied transforms. This assumes
 	/// modest motion from the original state. This does not change the
 	/// point count, impulses, etc. The radii must come from the shapes
 	/// that generated the manifold.
-	void Initialize(const b2Manifold* manifold,
-					const b2Transform& xfA, float32 radiusA,
-					const b2Transform& xfB, float32 radiusB);
+	void Initialize(const Manifold* manifold,
+					const Transform& xfA, float32 radiusA,
+					const Transform& xfB, float32 radiusB);
 
-	b2Vec2 normal;								///< world vector pointing from A to B
-	b2Vec2 points[b2_maxManifoldPoints];		///< world contact point (point of intersection)
-	float32 separations[b2_maxManifoldPoints];	///< a negative value indicates overlap, in meters
+	Vec2 normal;								///< world vector pointing from A to B
+	Vec2 points[MAX_MANIFOLD_POINTS];		///< world contact point (point of intersection)
+	float32 separations[MAX_MANIFOLD_POINTS];	///< a negative value indicates overlap, in meters
 };
 
 /// This is used for determining the state of contact points.
-enum b2PointState
+enum PointState
 {
-	b2_nullState,		///< point does not exist
-	b2_addState,		///< point was added in the update
-	b2_persistState,	///< point persisted across the update
-	b2_removeState		///< point was removed in the update
+	_nullState,		///< point does not exist
+	_addState,		///< point was added in the update
+	_persistState,	///< point persisted across the update
+	_removeState		///< point was removed in the update
 };
 
 /// Compute the point states given two manifolds. The states pertain to the transition from manifold1
 /// to manifold2. So state1 is either persist or remove while state2 is either add or persist.
-void b2GetPointStates(b2PointState state1[b2_maxManifoldPoints], b2PointState state2[b2_maxManifoldPoints],
-					  const b2Manifold* manifold1, const b2Manifold* manifold2);
+void GetPointStates(PointState state1[MAX_MANIFOLD_POINTS], PointState state2[MAX_MANIFOLD_POINTS],
+					  const Manifold* manifold1, const Manifold* manifold2);
 
 /// Used for computing contact manifolds.
-struct b2ClipVertex
+struct ClipVertex
 {
-	b2Vec2 v;
-	b2ContactID id;
+	Vec2 v;
+	ContactID id;
 };
 
 /// Ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).
-struct b2RayCastInput
+struct RayCastInput
 {
-	b2Vec2 p1, p2;
+	Vec2 p1, p2;
 	float32 maxFraction;
 };
 
 /// Ray-cast output data. The ray hits at p1 + fraction * (p2 - p1), where p1 and p2
-/// come from b2RayCastInput.
-struct b2RayCastOutput
+/// come from RayCastInput.
+struct RayCastOutput
 {
-	b2Vec2 normal;
+	Vec2 normal;
 	float32 fraction;
 };
 
 /// An axis aligned bounding box.
-struct b2AABB
+struct AABB
 {
 	/// Verify that the bounds are sorted.
 	bool IsValid() const;
 
 	/// Get the center of the AABB.
-	b2Vec2 GetCenter() const
+	Vec2 GetCenter() const
 	{
 		return 0.5f * (lowerBound + upperBound);
 	}
 
 	/// Get the extents of the AABB (half-widths).
-	b2Vec2 GetExtents() const
+	Vec2 GetExtents() const
 	{
 		return 0.5f * (upperBound - lowerBound);
 	}
@@ -185,21 +188,21 @@ struct b2AABB
 	}
 
 	/// Combine an AABB into this one.
-	void Combine(const b2AABB& aabb)
+	void Combine(const AABB& aabb)
 	{
-		lowerBound = b2Min(lowerBound, aabb.lowerBound);
-		upperBound = b2Max(upperBound, aabb.upperBound);
+		lowerBound = Min(lowerBound, aabb.lowerBound);
+		upperBound = Max(upperBound, aabb.upperBound);
 	}
 
 	/// Combine two AABBs into this one.
-	void Combine(const b2AABB& aabb1, const b2AABB& aabb2)
+	void Combine(const AABB& aabb1, const AABB& aabb2)
 	{
-		lowerBound = b2Min(aabb1.lowerBound, aabb2.lowerBound);
-		upperBound = b2Max(aabb1.upperBound, aabb2.upperBound);
+		lowerBound = Min(aabb1.lowerBound, aabb2.lowerBound);
+		upperBound = Max(aabb1.upperBound, aabb2.upperBound);
 	}
 
 	/// Does this aabb contain the provided AABB.
-	bool Contains(const b2AABB& aabb) const
+	bool Contains(const AABB& aabb) const
 	{
 		bool result = true;
 		result = result && lowerBound.x <= aabb.lowerBound.x;
@@ -209,59 +212,59 @@ struct b2AABB
 		return result;
 	}
 
-	bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input) const;
+	bool RayCast(RayCastOutput* output, const RayCastInput& input) const;
 
-	b2Vec2 lowerBound;	///< the lower vertex
-	b2Vec2 upperBound;	///< the upper vertex
+	Vec2 lowerBound;	///< the lower vertex
+	Vec2 upperBound;	///< the upper vertex
 };
 
 /// Compute the collision manifold between two circles.
-void b2CollideCircles(b2Manifold* manifold,
-					  const b2CircleShape* circleA, const b2Transform& xfA,
-					  const b2CircleShape* circleB, const b2Transform& xfB);
+void CollideCircles(Manifold* manifold,
+					  const CircleShape* circleA, const Transform& xfA,
+					  const CircleShape* circleB, const Transform& xfB);
 
 /// Compute the collision manifold between a polygon and a circle.
-void b2CollidePolygonAndCircle(b2Manifold* manifold,
-							   const b2PolygonShape* polygonA, const b2Transform& xfA,
-							   const b2CircleShape* circleB, const b2Transform& xfB);
+void CollidePolygonAndCircle(Manifold* manifold,
+							   const PolygonShape* polygonA, const Transform& xfA,
+							   const CircleShape* circleB, const Transform& xfB);
 
 /// Compute the collision manifold between two polygons.
-void b2CollidePolygons(b2Manifold* manifold,
-					   const b2PolygonShape* polygonA, const b2Transform& xfA,
-					   const b2PolygonShape* polygonB, const b2Transform& xfB);
+void CollidePolygons(Manifold* manifold,
+					   const PolygonShape* polygonA, const Transform& xfA,
+					   const PolygonShape* polygonB, const Transform& xfB);
 
 /// Compute the collision manifold between an edge and a circle.
-void b2CollideEdgeAndCircle(b2Manifold* manifold,
-							   const b2EdgeShape* polygonA, const b2Transform& xfA,
-							   const b2CircleShape* circleB, const b2Transform& xfB);
+void CollideEdgeAndCircle(Manifold* manifold,
+							   const EdgeShape* polygonA, const Transform& xfA,
+							   const CircleShape* circleB, const Transform& xfB);
 
 /// Compute the collision manifold between an edge and a circle.
-void b2CollideEdgeAndPolygon(b2Manifold* manifold,
-							   const b2EdgeShape* edgeA, const b2Transform& xfA,
-							   const b2PolygonShape* circleB, const b2Transform& xfB);
+void CollideEdgeAndPolygon(Manifold* manifold,
+							   const EdgeShape* edgeA, const Transform& xfA,
+							   const PolygonShape* circleB, const Transform& xfB);
 
 /// Clipping for contact manifolds.
-int32 b2ClipSegmentToLine(b2ClipVertex vOut[2], const b2ClipVertex vIn[2],
-							const b2Vec2& normal, float32 offset, int32 vertexIndexA);
+int32 ClipSegmentToLine(ClipVertex vOut[2], const ClipVertex vIn[2],
+							const Vec2& normal, float32 offset, int32 vertexIndexA);
 
 /// Determine if two generic shapes overlap.
-bool b2TestOverlap(	const b2Shape* shapeA, int32 indexA,
-					const b2Shape* shapeB, int32 indexB,
-					const b2Transform& xfA, const b2Transform& xfB);
+bool TestOverlap(	const Shape* shapeA, int32 indexA,
+					const Shape* shapeB, int32 indexB,
+					const Transform& xfA, const Transform& xfB);
 
 // ---------------- Inline Functions ------------------------------------------
 
-inline bool b2AABB::IsValid() const
+inline bool AABB::IsValid() const
 {
-	b2Vec2 d = upperBound - lowerBound;
+	Vec2 d = upperBound - lowerBound;
 	bool valid = d.x >= 0.0f && d.y >= 0.0f;
 	valid = valid && lowerBound.IsValid() && upperBound.IsValid();
 	return valid;
 }
 
-inline bool b2TestOverlap(const b2AABB& a, const b2AABB& b)
+inline bool TestOverlap(const AABB& a, const AABB& b)
 {
-	b2Vec2 d1, d2;
+	Vec2 d1, d2;
 	d1 = b.lowerBound - a.upperBound;
 	d2 = a.lowerBound - b.upperBound;
 
@@ -273,5 +276,7 @@ inline bool b2TestOverlap(const b2AABB& a, const b2AABB& b)
 
 	return true;
 }
+
+} // End of namespace b2d11
 
 #endif

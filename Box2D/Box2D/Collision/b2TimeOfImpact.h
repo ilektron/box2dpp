@@ -22,18 +22,21 @@
 #include <Box2D/Common/b2Math.h>
 #include <Box2D/Collision/b2Distance.h>
 
-/// Input parameters for b2TimeOfImpact
-struct b2TOIInput
+namespace b2d11
 {
-	b2DistanceProxy proxyA;
-	b2DistanceProxy proxyB;
-	b2Sweep sweepA;
-	b2Sweep sweepB;
+
+/// Input parameters for TimeOfImpact
+struct TOIInput
+{
+	DistanceProxy proxyA;
+	DistanceProxy proxyB;
+	Sweep sweepA;
+	Sweep sweepB;
 	float32 tMax;		// defines sweep interval [0, tMax]
 };
 
-// Output parameters for b2TimeOfImpact.
-struct b2TOIOutput
+// Output parameters for TimeOfImpact.
+struct TOIOutput
 {
 	enum State
 	{
@@ -52,7 +55,9 @@ struct b2TOIOutput
 /// a fraction between [0,tMax]. This uses a swept separating axis and may miss some intermediate,
 /// non-tunneling collision. If you change the time interval, you should call this function
 /// again.
-/// Note: use b2Distance to compute the contact point and normal at the time of impact.
-void b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input);
+/// Note: use Distance to compute the contact point and normal at the time of impact.
+void TimeOfImpact(TOIOutput* output, const TOIInput* input);
+
+} // End of namespace b2d11
 
 #endif

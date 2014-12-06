@@ -250,7 +250,7 @@ public:
 		float32 x = RandomFloat(-10.0f, 10.0f);
 		float32 y = RandomFloat(0.0f, 20.0f);
 		bd.position.Set(x, y);
-		bd.angle = RandomFloat(-b2_pi, b2_pi);
+		bd.angle = RandomFloat(-b2d11::PI, b2d11::PI);
 
 		m_userData[m_bodyIndex] = index;
 		bd.userData = m_userData + m_bodyIndex;
@@ -371,14 +371,14 @@ public:
 
 			if (callback.m_hit)
 			{
-				g_debugDraw.DrawPoint(callback.m_point, 5.0f, b2Color(0.4f, 0.9f, 0.4f));
-				g_debugDraw.DrawSegment(point1, callback.m_point, b2Color(0.8f, 0.8f, 0.8f));
+				g_debugDraw.DrawPoint(callback.m_point, 5.0f, b2d11::Color(0.4f, 0.9f, 0.4f));
+				g_debugDraw.DrawSegment(point1, callback.m_point, b2d11::Color(0.8f, 0.8f, 0.8f));
 				b2Vec2 head = callback.m_point + 0.5f * callback.m_normal;
-				g_debugDraw.DrawSegment(callback.m_point, head, b2Color(0.9f, 0.9f, 0.4f));
+				g_debugDraw.DrawSegment(callback.m_point, head, b2d11::Color(0.9f, 0.9f, 0.4f));
 			}
 			else
 			{
-				g_debugDraw.DrawSegment(point1, point2, b2Color(0.8f, 0.8f, 0.8f));
+				g_debugDraw.DrawSegment(point1, point2, b2d11::Color(0.8f, 0.8f, 0.8f));
 			}
 		}
 		else if (m_mode == e_any)
@@ -388,36 +388,36 @@ public:
 
 			if (callback.m_hit)
 			{
-				g_debugDraw.DrawPoint(callback.m_point, 5.0f, b2Color(0.4f, 0.9f, 0.4f));
-				g_debugDraw.DrawSegment(point1, callback.m_point, b2Color(0.8f, 0.8f, 0.8f));
+				g_debugDraw.DrawPoint(callback.m_point, 5.0f, b2d11::Color(0.4f, 0.9f, 0.4f));
+				g_debugDraw.DrawSegment(point1, callback.m_point, b2d11::Color(0.8f, 0.8f, 0.8f));
 				b2Vec2 head = callback.m_point + 0.5f * callback.m_normal;
-				g_debugDraw.DrawSegment(callback.m_point, head, b2Color(0.9f, 0.9f, 0.4f));
+				g_debugDraw.DrawSegment(callback.m_point, head, b2d11::Color(0.9f, 0.9f, 0.4f));
 			}
 			else
 			{
-				g_debugDraw.DrawSegment(point1, point2, b2Color(0.8f, 0.8f, 0.8f));
+				g_debugDraw.DrawSegment(point1, point2, b2d11::Color(0.8f, 0.8f, 0.8f));
 			}
 		}
 		else if (m_mode == e_multiple)
 		{
 			RayCastMultipleCallback callback;
 			m_world->RayCast(&callback, point1, point2);
-			g_debugDraw.DrawSegment(point1, point2, b2Color(0.8f, 0.8f, 0.8f));
+			g_debugDraw.DrawSegment(point1, point2, b2d11::Color(0.8f, 0.8f, 0.8f));
 
 			for (int32 i = 0; i < callback.m_count; ++i)
 			{
 				b2Vec2 p = callback.m_points[i];
 				b2Vec2 n = callback.m_normals[i];
-				g_debugDraw.DrawPoint(p, 5.0f, b2Color(0.4f, 0.9f, 0.4f));
-				g_debugDraw.DrawSegment(point1, p, b2Color(0.8f, 0.8f, 0.8f));
+				g_debugDraw.DrawPoint(p, 5.0f, b2d11::Color(0.4f, 0.9f, 0.4f));
+				g_debugDraw.DrawSegment(point1, p, b2d11::Color(0.8f, 0.8f, 0.8f));
 				b2Vec2 head = p + 0.5f * n;
-				g_debugDraw.DrawSegment(p, head, b2Color(0.9f, 0.9f, 0.4f));
+				g_debugDraw.DrawSegment(p, head, b2d11::Color(0.9f, 0.9f, 0.4f));
 			}
 		}
 
 		if (advanceRay)
 		{
-			m_angle += 0.25f * b2_pi / 180.0f;
+			m_angle += 0.25f * b2d11::PI / 180.0f;
 		}
 
 #if 0
@@ -448,7 +448,7 @@ public:
 			hit = shape.RayCast(&output, input, xf);
 			hit = false;
 
-			b2Color color(1.0f, 1.0f, 1.0f);
+			b2d11::Color color(1.0f, 1.0f, 1.0f);
 			b2Vec2 vs[4];
 			for (int32 i = 0; i < 4; ++i)
 			{
