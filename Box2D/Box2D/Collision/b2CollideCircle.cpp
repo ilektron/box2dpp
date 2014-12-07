@@ -22,7 +22,7 @@
 
 using namespace box2d;
 
-void b2CollideCircles(
+void box2d::b2CollideCircles(
 	b2Manifold* manifold,
 	const b2CircleShape* circleA, const b2Transform& xfA,
 	const b2CircleShape* circleB, const b2Transform& xfB)
@@ -50,7 +50,7 @@ void b2CollideCircles(
 	manifold->points[0].id.key = 0;
 }
 
-void b2CollidePolygonAndCircle(
+void box2d::b2CollidePolygonAndCircle(
 	b2Manifold* manifold,
 	const b2PolygonShape* polygonA, const b2Transform& xfA,
 	const b2CircleShape* circleB, const b2Transform& xfB)

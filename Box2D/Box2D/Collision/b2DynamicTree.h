@@ -20,7 +20,8 @@
 #define B2_DYNAMIC_TREE_H
 
 #include <Box2D/Collision/b2Collision.h>
-#include <Box2D/Common/b2GrowableStack.h>
+
+#include <vector>
 
 #define b2_nullNode (-1)
 
@@ -171,12 +172,13 @@ inline const b2AABB& b2DynamicTree::GetFatAABB(int32 proxyId) const
 template <typename T>
 inline void b2DynamicTree::Query(T* callback, const b2AABB& aabb) const
 {
-	b2GrowableStack<int32, 256> stack;
-	stack.Push(m_root);
+	std::vector<int32> stack(256);
+	stack.push_back(m_root);
 
-	while (stack.GetCount() > 0)
+	while (stack.size() > 0)
 	{
-		int32 nodeId = stack.Pop();
+		int32 nodeId = stack.back();
+		stack.pop_back();
 		if (nodeId == b2_nullNode)
 		{
 			continue;
@@ -196,8 +198,8 @@ inline void b2DynamicTree::Query(T* callback, const b2AABB& aabb) const
 			}
 			else
 			{
-				stack.Push(node->child1);
-				stack.Push(node->child2);
+				stack.push_back(node->child1);
+				stack.push_back(node->child2);
 			}
 		}
 	}
@@ -229,12 +231,13 @@ inline void b2DynamicTree::RayCast(T* callback, const b2RayCastInput& input) con
 		segmentAABB.upperBound = b2Max(p1, t);
 	}
 
-	b2GrowableStack<int32, 256> stack;
-	stack.Push(m_root);
+	std::vector<int32> stack(256);
+	stack.push_back(m_root);
 
-	while (stack.GetCount() > 0)
+	while (stack.size() > 0)
 	{
-		int32 nodeId = stack.Pop();
+		int32 nodeId = stack.back();
+		stack.pop_back();
 		if (nodeId == b2_nullNode)
 		{
 			continue;
@@ -283,8 +286,8 @@ inline void b2DynamicTree::RayCast(T* callback, const b2RayCastInput& input) con
 		}
 		else
 		{
-			stack.Push(node->child1);
-			stack.Push(node->child2);
+			stack.push_back(node->child1);
+			stack.push_back(node->child2);
 		}
 	}
 }

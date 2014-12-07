@@ -31,7 +31,7 @@
 
 #include <stdlib.h>
 
-using box2d::float;
+using box2d::float32;
 using box2d::b2Fixture;
 using box2d::b2PointState;
 using box2d::b2Profile;
@@ -40,6 +40,8 @@ using box2d::b2MouseJoint;
 using box2d::b2Body;
 using box2d::b2Joint;
 using box2d::b2Contact;
+using box2d::b2ContactImpulse;
+using box2d::b2Manifold;
 
 class Test;
 struct Settings;

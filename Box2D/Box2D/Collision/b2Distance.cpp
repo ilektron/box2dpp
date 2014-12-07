@@ -443,7 +443,7 @@ void b2Simplex::Solve3()
 	m_count = 3;
 }
 
-void b2Distance(b2DistanceOutput* output,
+void box2d::b2Distance(b2DistanceOutput* output,
 				b2SimplexCache* cache,
 				const b2DistanceInput* input)
 {

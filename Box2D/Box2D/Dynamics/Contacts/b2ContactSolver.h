@@ -29,7 +29,21 @@ namespace box2d
 class b2Contact;
 class b2Body;
 class b2StackAllocator;
-struct b2ContactPositionConstraint;
+// struct b2ContactPositionConstraint;
+struct b2ContactPositionConstraint
+{
+	b2Vec2 localPoints[b2_maxManifoldPoints];
+	b2Vec2 localNormal;
+	b2Vec2 localPoint;
+	int32 indexA;
+	int32 indexB;
+	float32 invMassA, invMassB;
+	b2Vec2 localCenterA, localCenterB;
+	float32 invIA, invIB;
+	b2Manifold::Type type;
+	float32 radiusA, radiusB;
+	int32 pointCount;
+};
 
 struct b2VelocityConstraintPoint
 {

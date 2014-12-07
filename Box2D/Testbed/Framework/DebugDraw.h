@@ -21,7 +21,7 @@
 
 #include <Box2D/Box2D.h>
 
-struct box2d::b2AABB;
+// struct box2d::b2AABB;
 struct GLRenderPoints;
 struct GLRenderLines;
 struct GLRenderTriangles;
@@ -30,6 +30,7 @@ using box2d::b2Vec2;
 using box2d::float32;
 using box2d::b2Color;
 using box2d::b2AABB;
+using box2d::b2Transform;
 
 //
 struct Camera

@@ -43,17 +43,6 @@ int32 b2BlockAllocator::s_blockSizes[b2_blockSizes] =
 uint8 b2BlockAllocator::s_blockSizeLookup[b2_maxBlockSize + 1];
 bool b2BlockAllocator::s_blockSizeLookupInitialized;
 
-struct b2Chunk
-{
-	int32 blockSize;
-	b2Block* blocks;
-};
-
-struct b2Block
-{
-	b2Block* next;
-};
-
 b2BlockAllocator::b2BlockAllocator()
 {
 	b2Assert(b2_blockSizes < UCHAR_MAX);
