@@ -49,7 +49,7 @@ public:
 
 		float32 xs[5] = {0.0f, -10.0f, -5.0f, 5.0f, 10.0f};
 
-		for (int32 j = 0; j < e_columnCount; ++j)
+		for (int32_t j = 0; j < e_columnCount; ++j)
 		{
 			b2PolygonShape shape;
 			shape.SetAsBox(0.5f, 0.5f);
@@ -64,7 +64,7 @@ public:
 				b2BodyDef bd;
 				bd.type = b2_dynamicBody;
 
-				int32 n = j * e_rowCount + i;
+				int32_t n = j * e_rowCount + i;
 				b2Assert(n < e_rowCount * e_columnCount);
 				m_indices[n] = n;
 				bd.userData = m_indices + n;
@@ -165,7 +165,7 @@ public:
 
 	b2Body* m_bullet;
 	b2Body* m_bodies[e_rowCount * e_columnCount];
-	int32 m_indices[e_rowCount * e_columnCount];
+	int32_t m_indices[e_rowCount * e_columnCount];
 };
 
 #endif

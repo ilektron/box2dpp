@@ -78,9 +78,9 @@ public:
 		}
 #endif
 
-		extern int32 b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
-		extern int32 b2_toiCalls, b2_toiIters;
-		extern int32 b2_toiRootIters, b2_toiMaxRootIters;
+		extern int32_t b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
+		extern int32_t b2_toiCalls, b2_toiIters;
+		extern int32_t b2_toiRootIters, b2_toiMaxRootIters;
 		extern float32 b2_toiTime, b2_toiMaxTime;
 
 		b2_gjkCalls = 0; b2_gjkIters = 0; b2_gjkMaxIters = 0;
@@ -91,9 +91,9 @@ public:
 
 	void Launch()
 	{
-		extern int32 b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
-		extern int32 b2_toiCalls, b2_toiIters;
-		extern int32 b2_toiRootIters, b2_toiMaxRootIters;
+		extern int32_t b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
+		extern int32_t b2_toiCalls, b2_toiIters;
+		extern int32_t b2_toiRootIters, b2_toiMaxRootIters;
 		extern float32 b2_toiTime, b2_toiMaxTime;
 
 		b2_gjkCalls = 0; b2_gjkIters = 0; b2_gjkMaxIters = 0;
@@ -111,7 +111,7 @@ public:
 	{
 		Test::Step(settings);
 
-		extern int32 b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
+		extern int32_t b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
 
 		if (b2_gjkCalls > 0)
 		{
@@ -120,8 +120,8 @@ public:
 			m_textLine += DRAW_STRING_NEW_LINE;
 		}
 
-		extern int32 b2_toiCalls, b2_toiIters;
-		extern int32 b2_toiRootIters, b2_toiMaxRootIters;
+		extern int32_t b2_toiCalls, b2_toiIters;
+		extern int32_t b2_toiRootIters, b2_toiMaxRootIters;
 		extern float32 b2_toiTime, b2_toiMaxTime;
 
 		if (b2_toiCalls > 0)

@@ -64,7 +64,7 @@ public:
 		fd.density = 1.0f;
 		fd.friction = 0.1f;
 
-		for (int32 j = 0; j < e_columnCount; ++j)
+		for (int32_t j = 0; j < e_columnCount; ++j)
 		{
 			for (int i = 0; i < e_rowCount; ++i)
 			{

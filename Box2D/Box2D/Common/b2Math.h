@@ -29,7 +29,7 @@ namespace box2d
 /// This function is used to ensure that a floating point number is not a NaN or infinity.
 inline bool b2IsValid(float32 x)
 {
-	int32 ix = 0;
+	int32_t ix = 0;
 	static_assert(sizeof(x) == sizeof(ix), "Mismatched storage type sizes");
 	memcpy(&ix, &x, sizeof(x));
 	return (ix & 0x7f800000) != 0x7f800000;
@@ -38,7 +38,7 @@ inline bool b2IsValid(float32 x)
 /// This is a approximate yet fast inverse square-root.
 inline float32 b2InvSqrt(float32 x)
 {
-	int32 ix = 0;
+	int32_t ix = 0;
 	static_assert(sizeof(x) == sizeof(ix), "Mismatched storage type sizes");
 	memcpy(&ix, &x, sizeof(x));
 	
@@ -71,13 +71,13 @@ struct b2Vec2
 	b2Vec2 operator -() const { b2Vec2 v; v.Set(-x, -y); return v; }
 	
 	/// Read from and indexed element.
-	float32 operator () (int32 i) const
+	float32 operator () (int32_t i) const
 	{
 		return (&x)[i];
 	}
 
 	/// Write to an indexed element.
-	float32& operator () (int32 i)
+	float32& operator () (int32_t i)
 	{
 		return (&x)[i];
 	}
@@ -117,7 +117,7 @@ struct b2Vec2
 	float32 Normalize()
 	{
 		float32 length = Length();
-		if (length < b2_epsilon)
+		if (length < EPSILON)
 		{
 			return 0.0f;
 		}
@@ -676,7 +676,7 @@ template<typename T> inline void b2Swap(T& a, T& b)
 /// that recursively "folds" the upper bits into the lower bits. This process yields a bit vector with
 /// the same most significant 1 as x, but all 1's below it. Adding 1 to that value yields the next
 /// largest power of 2. For a 32-bit value:"
-inline uint32 b2NextPowerOfTwo(uint32 x)
+inline uint32_t b2NextPowerOfTwo(uint32_t x)
 {
 	x |= (x >> 1);
 	x |= (x >> 2);
@@ -686,7 +686,7 @@ inline uint32 b2NextPowerOfTwo(uint32 x)
 	return x + 1;
 }
 
-inline bool b2IsPowerOfTwo(uint32 x)
+inline bool b2IsPowerOfTwo(uint32_t x)
 {
 	bool result = x > 0 && (x & (x - 1)) == 0;
 	return result;
@@ -714,7 +714,7 @@ inline void b2Sweep::Advance(float32 alpha)
 /// Normalize an angle in radians to be between -pi and pi
 inline void b2Sweep::Normalize()
 {
-	float32 twoPi = 2.0f * b2_pi;
+	float32 twoPi = 2.0f * PI;
 	float32 d =  twoPi * floorf(a0 / twoPi);
 	a0 -= d;
 	a -= d;

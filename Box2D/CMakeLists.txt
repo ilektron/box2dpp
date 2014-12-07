@@ -11,8 +11,8 @@ endif(UNIX)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 
-SET(CMAKE_CXX_COMPILER clang++-3.6)
-SET(CMAKE_C_COMPILER clang-3.6)
+#SET(CMAKE_CXX_COMPILER clang++-3.6)
+#SET(CMAKE_C_COMPILER clang-3.6)
 
 option(BOX2D_INSTALL "Install Box2D libs, includes, and CMake scripts" ${BOX2D_INSTALL_BY_DEFAULT})
 option(BOX2D_INSTALL_DOC "Install Box2D documentation" OFF)
@@ -32,8 +32,8 @@ if(BOX2D_BUILD_EXAMPLES)
 
   # Testbed and dependencies.
   find_package(OpenGL REQUIRED)
-  add_subdirectory(glew)
-  add_subdirectory(glfw)
+  # add_subdirectory(glew)
+  # add_subdirectory(glfw)
   add_subdirectory(Testbed)
 endif(BOX2D_BUILD_EXAMPLES)
 

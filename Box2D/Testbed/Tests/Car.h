@@ -48,7 +48,7 @@ public:
 
 			float32 x = 20.0f, y1 = 0.0f, dx = 5.0f;
 
-			for (int32 i = 0; i < 10; ++i)
+			for (int32_t i = 0; i < 10; ++i)
 			{
 				float32 y2 = hs[i];
 				shape.Set(b2Vec2(x, y1), b2Vec2(x + dx, y2));
@@ -57,7 +57,7 @@ public:
 				x += dx;
 			}
 
-			for (int32 i = 0; i < 10; ++i)
+			for (int32_t i = 0; i < 10; ++i)
 			{
 				float32 y2 = hs[i];
 				shape.Set(b2Vec2(x, y1), b2Vec2(x + dx, y2));
@@ -99,8 +99,8 @@ public:
 
 			b2RevoluteJointDef jd;
 			jd.Initialize(ground, body, body->GetPosition());
-			jd.lowerAngle = -8.0f * b2_pi / 180.0f;
-			jd.upperAngle = 8.0f * b2_pi / 180.0f;
+			jd.lowerAngle = -8.0f * PI / 180.0f;
+			jd.upperAngle = 8.0f * PI / 180.0f;
 			jd.enableLimit = true;
 			m_world->CreateJoint(&jd);
 
@@ -109,7 +109,7 @@ public:
 
 		// Bridge
 		{
-			int32 N = 20;
+			int32_t N = 20;
 			b2PolygonShape shape;
 			shape.SetAsBox(1.0f, 0.125f);
 
@@ -121,7 +121,7 @@ public:
 			b2RevoluteJointDef jd;
 
 			b2Body* prevBody = ground;
-			for (int32 i = 0; i < N; ++i)
+			for (int32_t i = 0; i < N; ++i)
 			{
 				b2BodyDef bd;
 				bd.type = b2_dynamicBody;

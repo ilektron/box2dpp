@@ -57,21 +57,21 @@ public:
 
 		{
 			b2Color color(0.9f, 0.9f, 0.9f);
-			b2Vec2 v[b2_maxPolygonVertices];
-			for (int32 i = 0; i < m_polygonA.m_count; ++i)
+			b2Vec2 v[MAX_POLYGON_VERTICES];
+			for (int32_t i = 0; i < m_polygonA.m_count; ++i)
 			{
 				v[i] = b2Mul(m_transformA, m_polygonA.m_vertices[i]);
 			}
 			g_debugDraw.DrawPolygon(v, m_polygonA.m_count, color);
 
-			for (int32 i = 0; i < m_polygonB.m_count; ++i)
+			for (int32_t i = 0; i < m_polygonB.m_count; ++i)
 			{
 				v[i] = b2Mul(m_transformB, m_polygonB.m_vertices[i]);
 			}
 			g_debugDraw.DrawPolygon(v, m_polygonB.m_count, color);
 		}
 
-		for (int32 i = 0; i < manifold.pointCount; ++i)
+		for (int32_t i = 0; i < manifold.pointCount; ++i)
 		{
 			g_debugDraw.DrawPoint(worldManifold.points[i], 4.0f, b2Color(0.9f, 0.3f, 0.3f));
 		}
@@ -98,11 +98,11 @@ public:
 			break;
 
 		case GLFW_KEY_Q:
-			m_angleB += 0.1f * b2_pi;
+			m_angleB += 0.1f * PI;
 			break;
 
 		case GLFW_KEY_E:
-			m_angleB -= 0.1f * b2_pi;
+			m_angleB -= 0.1f * PI;
 			break;
 		}
 

@@ -117,8 +117,8 @@ protected:
 	float32 m_correctionFactor;
 
 	// Solver temp
-	int32 m_indexA;
-	int32 m_indexB;
+	int32_t m_indexA;
+	int32_t m_indexB;
 	b2Vec2 m_rA;
 	b2Vec2 m_rB;
 	b2Vec2 m_localCenterA;

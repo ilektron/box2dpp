@@ -10,6 +10,8 @@ set(Testbed_Framework_SRCS
 	Framework/Test.h
 	Framework/DebugDraw.cpp
 	Framework/DebugDraw.h
+	Framework/imgui.cpp
+	Framework/imgui.h
 )
 
 #define the test files.
@@ -84,10 +86,17 @@ add_executable(Testbed
 	${Testbed_Tests_SRCS}
 )
 
+find_package(GLEW REQUIRED)
+#pkg_search_module(GLFW REQUIRED glfw3)
+
+add_subdirectory(glfw)
+include_directories(glfw/include)
+
 target_link_libraries (
 	Testbed
 	Box2D
-	glew
+	${GLEW_LIBRARIES}
+	${GLFW_LIBRARIES}
 	glfw
 	${ADDITIONAL_LIBRARIES}
 	${OPENGL_LIBRARIES}

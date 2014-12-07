@@ -163,22 +163,22 @@ struct b2EPAxis
 	};
 	
 	Type type;
-	int32 index;
+	int32_t index;
 	float32 separation;
 };
 
 // This holds polygon B expressed in frame A.
 struct b2TempPolygon
 {
-	b2Vec2 vertices[b2_maxPolygonVertices];
-	b2Vec2 normals[b2_maxPolygonVertices];
-	int32 count;
+	b2Vec2 vertices[MAX_POLYGON_VERTICES];
+	b2Vec2 normals[MAX_POLYGON_VERTICES];
+	int32_t count;
 };
 
 // Reference face used for clipping
 struct b2ReferenceFace
 {
-	int32 i1, i2;
+	int32_t i1, i2;
 	
 	b2Vec2 v1, v2;
 	
@@ -427,13 +427,13 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
 	
 	// Get polygonB in frameA
 	m_polygonB.count = polygonB->m_count;
-	for (int32 i = 0; i < polygonB->m_count; ++i)
+	for (int32_t i = 0; i < polygonB->m_count; ++i)
 	{
 		m_polygonB.vertices[i] = b2Mul(m_xf, polygonB->m_vertices[i]);
 		m_polygonB.normals[i] = b2Mul(m_xf.q, polygonB->m_normals[i]);
 	}
 	
-	m_radius = 2.0f * b2_polygonRadius;
+	m_radius = 2.0f * POLYGON_RADIUS;
 	
 	manifold->pointCount = 0;
 	
@@ -481,9 +481,9 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
 		manifold->type = b2Manifold::e_faceA;
 		
 		// Search for the polygon normal that is most anti-parallel to the edge normal.
-		int32 bestIndex = 0;
+		int32_t bestIndex = 0;
 		float32 bestValue = b2Dot(m_normal, m_polygonB.normals[0]);
-		for (int32 i = 1; i < m_polygonB.count; ++i)
+		for (int32_t i = 1; i < m_polygonB.count; ++i)
 		{
 			float32 value = b2Dot(m_normal, m_polygonB.normals[i]);
 			if (value < bestValue)
@@ -493,18 +493,18 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
 			}
 		}
 		
-		int32 i1 = bestIndex;
-		int32 i2 = i1 + 1 < m_polygonB.count ? i1 + 1 : 0;
+		int32_t i1 = bestIndex;
+		int32_t i2 = i1 + 1 < m_polygonB.count ? i1 + 1 : 0;
 		
 		ie[0].v = m_polygonB.vertices[i1];
 		ie[0].id.cf.indexA = 0;
-		ie[0].id.cf.indexB = static_cast<uint8>(i1);
+		ie[0].id.cf.indexB = static_cast<uint8_t>(i1);
 		ie[0].id.cf.typeA = b2ContactFeature::e_face;
 		ie[0].id.cf.typeB = b2ContactFeature::e_vertex;
 		
 		ie[1].v = m_polygonB.vertices[i2];
 		ie[1].id.cf.indexA = 0;
-		ie[1].id.cf.indexB = static_cast<uint8>(i2);
+		ie[1].id.cf.indexB = static_cast<uint8_t>(i2);
 		ie[1].id.cf.typeA = b2ContactFeature::e_face;
 		ie[1].id.cf.typeB = b2ContactFeature::e_vertex;
 		
@@ -531,13 +531,13 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
 		
 		ie[0].v = m_v1;
 		ie[0].id.cf.indexA = 0;
-		ie[0].id.cf.indexB = static_cast<uint8>(primaryAxis.index);
+		ie[0].id.cf.indexB = static_cast<uint8_t>(primaryAxis.index);
 		ie[0].id.cf.typeA = b2ContactFeature::e_vertex;
 		ie[0].id.cf.typeB = b2ContactFeature::e_face;
 		
 		ie[1].v = m_v2;
 		ie[1].id.cf.indexA = 0;
-		ie[1].id.cf.indexB = static_cast<uint8>(primaryAxis.index);		
+		ie[1].id.cf.indexB = static_cast<uint8_t>(primaryAxis.index);		
 		ie[1].id.cf.typeA = b2ContactFeature::e_vertex;
 		ie[1].id.cf.typeB = b2ContactFeature::e_face;
 		
@@ -556,12 +556,12 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
 	// Clip incident edge against extruded edge1 side edges.
 	b2ClipVertex clipPoints1[2];
 	b2ClipVertex clipPoints2[2];
-	int32 np;
+	int32_t np;
 	
 	// Clip to box side 1
 	np = b2ClipSegmentToLine(clipPoints1, ie, rf.sideNormal1, rf.sideOffset1, rf.i1);
 	
-	if (np < b2_maxManifoldPoints)
+	if (np < MAX_MANIFOLD_POINTS)
 	{
 		return;
 	}
@@ -569,7 +569,7 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
 	// Clip to negative box side 1
 	np = b2ClipSegmentToLine(clipPoints2, clipPoints1, rf.sideNormal2, rf.sideOffset2, rf.i2);
 	
-	if (np < b2_maxManifoldPoints)
+	if (np < MAX_MANIFOLD_POINTS)
 	{
 		return;
 	}
@@ -586,8 +586,8 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
 		manifold->localPoint = polygonB->m_vertices[rf.i1];
 	}
 	
-	int32 pointCount = 0;
-	for (int32 i = 0; i < b2_maxManifoldPoints; ++i)
+	int32_t pointCount = 0;
+	for (int32_t i = 0; i < MAX_MANIFOLD_POINTS; ++i)
 	{
 		float32 separation;
 		
@@ -625,7 +625,7 @@ b2EPAxis b2EPCollider::ComputeEdgeSeparation()
 	axis.index = m_front ? 0 : 1;
 	axis.separation = FLT_MAX;
 	
-	for (int32 i = 0; i < m_polygonB.count; ++i)
+	for (int32_t i = 0; i < m_polygonB.count; ++i)
 	{
 		float32 s = b2Dot(m_normal, m_polygonB.vertices[i] - m_v1);
 		if (s < axis.separation)
@@ -646,7 +646,7 @@ b2EPAxis b2EPCollider::ComputePolygonSeparation()
 
 	b2Vec2 perp(-m_normal.y, m_normal.x);
 
-	for (int32 i = 0; i < m_polygonB.count; ++i)
+	for (int32_t i = 0; i < m_polygonB.count; ++i)
 	{
 		b2Vec2 n = -m_polygonB.normals[i];
 		
@@ -666,14 +666,14 @@ b2EPAxis b2EPCollider::ComputePolygonSeparation()
 		// Adjacency
 		if (b2Dot(n, perp) >= 0.0f)
 		{
-			if (b2Dot(n - m_upperLimit, m_normal) < -b2_angularSlop)
+			if (b2Dot(n - m_upperLimit, m_normal) < -ANGULAR_SLOP)
 			{
 				continue;
 			}
 		}
 		else
 		{
-			if (b2Dot(n - m_lowerLimit, m_normal) < -b2_angularSlop)
+			if (b2Dot(n - m_lowerLimit, m_normal) < -ANGULAR_SLOP)
 			{
 				continue;
 			}

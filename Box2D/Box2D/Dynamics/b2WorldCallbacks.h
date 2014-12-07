@@ -67,9 +67,9 @@ public:
 /// match up one-to-one with the contact points in b2Manifold.
 struct b2ContactImpulse
 {
-	float32 normalImpulses[b2_maxManifoldPoints];
-	float32 tangentImpulses[b2_maxManifoldPoints];
-	int32 count;
+	float32 normalImpulses[MAX_MANIFOLD_POINTS];
+	float32 tangentImpulses[MAX_MANIFOLD_POINTS];
+	int32_t count;
 };
 
 /// Implement this class to get contact information. You can use these results for

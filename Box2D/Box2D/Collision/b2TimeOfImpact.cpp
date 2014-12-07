@@ -28,8 +28,8 @@
 using namespace box2d;
 
 float32 b2_toiTime, b2_toiMaxTime;
-int32 b2_toiCalls, b2_toiIters, b2_toiMaxIters;
-int32 b2_toiRootIters, b2_toiMaxRootIters;
+int32_t b2_toiCalls, b2_toiIters, b2_toiMaxIters;
+int32_t b2_toiRootIters, b2_toiMaxRootIters;
 
 //
 struct b2SeparationFunction
@@ -50,7 +50,7 @@ struct b2SeparationFunction
 	{
 		m_proxyA = proxyA;
 		m_proxyB = proxyB;
-		int32 count = cache->count;
+		int32_t count = cache->count;
 		b2Assert(0 < count && count < 3);
 
 		m_sweepA = sweepA;
@@ -124,7 +124,7 @@ struct b2SeparationFunction
 	}
 
 	//
-	float32 FindMinSeparation(int32* indexA, int32* indexB, float32 t) const
+	float32 FindMinSeparation(int32_t* indexA, int32_t* indexB, float32 t) const
 	{
 		b2Transform xfA, xfB;
 		m_sweepA.GetTransform(&xfA, t);
@@ -193,7 +193,7 @@ struct b2SeparationFunction
 	}
 
 	//
-	float32 Evaluate(int32 indexA, int32 indexB, float32 t) const
+	float32 Evaluate(int32_t indexA, int32_t indexB, float32 t) const
 	{
 		b2Transform xfA, xfB;
 		m_sweepA.GetTransform(&xfA, t);
@@ -276,13 +276,13 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 	float32 tMax = input->tMax;
 
 	float32 totalRadius = proxyA->m_radius + proxyB->m_radius;
-	float32 target = b2Max(b2_linearSlop, totalRadius - 3.0f * b2_linearSlop);
-	float32 tolerance = 0.25f * b2_linearSlop;
+	float32 target = b2Max(LINEAR_SLOP, totalRadius - 3.0f * LINEAR_SLOP);
+	float32 tolerance = 0.25f * LINEAR_SLOP;
 	b2Assert(target > tolerance);
 
 	float32 t1 = 0.0f;
-	const int32 k_maxIterations = 20;	// TODO_ERIN b2Settings
-	int32 iter = 0;
+	const int32_t k_maxIterations = 20;	// TODO_ERIN b2Settings
+	int32_t iter = 0;
 
 	// Prepare input for distance query.
 	b2SimplexCache cache;
@@ -330,14 +330,14 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 #if 0
 		// Dump the curve seen by the root finder
 		{
-			const int32 N = 100;
+			const int32_t N = 100;
 			float32 dx = 1.0f / N;
 			float32 xs[N+1];
 			float32 fs[N+1];
 
 			float32 x = 0.0f;
 
-			for (int32 i = 0; i <= N; ++i)
+			for (int32_t i = 0; i <= N; ++i)
 			{
 				sweepA.GetTransform(&xfA, x);
 				sweepB.GetTransform(&xfB, x);
@@ -357,11 +357,11 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 		// resolving the deepest point. This loop is bounded by the number of vertices.
 		bool done = false;
 		float32 t2 = tMax;
-		int32 pushBackIter = 0;
+		int32_t pushBackIter = 0;
 		for (;;)
 		{
 			// Find the deepest point at t2. Store the witness point indices.
-			int32 indexA, indexB;
+			int32_t indexA, indexB;
 			float32 s2 = fcn.FindMinSeparation(&indexA, &indexB, t2);
 
 			// Is the final configuration separated?
@@ -406,7 +406,7 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 			}
 
 			// Compute 1D root of: f(x) - target = 0
-			int32 rootIterCount = 0;
+			int32_t rootIterCount = 0;
 			float32 a1 = t1, a2 = t2;
 			for (;;)
 			{
@@ -457,7 +457,7 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 
 			++pushBackIter;
 
-			if (pushBackIter == b2_maxPolygonVertices)
+			if (pushBackIter == MAX_POLYGON_VERTICES)
 			{
 				break;
 			}

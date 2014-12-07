@@ -44,7 +44,7 @@ struct b2RopeDef
 	b2Vec2* vertices;
 
 	///
-	int32 count;
+	int32_t count;
 
 	///
 	float32* masses;
@@ -73,10 +73,10 @@ public:
 	void Initialize(const b2RopeDef* def);
 
 	///
-	void Step(float32 timeStep, int32 iterations);
+	void Step(float32 timeStep, int32_t iterations);
 
 	///
-	int32 GetVertexCount() const
+	int32_t GetVertexCount() const
 	{
 		return m_count;
 	}
@@ -98,7 +98,7 @@ private:
 	void SolveC2();
 	void SolveC3();
 
-	int32 m_count;
+	int32_t m_count;
 	b2Vec2* m_ps;
 	b2Vec2* m_p0s;
 	b2Vec2* m_vs;

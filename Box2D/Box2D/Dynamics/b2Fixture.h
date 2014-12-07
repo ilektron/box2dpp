@@ -42,16 +42,16 @@ struct b2Filter
 	}
 
 	/// The collision category bits. Normally you would just set one bit.
-	uint16 categoryBits;
+	uint16_t categoryBits;
 
 	/// The collision mask bits. This states the categories that this
 	/// shape would accept for collision.
-	uint16 maskBits;
+	uint16_t maskBits;
 
 	/// Collision groups allow a certain group of objects to never collide (negative)
 	/// or always collide (positive). Zero means no collision group. Non-zero group
 	/// filtering always wins against the mask bits.
-	int16 groupIndex;
+	int16_t groupIndex;
 };
 
 /// A fixture definition is used to create a fixture. This class defines an
@@ -98,8 +98,8 @@ struct b2FixtureProxy
 {
 	b2AABB aabb;
 	b2Fixture* fixture;
-	int32 childIndex;
-	int32 proxyId;
+	int32_t childIndex;
+	int32_t proxyId;
 };
 
 /// A fixture is used to attach a shape to a body for collision detection. A fixture
@@ -162,7 +162,7 @@ public:
 	/// Cast a ray against this shape.
 	/// @param output the ray-cast results.
 	/// @param input the ray-cast input parameters.
-	bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input, int32 childIndex) const;
+	bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input, int32_t childIndex) const;
 
 	/// Get the mass data for this fixture. The mass data is based on the density and
 	/// the shape. The rotational inertia is about the shape's origin. This operation
@@ -193,10 +193,10 @@ public:
 	/// Get the fixture's AABB. This AABB may be enlarge and/or stale.
 	/// If you need a more accurate AABB, compute it using the shape and
 	/// the body transform.
-	const b2AABB& GetAABB(int32 childIndex) const;
+	const b2AABB& GetAABB(int32_t childIndex) const;
 
 	/// Dump this fixture to the log file.
-	void Dump(int32 bodyIndex);
+	void Dump(int32_t bodyIndex);
 
 protected:
 
@@ -229,7 +229,7 @@ protected:
 	float32 m_restitution;
 
 	b2FixtureProxy* m_proxies;
-	int32 m_proxyCount;
+	int32_t m_proxyCount;
 
 	b2Filter m_filter;
 
@@ -329,7 +329,7 @@ inline bool b2Fixture::TestPoint(const b2Vec2& p) const
 	return m_shape->TestPoint(m_body->GetTransform(), p);
 }
 
-inline bool b2Fixture::RayCast(b2RayCastOutput* output, const b2RayCastInput& input, int32 childIndex) const
+inline bool b2Fixture::RayCast(b2RayCastOutput* output, const b2RayCastInput& input, int32_t childIndex) const
 {
 	return m_shape->RayCast(output, input, m_body->GetTransform(), childIndex);
 }
@@ -339,7 +339,7 @@ inline void b2Fixture::GetMassData(b2MassData* massData) const
 	m_shape->ComputeMass(massData, m_density);
 }
 
-inline const b2AABB& b2Fixture::GetAABB(int32 childIndex) const
+inline const b2AABB& b2Fixture::GetAABB(int32_t childIndex) const
 {
 	b2Assert(0 <= childIndex && childIndex < m_proxyCount);
 	return m_proxies[childIndex].aabb;

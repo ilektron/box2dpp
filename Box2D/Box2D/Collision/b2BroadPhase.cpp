@@ -30,7 +30,7 @@ b2BroadPhase::b2BroadPhase()
 
 	m_moveCapacity = 16;
 	m_moveCount = 0;
-	m_moveBuffer = (int32*)b2Alloc(m_moveCapacity * sizeof(int32));
+	m_moveBuffer = (int32_t*)b2Alloc(m_moveCapacity * sizeof(int32_t));
 }
 
 b2BroadPhase::~b2BroadPhase()
@@ -39,22 +39,22 @@ b2BroadPhase::~b2BroadPhase()
 	b2Free(m_pairBuffer);
 }
 
-int32 b2BroadPhase::CreateProxy(const b2AABB& aabb, void* userData)
+int32_t b2BroadPhase::CreateProxy(const b2AABB& aabb, void* userData)
 {
-	int32 proxyId = m_tree.CreateProxy(aabb, userData);
+	int32_t proxyId = m_tree.CreateProxy(aabb, userData);
 	++m_proxyCount;
 	BufferMove(proxyId);
 	return proxyId;
 }
 
-void b2BroadPhase::DestroyProxy(int32 proxyId)
+void b2BroadPhase::DestroyProxy(int32_t proxyId)
 {
 	UnBufferMove(proxyId);
 	--m_proxyCount;
 	m_tree.DestroyProxy(proxyId);
 }
 
-void b2BroadPhase::MoveProxy(int32 proxyId, const b2AABB& aabb, const b2Vec2& displacement)
+void b2BroadPhase::MoveProxy(int32_t proxyId, const b2AABB& aabb, const b2Vec2& displacement)
 {
 	bool buffer = m_tree.MoveProxy(proxyId, aabb, displacement);
 	if (buffer)
@@ -63,19 +63,19 @@ void b2BroadPhase::MoveProxy(int32 proxyId, const b2AABB& aabb, const b2Vec2& di
 	}
 }
 
-void b2BroadPhase::TouchProxy(int32 proxyId)
+void b2BroadPhase::TouchProxy(int32_t proxyId)
 {
 	BufferMove(proxyId);
 }
 
-void b2BroadPhase::BufferMove(int32 proxyId)
+void b2BroadPhase::BufferMove(int32_t proxyId)
 {
 	if (m_moveCount == m_moveCapacity)
 	{
-		int32* oldBuffer = m_moveBuffer;
+		int32_t* oldBuffer = m_moveBuffer;
 		m_moveCapacity *= 2;
-		m_moveBuffer = (int32*)b2Alloc(m_moveCapacity * sizeof(int32));
-		memcpy(m_moveBuffer, oldBuffer, m_moveCount * sizeof(int32));
+		m_moveBuffer = (int32_t*)b2Alloc(m_moveCapacity * sizeof(int32_t));
+		memcpy(m_moveBuffer, oldBuffer, m_moveCount * sizeof(int32_t));
 		b2Free(oldBuffer);
 	}
 
@@ -83,9 +83,9 @@ void b2BroadPhase::BufferMove(int32 proxyId)
 	++m_moveCount;
 }
 
-void b2BroadPhase::UnBufferMove(int32 proxyId)
+void b2BroadPhase::UnBufferMove(int32_t proxyId)
 {
-	for (int32 i = 0; i < m_moveCount; ++i)
+	for (int32_t i = 0; i < m_moveCount; ++i)
 	{
 		if (m_moveBuffer[i] == proxyId)
 		{
@@ -95,7 +95,7 @@ void b2BroadPhase::UnBufferMove(int32 proxyId)
 }
 
 // This is called from b2DynamicTree::Query when we are gathering pairs.
-bool b2BroadPhase::QueryCallback(int32 proxyId)
+bool b2BroadPhase::QueryCallback(int32_t proxyId)
 {
 	// A proxy cannot form a pair with itself.
 	if (proxyId == m_queryProxyId)

@@ -34,7 +34,7 @@ class b2CircleShape;
 class b2EdgeShape;
 class b2PolygonShape;
 
-const uint8 b2_nullFeature = UCHAR_MAX;
+const uint8_t b2_nullFeature = UCHAR_MAX;
 
 /// The features that intersect to form the contact point
 /// This must be 4 bytes or less.
@@ -46,17 +46,17 @@ struct b2ContactFeature
 		e_face = 1
 	};
 
-	uint8 indexA;		///< Feature index on shapeA
-	uint8 indexB;		///< Feature index on shapeB
-	uint8 typeA;		///< The feature type on shapeA
-	uint8 typeB;		///< The feature type on shapeB
+	uint8_t indexA;		///< Feature index on shapeA
+	uint8_t indexB;		///< Feature index on shapeB
+	uint8_t typeA;		///< The feature type on shapeA
+	uint8_t typeB;		///< The feature type on shapeB
 };
 
 /// Contact ids to facilitate warm starting.
 union b2ContactID
 {
 	b2ContactFeature cf;
-	uint32 key;					///< Used to quickly compare contact ids.
+	uint32_t key;					///< Used to quickly compare contact ids.
 };
 
 /// A manifold point is a contact point belonging to a contact
@@ -102,11 +102,11 @@ struct b2Manifold
 		e_faceB
 	};
 
-	b2ManifoldPoint points[b2_maxManifoldPoints];	///< the points of contact
+	b2ManifoldPoint points[MAX_MANIFOLD_POINTS];	///< the points of contact
 	b2Vec2 localNormal;								///< not use for Type::e_points
 	b2Vec2 localPoint;								///< usage depends on manifold type
 	Type type;
-	int32 pointCount;								///< the number of manifold points
+	int32_t pointCount;								///< the number of manifold points
 };
 
 /// This is used to compute the current state of a contact manifold.
@@ -121,8 +121,8 @@ struct b2WorldManifold
 					const b2Transform& xfB, float32 radiusB);
 
 	b2Vec2 normal;								///< world vector pointing from A to B
-	b2Vec2 points[b2_maxManifoldPoints];		///< world contact point (point of intersection)
-	float32 separations[b2_maxManifoldPoints];	///< a negative value indicates overlap, in meters
+	b2Vec2 points[MAX_MANIFOLD_POINTS];		///< world contact point (point of intersection)
+	float32 separations[MAX_MANIFOLD_POINTS];	///< a negative value indicates overlap, in meters
 };
 
 /// This is used for determining the state of contact points.
@@ -136,7 +136,7 @@ enum b2PointState
 
 /// Compute the point states given two manifolds. The states pertain to the transition from manifold1
 /// to manifold2. So state1 is either persist or remove while state2 is either add or persist.
-void b2GetPointStates(b2PointState state1[b2_maxManifoldPoints], b2PointState state2[b2_maxManifoldPoints],
+void b2GetPointStates(b2PointState state1[MAX_MANIFOLD_POINTS], b2PointState state2[MAX_MANIFOLD_POINTS],
 					  const b2Manifold* manifold1, const b2Manifold* manifold2);
 
 /// Used for computing contact manifolds.
@@ -244,12 +244,12 @@ void b2CollideEdgeAndPolygon(b2Manifold* manifold,
 							   const b2PolygonShape* circleB, const b2Transform& xfB);
 
 /// Clipping for contact manifolds.
-int32 b2ClipSegmentToLine(b2ClipVertex vOut[2], const b2ClipVertex vIn[2],
-							const b2Vec2& normal, float32 offset, int32 vertexIndexA);
+int32_t b2ClipSegmentToLine(b2ClipVertex vOut[2], const b2ClipVertex vIn[2],
+							const b2Vec2& normal, float32 offset, int32_t vertexIndexA);
 
 /// Determine if two generic shapes overlap.
-bool b2TestOverlap(	const b2Shape* shapeA, int32 indexA,
-					const b2Shape* shapeB, int32 indexB,
+bool b2TestOverlap(	const b2Shape* shapeA, int32_t indexA,
+					const b2Shape* shapeB, int32_t indexB,
 					const b2Transform& xfA, const b2Transform& xfB);
 
 // ---------------- Inline Functions ------------------------------------------

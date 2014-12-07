@@ -32,17 +32,17 @@ class b2StackAllocator;
 // struct b2ContactPositionConstraint;
 struct b2ContactPositionConstraint
 {
-	b2Vec2 localPoints[b2_maxManifoldPoints];
+	b2Vec2 localPoints[MAX_MANIFOLD_POINTS];
 	b2Vec2 localNormal;
 	b2Vec2 localPoint;
-	int32 indexA;
-	int32 indexB;
+	int32_t indexA;
+	int32_t indexB;
 	float32 invMassA, invMassB;
 	b2Vec2 localCenterA, localCenterB;
 	float32 invIA, invIB;
 	b2Manifold::Type type;
 	float32 radiusA, radiusB;
-	int32 pointCount;
+	int32_t pointCount;
 };
 
 struct b2VelocityConstraintPoint
@@ -58,26 +58,26 @@ struct b2VelocityConstraintPoint
 
 struct b2ContactVelocityConstraint
 {
-	b2VelocityConstraintPoint points[b2_maxManifoldPoints];
+	b2VelocityConstraintPoint points[MAX_MANIFOLD_POINTS];
 	b2Vec2 normal;
 	b2Mat22 normalMass;
 	b2Mat22 K;
-	int32 indexA;
-	int32 indexB;
+	int32_t indexA;
+	int32_t indexB;
 	float32 invMassA, invMassB;
 	float32 invIA, invIB;
 	float32 friction;
 	float32 restitution;
 	float32 tangentSpeed;
-	int32 pointCount;
-	int32 contactIndex;
+	int32_t pointCount;
+	int32_t contactIndex;
 };
 
 struct b2ContactSolverDef
 {
 	b2TimeStep step;
 	b2Contact** contacts;
-	int32 count;
+	int32_t count;
 	b2Position* positions;
 	b2Velocity* velocities;
 	b2StackAllocator* allocator;
@@ -96,7 +96,7 @@ public:
 	void StoreImpulses();
 
 	bool SolvePositionConstraints();
-	bool SolveTOIPositionConstraints(int32 toiIndexA, int32 toiIndexB);
+	bool SolveTOIPositionConstraints(int32_t toiIndexA, int32_t toiIndexB);
 
 	b2TimeStep m_step;
 	b2Position* m_positions;

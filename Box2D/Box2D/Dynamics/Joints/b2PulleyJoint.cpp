@@ -50,7 +50,7 @@ void b2PulleyJointDef::Initialize(b2Body* bA, b2Body* bB,
 	b2Vec2 dB = anchorB - groundB;
 	lengthB = dB.Length();
 	ratio = r;
-	b2Assert(ratio > b2_epsilon);
+	b2Assert(ratio > EPSILON);
 }
 
 b2PulleyJoint::b2PulleyJoint(const b2PulleyJointDef* def)
@@ -105,7 +105,7 @@ void b2PulleyJoint::InitVelocityConstraints(const b2SolverData& data)
 	float32 lengthA = m_uA.Length();
 	float32 lengthB = m_uB.Length();
 
-	if (lengthA > 10.0f * b2_linearSlop)
+	if (lengthA > 10.0f * LINEAR_SLOP)
 	{
 		m_uA *= 1.0f / lengthA;
 	}
@@ -114,7 +114,7 @@ void b2PulleyJoint::InitVelocityConstraints(const b2SolverData& data)
 		m_uA.SetZero();
 	}
 
-	if (lengthB > 10.0f * b2_linearSlop)
+	if (lengthB > 10.0f * LINEAR_SLOP)
 	{
 		m_uB *= 1.0f / lengthB;
 	}
@@ -208,7 +208,7 @@ bool b2PulleyJoint::SolvePositionConstraints(const b2SolverData& data)
 	float32 lengthA = uA.Length();
 	float32 lengthB = uB.Length();
 
-	if (lengthA > 10.0f * b2_linearSlop)
+	if (lengthA > 10.0f * LINEAR_SLOP)
 	{
 		uA *= 1.0f / lengthA;
 	}
@@ -217,7 +217,7 @@ bool b2PulleyJoint::SolvePositionConstraints(const b2SolverData& data)
 		uA.SetZero();
 	}
 
-	if (lengthB > 10.0f * b2_linearSlop)
+	if (lengthB > 10.0f * LINEAR_SLOP)
 	{
 		uB *= 1.0f / lengthB;
 	}
@@ -258,7 +258,7 @@ bool b2PulleyJoint::SolvePositionConstraints(const b2SolverData& data)
 	data.positions[m_indexB].c = cB;
 	data.positions[m_indexB].a = aB;
 
-	return linearError < b2_linearSlop;
+	return linearError < LINEAR_SLOP;
 }
 
 b2Vec2 b2PulleyJoint::GetAnchorA() const
@@ -326,8 +326,8 @@ float32 b2PulleyJoint::GetCurrentLengthB() const
 
 void b2PulleyJoint::Dump()
 {
-	int32 indexA = m_bodyA->m_islandIndex;
-	int32 indexB = m_bodyB->m_islandIndex;
+	int32_t indexA = m_bodyA->m_islandIndex;
+	int32_t indexB = m_bodyB->m_islandIndex;
 
 	b2Log("  b2PulleyJointDef jd;\n");
 	b2Log("  jd.bodyA = bodies[%d];\n", indexA);

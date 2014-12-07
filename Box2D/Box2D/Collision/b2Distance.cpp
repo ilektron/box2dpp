@@ -25,9 +25,9 @@
 using namespace box2d;
 
 // GJK using Voronoi regions (Christer Ericson) and Barycentric coordinates.
-int32 b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
+int32_t b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
 
-void b2DistanceProxy::Set(const b2Shape* shape, int32 index)
+void b2DistanceProxy::Set(const b2Shape* shape, int32_t index)
 {
 	switch (shape->GetType())
 	{
@@ -91,8 +91,8 @@ struct b2SimplexVertex
 	b2Vec2 wB;		// support point in proxyB
 	b2Vec2 w;		// wB - wA
 	float32 a;		// barycentric coordinate for closest point
-	int32 indexA;	// wA index
-	int32 indexB;	// wB index
+	int32_t indexA;	// wA index
+	int32_t indexB;	// wB index
 };
 
 struct b2Simplex
@@ -106,7 +106,7 @@ struct b2Simplex
 		// Copy data from cache.
 		m_count = cache->count;
 		b2SimplexVertex* vertices = &m_v1;
-		for (int32 i = 0; i < m_count; ++i)
+		for (int32_t i = 0; i < m_count; ++i)
 		{
 			b2SimplexVertex* v = vertices + i;
 			v->indexA = cache->indexA[i];
@@ -125,7 +125,7 @@ struct b2Simplex
 		{
 			float32 metric1 = cache->metric;
 			float32 metric2 = GetMetric();
-			if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < b2_epsilon)
+			if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < EPSILON)
 			{
 				// Reset the simplex.
 				m_count = 0;
@@ -151,12 +151,12 @@ struct b2Simplex
 	void WriteCache(b2SimplexCache* cache) const
 	{
 		cache->metric = GetMetric();
-		cache->count = uint16(m_count);
+		cache->count = uint16_t(m_count);
 		const b2SimplexVertex* vertices = &m_v1;
-		for (int32 i = 0; i < m_count; ++i)
+		for (int32_t i = 0; i < m_count; ++i)
 		{
-			cache->indexA[i] = uint8(vertices[i].indexA);
-			cache->indexB[i] = uint8(vertices[i].indexB);
+			cache->indexA[i] = uint8_t(vertices[i].indexA);
+			cache->indexB[i] = uint8_t(vertices[i].indexB);
 		}
 	}
 
@@ -268,7 +268,7 @@ struct b2Simplex
 	void Solve3();
 
 	b2SimplexVertex m_v1, m_v2, m_v3;
-	int32 m_count;
+	int32_t m_count;
 };
 
 
@@ -461,23 +461,23 @@ void box2d::b2Distance(b2DistanceOutput* output,
 
 	// Get simplex vertices as an array.
 	b2SimplexVertex* vertices = &simplex.m_v1;
-	const int32 k_maxIters = 20;
+	const int32_t k_maxIters = 20;
 
 	// These store the vertices of the last simplex so that we
 	// can check for duplicates and prevent cycling.
-	int32 saveA[3], saveB[3];
-	int32 saveCount = 0;
+	int32_t saveA[3], saveB[3];
+	int32_t saveCount = 0;
 
-	float32 distanceSqr1 = b2_maxFloat;
+	float32 distanceSqr1 = MAX_FLOAT;
 	float32 distanceSqr2 = distanceSqr1;
 
 	// Main iteration loop.
-	int32 iter = 0;
+	int32_t iter = 0;
 	while (iter < k_maxIters)
 	{
 		// Copy simplex so we can identify duplicates.
 		saveCount = simplex.m_count;
-		for (int32 i = 0; i < saveCount; ++i)
+		for (int32_t i = 0; i < saveCount; ++i)
 		{
 			saveA[i] = vertices[i].indexA;
 			saveB[i] = vertices[i].indexB;
@@ -521,7 +521,7 @@ void box2d::b2Distance(b2DistanceOutput* output,
 		b2Vec2 d = simplex.GetSearchDirection();
 
 		// Ensure the search direction is numerically fit.
-		if (d.LengthSquared() < b2_epsilon * b2_epsilon)
+		if (d.LengthSquared() < EPSILON * EPSILON)
 		{
 			// The origin is probably contained by a line segment
 			// or triangle. Thus the shapes are overlapped.
@@ -547,7 +547,7 @@ void box2d::b2Distance(b2DistanceOutput* output,
 
 		// Check for duplicate support points. This is the main termination criteria.
 		bool duplicate = false;
-		for (int32 i = 0; i < saveCount; ++i)
+		for (int32_t i = 0; i < saveCount; ++i)
 		{
 			if (vertex->indexA == saveA[i] && vertex->indexB == saveB[i])
 			{
@@ -582,7 +582,7 @@ void box2d::b2Distance(b2DistanceOutput* output,
 		float32 rA = proxyA->m_radius;
 		float32 rB = proxyB->m_radius;
 
-		if (output->distance > rA + rB && output->distance > b2_epsilon)
+		if (output->distance > rA + rB && output->distance > EPSILON)
 		{
 			// Shapes are still no overlapped.
 			// Move the witness points to the outer surface.

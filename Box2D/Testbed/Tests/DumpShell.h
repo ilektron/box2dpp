@@ -63,9 +63,9 @@ public:
 				fd.restitution = 0.000000000000000e+00f;
 				fd.density = 1.000000000000000e+00f;
 				fd.isSensor = bool(0);
-				fd.filter.categoryBits = uint16(1);
-				fd.filter.maskBits = uint16(65535);
-				fd.filter.groupIndex = int16(0);
+				fd.filter.categoryBits = uint16_t(1);
+				fd.filter.maskBits = uint16_t(65535);
+				fd.filter.groupIndex = int16_t(0);
 				b2PolygonShape shape;
 				b2Vec2 vs[8];
 				vs[0].Set(7.733039855957031e-01f, -1.497260034084320e-01f);
@@ -102,9 +102,9 @@ public:
 				fd.restitution = 0.000000000000000e+00f;
 				fd.density = 5.000000000000000e+00f;
 				fd.isSensor = bool(0);
-				fd.filter.categoryBits = uint16(1);
-				fd.filter.maskBits = uint16(65535);
-				fd.filter.groupIndex = int16(0);
+				fd.filter.categoryBits = uint16_t(1);
+				fd.filter.maskBits = uint16_t(65535);
+				fd.filter.groupIndex = int16_t(0);
 				b2PolygonShape shape;
 				b2Vec2 vs[8];
 				vs[0].Set(3.473900079727173e+00f, -2.009889930486679e-01f);
@@ -143,9 +143,9 @@ public:
 				fd.restitution = 0.000000000000000e+00f;
 				fd.density = 1.000000000000000e+01f;
 				fd.isSensor = bool(0);
-				fd.filter.categoryBits = uint16(1);
-				fd.filter.maskBits = uint16(65535);
-				fd.filter.groupIndex = int16(-3);
+				fd.filter.categoryBits = uint16_t(1);
+				fd.filter.maskBits = uint16_t(65535);
+				fd.filter.groupIndex = int16_t(-3);
 				b2PolygonShape shape;
 				b2Vec2 vs[8];
 				vs[0].Set(1.639146506786346e-01f, 4.428443685173988e-02f);

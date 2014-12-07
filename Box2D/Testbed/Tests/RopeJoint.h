@@ -56,12 +56,12 @@ public:
 			b2RevoluteJointDef jd;
 			jd.collideConnected = false;
 
-			const int32 N = 10;
+			const int32_t N = 10;
 			const float32 y = 15.0f;
 			m_ropeDef.localAnchorA.Set(0.0f, y);
 
 			b2Body* prevBody = ground;
-			for (int32 i = 0; i < N; ++i)
+			for (int32_t i = 0; i < N; ++i)
 			{
 				b2BodyDef bd;
 				bd.type = b2_dynamicBody;

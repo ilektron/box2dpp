@@ -51,7 +51,7 @@ public:
 		}
 
 		// Boxes
-		for (int32 i = 0; i < 5; ++i)
+		for (int32_t i = 0; i < 5; ++i)
 		{
 			b2BodyDef bd;
 			bd.type = b2_dynamicBody;

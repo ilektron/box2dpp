@@ -54,7 +54,7 @@ void b2Rope::Initialize(const b2RopeDef* def)
 	m_vs = (b2Vec2*)b2Alloc(m_count * sizeof(b2Vec2));
 	m_ims = (float32*)b2Alloc(m_count * sizeof(float32));
 
-	for (int32 i = 0; i < m_count; ++i)
+	for (int32_t i = 0; i < m_count; ++i)
 	{
 		m_ps[i] = def->vertices[i];
 		m_p0s[i] = def->vertices[i];
@@ -71,19 +71,19 @@ void b2Rope::Initialize(const b2RopeDef* def)
 		}
 	}
 
-	int32 count2 = m_count - 1;
-	int32 count3 = m_count - 2;
+	int32_t count2 = m_count - 1;
+	int32_t count3 = m_count - 2;
 	m_Ls = (float32*)b2Alloc(count2 * sizeof(float32));
 	m_as = (float32*)b2Alloc(count3 * sizeof(float32));
 
-	for (int32 i = 0; i < count2; ++i)
+	for (int32_t i = 0; i < count2; ++i)
 	{
 		b2Vec2 p1 = m_ps[i];
 		b2Vec2 p2 = m_ps[i+1];
 		m_Ls[i] = b2Distance(p1, p2);
 	}
 
-	for (int32 i = 0; i < count3; ++i)
+	for (int32_t i = 0; i < count3; ++i)
 	{
 		b2Vec2 p1 = m_ps[i];
 		b2Vec2 p2 = m_ps[i + 1];
@@ -104,7 +104,7 @@ void b2Rope::Initialize(const b2RopeDef* def)
 	m_k3 = def->k3;
 }
 
-void b2Rope::Step(float32 h, int32 iterations)
+void b2Rope::Step(float32 h, int32_t iterations)
 {
 	if (h == 0.0)
 	{
@@ -113,7 +113,7 @@ void b2Rope::Step(float32 h, int32 iterations)
 
 	float32 d = expf(- h * m_damping);
 
-	for (int32 i = 0; i < m_count; ++i)
+	for (int32_t i = 0; i < m_count; ++i)
 	{
 		m_p0s[i] = m_ps[i];
 		if (m_ims[i] > 0.0f)
@@ -125,7 +125,7 @@ void b2Rope::Step(float32 h, int32 iterations)
 
 	}
 
-	for (int32 i = 0; i < iterations; ++i)
+	for (int32_t i = 0; i < iterations; ++i)
 	{
 		SolveC2();
 		SolveC3();
@@ -133,7 +133,7 @@ void b2Rope::Step(float32 h, int32 iterations)
 	}
 
 	float32 inv_h = 1.0f / h;
-	for (int32 i = 0; i < m_count; ++i)
+	for (int32_t i = 0; i < m_count; ++i)
 	{
 		m_vs[i] = inv_h * (m_ps[i] - m_p0s[i]);
 	}
@@ -141,9 +141,9 @@ void b2Rope::Step(float32 h, int32 iterations)
 
 void b2Rope::SolveC2()
 {
-	int32 count2 = m_count - 1;
+	int32_t count2 = m_count - 1;
 
-	for (int32 i = 0; i < count2; ++i)
+	for (int32_t i = 0; i < count2; ++i)
 	{
 		b2Vec2 p1 = m_ps[i];
 		b2Vec2 p2 = m_ps[i + 1];
@@ -172,8 +172,8 @@ void b2Rope::SolveC2()
 
 void b2Rope::SetAngle(float32 angle)
 {
-	int32 count3 = m_count - 2;
-	for (int32 i = 0; i < count3; ++i)
+	int32_t count3 = m_count - 2;
+	for (int32_t i = 0; i < count3; ++i)
 	{
 		m_as[i] = angle;
 	}
@@ -181,9 +181,9 @@ void b2Rope::SetAngle(float32 angle)
 
 void b2Rope::SolveC3()
 {
-	int32 count3 = m_count - 2;
+	int32_t count3 = m_count - 2;
 
-	for (int32 i = 0; i < count3; ++i)
+	for (int32_t i = 0; i < count3; ++i)
 	{
 		b2Vec2 p1 = m_ps[i];
 		b2Vec2 p2 = m_ps[i + 1];
@@ -226,15 +226,15 @@ void b2Rope::SolveC3()
 
 		float32 C = angle - m_as[i];
 
-		while (C > b2_pi)
+		while (C > PI)
 		{
-			angle -= 2 * b2_pi;
+			angle -= 2 * PI;
 			C = angle - m_as[i];
 		}
 
-		while (C < -b2_pi)
+		while (C < -PI)
 		{
-			angle += 2.0f * b2_pi;
+			angle += 2.0f * PI;
 			C = angle - m_as[i];
 		}
 
@@ -254,7 +254,7 @@ void b2Rope::Draw(b2Draw* draw) const
 {
 	b2Color c(0.4f, 0.5f, 0.7f);
 
-	for (int32 i = 0; i < m_count - 1; ++i)
+	for (int32_t i = 0; i < m_count - 1; ++i)
 	{
 		draw->DrawSegment(m_ps[i], m_ps[i+1], c);
 	}

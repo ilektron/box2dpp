@@ -26,7 +26,7 @@ namespace box2d
 
 /// A convex polygon. It is assumed that the interior of the polygon is to
 /// the left of each edge.
-/// Polygons have a maximum number of vertices equal to b2_maxPolygonVertices.
+/// Polygons have a maximum number of vertices equal to MAX_POLYGON_VERTICES.
 /// In most cases you should not need many vertices for a convex polygon.
 class b2PolygonShape : public b2Shape
 {
@@ -37,14 +37,14 @@ public:
 	b2Shape* Clone(b2BlockAllocator* allocator) const;
 
 	/// @see b2Shape::GetChildCount
-	int32 GetChildCount() const;
+	int32_t GetChildCount() const;
 
 	/// Create a convex hull from the given array of local points.
-	/// The count must be in the range [3, b2_maxPolygonVertices].
+	/// The count must be in the range [3, MAX_POLYGON_VERTICES].
 	/// @warning the points may be re-ordered, even if they form a convex polygon
 	/// @warning collinear points are handled but not removed. Collinear points
 	/// may lead to poor stacking behavior.
-	void Set(const b2Vec2* points, int32 count);
+	void Set(const b2Vec2* points, int32_t count);
 
 	/// Build vertices to represent an axis-aligned box centered on the local origin.
 	/// @param hx the half-width.
@@ -63,39 +63,39 @@ public:
 
 	/// Implement b2Shape.
 	bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input,
-					const b2Transform& transform, int32 childIndex) const;
+					const b2Transform& transform, int32_t childIndex) const;
 
 	/// @see b2Shape::ComputeAABB
-	void ComputeAABB(b2AABB* aabb, const b2Transform& transform, int32 childIndex) const;
+	void ComputeAABB(b2AABB* aabb, const b2Transform& transform, int32_t childIndex) const;
 
 	/// @see b2Shape::ComputeMass
 	void ComputeMass(b2MassData* massData, float32 density) const;
 
 	/// Get the vertex count.
-	int32 GetVertexCount() const { return m_count; }
+	int32_t GetVertexCount() const { return m_count; }
 
 	/// Get a vertex by index.
-	const b2Vec2& GetVertex(int32 index) const;
+	const b2Vec2& GetVertex(int32_t index) const;
 
 	/// Validate convexity. This is a very time consuming operation.
 	/// @returns true if valid
 	bool Validate() const;
 
 	b2Vec2 m_centroid;
-	b2Vec2 m_vertices[b2_maxPolygonVertices];
-	b2Vec2 m_normals[b2_maxPolygonVertices];
-	int32 m_count;
+	b2Vec2 m_vertices[MAX_POLYGON_VERTICES];
+	b2Vec2 m_normals[MAX_POLYGON_VERTICES];
+	int32_t m_count;
 };
 
 inline b2PolygonShape::b2PolygonShape()
 {
 	m_type = e_polygon;
-	m_radius = b2_polygonRadius;
+	m_radius = POLYGON_RADIUS;
 	m_count = 0;
 	m_centroid.SetZero();
 }
 
-inline const b2Vec2& b2PolygonShape::GetVertex(int32 index) const
+inline const b2Vec2& b2PolygonShape::GetVertex(int32_t index) const
 {
 	b2Assert(0 <= index && index < m_count);
 	return m_vertices[index];

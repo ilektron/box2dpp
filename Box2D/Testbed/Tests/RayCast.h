@@ -38,7 +38,7 @@ public:
 		void* userData = body->GetUserData();
 		if (userData)
 		{
-			int32 index = *(int32*)userData;
+			int32_t index = *(int32_t*)userData;
 			if (index == 0)
 			{
 				// By returning -1, we instruct the calling code to ignore this fixture and
@@ -78,7 +78,7 @@ public:
 		void* userData = body->GetUserData();
 		if (userData)
 		{
-			int32 index = *(int32*)userData;
+			int32_t index = *(int32_t*)userData;
 			if (index == 0)
 			{
 				// By returning -1, we instruct the calling code to ignore this fixture
@@ -123,7 +123,7 @@ public:
 		void* userData = body->GetUserData();
 		if (userData)
 		{
-			int32 index = *(int32*)userData;
+			int32_t index = *(int32_t*)userData;
 			if (index == 0)
 			{
 				// By returning -1, we instruct the calling code to ignore this fixture
@@ -151,7 +151,7 @@ public:
 
 	b2Vec2 m_points[e_maxCount];
 	b2Vec2 m_normals[e_maxCount];
-	int32 m_count;
+	int32_t m_count;
 };
 
 
@@ -237,7 +237,7 @@ public:
 		m_mode = e_closest;
 	}
 
-	void Create(int32 index)
+	void Create(int32_t index)
 	{
 		if (m_bodies[m_bodyIndex] != NULL)
 		{
@@ -250,7 +250,7 @@ public:
 		float32 x = RandomFloat(-10.0f, 10.0f);
 		float32 y = RandomFloat(0.0f, 20.0f);
 		bd.position.Set(x, y);
-		bd.angle = RandomFloat(-b2_pi, b2_pi);
+		bd.angle = RandomFloat(-PI, PI);
 
 		m_userData[m_bodyIndex] = index;
 		bd.userData = m_userData + m_bodyIndex;
@@ -291,7 +291,7 @@ public:
 
 	void DestroyBody()
 	{
-		for (int32 i = 0; i < e_maxBodies; ++i)
+		for (int32_t i = 0; i < e_maxBodies; ++i)
 		{
 			if (m_bodies[i] != NULL)
 			{
@@ -404,7 +404,7 @@ public:
 			m_world->RayCast(&callback, point1, point2);
 			g_debugDraw.DrawSegment(point1, point2, b2Color(0.8f, 0.8f, 0.8f));
 
-			for (int32 i = 0; i < callback.m_count; ++i)
+			for (int32_t i = 0; i < callback.m_count; ++i)
 			{
 				b2Vec2 p = callback.m_points[i];
 				b2Vec2 n = callback.m_normals[i];
@@ -417,7 +417,7 @@ public:
 
 		if (advanceRay)
 		{
-			m_angle += 0.25f * b2_pi / 180.0f;
+			m_angle += 0.25f * PI / 180.0f;
 		}
 
 #if 0
@@ -450,7 +450,7 @@ public:
 
 			b2Color color(1.0f, 1.0f, 1.0f);
 			b2Vec2 vs[4];
-			for (int32 i = 0; i < 4; ++i)
+			for (int32_t i = 0; i < 4; ++i)
 			{
 				vs[i] = b2Mul(xf, shape.m_vertices[i]);
 			}
@@ -466,9 +466,9 @@ public:
 		return new RayCast;
 	}
 
-	int32 m_bodyIndex;
+	int32_t m_bodyIndex;
 	b2Body* m_bodies[e_maxBodies];
-	int32 m_userData[e_maxBodies];
+	int32_t m_userData[e_maxBodies];
 	b2PolygonShape m_polygons[4];
 	b2CircleShape m_circle;
 	b2EdgeShape m_edge;

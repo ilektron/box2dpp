@@ -57,11 +57,11 @@ public:
 			body->SetLinearVelocity(b2Vec2(-8.0f * w, 0.0f));
 
 			rjd.Initialize(ground, body, b2Vec2(-10.0f, 12.0f));
-			rjd.motorSpeed = 1.0f * b2_pi;
+			rjd.motorSpeed = 1.0f * PI;
 			rjd.maxMotorTorque = 10000.0f;
 			rjd.enableMotor = false;
-			rjd.lowerAngle = -0.25f * b2_pi;
-			rjd.upperAngle = 0.5f * b2_pi;
+			rjd.lowerAngle = -0.25f * PI;
+			rjd.upperAngle = 0.5f * PI;
 			rjd.enableLimit = true;
 			rjd.collideConnected = true;
 
@@ -96,8 +96,8 @@ public:
 
 			b2RevoluteJointDef rjd;
 			rjd.Initialize(ground, polygon_body, b2Vec2(20.0f, 10.0f));
-			rjd.lowerAngle = -0.25f * b2_pi;
-			rjd.upperAngle = 0.0f * b2_pi;
+			rjd.lowerAngle = -0.25f * PI;
+			rjd.upperAngle = 0.0f * PI;
 			rjd.enableLimit = true;
 			m_world->CreateJoint(&rjd);
 		}

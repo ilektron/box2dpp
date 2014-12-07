@@ -140,7 +140,7 @@ public:
 		}
 
 		// Balls
-		for (int32 i = 0; i < 40; ++i)
+		for (int32_t i = 0; i < 40; ++i)
 		{
 			b2CircleShape shape;
 			shape.m_radius = 0.25f;
@@ -201,11 +201,11 @@ public:
 		CreateLeg(-1.0f, wheelAnchor);
 		CreateLeg(1.0f, wheelAnchor);
 
-		m_wheel->SetTransform(m_wheel->GetPosition(), 120.0f * b2_pi / 180.0f);
+		m_wheel->SetTransform(m_wheel->GetPosition(), 120.0f * PI / 180.0f);
 		CreateLeg(-1.0f, wheelAnchor);
 		CreateLeg(1.0f, wheelAnchor);
 
-		m_wheel->SetTransform(m_wheel->GetPosition(), -120.0f * b2_pi / 180.0f);
+		m_wheel->SetTransform(m_wheel->GetPosition(), -120.0f * PI / 180.0f);
 		CreateLeg(-1.0f, wheelAnchor);
 		CreateLeg(1.0f, wheelAnchor);
 	}

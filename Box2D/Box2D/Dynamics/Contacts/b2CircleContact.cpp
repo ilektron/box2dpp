@@ -27,7 +27,7 @@
 
 using namespace box2d;
 
-b2Contact* b2CircleContact::Create(b2Fixture* fixtureA, int32, b2Fixture* fixtureB, int32, b2BlockAllocator* allocator)
+b2Contact* b2CircleContact::Create(b2Fixture* fixtureA, int32_t, b2Fixture* fixtureB, int32_t, b2BlockAllocator* allocator)
 {
 	void* mem = allocator->Allocate(sizeof(b2CircleContact));
 	return new (mem) b2CircleContact(fixtureA, fixtureB);

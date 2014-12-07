@@ -24,7 +24,7 @@ class ConvexHull : public Test
 public:
 	enum
 	{
-		e_count = b2_maxPolygonVertices
+		e_count = MAX_POLYGON_VERTICES
 	};
 
 	ConvexHull()
@@ -38,7 +38,7 @@ public:
 		b2Vec2 lowerBound(-8.0f, -8.0f);
 		b2Vec2 upperBound(8.0f, 8.0f);
 
-		for (int32 i = 0; i < e_count; ++i)
+		for (int32_t i = 0; i < e_count; ++i)
 		{
 			float32 x = 10.0f * RandomFloat();
 			float32 y = 10.0f * RandomFloat();
@@ -84,7 +84,7 @@ public:
 
 		g_debugDraw.DrawPolygon(shape.m_vertices, shape.m_count, b2Color(0.9f, 0.9f, 0.9f));
 
-		for (int32 i = 0; i < m_count; ++i)
+		for (int32_t i = 0; i < m_count; ++i)
 		{
 			g_debugDraw.DrawPoint(m_points[i], 3.0f, b2Color(0.3f, 0.9f, 0.3f));
 			g_debugDraw.DrawString(m_points[i] + b2Vec2(0.05f, 0.05f), "%d", i);
@@ -101,8 +101,8 @@ public:
 		}
 	}
 
-	b2Vec2 m_points[b2_maxPolygonVertices];
-	int32 m_count;
+	b2Vec2 m_points[MAX_POLYGON_VERTICES];
+	int32_t m_count;
 	bool m_auto;
 };
 

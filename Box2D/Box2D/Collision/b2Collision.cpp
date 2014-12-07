@@ -37,7 +37,7 @@ void b2WorldManifold::Initialize(const b2Manifold* manifold,
 			normal.Set(1.0f, 0.0f);
 			b2Vec2 pointA = b2Mul(xfA, manifold->localPoint);
 			b2Vec2 pointB = b2Mul(xfB, manifold->points[0].localPoint);
-			if (b2DistanceSquared(pointA, pointB) > b2_epsilon * b2_epsilon)
+			if (b2DistanceSquared(pointA, pointB) > EPSILON * EPSILON)
 			{
 				normal = pointB - pointA;
 				normal.Normalize();
@@ -55,7 +55,7 @@ void b2WorldManifold::Initialize(const b2Manifold* manifold,
 			normal = b2Mul(xfA.q, manifold->localNormal);
 			b2Vec2 planePoint = b2Mul(xfA, manifold->localPoint);
 			
-			for (int32 i = 0; i < manifold->pointCount; ++i)
+			for (int32_t i = 0; i < manifold->pointCount; ++i)
 			{
 				b2Vec2 clipPoint = b2Mul(xfB, manifold->points[i].localPoint);
 				b2Vec2 cA = clipPoint + (radiusA - b2Dot(clipPoint - planePoint, normal)) * normal;
@@ -71,7 +71,7 @@ void b2WorldManifold::Initialize(const b2Manifold* manifold,
 			normal = b2Mul(xfB.q, manifold->localNormal);
 			b2Vec2 planePoint = b2Mul(xfB, manifold->localPoint);
 
-			for (int32 i = 0; i < manifold->pointCount; ++i)
+			for (int32_t i = 0; i < manifold->pointCount; ++i)
 			{
 				b2Vec2 clipPoint = b2Mul(xfA, manifold->points[i].localPoint);
 				b2Vec2 cB = clipPoint + (radiusB - b2Dot(clipPoint - planePoint, normal)) * normal;
@@ -87,23 +87,23 @@ void b2WorldManifold::Initialize(const b2Manifold* manifold,
 	}
 }
 
-void box2d::b2GetPointStates(b2PointState state1[b2_maxManifoldPoints], b2PointState state2[b2_maxManifoldPoints],
+void box2d::b2GetPointStates(b2PointState state1[MAX_MANIFOLD_POINTS], b2PointState state2[MAX_MANIFOLD_POINTS],
 					  const b2Manifold* manifold1, const b2Manifold* manifold2)
 {
-	for (int32 i = 0; i < b2_maxManifoldPoints; ++i)
+	for (int32_t i = 0; i < MAX_MANIFOLD_POINTS; ++i)
 	{
 		state1[i] = b2_nullState;
 		state2[i] = b2_nullState;
 	}
 
 	// Detect persists and removes.
-	for (int32 i = 0; i < manifold1->pointCount; ++i)
+	for (int32_t i = 0; i < manifold1->pointCount; ++i)
 	{
 		b2ContactID id = manifold1->points[i].id;
 
 		state1[i] = b2_removeState;
 
-		for (int32 j = 0; j < manifold2->pointCount; ++j)
+		for (int32_t j = 0; j < manifold2->pointCount; ++j)
 		{
 			if (manifold2->points[j].id.key == id.key)
 			{
@@ -114,13 +114,13 @@ void box2d::b2GetPointStates(b2PointState state1[b2_maxManifoldPoints], b2PointS
 	}
 
 	// Detect persists and adds.
-	for (int32 i = 0; i < manifold2->pointCount; ++i)
+	for (int32_t i = 0; i < manifold2->pointCount; ++i)
 	{
 		b2ContactID id = manifold2->points[i].id;
 
 		state2[i] = b2_addState;
 
-		for (int32 j = 0; j < manifold1->pointCount; ++j)
+		for (int32_t j = 0; j < manifold1->pointCount; ++j)
 		{
 			if (manifold1->points[j].id.key == id.key)
 			{
@@ -134,8 +134,8 @@ void box2d::b2GetPointStates(b2PointState state1[b2_maxManifoldPoints], b2PointS
 // From Real-time Collision Detection, p179.
 bool b2AABB::RayCast(b2RayCastOutput* output, const b2RayCastInput& input) const
 {
-	float32 tmin = -b2_maxFloat;
-	float32 tmax = b2_maxFloat;
+	float32 tmin = -MAX_FLOAT;
+	float32 tmax = MAX_FLOAT;
 
 	b2Vec2 p = input.p1;
 	b2Vec2 d = input.p2 - input.p1;
@@ -143,9 +143,9 @@ bool b2AABB::RayCast(b2RayCastOutput* output, const b2RayCastInput& input) const
 
 	b2Vec2 normal;
 
-	for (int32 i = 0; i < 2; ++i)
+	for (int32_t i = 0; i < 2; ++i)
 	{
-		if (absD(i) < b2_epsilon)
+		if (absD(i) < EPSILON)
 		{
 			// Parallel.
 			if (p(i) < lowerBound(i) || upperBound(i) < p(i))
@@ -200,11 +200,11 @@ bool b2AABB::RayCast(b2RayCastOutput* output, const b2RayCastInput& input) const
 }
 
 // Sutherland-Hodgman clipping.
-int32 box2d::b2ClipSegmentToLine(b2ClipVertex vOut[2], const b2ClipVertex vIn[2],
-						const b2Vec2& normal, float32 offset, int32 vertexIndexA)
+int32_t box2d::b2ClipSegmentToLine(b2ClipVertex vOut[2], const b2ClipVertex vIn[2],
+						const b2Vec2& normal, float32 offset, int32_t vertexIndexA)
 {
 	// Start with no output points
-	int32 numOut = 0;
+	int32_t numOut = 0;
 
 	// Calculate the distance of end points to the line
 	float32 distance0 = b2Dot(normal, vIn[0].v) - offset;
@@ -222,7 +222,7 @@ int32 box2d::b2ClipSegmentToLine(b2ClipVertex vOut[2], const b2ClipVertex vIn[2]
 		vOut[numOut].v = vIn[0].v + interp * (vIn[1].v - vIn[0].v);
 
 		// VertexA is hitting edgeB.
-		vOut[numOut].id.cf.indexA = static_cast<uint8>(vertexIndexA);
+		vOut[numOut].id.cf.indexA = static_cast<uint8_t>(vertexIndexA);
 		vOut[numOut].id.cf.indexB = vIn[0].id.cf.indexB;
 		vOut[numOut].id.cf.typeA = b2ContactFeature::e_vertex;
 		vOut[numOut].id.cf.typeB = b2ContactFeature::e_face;
@@ -232,8 +232,8 @@ int32 box2d::b2ClipSegmentToLine(b2ClipVertex vOut[2], const b2ClipVertex vIn[2]
 	return numOut;
 }
 
-bool box2d::b2TestOverlap(	const b2Shape* shapeA, int32 indexA,
-					const b2Shape* shapeB, int32 indexB,
+bool box2d::b2TestOverlap(	const b2Shape* shapeA, int32_t indexA,
+					const b2Shape* shapeB, int32_t indexB,
 					const b2Transform& xfA, const b2Transform& xfB)
 {
 	b2DistanceInput input;
@@ -250,5 +250,5 @@ bool box2d::b2TestOverlap(	const b2Shape* shapeA, int32 indexA,
 
 	b2Distance(&output, &cache, &input);
 
-	return output.distance < 10.0f * b2_epsilon;
+	return output.distance < 10.0f * EPSILON;
 }

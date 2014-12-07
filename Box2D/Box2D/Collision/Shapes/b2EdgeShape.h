@@ -40,17 +40,17 @@ public:
 	b2Shape* Clone(b2BlockAllocator* allocator) const;
 
 	/// @see b2Shape::GetChildCount
-	int32 GetChildCount() const;
+	int32_t GetChildCount() const;
 
 	/// @see b2Shape::TestPoint
 	bool TestPoint(const b2Transform& transform, const b2Vec2& p) const;
 
 	/// Implement b2Shape.
 	bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input,
-				const b2Transform& transform, int32 childIndex) const;
+				const b2Transform& transform, int32_t childIndex) const;
 
 	/// @see b2Shape::ComputeAABB
-	void ComputeAABB(b2AABB* aabb, const b2Transform& transform, int32 childIndex) const;
+	void ComputeAABB(b2AABB* aabb, const b2Transform& transform, int32_t childIndex) const;
 
 	/// @see b2Shape::ComputeMass
 	void ComputeMass(b2MassData* massData, float32 density) const;
@@ -66,7 +66,7 @@ public:
 inline b2EdgeShape::b2EdgeShape()
 {
 	m_type = e_edge;
-	m_radius = b2_polygonRadius;
+	m_radius = POLYGON_RADIUS;
 	m_vertex0.x = 0.0f;
 	m_vertex0.y = 0.0f;
 	m_vertex3.x = 0.0f;

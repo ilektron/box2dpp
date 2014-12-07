@@ -238,8 +238,8 @@ float32 b2FrictionJoint::GetMaxTorque() const
 
 void b2FrictionJoint::Dump()
 {
-	int32 indexA = m_bodyA->m_islandIndex;
-	int32 indexB = m_bodyB->m_islandIndex;
+	int32_t indexA = m_bodyA->m_islandIndex;
+	int32_t indexB = m_bodyB->m_islandIndex;
 
 	b2Log("  b2FrictionJointDef jd;\n");
 	b2Log("  jd.bodyA = bodies[%d];\n", indexA);

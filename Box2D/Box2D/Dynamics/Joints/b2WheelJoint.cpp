@@ -140,7 +140,7 @@ void b2WheelJoint::InitVelocityConstraints(const b2SolverData& data)
 			float32 C = b2Dot(d, m_ax);
 
 			// Frequency
-			float32 omega = 2.0f * b2_pi * m_frequencyHz;
+			float32 omega = 2.0f * PI * m_frequencyHz;
 
 			// Damping coefficient
 			float32 d = 2.0f * m_springMass * m_dampingRatio * omega;
@@ -325,7 +325,7 @@ bool b2WheelJoint::SolvePositionConstraints(const b2SolverData& data)
 	data.positions[m_indexB].c = cB;
 	data.positions[m_indexB].a = aB;
 
-	return b2Abs(C) <= b2_linearSlop;
+	return b2Abs(C) <= LINEAR_SLOP;
 }
 
 b2Vec2 b2WheelJoint::GetAnchorA() const
@@ -402,8 +402,8 @@ float32 b2WheelJoint::GetMotorTorque(float32 inv_dt) const
 
 void b2WheelJoint::Dump()
 {
-	int32 indexA = m_bodyA->m_islandIndex;
-	int32 indexB = m_bodyB->m_islandIndex;
+	int32_t indexA = m_bodyA->m_islandIndex;
+	int32_t indexB = m_bodyB->m_islandIndex;
 
 	b2Log("  b2WheelJointDef jd;\n");
 	b2Log("  jd.bodyA = bodies[%d];\n", indexA);

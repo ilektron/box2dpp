@@ -151,7 +151,7 @@ public:
 		switch (key)
 		{
 		case GLFW_KEY_B:
-			for (int32 i = 0; i < 4; ++i)
+			for (int32_t i = 0; i < 4; ++i)
 			{
 				if (m_bodies[i])
 				{
@@ -163,7 +163,7 @@ public:
 			break;
 
 		case GLFW_KEY_J:
-			for (int32 i = 0; i < 8; ++i)
+			for (int32_t i = 0; i < 8; ++i)
 			{
 				if (m_joints[i])
 				{
@@ -187,7 +187,7 @@ public:
 
 	void JointDestroyed(b2Joint* joint)
 	{
-		for (int32 i = 0; i < 8; ++i)
+		for (int32_t i = 0; i < 8; ++i)
 		{
 			if (m_joints[i] == joint)
 			{

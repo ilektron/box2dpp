@@ -37,7 +37,7 @@ struct b2Profile;
 class b2Island
 {
 public:
-	b2Island(int32 bodyCapacity, int32 contactCapacity, int32 jointCapacity,
+	b2Island(int32_t bodyCapacity, int32_t contactCapacity, int32_t jointCapacity,
 			b2StackAllocator* allocator, b2ContactListener* listener);
 	~b2Island();
 
@@ -50,7 +50,7 @@ public:
 
 	void Solve(b2Profile* profile, const b2TimeStep& step, const b2Vec2& gravity, bool allowSleep);
 
-	void SolveTOI(const b2TimeStep& subStep, int32 toiIndexA, int32 toiIndexB);
+	void SolveTOI(const b2TimeStep& subStep, int32_t toiIndexA, int32_t toiIndexB);
 
 	void Add(b2Body* body)
 	{
@@ -84,13 +84,13 @@ public:
 	b2Position* m_positions;
 	b2Velocity* m_velocities;
 
-	int32 m_bodyCount;
-	int32 m_jointCount;
-	int32 m_contactCount;
+	int32_t m_bodyCount;
+	int32_t m_jointCount;
+	int32_t m_contactCount;
 
-	int32 m_bodyCapacity;
-	int32 m_contactCapacity;
-	int32 m_jointCapacity;
+	int32_t m_bodyCapacity;
+	int32_t m_contactCapacity;
+	int32_t m_jointCapacity;
 };
 
 }

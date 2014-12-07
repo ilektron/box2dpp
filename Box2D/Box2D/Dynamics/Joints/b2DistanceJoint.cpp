@@ -90,7 +90,7 @@ void b2DistanceJoint::InitVelocityConstraints(const b2SolverData& data)
 
 	// Handle singularity.
 	float32 length = m_u.Length();
-	if (length > b2_linearSlop)
+	if (length > LINEAR_SLOP)
 	{
 		m_u *= 1.0f / length;
 	}
@@ -111,7 +111,7 @@ void b2DistanceJoint::InitVelocityConstraints(const b2SolverData& data)
 		float32 C = length - m_length;
 
 		// Frequency
-		float32 omega = 2.0f * b2_pi * m_frequencyHz;
+		float32 omega = 2.0f * PI * m_frequencyHz;
 
 		// Damping coefficient
 		float32 d = 2.0f * m_mass * m_dampingRatio * omega;
@@ -204,7 +204,7 @@ bool b2DistanceJoint::SolvePositionConstraints(const b2SolverData& data)
 
 	float32 length = u.Normalize();
 	float32 C = length - m_length;
-	C = b2Clamp(C, -b2_maxLinearCorrection, b2_maxLinearCorrection);
+	C = b2Clamp(C, -MAX_LINEAR_CORRECTION, MAX_LINEAR_CORRECTION);
 
 	float32 impulse = -m_mass * C;
 	b2Vec2 P = impulse * u;
@@ -219,7 +219,7 @@ bool b2DistanceJoint::SolvePositionConstraints(const b2SolverData& data)
 	data.positions[m_indexB].c = cB;
 	data.positions[m_indexB].a = aB;
 
-	return b2Abs(C) < b2_linearSlop;
+	return b2Abs(C) < LINEAR_SLOP;
 }
 
 b2Vec2 b2DistanceJoint::GetAnchorA() const
@@ -246,8 +246,8 @@ float32 b2DistanceJoint::GetReactionTorque(float32 inv_dt) const
 
 void b2DistanceJoint::Dump()
 {
-	int32 indexA = m_bodyA->m_islandIndex;
-	int32 indexB = m_bodyB->m_islandIndex;
+	int32_t indexA = m_bodyA->m_islandIndex;
+	int32_t indexB = m_bodyB->m_islandIndex;
 
 	b2Log("  b2DistanceJointDef jd;\n");
 	b2Log("  jd.bodyA = bodies[%d];\n", indexA);

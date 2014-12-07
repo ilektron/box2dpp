@@ -41,14 +41,14 @@ public:
 			b2Body* ground = m_world->CreateBody(&bd);
 
 #if 1
-			int32 N = 200;
-			int32 M = 10;
+			int32_t N = 200;
+			int32_t M = 10;
 			b2Vec2 position;
 			position.y = 0.0f;
-			for (int32 j = 0; j < M; ++j)
+			for (int32_t j = 0; j < M; ++j)
 			{
 				position.x = -N * a;
-				for (int32 i = 0; i < N; ++i)
+				for (int32_t i = 0; i < N; ++i)
 				{
 					b2PolygonShape shape;
 					shape.SetAsBox(a, a, position, 0.0f);
@@ -59,14 +59,14 @@ public:
 				position.y -= 2.0f * a;
 			}
 #else
-			int32 N = 200;
-			int32 M = 10;
+			int32_t N = 200;
+			int32_t M = 10;
 			b2Vec2 position;
 			position.x = -N * a;
-			for (int32 i = 0; i < N; ++i)
+			for (int32_t i = 0; i < N; ++i)
 			{
 				position.y = 0.0f;
-				for (int32 j = 0; j < M; ++j)
+				for (int32_t j = 0; j < M; ++j)
 				{
 					b2PolygonShape shape;
 					shape.SetAsBox(a, a, position, 0.0f);
@@ -88,11 +88,11 @@ public:
 			b2Vec2 deltaX(0.5625f, 1.25f);
 			b2Vec2 deltaY(1.125f, 0.0f);
 
-			for (int32 i = 0; i < e_count; ++i)
+			for (int32_t i = 0; i < e_count; ++i)
 			{
 				y = x;
 
-				for (int32 j = i; j < e_count; ++j)
+				for (int32_t j = i; j < e_count; ++j)
 				{
 					b2BodyDef bd;
 					bd.type = b2_dynamicBody;
@@ -123,11 +123,11 @@ public:
 	void Step(Settings* settings)
 	{
 		const b2ContactManager& cm = m_world->GetContactManager();
-		int32 height = cm.m_broadPhase.GetTreeHeight();
-		int32 leafCount = cm.m_broadPhase.GetProxyCount();
-		int32 minimumNodeCount = 2 * leafCount - 1;
+		int32_t height = cm.m_broadPhase.GetTreeHeight();
+		int32_t leafCount = cm.m_broadPhase.GetProxyCount();
+		int32_t minimumNodeCount = 2 * leafCount - 1;
 		float32 minimumHeight = ceilf(logf(float32(minimumNodeCount)) / logf(2.0f));
-		g_debugDraw.DrawString(5, m_textLine, "dynamic tree height = %d, min = %d", height, int32(minimumHeight));
+		g_debugDraw.DrawString(5, m_textLine, "dynamic tree height = %d, min = %d", height, int32_t(minimumHeight));
 		m_textLine += DRAW_STRING_NEW_LINE;
 
 		Test::Step(settings);
@@ -149,7 +149,7 @@ public:
 		return new Tiles;
 	}
 
-	int32 m_fixtureCount;
+	int32_t m_fixtureCount;
 	float32 m_createTime;
 };
 

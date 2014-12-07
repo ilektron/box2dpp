@@ -125,7 +125,7 @@ void b2RevoluteJoint::InitVelocityConstraints(const b2SolverData& data)
 	if (m_enableLimit && fixedRotation == false)
 	{
 		float32 jointAngle = aB - aA - m_referenceAngle;
-		if (b2Abs(m_upperAngle - m_lowerAngle) < 2.0f * b2_angularSlop)
+		if (b2Abs(m_upperAngle - m_lowerAngle) < 2.0f * ANGULAR_SLOP)
 		{
 			m_limitState = e_equalLimits;
 		}
@@ -313,7 +313,7 @@ bool b2RevoluteJoint::SolvePositionConstraints(const b2SolverData& data)
 		if (m_limitState == e_equalLimits)
 		{
 			// Prevent large angular corrections
-			float32 C = b2Clamp(angle - m_lowerAngle, -b2_maxAngularCorrection, b2_maxAngularCorrection);
+			float32 C = b2Clamp(angle - m_lowerAngle, -MAX_ANGULAR_CORRECTION, MAX_ANGULAR_CORRECTION);
 			limitImpulse = -m_motorMass * C;
 			angularError = b2Abs(C);
 		}
@@ -323,7 +323,7 @@ bool b2RevoluteJoint::SolvePositionConstraints(const b2SolverData& data)
 			angularError = -C;
 
 			// Prevent large angular corrections and allow some slop.
-			C = b2Clamp(C + b2_angularSlop, -b2_maxAngularCorrection, 0.0f);
+			C = b2Clamp(C + ANGULAR_SLOP, -MAX_ANGULAR_CORRECTION, 0.0f);
 			limitImpulse = -m_motorMass * C;
 		}
 		else if (m_limitState == e_atUpperLimit)
@@ -332,7 +332,7 @@ bool b2RevoluteJoint::SolvePositionConstraints(const b2SolverData& data)
 			angularError = C;
 
 			// Prevent large angular corrections and allow some slop.
-			C = b2Clamp(C - b2_angularSlop, 0.0f, b2_maxAngularCorrection);
+			C = b2Clamp(C - ANGULAR_SLOP, 0.0f, MAX_ANGULAR_CORRECTION);
 			limitImpulse = -m_motorMass * C;
 		}
 
@@ -373,7 +373,7 @@ bool b2RevoluteJoint::SolvePositionConstraints(const b2SolverData& data)
 	data.positions[m_indexB].c = cB;
 	data.positions[m_indexB].a = aB;
 	
-	return positionError <= b2_linearSlop && angularError <= b2_angularSlop;
+	return positionError <= LINEAR_SLOP && angularError <= ANGULAR_SLOP;
 }
 
 b2Vec2 b2RevoluteJoint::GetAnchorA() const
@@ -484,8 +484,8 @@ void b2RevoluteJoint::SetLimits(float32 lower, float32 upper)
 
 void b2RevoluteJoint::Dump()
 {
-	int32 indexA = m_bodyA->m_islandIndex;
-	int32 indexB = m_bodyB->m_islandIndex;
+	int32_t indexA = m_bodyA->m_islandIndex;
+	int32_t indexB = m_bodyB->m_islandIndex;
 
 	b2Log("  b2RevoluteJointDef jd;\n");
 	b2Log("  jd.bodyA = bodies[%d];\n", indexA);

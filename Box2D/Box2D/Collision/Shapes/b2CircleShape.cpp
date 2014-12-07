@@ -29,7 +29,7 @@ b2Shape* b2CircleShape::Clone(b2BlockAllocator* allocator) const
 	return clone;
 }
 
-int32 b2CircleShape::GetChildCount() const
+int32_t b2CircleShape::GetChildCount() const
 {
 	return 1;
 }
@@ -46,7 +46,7 @@ bool b2CircleShape::TestPoint(const b2Transform& transform, const b2Vec2& p) con
 // x = s + a * r
 // norm(x) = radius
 bool b2CircleShape::RayCast(b2RayCastOutput* output, const b2RayCastInput& input,
-							const b2Transform& transform, int32 childIndex) const
+							const b2Transform& transform, int32_t childIndex) const
 {
 	B2_NOT_USED(childIndex);
 
@@ -61,7 +61,7 @@ bool b2CircleShape::RayCast(b2RayCastOutput* output, const b2RayCastInput& input
 	float32 sigma = c * c - rr * b;
 
 	// Check for negative discriminant and short segment.
-	if (sigma < 0.0f || rr < b2_epsilon)
+	if (sigma < 0.0f || rr < EPSILON)
 	{
 		return false;
 	}
@@ -82,7 +82,7 @@ bool b2CircleShape::RayCast(b2RayCastOutput* output, const b2RayCastInput& input
 	return false;
 }
 
-void b2CircleShape::ComputeAABB(b2AABB* aabb, const b2Transform& transform, int32 childIndex) const
+void b2CircleShape::ComputeAABB(b2AABB* aabb, const b2Transform& transform, int32_t childIndex) const
 {
 	B2_NOT_USED(childIndex);
 
@@ -93,7 +93,7 @@ void b2CircleShape::ComputeAABB(b2AABB* aabb, const b2Transform& transform, int3
 
 void b2CircleShape::ComputeMass(b2MassData* massData, float32 density) const
 {
-	massData->mass = density * b2_pi * m_radius * m_radius;
+	massData->mass = density * PI * m_radius * m_radius;
 	massData->center = m_p;
 
 	// inertia about the local origin

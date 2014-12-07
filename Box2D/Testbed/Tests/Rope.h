@@ -25,11 +25,11 @@ class Rope : public Test
 public:
 	Rope()
 	{
-		const int32 N = 40;
+		const int32_t N = 40;
 		b2Vec2 vertices[N];
 		float32 masses[N];
 
-		for (int32 i = 0; i < N; ++i)
+		for (int32_t i = 0; i < N; ++i)
 		{
 			vertices[i].Set(0.0f, 20.0f - 0.25f * i);
 			masses[i] = 1.0f;
@@ -57,12 +57,12 @@ public:
 		switch (key)
 		{
 		case 'q':
-			m_angle = b2Max(-b2_pi, m_angle - 0.05f * b2_pi);
+			m_angle = b2Max(-PI, m_angle - 0.05f * PI);
 			m_rope.SetAngle(m_angle);
 			break;
 
 		case 'e':
-			m_angle = b2Min(b2_pi, m_angle + 0.05f * b2_pi);
+			m_angle = b2Min(PI, m_angle + 0.05f * PI);
 			m_rope.SetAngle(m_angle);
 			break;
 		}
@@ -85,7 +85,7 @@ public:
 
 		m_debugDraw.DrawString(5, m_textLine, "Press (q,e) to adjust target angle");
 		m_textLine += DRAW_STRING_NEW_LINE;
-		m_debugDraw.DrawString(5, m_textLine, "Target angle = %g degrees", m_angle * 180.0f / b2_pi);
+		m_debugDraw.DrawString(5, m_textLine, "Target angle = %g degrees", m_angle * 180.0f / PI);
 		m_textLine += DRAW_STRING_NEW_LINE;
 	}
 

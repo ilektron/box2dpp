@@ -46,7 +46,7 @@ public:
 			b2BodyDef bd;
 			bd.type = b2_dynamicBody;
 			bd.position.Set(0.0f, 40.0f);
-			bd.angle = 0.25f * b2_pi;
+			bd.angle = 0.25f * PI;
 			m_body1 = m_world->CreateBody(&bd);
 
 			m_shape1.SetAsBox(0.5f, 0.5f, b2Vec2(-0.5f, 0.0f), 0.0f);
@@ -69,10 +69,10 @@ public:
 		}
 
 		// Should the body break?
-		int32 count = contact->GetManifold()->pointCount;
+		int32_t count = contact->GetManifold()->pointCount;
 
 		float32 maxImpulse = 0.0f;
-		for (int32 i = 0; i < count; ++i)
+		for (int32_t i = 0; i < count; ++i)
 		{
 			maxImpulse = b2Max(maxImpulse, impulse->normalImpulses[i]);
 		}

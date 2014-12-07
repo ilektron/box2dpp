@@ -200,7 +200,7 @@ void b2PrismaticJoint::InitVelocityConstraints(const b2SolverData& data)
 	if (m_enableLimit)
 	{
 		float32 jointTranslation = b2Dot(m_axis, d);
-		if (b2Abs(m_upperTranslation - m_lowerTranslation) < 2.0f * b2_linearSlop)
+		if (b2Abs(m_upperTranslation - m_lowerTranslation) < 2.0f * LINEAR_SLOP)
 		{
 			m_limitState = e_equalLimits;
 		}
@@ -400,24 +400,24 @@ bool b2PrismaticJoint::SolvePositionConstraints(const b2SolverData& data)
 	if (m_enableLimit)
 	{
 		float32 translation = b2Dot(axis, d);
-		if (b2Abs(m_upperTranslation - m_lowerTranslation) < 2.0f * b2_linearSlop)
+		if (b2Abs(m_upperTranslation - m_lowerTranslation) < 2.0f * LINEAR_SLOP)
 		{
 			// Prevent large angular corrections
-			C2 = b2Clamp(translation, -b2_maxLinearCorrection, b2_maxLinearCorrection);
+			C2 = b2Clamp(translation, -MAX_LINEAR_CORRECTION, MAX_LINEAR_CORRECTION);
 			linearError = b2Max(linearError, b2Abs(translation));
 			active = true;
 		}
 		else if (translation <= m_lowerTranslation)
 		{
 			// Prevent large linear corrections and allow some slop.
-			C2 = b2Clamp(translation - m_lowerTranslation + b2_linearSlop, -b2_maxLinearCorrection, 0.0f);
+			C2 = b2Clamp(translation - m_lowerTranslation + LINEAR_SLOP, -MAX_LINEAR_CORRECTION, 0.0f);
 			linearError = b2Max(linearError, m_lowerTranslation - translation);
 			active = true;
 		}
 		else if (translation >= m_upperTranslation)
 		{
 			// Prevent large linear corrections and allow some slop.
-			C2 = b2Clamp(translation - m_upperTranslation - b2_linearSlop, 0.0f, b2_maxLinearCorrection);
+			C2 = b2Clamp(translation - m_upperTranslation - LINEAR_SLOP, 0.0f, MAX_LINEAR_CORRECTION);
 			linearError = b2Max(linearError, translation - m_upperTranslation);
 			active = true;
 		}
@@ -483,7 +483,7 @@ bool b2PrismaticJoint::SolvePositionConstraints(const b2SolverData& data)
 	data.positions[m_indexB].c = cB;
 	data.positions[m_indexB].a = aB;
 
-	return linearError <= b2_linearSlop && angularError <= b2_angularSlop;
+	return linearError <= LINEAR_SLOP && angularError <= ANGULAR_SLOP;
 }
 
 b2Vec2 b2PrismaticJoint::GetAnchorA() const
@@ -610,8 +610,8 @@ float32 b2PrismaticJoint::GetMotorForce(float32 inv_dt) const
 
 void b2PrismaticJoint::Dump()
 {
-	int32 indexA = m_bodyA->m_islandIndex;
-	int32 indexB = m_bodyB->m_islandIndex;
+	int32_t indexA = m_bodyA->m_islandIndex;
+	int32_t indexB = m_bodyB->m_islandIndex;
 
 	b2Log("  b2PrismaticJointDef jd;\n");
 	b2Log("  jd.bodyA = bodies[%d];\n", indexA);

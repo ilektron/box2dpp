@@ -56,7 +56,7 @@ public:
 		// Chain shape
 		{
 			b2BodyDef bd;
-			bd.angle = 0.25f * b2_pi;
+			bd.angle = 0.25f * PI;
 			b2Body* ground = m_world->CreateBody(&bd);
 
 			b2Vec2 vs[4];
@@ -171,9 +171,9 @@ public:
 			b2Body* body = m_world->CreateBody(&bd);
 
 			float32 angle = 0.0f;
-			float32 delta = b2_pi / 3.0f;
+			float32 delta = PI / 3.0f;
 			b2Vec2 vertices[6];
-			for (int32 i = 0; i < 6; ++i)
+			for (int32_t i = 0; i < 6; ++i)
 			{
 				vertices[i].Set(0.5f * cosf(angle), 0.5f * sinf(angle));
 				angle += delta;

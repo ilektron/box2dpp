@@ -52,9 +52,9 @@ namespace
 	GLFWwindow* mainWindow = NULL;
 	UIState ui;
 
-	int32 testIndex = 0;
-	int32 testSelection = 0;
-	int32 testCount = 0;
+	int32_t testIndex = 0;
+	int32_t testSelection = 0;
+	int32_t testCount = 0;
 	TestEntry* entry;
 	Test* test;
 	Settings settings;
@@ -224,7 +224,7 @@ static void sKeyCallback(GLFWwindow*, int key, int scancode, int action, int mod
 }
 
 //
-static void sMouseButton(GLFWwindow*, int32 button, int32 action, int32 mods)
+static void sMouseButton(GLFWwindow*, int32_t button, int32_t action, int32_t mods)
 {
 	double xd, yd;
 	glfwGetCursorPos(mainWindow, &xd, &yd);
