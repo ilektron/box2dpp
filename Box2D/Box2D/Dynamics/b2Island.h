@@ -23,6 +23,9 @@
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2TimeStep.h>
 
+namespace box2d
+{
+
 class b2Contact;
 class b2Joint;
 class b2StackAllocator;
@@ -89,5 +92,7 @@ public:
 	int32 m_contactCapacity;
 	int32 m_jointCapacity;
 };
+
+}
 
 #endif

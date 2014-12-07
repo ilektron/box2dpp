@@ -24,6 +24,8 @@
 
 #include <new>
 
+using namespace box2d;
+
 b2Contact* b2ChainAndPolygonContact::Create(b2Fixture* fixtureA, int32 indexA, b2Fixture* fixtureB, int32 indexB, b2BlockAllocator* allocator)
 {
 	void* mem = allocator->Allocate(sizeof(b2ChainAndPolygonContact));

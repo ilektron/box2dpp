@@ -23,6 +23,9 @@
 #include <Box2D/Collision/b2Collision.h>
 #include <Box2D/Dynamics/b2TimeStep.h>
 
+namespace box2d
+{
+
 class b2Contact;
 class b2Body;
 class b2StackAllocator;
@@ -90,6 +93,8 @@ public:
 	b2Contact** m_contacts;
 	int m_count;
 };
+
+}
 
 #endif
 

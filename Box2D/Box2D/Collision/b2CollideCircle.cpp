@@ -20,6 +20,8 @@
 #include <Box2D/Collision/Shapes/b2CircleShape.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
+using namespace box2d;
+
 void b2CollideCircles(
 	b2Manifold* manifold,
 	const b2CircleShape* circleA, const b2Transform& xfA,

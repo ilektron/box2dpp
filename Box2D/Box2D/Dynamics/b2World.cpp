@@ -34,6 +34,8 @@
 #include <Box2D/Common/b2Timer.h>
 #include <new>
 
+using namespace box2d;
+
 b2World::b2World(const b2Vec2& gravity)
 {
 	m_destructionListener = NULL;

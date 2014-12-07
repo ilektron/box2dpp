@@ -24,6 +24,9 @@
 
 #define b2_nullNode (-1)
 
+namespace box2d
+{
+
 /// A node in the dynamic tree. The client does not interact with this directly.
 struct b2TreeNode
 {
@@ -284,6 +287,8 @@ inline void b2DynamicTree::RayCast(T* callback, const b2RayCastInput& input) con
 			stack.Push(node->child2);
 		}
 	}
+}
+
 }
 
 #endif

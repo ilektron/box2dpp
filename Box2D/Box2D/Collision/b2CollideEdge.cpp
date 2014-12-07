@@ -21,6 +21,7 @@
 #include <Box2D/Collision/Shapes/b2EdgeShape.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
+using namespace box2d;
 
 // Compute contact points for edge versus circle.
 // This accounts for edge connectivity.

@@ -18,6 +18,8 @@
 
 #include <Box2D/Common/b2Draw.h>
 
+using namespace box2d;
+
 b2Draw::b2Draw()
 {
 	m_drawFlags = 0;

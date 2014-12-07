@@ -21,6 +21,9 @@
 
 #include <Box2D/Common/b2Math.h>
 
+namespace box2d
+{
+
 class b2Draw;
 
 /// 
@@ -111,5 +114,7 @@ private:
 	float32 m_k2;
 	float32 m_k3;
 };
+
+}
 
 #endif

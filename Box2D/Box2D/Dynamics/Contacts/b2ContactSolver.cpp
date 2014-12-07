@@ -24,6 +24,8 @@
 #include <Box2D/Dynamics/b2World.h>
 #include <Box2D/Common/b2StackAllocator.h>
 
+using namespace box2d;
+
 #define B2_DEBUG_SOLVER 0
 
 bool g_blockSolve = true;

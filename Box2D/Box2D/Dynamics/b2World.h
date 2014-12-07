@@ -26,6 +26,9 @@
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 #include <Box2D/Dynamics/b2TimeStep.h>
 
+namespace box2d
+{
+
 struct b2AABB;
 struct b2BodyDef;
 struct b2Color;
@@ -349,6 +352,8 @@ inline const b2ContactManager& b2World::GetContactManager() const
 inline const b2Profile& b2World::GetProfile() const
 {
 	return m_profile;
+}
+
 }
 
 #endif

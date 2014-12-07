@@ -21,6 +21,9 @@
 
 #include <Box2D/Common/b2Settings.h>
 
+namespace box2d
+{
+
 const int32 b2_chunkSize = 16 * 1024;
 const int32 b2_maxBlockSize = 640;
 const int32 b2_blockSizes = 14;
@@ -58,5 +61,7 @@ private:
 	static uint8 s_blockSizeLookup[b2_maxBlockSize + 1];
 	static bool s_blockSizeLookupInitialized;
 };
+
+}
 
 #endif

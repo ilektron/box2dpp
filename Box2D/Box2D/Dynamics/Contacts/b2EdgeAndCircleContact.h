@@ -21,6 +21,9 @@
 
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
 
+namespace box2d
+{
+	
 class b2BlockAllocator;
 
 class b2EdgeAndCircleContact : public b2Contact
@@ -35,5 +38,7 @@ public:
 
 	void Evaluate(b2Manifold* manifold, const b2Transform& xfA, const b2Transform& xfB);
 };
+
+}
 
 #endif

@@ -25,6 +25,8 @@
 
 #include <stdio.h>
 
+using namespace box2d;
+
 float32 b2_toiTime, b2_toiMaxTime;
 int32 b2_toiCalls, b2_toiIters, b2_toiMaxIters;
 int32 b2_toiRootIters, b2_toiMaxRootIters;

@@ -27,6 +27,8 @@
 #include <Box2D/Common/b2StackAllocator.h>
 #include <Box2D/Common/b2Timer.h>
 
+using namespace box2d;
+
 /*
 Position Correction Notes
 =========================

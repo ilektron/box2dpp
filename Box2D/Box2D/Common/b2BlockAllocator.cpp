@@ -21,6 +21,8 @@
 #include <string.h>
 #include <stddef.h>
 
+using namespace box2d;
+
 int32 b2BlockAllocator::s_blockSizes[b2_blockSizes] = 
 {
 	16,		// 0

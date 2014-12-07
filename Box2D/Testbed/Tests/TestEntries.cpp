@@ -16,6 +16,10 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
+namespace box2d {};
+
+using namespace box2d;
+
 #include "../Framework/Test.h"
 
 #include "AddPair.h"

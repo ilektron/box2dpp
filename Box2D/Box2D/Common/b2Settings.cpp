@@ -21,6 +21,8 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+using namespace box2d;
+
 b2Version b2_version = {2, 3, 2};
 
 // Memory allocators. Modify these to use your own allocator.

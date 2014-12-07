@@ -32,6 +32,8 @@
 
 #define BUFFER_OFFSET(x)  ((const void*) (x))
 
+using namespace box2d;
+
 DebugDraw g_debugDraw;
 Camera g_camera;
 

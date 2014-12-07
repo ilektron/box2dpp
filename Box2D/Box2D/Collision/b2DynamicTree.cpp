@@ -19,6 +19,8 @@
 #include <Box2D/Collision/b2DynamicTree.h>
 #include <string.h>
 
+using namespace box2d;
+
 b2DynamicTree::b2DynamicTree()
 {
 	m_root = b2_nullNode;

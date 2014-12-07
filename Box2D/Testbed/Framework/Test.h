@@ -31,6 +31,16 @@
 
 #include <stdlib.h>
 
+using box2d::float;
+using box2d::b2Fixture;
+using box2d::b2PointState;
+using box2d::b2Profile;
+using box2d::b2World;
+using box2d::b2MouseJoint;
+using box2d::b2Body;
+using box2d::b2Joint;
+using box2d::b2Contact;
+
 class Test;
 struct Settings;
 
@@ -84,8 +94,8 @@ struct Settings
 	}
 
 	float32 hz;
-	int32 velocityIterations;
-	int32 positionIterations;
+	int32_t velocityIterations;
+	int32_t positionIterations;
 	bool drawShapes;
 	bool drawJoints;
 	bool drawAABBs;
@@ -114,7 +124,7 @@ extern TestEntry g_testEntries[];
 // This is called when a joint in the world is implicitly destroyed
 // because an attached body is destroyed. This gives us a chance to
 // nullify the mouse joint.
-class DestructionListener : public b2DestructionListener
+class DestructionListener : public box2d::b2DestructionListener
 {
 public:
 	void SayGoodbye(b2Fixture* fixture) { B2_NOT_USED(fixture); }
@@ -123,7 +133,7 @@ public:
 	Test* test;
 };
 
-const int32 k_maxContactPoints = 2048;
+const int32_t k_maxContactPoints = 2048;
 
 struct ContactPoint
 {
@@ -137,7 +147,7 @@ struct ContactPoint
 	float32 separation;
 };
 
-class Test : public b2ContactListener
+class Test : public box2d::b2ContactListener
 {
 public:
 
@@ -181,16 +191,16 @@ protected:
 	b2Body* m_groundBody;
 	b2AABB m_worldAABB;
 	ContactPoint m_points[k_maxContactPoints];
-	int32 m_pointCount;
+	int32_t m_pointCount;
 	DestructionListener m_destructionListener;
-	int32 m_textLine;
+	int32_t m_textLine;
 	b2World* m_world;
 	b2Body* m_bomb;
 	b2MouseJoint* m_mouseJoint;
 	b2Vec2 m_bombSpawnPoint;
 	bool m_bombSpawning;
 	b2Vec2 m_mouseWorld;
-	int32 m_stepCount;
+	int32_t m_stepCount;
 
 	b2Profile m_maxProfile;
 	b2Profile m_totalProfile;

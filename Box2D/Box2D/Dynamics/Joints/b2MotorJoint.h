@@ -21,6 +21,9 @@
 
 #include <Box2D/Dynamics/Joints/b2Joint.h>
 
+namespace box2d
+{
+
 /// Motor joint definition.
 struct b2MotorJointDef : public b2JointDef
 {
@@ -129,5 +132,7 @@ protected:
 	b2Mat22 m_linearMass;
 	float32 m_angularMass;
 };
+
+}
 
 #endif
