@@ -19,7 +19,7 @@
 #ifndef DUMP_SHELL_H
 #define DUMP_SHELL_H
 
-// This test holds worlds dumped using b2d11::World::Dump.
+// This test holds worlds dumped using b2World::Dump.
 class DumpShell : public Test
 {
 public:
@@ -34,7 +34,7 @@ public:
 		//
 		//  This code is originally intended for use in the Box2D testbed,
 		//  but you can easily use it in other applications by providing
-		//  a b2d11::World for use as the 'm_world' variable in the code below.
+		//  a b2World for use as the 'm_world' variable in the code below.
 
 		b2Vec2 g(0.000000000000000e+00f, -1.000000000000000e+01f);
 		m_world->SetGravity(g);

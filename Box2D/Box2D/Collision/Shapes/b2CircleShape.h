@@ -21,76 +21,71 @@
 
 #include <Box2D/Collision/Shapes/b2Shape.h>
 
-namespace b2d11
-{
-
 /// A circle shape.
-class CircleShape : public Shape
+class b2CircleShape : public b2Shape
 {
 public:
-	CircleShape();
+	b2CircleShape();
 
-	/// Implement Shape.
-	Shape* Clone(BlockAllocator* allocator) const;
+	/// Implement b2Shape.
+	b2Shape* Clone(b2BlockAllocator* allocator) const;
 
-	/// @see Shape::GetChildCount
+	/// @see b2Shape::GetChildCount
 	int32 GetChildCount() const;
 
-	/// Implement Shape.
-	bool TestPoint(const Transform& transform, const Vec2& p) const;
+	/// Implement b2Shape.
+	bool TestPoint(const b2Transform& transform, const b2Vec2& p) const;
 
-	/// Implement Shape.
-	bool RayCast(RayCastOutput* output, const RayCastInput& input,
-				const Transform& transform, int32 childIndex) const;
+	/// Implement b2Shape.
+	bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input,
+				const b2Transform& transform, int32 childIndex) const;
 
-	/// @see Shape::ComputeAABB
-	void ComputeAABB(AABB* aabb, const Transform& transform, int32 childIndex) const;
+	/// @see b2Shape::ComputeAABB
+	void ComputeAABB(b2AABB* aabb, const b2Transform& transform, int32 childIndex) const;
 
-	/// @see Shape::ComputeMass
-	void ComputeMass(MassData* massData, float32 density) const;
+	/// @see b2Shape::ComputeMass
+	void ComputeMass(b2MassData* massData, float32 density) const;
 
 	/// Get the supporting vertex index in the given direction.
-	int32 GetSupport(const Vec2& d) const;
+	int32 GetSupport(const b2Vec2& d) const;
 
 	/// Get the supporting vertex in the given direction.
-	const Vec2& GetSupportVertex(const Vec2& d) const;
+	const b2Vec2& GetSupportVertex(const b2Vec2& d) const;
 
 	/// Get the vertex count.
 	int32 GetVertexCount() const { return 1; }
 
-	/// Get a vertex by index. Used by Distance.
-	const Vec2& GetVertex(int32 index) const;
+	/// Get a vertex by index. Used by b2Distance.
+	const b2Vec2& GetVertex(int32 index) const;
 
 	/// Position
-	Vec2 m_p;
+	b2Vec2 m_p;
 };
 
-inline CircleShape::CircleShape()
+inline b2CircleShape::b2CircleShape()
 {
 	m_type = e_circle;
 	m_radius = 0.0f;
 	m_p.SetZero();
 }
 
-inline int32 CircleShape::GetSupport(const Vec2 &d) const
+inline int32 b2CircleShape::GetSupport(const b2Vec2 &d) const
 {
 	B2_NOT_USED(d);
 	return 0;
 }
 
-inline const Vec2& CircleShape::GetSupportVertex(const Vec2 &d) const
+inline const b2Vec2& b2CircleShape::GetSupportVertex(const b2Vec2 &d) const
 {
 	B2_NOT_USED(d);
 	return m_p;
 }
 
-inline const Vec2& CircleShape::GetVertex(int32 index) const
+inline const b2Vec2& b2CircleShape::GetVertex(int32 index) const
 {
 	B2_NOT_USED(index);
-	Assert(index == 0);
+	b2Assert(index == 0);
 	return m_p;
 }
-
-} // End of namespace b2d11
 
 #endif

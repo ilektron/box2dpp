@@ -89,10 +89,10 @@ public:
 		for (int32 i = 0; i < e_actorCount; ++i)
 		{
 			Actor* actor = m_actors + i;
-			if (actor->proxyId == b2NULL_NODE)
+			if (actor->proxyId == b2_nullNode)
 				continue;
 
-			b2d11::Color c(0.9f, 0.9f, 0.9f);
+			b2Color c(0.9f, 0.9f, 0.9f);
 			if (actor == m_rayActor && actor->overlap)
 			{
 				c.Set(0.9f, 0.6f, 0.6f);
@@ -109,19 +109,19 @@ public:
 			g_debugDraw.DrawAABB(&actor->aabb, c);
 		}
 
-		b2d11::Color c(0.7f, 0.7f, 0.7f);
+		b2Color c(0.7f, 0.7f, 0.7f);
 		g_debugDraw.DrawAABB(&m_queryAABB, c);
 
 		g_debugDraw.DrawSegment(m_rayCastInput.p1, m_rayCastInput.p2, c);
 
-		b2d11::Color c1(0.2f, 0.9f, 0.2f);
-		b2d11::Color c2(0.9f, 0.2f, 0.2f);
+		b2Color c1(0.2f, 0.9f, 0.2f);
+		b2Color c2(0.9f, 0.2f, 0.2f);
 		g_debugDraw.DrawPoint(m_rayCastInput.p1, 6.0f, c1);
 		g_debugDraw.DrawPoint(m_rayCastInput.p2, 6.0f, c2);
 
 		if (m_rayActor)
 		{
-			b2d11::Color cr(0.2f, 0.2f, 0.9f);
+			b2Color cr(0.2f, 0.2f, 0.9f);
 			b2Vec2 p = m_rayCastInput.p1 + m_rayActor->fraction * (m_rayCastInput.p2 - m_rayCastInput.p1);
 			g_debugDraw.DrawPoint(p, 6.0f, cr);
 		}
@@ -227,7 +227,7 @@ private:
 		{
 			int32 j = rand() % e_actorCount;
 			Actor* actor = m_actors + j;
-			if (actor->proxyId == b2NULL_NODE)
+			if (actor->proxyId == b2_nullNode)
 			{
 				GetRandomAABB(&actor->aabb);
 				actor->proxyId = m_tree.CreateProxy(actor->aabb, actor);
@@ -242,10 +242,10 @@ private:
 		{
 			int32 j = rand() % e_actorCount;
 			Actor* actor = m_actors + j;
-			if (actor->proxyId != b2NULL_NODE)
+			if (actor->proxyId != b2_nullNode)
 			{
 				m_tree.DestroyProxy(actor->proxyId);
-				actor->proxyId = b2NULL_NODE;
+				actor->proxyId = b2_nullNode;
 				return;
 			}
 		}
@@ -257,7 +257,7 @@ private:
 		{
 			int32 j = rand() % e_actorCount;
 			Actor* actor = m_actors + j;
-			if (actor->proxyId == b2NULL_NODE)
+			if (actor->proxyId == b2_nullNode)
 			{
 				continue;
 			}
@@ -295,7 +295,7 @@ private:
 
 		for (int32 i = 0; i < e_actorCount; ++i)
 		{
-			if (m_actors[i].proxyId == b2NULL_NODE)
+			if (m_actors[i].proxyId == b2_nullNode)
 			{
 				continue;
 			}
@@ -320,7 +320,7 @@ private:
 		b2RayCastOutput bruteOutput;
 		for (int32 i = 0; i < e_actorCount; ++i)
 		{
-			if (m_actors[i].proxyId == b2NULL_NODE)
+			if (m_actors[i].proxyId == b2_nullNode)
 			{
 				continue;
 			}

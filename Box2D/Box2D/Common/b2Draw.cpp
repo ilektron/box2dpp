@@ -18,29 +18,27 @@
 
 #include <Box2D/Common/b2Draw.h>
 
-using namespace b2d11;
-
-Draw::Draw()
+b2Draw::b2Draw()
 {
 	m_drawFlags = 0;
 }
 
-void Draw::SetFlags(uint32 flags)
+void b2Draw::SetFlags(uint32 flags)
 {
 	m_drawFlags = flags;
 }
 
-uint32 Draw::GetFlags() const
+uint32 b2Draw::GetFlags() const
 {
 	return m_drawFlags;
 }
 
-void Draw::AppendFlags(uint32 flags)
+void b2Draw::AppendFlags(uint32 flags)
 {
 	m_drawFlags |= flags;
 }
 
-void Draw::ClearFlags(uint32 flags)
+void b2Draw::ClearFlags(uint32 flags)
 {
 	m_drawFlags &= ~flags;
 }

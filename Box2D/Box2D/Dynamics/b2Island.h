@@ -23,23 +23,20 @@
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2TimeStep.h>
 
-namespace b2d11
-{
-
-class Contact;
-class Joint;
-class StackAllocator;
-class ContactListener;
-struct ContactVelocityConstraint;
-struct Profile;
+class b2Contact;
+class b2Joint;
+class b2StackAllocator;
+class b2ContactListener;
+struct b2ContactVelocityConstraint;
+struct b2Profile;
 
 /// This is an internal class.
-class Island
+class b2Island
 {
 public:
-	Island(int32 bodyCapacity, int32 contactCapacity, int32 jointCapacity,
-			StackAllocator* allocator, ContactListener* listener);
-	~Island();
+	b2Island(int32 bodyCapacity, int32 contactCapacity, int32 jointCapacity,
+			b2StackAllocator* allocator, b2ContactListener* listener);
+	~b2Island();
 
 	void Clear()
 	{
@@ -48,41 +45,41 @@ public:
 		m_jointCount = 0;
 	}
 
-	void Solve(Profile* profile, const TimeStep& step, const Vec2& gravity, bool allowSleep);
+	void Solve(b2Profile* profile, const b2TimeStep& step, const b2Vec2& gravity, bool allowSleep);
 
-	void SolveTOI(const TimeStep& subStep, int32 toiIndexA, int32 toiIndexB);
+	void SolveTOI(const b2TimeStep& subStep, int32 toiIndexA, int32 toiIndexB);
 
-	void Add(Body* body)
+	void Add(b2Body* body)
 	{
-		Assert(m_bodyCount < m_bodyCapacity);
+		b2Assert(m_bodyCount < m_bodyCapacity);
 		body->m_islandIndex = m_bodyCount;
 		m_bodies[m_bodyCount] = body;
 		++m_bodyCount;
 	}
 
-	void Add(Contact* contact)
+	void Add(b2Contact* contact)
 	{
-		Assert(m_contactCount < m_contactCapacity);
+		b2Assert(m_contactCount < m_contactCapacity);
 		m_contacts[m_contactCount++] = contact;
 	}
 
-	void Add(Joint* joint)
+	void Add(b2Joint* joint)
 	{
-		Assert(m_jointCount < m_jointCapacity);
+		b2Assert(m_jointCount < m_jointCapacity);
 		m_joints[m_jointCount++] = joint;
 	}
 
-	void Report(const ContactVelocityConstraint* constraints);
+	void Report(const b2ContactVelocityConstraint* constraints);
 
-	StackAllocator* m_allocator;
-	ContactListener* m_listener;
+	b2StackAllocator* m_allocator;
+	b2ContactListener* m_listener;
 
-	Body** m_bodies;
-	Contact** m_contacts;
-	Joint** m_joints;
+	b2Body** m_bodies;
+	b2Contact** m_contacts;
+	b2Joint** m_joints;
 
-	Position* m_positions;
-	Velocity* m_velocities;
+	b2Position* m_positions;
+	b2Velocity* m_velocities;
 
 	int32 m_bodyCount;
 	int32 m_jointCount;
@@ -92,7 +89,5 @@ public:
 	int32 m_contactCapacity;
 	int32 m_jointCapacity;
 };
-
-}
 
 #endif

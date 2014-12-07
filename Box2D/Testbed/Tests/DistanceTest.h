@@ -66,8 +66,8 @@ public:
 		m_textLine += DRAW_STRING_NEW_LINE;
 
 		{
-			b2d11::Color color(0.9f, 0.9f, 0.9f);
-			b2Vec2 v[b2MAX_POLYGON_VERTICES];
+			b2Color color(0.9f, 0.9f, 0.9f);
+			b2Vec2 v[b2_maxPolygonVertices];
 			for (int32 i = 0; i < m_polygonA.m_count; ++i)
 			{
 				v[i] = b2Mul(m_transformA, m_polygonA.m_vertices[i]);
@@ -84,10 +84,10 @@ public:
 		b2Vec2 x1 = output.pointA;
 		b2Vec2 x2 = output.pointB;
 
-		b2d11::Color c1(1.0f, 0.0f, 0.0f);
+		b2Color c1(1.0f, 0.0f, 0.0f);
 		g_debugDraw.DrawPoint(x1, 4.0f, c1);
 
-		b2d11::Color c2(1.0f, 1.0f, 0.0f);
+		b2Color c2(1.0f, 1.0f, 0.0f);
 		g_debugDraw.DrawPoint(x2, 4.0f, c2);
 	}
 
@@ -112,11 +112,11 @@ public:
 			break;
 
 		case GLFW_KEY_Q:
-			m_angleB += 0.1f * b2d11::PI;
+			m_angleB += 0.1f * b2_pi;
 			break;
 
 		case GLFW_KEY_E:
-			m_angleB -= 0.1f * b2d11::PI;
+			m_angleB -= 0.1f * b2_pi;
 			break;
 		}
 

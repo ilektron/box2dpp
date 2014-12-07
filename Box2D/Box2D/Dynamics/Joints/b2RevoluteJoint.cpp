@@ -20,8 +20,6 @@
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2TimeStep.h>
 
-using namespace b2d11;
-
 // Point-to-point constraint
 // C = p2 - p1
 // Cdot = v2 - v1
@@ -35,7 +33,7 @@ using namespace b2d11;
 // J = [0 0 -1 0 0 1]
 // K = invI1 + invI2
 
-void RevoluteJointDef::Initialize(Body* bA, Body* bB, const Vec2& anchor)
+void b2RevoluteJointDef::Initialize(b2Body* bA, b2Body* bB, const b2Vec2& anchor)
 {
 	bodyA = bA;
 	bodyB = bB;
@@ -44,8 +42,8 @@ void RevoluteJointDef::Initialize(Body* bA, Body* bB, const Vec2& anchor)
 	referenceAngle = bodyB->GetAngle() - bodyA->GetAngle();
 }
 
-RevoluteJoint::RevoluteJoint(const RevoluteJointDef* def)
-: Joint(def)
+b2RevoluteJoint::b2RevoluteJoint(const b2RevoluteJointDef* def)
+: b2Joint(def)
 {
 	m_localAnchorA = def->localAnchorA;
 	m_localAnchorB = def->localAnchorB;
@@ -63,7 +61,7 @@ RevoluteJoint::RevoluteJoint(const RevoluteJointDef* def)
 	m_limitState = e_inactiveLimit;
 }
 
-void RevoluteJoint::InitVelocityConstraints(const SolverData& data)
+void b2RevoluteJoint::InitVelocityConstraints(const b2SolverData& data)
 {
 	m_indexA = m_bodyA->m_islandIndex;
 	m_indexB = m_bodyB->m_islandIndex;
@@ -75,17 +73,17 @@ void RevoluteJoint::InitVelocityConstraints(const SolverData& data)
 	m_invIB = m_bodyB->m_invI;
 
 	float32 aA = data.positions[m_indexA].a;
-	Vec2 vA = data.velocities[m_indexA].v;
+	b2Vec2 vA = data.velocities[m_indexA].v;
 	float32 wA = data.velocities[m_indexA].w;
 
 	float32 aB = data.positions[m_indexB].a;
-	Vec2 vB = data.velocities[m_indexB].v;
+	b2Vec2 vB = data.velocities[m_indexB].v;
 	float32 wB = data.velocities[m_indexB].w;
 
-	Rot qA(aA), qB(aB);
+	b2Rot qA(aA), qB(aB);
 
-	m_rA = Mul(qA, m_localAnchorA - m_localCenterA);
-	m_rB = Mul(qB, m_localAnchorB - m_localCenterB);
+	m_rA = b2Mul(qA, m_localAnchorA - m_localCenterA);
+	m_rB = b2Mul(qB, m_localAnchorB - m_localCenterB);
 
 	// J = [-I -r1_skew I r2_skew]
 	//     [ 0       -1 0       1]
@@ -125,7 +123,7 @@ void RevoluteJoint::InitVelocityConstraints(const SolverData& data)
 	if (m_enableLimit && fixedRotation == false)
 	{
 		float32 jointAngle = aB - aA - m_referenceAngle;
-		if (Abs(m_upperAngle - m_lowerAngle) < 2.0f * ANGULAR_SLOP)
+		if (b2Abs(m_upperAngle - m_lowerAngle) < 2.0f * b2_angularSlop)
 		{
 			m_limitState = e_equalLimits;
 		}
@@ -162,13 +160,13 @@ void RevoluteJoint::InitVelocityConstraints(const SolverData& data)
 		m_impulse *= data.step.dtRatio;
 		m_motorImpulse *= data.step.dtRatio;
 
-		Vec2 P(m_impulse.x, m_impulse.y);
+		b2Vec2 P(m_impulse.x, m_impulse.y);
 
 		vA -= mA * P;
-		wA -= iA * (Cross(m_rA, P) + m_motorImpulse + m_impulse.z);
+		wA -= iA * (b2Cross(m_rA, P) + m_motorImpulse + m_impulse.z);
 
 		vB += mB * P;
-		wB += iB * (Cross(m_rB, P) + m_motorImpulse + m_impulse.z);
+		wB += iB * (b2Cross(m_rB, P) + m_motorImpulse + m_impulse.z);
 	}
 	else
 	{
@@ -182,11 +180,11 @@ void RevoluteJoint::InitVelocityConstraints(const SolverData& data)
 	data.velocities[m_indexB].w = wB;
 }
 
-void RevoluteJoint::SolveVelocityConstraints(const SolverData& data)
+void b2RevoluteJoint::SolveVelocityConstraints(const b2SolverData& data)
 {
-	Vec2 vA = data.velocities[m_indexA].v;
+	b2Vec2 vA = data.velocities[m_indexA].v;
 	float32 wA = data.velocities[m_indexA].w;
-	Vec2 vB = data.velocities[m_indexB].v;
+	b2Vec2 vB = data.velocities[m_indexB].v;
 	float32 wB = data.velocities[m_indexB].w;
 
 	float32 mA = m_invMassA, mB = m_invMassB;
@@ -201,7 +199,7 @@ void RevoluteJoint::SolveVelocityConstraints(const SolverData& data)
 		float32 impulse = -m_motorMass * Cdot;
 		float32 oldImpulse = m_motorImpulse;
 		float32 maxImpulse = data.step.dt * m_maxMotorTorque;
-		m_motorImpulse = Clamp(m_motorImpulse + impulse, -maxImpulse, maxImpulse);
+		m_motorImpulse = b2Clamp(m_motorImpulse + impulse, -maxImpulse, maxImpulse);
 		impulse = m_motorImpulse - oldImpulse;
 
 		wA -= iA * impulse;
@@ -211,11 +209,11 @@ void RevoluteJoint::SolveVelocityConstraints(const SolverData& data)
 	// Solve limit constraint.
 	if (m_enableLimit && m_limitState != e_inactiveLimit && fixedRotation == false)
 	{
-		Vec2 Cdot1 = vB + Cross(wB, m_rB) - vA - Cross(wA, m_rA);
+		b2Vec2 Cdot1 = vB + b2Cross(wB, m_rB) - vA - b2Cross(wA, m_rA);
 		float32 Cdot2 = wB - wA;
-		Vec3 Cdot(Cdot1.x, Cdot1.y, Cdot2);
+		b2Vec3 Cdot(Cdot1.x, Cdot1.y, Cdot2);
 
-		Vec3 impulse = -m_mass.Solve33(Cdot);
+		b2Vec3 impulse = -m_mass.Solve33(Cdot);
 
 		if (m_limitState == e_equalLimits)
 		{
@@ -226,8 +224,8 @@ void RevoluteJoint::SolveVelocityConstraints(const SolverData& data)
 			float32 newImpulse = m_impulse.z + impulse.z;
 			if (newImpulse < 0.0f)
 			{
-				Vec2 rhs = -Cdot1 + m_impulse.z * Vec2(m_mass.ez.x, m_mass.ez.y);
-				Vec2 reduced = m_mass.Solve22(rhs);
+				b2Vec2 rhs = -Cdot1 + m_impulse.z * b2Vec2(m_mass.ez.x, m_mass.ez.y);
+				b2Vec2 reduced = m_mass.Solve22(rhs);
 				impulse.x = reduced.x;
 				impulse.y = reduced.y;
 				impulse.z = -m_impulse.z;
@@ -245,8 +243,8 @@ void RevoluteJoint::SolveVelocityConstraints(const SolverData& data)
 			float32 newImpulse = m_impulse.z + impulse.z;
 			if (newImpulse > 0.0f)
 			{
-				Vec2 rhs = -Cdot1 + m_impulse.z * Vec2(m_mass.ez.x, m_mass.ez.y);
-				Vec2 reduced = m_mass.Solve22(rhs);
+				b2Vec2 rhs = -Cdot1 + m_impulse.z * b2Vec2(m_mass.ez.x, m_mass.ez.y);
+				b2Vec2 reduced = m_mass.Solve22(rhs);
 				impulse.x = reduced.x;
 				impulse.y = reduced.y;
 				impulse.z = -m_impulse.z;
@@ -260,28 +258,28 @@ void RevoluteJoint::SolveVelocityConstraints(const SolverData& data)
 			}
 		}
 
-		Vec2 P(impulse.x, impulse.y);
+		b2Vec2 P(impulse.x, impulse.y);
 
 		vA -= mA * P;
-		wA -= iA * (Cross(m_rA, P) + impulse.z);
+		wA -= iA * (b2Cross(m_rA, P) + impulse.z);
 
 		vB += mB * P;
-		wB += iB * (Cross(m_rB, P) + impulse.z);
+		wB += iB * (b2Cross(m_rB, P) + impulse.z);
 	}
 	else
 	{
 		// Solve point-to-point constraint
-		Vec2 Cdot = vB + Cross(wB, m_rB) - vA - Cross(wA, m_rA);
-		Vec2 impulse = m_mass.Solve22(-Cdot);
+		b2Vec2 Cdot = vB + b2Cross(wB, m_rB) - vA - b2Cross(wA, m_rA);
+		b2Vec2 impulse = m_mass.Solve22(-Cdot);
 
 		m_impulse.x += impulse.x;
 		m_impulse.y += impulse.y;
 
 		vA -= mA * impulse;
-		wA -= iA * Cross(m_rA, impulse);
+		wA -= iA * b2Cross(m_rA, impulse);
 
 		vB += mB * impulse;
-		wB += iB * Cross(m_rB, impulse);
+		wB += iB * b2Cross(m_rB, impulse);
 	}
 
 	data.velocities[m_indexA].v = vA;
@@ -290,14 +288,14 @@ void RevoluteJoint::SolveVelocityConstraints(const SolverData& data)
 	data.velocities[m_indexB].w = wB;
 }
 
-bool RevoluteJoint::SolvePositionConstraints(const SolverData& data)
+bool b2RevoluteJoint::SolvePositionConstraints(const b2SolverData& data)
 {
-	Vec2 cA = data.positions[m_indexA].c;
+	b2Vec2 cA = data.positions[m_indexA].c;
 	float32 aA = data.positions[m_indexA].a;
-	Vec2 cB = data.positions[m_indexB].c;
+	b2Vec2 cB = data.positions[m_indexB].c;
 	float32 aB = data.positions[m_indexB].a;
 
-	Rot qA(aA), qB(aB);
+	b2Rot qA(aA), qB(aB);
 
 	float32 angularError = 0.0f;
 	float32 positionError = 0.0f;
@@ -313,9 +311,9 @@ bool RevoluteJoint::SolvePositionConstraints(const SolverData& data)
 		if (m_limitState == e_equalLimits)
 		{
 			// Prevent large angular corrections
-			float32 C = Clamp(angle - m_lowerAngle, -MAX_ANGULAR_CORRECTION, MAX_ANGULAR_CORRECTION);
+			float32 C = b2Clamp(angle - m_lowerAngle, -b2_maxAngularCorrection, b2_maxAngularCorrection);
 			limitImpulse = -m_motorMass * C;
-			angularError = Abs(C);
+			angularError = b2Abs(C);
 		}
 		else if (m_limitState == e_atLowerLimit)
 		{
@@ -323,7 +321,7 @@ bool RevoluteJoint::SolvePositionConstraints(const SolverData& data)
 			angularError = -C;
 
 			// Prevent large angular corrections and allow some slop.
-			C = Clamp(C + ANGULAR_SLOP, -MAX_ANGULAR_CORRECTION, 0.0f);
+			C = b2Clamp(C + b2_angularSlop, -b2_maxAngularCorrection, 0.0f);
 			limitImpulse = -m_motorMass * C;
 		}
 		else if (m_limitState == e_atUpperLimit)
@@ -332,7 +330,7 @@ bool RevoluteJoint::SolvePositionConstraints(const SolverData& data)
 			angularError = C;
 
 			// Prevent large angular corrections and allow some slop.
-			C = Clamp(C - ANGULAR_SLOP, 0.0f, MAX_ANGULAR_CORRECTION);
+			C = b2Clamp(C - b2_angularSlop, 0.0f, b2_maxAngularCorrection);
 			limitImpulse = -m_motorMass * C;
 		}
 
@@ -344,28 +342,28 @@ bool RevoluteJoint::SolvePositionConstraints(const SolverData& data)
 	{
 		qA.Set(aA);
 		qB.Set(aB);
-		Vec2 rA = Mul(qA, m_localAnchorA - m_localCenterA);
-		Vec2 rB = Mul(qB, m_localAnchorB - m_localCenterB);
+		b2Vec2 rA = b2Mul(qA, m_localAnchorA - m_localCenterA);
+		b2Vec2 rB = b2Mul(qB, m_localAnchorB - m_localCenterB);
 
-		Vec2 C = cB + rB - cA - rA;
+		b2Vec2 C = cB + rB - cA - rA;
 		positionError = C.Length();
 
 		float32 mA = m_invMassA, mB = m_invMassB;
 		float32 iA = m_invIA, iB = m_invIB;
 
-		Mat22 K;
+		b2Mat22 K;
 		K.ex.x = mA + mB + iA * rA.y * rA.y + iB * rB.y * rB.y;
 		K.ex.y = -iA * rA.x * rA.y - iB * rB.x * rB.y;
 		K.ey.x = K.ex.y;
 		K.ey.y = mA + mB + iA * rA.x * rA.x + iB * rB.x * rB.x;
 
-		Vec2 impulse = -K.Solve(C);
+		b2Vec2 impulse = -K.Solve(C);
 
 		cA -= mA * impulse;
-		aA -= iA * Cross(rA, impulse);
+		aA -= iA * b2Cross(rA, impulse);
 
 		cB += mB * impulse;
-		aB += iB * Cross(rB, impulse);
+		aB += iB * b2Cross(rB, impulse);
 	}
 
 	data.positions[m_indexA].c = cA;
@@ -373,81 +371,81 @@ bool RevoluteJoint::SolvePositionConstraints(const SolverData& data)
 	data.positions[m_indexB].c = cB;
 	data.positions[m_indexB].a = aB;
 	
-	return positionError <= LINEAR_SLOP && angularError <= ANGULAR_SLOP;
+	return positionError <= b2_linearSlop && angularError <= b2_angularSlop;
 }
 
-Vec2 RevoluteJoint::GetAnchorA() const
+b2Vec2 b2RevoluteJoint::GetAnchorA() const
 {
 	return m_bodyA->GetWorldPoint(m_localAnchorA);
 }
 
-Vec2 RevoluteJoint::GetAnchorB() const
+b2Vec2 b2RevoluteJoint::GetAnchorB() const
 {
 	return m_bodyB->GetWorldPoint(m_localAnchorB);
 }
 
-Vec2 RevoluteJoint::GetReactionForce(float32 inv_dt) const
+b2Vec2 b2RevoluteJoint::GetReactionForce(float32 inv_dt) const
 {
-	Vec2 P(m_impulse.x, m_impulse.y);
+	b2Vec2 P(m_impulse.x, m_impulse.y);
 	return inv_dt * P;
 }
 
-float32 RevoluteJoint::GetReactionTorque(float32 inv_dt) const
+float32 b2RevoluteJoint::GetReactionTorque(float32 inv_dt) const
 {
 	return inv_dt * m_impulse.z;
 }
 
-float32 RevoluteJoint::GetJointAngle() const
+float32 b2RevoluteJoint::GetJointAngle() const
 {
-	Body* bA = m_bodyA;
-	Body* bB = m_bodyB;
+	b2Body* bA = m_bodyA;
+	b2Body* bB = m_bodyB;
 	return bB->m_sweep.a - bA->m_sweep.a - m_referenceAngle;
 }
 
-float32 RevoluteJoint::GetJointSpeed() const
+float32 b2RevoluteJoint::GetJointSpeed() const
 {
-	Body* bA = m_bodyA;
-	Body* bB = m_bodyB;
+	b2Body* bA = m_bodyA;
+	b2Body* bB = m_bodyB;
 	return bB->m_angularVelocity - bA->m_angularVelocity;
 }
 
-bool RevoluteJoint::IsMotorEnabled() const
+bool b2RevoluteJoint::IsMotorEnabled() const
 {
 	return m_enableMotor;
 }
 
-void RevoluteJoint::EnableMotor(bool flag)
+void b2RevoluteJoint::EnableMotor(bool flag)
 {
 	m_bodyA->SetAwake(true);
 	m_bodyB->SetAwake(true);
 	m_enableMotor = flag;
 }
 
-float32 RevoluteJoint::GetMotorTorque(float32 inv_dt) const
+float32 b2RevoluteJoint::GetMotorTorque(float32 inv_dt) const
 {
 	return inv_dt * m_motorImpulse;
 }
 
-void RevoluteJoint::SetMotorSpeed(float32 speed)
+void b2RevoluteJoint::SetMotorSpeed(float32 speed)
 {
 	m_bodyA->SetAwake(true);
 	m_bodyB->SetAwake(true);
 	m_motorSpeed = speed;
 }
 
-void RevoluteJoint::SetMaxMotorTorque(float32 torque)
+void b2RevoluteJoint::SetMaxMotorTorque(float32 torque)
 {
 	m_bodyA->SetAwake(true);
 	m_bodyB->SetAwake(true);
 	m_maxMotorTorque = torque;
 }
 
-bool RevoluteJoint::IsLimitEnabled() const
+bool b2RevoluteJoint::IsLimitEnabled() const
 {
 	return m_enableLimit;
 }
 
-void RevoluteJoint::EnableLimit(bool flag)
+void b2RevoluteJoint::EnableLimit(bool flag)
 {
 	if (flag != m_enableLimit)
 	{
@@ -458,19 +456,19 @@ void RevoluteJoint::EnableLimit(bool flag)
 	}
 }
 
-float32 RevoluteJoint::GetLowerLimit() const
+float32 b2RevoluteJoint::GetLowerLimit() const
 {
 	return m_lowerAngle;
 }
 
-float32 RevoluteJoint::GetUpperLimit() const
+float32 b2RevoluteJoint::GetUpperLimit() const
 {
 	return m_upperAngle;
 }
 
-void RevoluteJoint::SetLimits(float32 lower, float32 upper)
+void b2RevoluteJoint::SetLimits(float32 lower, float32 upper)
 {
-	Assert(lower <= upper);
+	b2Assert(lower <= upper);
 	
 	if (lower != m_lowerAngle || upper != m_upperAngle)
 	{
@@ -482,23 +480,23 @@ void RevoluteJoint::SetLimits(float32 lower, float32 upper)
 	}
 }
 
-void RevoluteJoint::Dump()
+void b2RevoluteJoint::Dump()
 {
 	int32 indexA = m_bodyA->m_islandIndex;
 	int32 indexB = m_bodyB->m_islandIndex;
 
-	Log("  RevoluteJointDef jd;\n");
-	Log("  jd.bodyA = bodies[%d];\n", indexA);
-	Log("  jd.bodyB = bodies[%d];\n", indexB);
-	Log("  jd.collideConnected = bool(%d);\n", m_collideConnected);
-	Log("  jd.localAnchorA.Set(%.15lef, %.15lef);\n", m_localAnchorA.x, m_localAnchorA.y);
-	Log("  jd.localAnchorB.Set(%.15lef, %.15lef);\n", m_localAnchorB.x, m_localAnchorB.y);
-	Log("  jd.referenceAngle = %.15lef;\n", m_referenceAngle);
-	Log("  jd.enableLimit = bool(%d);\n", m_enableLimit);
-	Log("  jd.lowerAngle = %.15lef;\n", m_lowerAngle);
-	Log("  jd.upperAngle = %.15lef;\n", m_upperAngle);
-	Log("  jd.enableMotor = bool(%d);\n", m_enableMotor);
-	Log("  jd.motorSpeed = %.15lef;\n", m_motorSpeed);
-	Log("  jd.maxMotorTorque = %.15lef;\n", m_maxMotorTorque);
-	Log("  joints[%d] = m_world->CreateJoint(&jd);\n", m_index);
+	b2Log("  b2RevoluteJointDef jd;\n");
+	b2Log("  jd.bodyA = bodies[%d];\n", indexA);
+	b2Log("  jd.bodyB = bodies[%d];\n", indexB);
+	b2Log("  jd.collideConnected = bool(%d);\n", m_collideConnected);
+	b2Log("  jd.localAnchorA.Set(%.15lef, %.15lef);\n", m_localAnchorA.x, m_localAnchorA.y);
+	b2Log("  jd.localAnchorB.Set(%.15lef, %.15lef);\n", m_localAnchorB.x, m_localAnchorB.y);
+	b2Log("  jd.referenceAngle = %.15lef;\n", m_referenceAngle);
+	b2Log("  jd.enableLimit = bool(%d);\n", m_enableLimit);
+	b2Log("  jd.lowerAngle = %.15lef;\n", m_lowerAngle);
+	b2Log("  jd.upperAngle = %.15lef;\n", m_upperAngle);
+	b2Log("  jd.enableMotor = bool(%d);\n", m_enableMotor);
+	b2Log("  jd.motorSpeed = %.15lef;\n", m_motorSpeed);
+	b2Log("  jd.maxMotorTorque = %.15lef;\n", m_maxMotorTorque);
+	b2Log("  joints[%d] = m_world->CreateJoint(&jd);\n", m_index);
 }

@@ -20,8 +20,6 @@
 
 #include <stdio.h>
 
-using namespace b2d11;
-
 // This is a simple example of building and running a simulation
 // using Box2D. Here we create a large ground box and a small dynamic
 // box.
@@ -33,22 +31,22 @@ int main(int argc, char** argv)
 	B2_NOT_USED(argv);
 
 	// Define the gravity vector.
-	Vec2 gravity(0.0f, -10.0f);
+	b2Vec2 gravity(0.0f, -10.0f);
 
 	// Construct a world object, which will hold and simulate the rigid bodies.
-	World world(gravity);
+	b2World world(gravity);
 
 	// Define the ground body.
-	BodyDef groundBodyDef;
+	b2BodyDef groundBodyDef;
 	groundBodyDef.position.Set(0.0f, -10.0f);
 
 	// Call the body factory which allocates memory for the ground body
 	// from a pool and creates the ground box shape (also from a pool).
 	// The body is also added to the world.
-	Body* groundBody = world.CreateBody(&groundBodyDef);
+	b2Body* groundBody = world.CreateBody(&groundBodyDef);
 
 	// Define the ground box shape.
-	PolygonShape groundBox;
+	b2PolygonShape groundBox;
 
 	// The extents are the half-widths of the box.
 	groundBox.SetAsBox(50.0f, 10.0f);
@@ -57,17 +55,17 @@ int main(int argc, char** argv)
 	groundBody->CreateFixture(&groundBox, 0.0f);
 
 	// Define the dynamic body. We set its position and call the body factory.
-	BodyDef bodyDef;
-	bodyDef.type = _dynamicBody;
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
 	bodyDef.position.Set(0.0f, 4.0f);
-	Body* body = world.CreateBody(&bodyDef);
+	b2Body* body = world.CreateBody(&bodyDef);
 
 	// Define another box shape for our dynamic body.
-	PolygonShape dynamicBox;
+	b2PolygonShape dynamicBox;
 	dynamicBox.SetAsBox(1.0f, 1.0f);
 
 	// Define the dynamic body fixture.
-	FixtureDef fixtureDef;
+	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &dynamicBox;
 
 	// Set the box density to be non-zero, so it will be dynamic.
@@ -94,7 +92,7 @@ int main(int argc, char** argv)
 		world.Step(timeStep, velocityIterations, positionIterations);
 
 		// Now print the position and angle of the body.
-		Vec2 position = body->GetPosition();
+		b2Vec2 position = body->GetPosition();
 		float32 angle = body->GetAngle();
 
 		printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);

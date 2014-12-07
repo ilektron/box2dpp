@@ -49,15 +49,15 @@ public:
 		b2Manifold manifold;
 		b2CollidePolygons(&manifold, &m_polygonA, m_transformA, &m_polygonB, m_transformB);
 
-		b2d11::WorldManifold worldManifold;
+		b2WorldManifold worldManifold;
 		worldManifold.Initialize(&manifold, m_transformA, m_polygonA.m_radius, m_transformB, m_polygonB.m_radius);
 
 		g_debugDraw.DrawString(5, m_textLine, "point count = %d", manifold.pointCount);
 		m_textLine += DRAW_STRING_NEW_LINE;
 
 		{
-			b2d11::Color color(0.9f, 0.9f, 0.9f);
-			b2Vec2 v[b2MAX_POLYGON_VERTICES];
+			b2Color color(0.9f, 0.9f, 0.9f);
+			b2Vec2 v[b2_maxPolygonVertices];
 			for (int32 i = 0; i < m_polygonA.m_count; ++i)
 			{
 				v[i] = b2Mul(m_transformA, m_polygonA.m_vertices[i]);
@@ -73,7 +73,7 @@ public:
 
 		for (int32 i = 0; i < manifold.pointCount; ++i)
 		{
-			g_debugDraw.DrawPoint(worldManifold.points[i], 4.0f, b2d11::Color(0.9f, 0.3f, 0.3f));
+			g_debugDraw.DrawPoint(worldManifold.points[i], 4.0f, b2Color(0.9f, 0.3f, 0.3f));
 		}
 	}
 
@@ -98,11 +98,11 @@ public:
 			break;
 
 		case GLFW_KEY_Q:
-			m_angleB += 0.1f * b2d11::PI;
+			m_angleB += 0.1f * b2_pi;
 			break;
 
 		case GLFW_KEY_E:
-			m_angleB -= 0.1f * b2d11::PI;
+			m_angleB -= 0.1f * b2_pi;
 			break;
 		}
 

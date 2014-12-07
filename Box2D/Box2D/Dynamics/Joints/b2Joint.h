@@ -21,15 +21,12 @@
 
 #include <Box2D/Common/b2Math.h>
 
-namespace b2d11
-{
+class b2Body;
+class b2Joint;
+struct b2SolverData;
+class b2BlockAllocator;
 
-class Body;
-class Joint;
-struct SolverData;
-class BlockAllocator;
-
-enum JointType
+enum b2JointType
 {
 	e_unknownJoint,
 	e_revoluteJoint,
@@ -45,7 +42,7 @@ enum JointType
 	e_motorJoint
 };
 
-enum LimitState
+enum b2LimitState
 {
 	e_inactiveLimit,
 	e_atLowerLimit,
@@ -53,9 +50,9 @@ enum LimitState
 	e_equalLimits
 };
 
-struct Jacobian
+struct b2Jacobian
 {
-	Vec2 linear;
+	b2Vec2 linear;
 	float32 angularA;
 	float32 angularB;
 };
@@ -65,18 +62,18 @@ struct Jacobian
 /// is an edge. A joint edge belongs to a doubly linked list
 /// maintained in each attached body. Each joint has two joint
 /// nodes, one for each attached body.
-struct JointEdge
+struct b2JointEdge
 {
-	Body* other;			///< provides quick access to the other body attached.
-	Joint* joint;			///< the joint
-	JointEdge* prev;		///< the previous joint edge in the body's joint list
-	JointEdge* next;		///< the next joint edge in the body's joint list
+	b2Body* other;			///< provides quick access to the other body attached.
+	b2Joint* joint;			///< the joint
+	b2JointEdge* prev;		///< the previous joint edge in the body's joint list
+	b2JointEdge* next;		///< the next joint edge in the body's joint list
 };
 
 /// Joint definitions are used to construct joints.
-struct JointDef
+struct b2JointDef
 {
-	JointDef()
+	b2JointDef()
 	{
 		type = e_unknownJoint;
 		userData = NULL;
@@ -86,16 +83,16 @@ struct JointDef
 	}
 
 	/// The joint type is set automatically for concrete joint types.
-	JointType type;
+	b2JointType type;
 
 	/// Use this to attach application specific data to your joints.
 	void* userData;
 
 	/// The first attached body.
-	Body* bodyA;
+	b2Body* bodyA;
 
 	/// The second attached body.
-	Body* bodyB;
+	b2Body* bodyB;
 
 	/// Set this flag to true if the attached bodies should collide.
 	bool collideConnected;
@@ -103,34 +100,34 @@ struct JointDef
 
 /// The base joint class. Joints are used to constraint two bodies together in
 /// various fashions. Some joints also feature limits and motors.
-class Joint
+class b2Joint
 {
 public:
 
 	/// Get the type of the concrete joint.
-	JointType GetType() const;
+	b2JointType GetType() const;
 
 	/// Get the first body attached to this joint.
-	Body* GetBodyA();
+	b2Body* GetBodyA();
 
 	/// Get the second body attached to this joint.
-	Body* GetBodyB();
+	b2Body* GetBodyB();
 
 	/// Get the anchor point on bodyA in world coordinates.
-	virtual Vec2 GetAnchorA() const = 0;
+	virtual b2Vec2 GetAnchorA() const = 0;
 
 	/// Get the anchor point on bodyB in world coordinates.
-	virtual Vec2 GetAnchorB() const = 0;
+	virtual b2Vec2 GetAnchorB() const = 0;
 
 	/// Get the reaction force on bodyB at the joint anchor in Newtons.
-	virtual Vec2 GetReactionForce(float32 inv_dt) const = 0;
+	virtual b2Vec2 GetReactionForce(float32 inv_dt) const = 0;
 
 	/// Get the reaction torque on bodyB in N*m.
 	virtual float32 GetReactionTorque(float32 inv_dt) const = 0;
 
 	/// Get the next joint the world joint list.
-	Joint* GetNext();
-	const Joint* GetNext() const;
+	b2Joint* GetNext();
+	const b2Joint* GetNext() const;
 
 	/// Get the user data pointer.
 	void* GetUserData() const;
@@ -147,36 +144,36 @@ public:
 	bool GetCollideConnected() const;
 
 	/// Dump this joint to the log file.
-	virtual void Dump() { Log("// Dump is not supported for this joint type.\n"); }
+	virtual void Dump() { b2Log("// Dump is not supported for this joint type.\n"); }
 
 	/// Shift the origin for any points stored in world coordinates.
-	virtual void ShiftOrigin(const Vec2& newOrigin) { B2_NOT_USED(newOrigin);  }
+	virtual void ShiftOrigin(const b2Vec2& newOrigin) { B2_NOT_USED(newOrigin);  }
 
 protected:
-	friend class World;
-	friend class Body;
-	friend class Island;
-	friend class GearJoint;
+	friend class b2World;
+	friend class b2Body;
+	friend class b2Island;
+	friend class b2GearJoint;
 
-	static Joint* Create(const JointDef* def, BlockAllocator* allocator);
-	static void Destroy(Joint* joint, BlockAllocator* allocator);
+	static b2Joint* Create(const b2JointDef* def, b2BlockAllocator* allocator);
+	static void Destroy(b2Joint* joint, b2BlockAllocator* allocator);
 
-	Joint(const JointDef* def);
-	virtual ~Joint() {}
+	b2Joint(const b2JointDef* def);
+	virtual ~b2Joint() {}
 
-	virtual void InitVelocityConstraints(const SolverData& data) = 0;
-	virtual void SolveVelocityConstraints(const SolverData& data) = 0;
+	virtual void InitVelocityConstraints(const b2SolverData& data) = 0;
+	virtual void SolveVelocityConstraints(const b2SolverData& data) = 0;
 
 	// This returns true if the position errors are within tolerance.
-	virtual bool SolvePositionConstraints(const SolverData& data) = 0;
+	virtual bool SolvePositionConstraints(const b2SolverData& data) = 0;
 
-	JointType m_type;
-	Joint* m_prev;
-	Joint* m_next;
-	JointEdge m_edgeA;
-	JointEdge m_edgeB;
-	Body* m_bodyA;
-	Body* m_bodyB;
+	b2JointType m_type;
+	b2Joint* m_prev;
+	b2Joint* m_next;
+	b2JointEdge m_edgeA;
+	b2JointEdge m_edgeB;
+	b2Body* m_bodyA;
+	b2Body* m_bodyB;
 
 	int32 m_index;
 
@@ -186,46 +183,44 @@ protected:
 	void* m_userData;
 };
 
-inline JointType Joint::GetType() const
+inline b2JointType b2Joint::GetType() const
 {
 	return m_type;
 }
 
-inline Body* Joint::GetBodyA()
+inline b2Body* b2Joint::GetBodyA()
 {
 	return m_bodyA;
 }
 
-inline Body* Joint::GetBodyB()
+inline b2Body* b2Joint::GetBodyB()
 {
 	return m_bodyB;
 }
 
-inline Joint* Joint::GetNext()
+inline b2Joint* b2Joint::GetNext()
 {
 	return m_next;
 }
 
-inline const Joint* Joint::GetNext() const
+inline const b2Joint* b2Joint::GetNext() const
 {
 	return m_next;
 }
 
-inline void* Joint::GetUserData() const
+inline void* b2Joint::GetUserData() const
 {
 	return m_userData;
 }
 
-inline void Joint::SetUserData(void* data)
+inline void b2Joint::SetUserData(void* data)
 {
 	m_userData = data;
 }
 
-inline bool Joint::GetCollideConnected() const
+inline bool b2Joint::GetCollideConnected() const
 {
 	return m_collideConnected;
 }
-
-} // End of namespace b2d11
 
 #endif

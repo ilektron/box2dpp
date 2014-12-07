@@ -19,14 +19,12 @@
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 #include <Box2D/Dynamics/b2Fixture.h>
 
-using namespace b2d11;
-
 // Return true if contact calculations should be performed between these two shapes.
 // If you implement your own collision filter you may want to build from this implementation.
-bool ContactFilter::ShouldCollide(Fixture* fixtureA, Fixture* fixtureB)
+bool b2ContactFilter::ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB)
 {
-	const Filter& filterA = fixtureA->GetFilterData();
-	const Filter& filterB = fixtureB->GetFilterData();
+	const b2Filter& filterA = fixtureA->GetFilterData();
+	const b2Filter& filterB = fixtureB->GetFilterData();
 
 	if (filterA.groupIndex == filterB.groupIndex && filterA.groupIndex != 0)
 	{

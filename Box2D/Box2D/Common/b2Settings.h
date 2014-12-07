@@ -22,29 +22,22 @@
 #include <stddef.h>
 #include <assert.h>
 #include <float.h>
-#include <cmath>
-#include <cinttypes>
-
-namespace b2d11
-{
 
 #define B2_NOT_USED(x) ((void)(x))
+#define b2Assert(A) assert(A)
 
-// #define b2Assert(A) assert(A)
-inline void Assert(bool b) { assert(b); }
-
-typedef int8_t	int8;
-typedef int16_t int16;
-typedef int32_t int32;
-typedef uint8_t uint8;
-typedef uint16_t uint16;
-typedef uint32_t uint32;
-typedef float float32; // Not guaranteed
+typedef signed char	int8;
+typedef signed short int16;
+typedef signed int int32;
+typedef unsigned char uint8;
+typedef unsigned short uint16;
+typedef unsigned int uint32;
+typedef float float32;
 typedef double float64;
 
-constexpr float MAX_FLOAT = FLT_MAX;
-constexpr float EPSILON =		FLT_EPSILON;
-constexpr float PI =			M_PI;
+#define	b2_maxFloat		FLT_MAX
+#define	b2_epsilon		FLT_EPSILON
+#define b2_pi			3.14159265359f
 
 /// @file
 /// Global tuning constants based on meters-kilograms-seconds (MKS) units.
@@ -54,98 +47,98 @@ constexpr float PI =			M_PI;
 
 /// The maximum number of contact points between two convex shapes. Do
 /// not change this value.
-constexpr int MAX_MANIFOLD_POINTS =	2;
+#define b2_maxManifoldPoints	2
 
 /// The maximum number of vertices on a convex polygon. You cannot increase
 /// this too much because b2BlockAllocator has a maximum object size.
-constexpr int MAX_POLYGON_VERTICES =	8;
+#define b2_maxPolygonVertices	8
 
 /// This is used to fatten AABBs in the dynamic tree. This allows proxies
 /// to move by a small amount without triggering a tree adjustment.
 /// This is in meters.
-constexpr float AABB_EXTENSION =		0.1f;
+#define b2_aabbExtension		0.1f
 
 /// This is used to fatten AABBs in the dynamic tree. This is used to predict
 /// the future position based on the current displacement.
 /// This is a dimensionless multiplier.
-constexpr float AABB_MULTIPLIER =		2.0f;
+#define b2_aabbMultiplier		2.0f
 
 /// A small length used as a collision and constraint tolerance. Usually it is
 /// chosen to be numerically significant, but visually insignificant.
-constexpr float LINEAR_SLOP =			0.005f;
+#define b2_linearSlop			0.005f
 
 /// A small angle used as a collision and constraint tolerance. Usually it is
 /// chosen to be numerically significant, but visually insignificant.
-constexpr float ANGULAR_SLOP =			(2.0f / 180.0f * PI);
+#define b2_angularSlop			(2.0f / 180.0f * b2_pi)
 
 /// The radius of the polygon/edge shape skin. This should not be modified. Making
 /// this smaller means polygons will have an insufficient buffer for continuous collision.
 /// Making it larger may create artifacts for vertex collision.
-constexpr float POLYGON_RADIUS =		(2.0f * LINEAR_SLOP);
+#define b2_polygonRadius		(2.0f * b2_linearSlop)
 
 /// Maximum number of sub-steps per contact in continuous physics simulation.
-constexpr int MAX_SUB_STEPS =	8;
+#define b2_maxSubSteps			8
 
 
 // Dynamics
 
 /// Maximum number of contacts to be handled to solve a TOI impact.
-constexpr int MAX_TOI_CONTACTS =			32;
+#define b2_maxTOIContacts			32
 
 /// A velocity threshold for elastic collisions. Any collision with a relative linear
 /// velocity below this threshold will be treated as inelastic.
-constexpr float VELOCITY_THRESHOLD =		1.0f;
+#define b2_velocityThreshold		1.0f
 
 /// The maximum linear position correction used when solving constraints. This helps to
 /// prevent overshoot.
-constexpr float MAX_LINEAR_CORRECTION =		0.2f;
+#define b2_maxLinearCorrection		0.2f
 
 /// The maximum angular position correction used when solving constraints. This helps to
 /// prevent overshoot.
-constexpr float MAX_ANGULAR_CORRECTION =		(8.0f / 180.0f * PI);
+#define b2_maxAngularCorrection		(8.0f / 180.0f * b2_pi)
 
 /// The maximum linear velocity of a body. This limit is very large and is used
 /// to prevent numerical problems. You shouldn't need to adjust this.
-constexpr float MAX_TRANSLATION =			2.0f;
-constexpr float MAX_TRANSLATION_SQUARED =	(MAX_TRANSLATION * MAX_TRANSLATION);
+#define b2_maxTranslation			2.0f
+#define b2_maxTranslationSquared	(b2_maxTranslation * b2_maxTranslation)
 
 /// The maximum angular velocity of a body. This limit is very large and is used
 /// to prevent numerical problems. You shouldn't need to adjust this.
-constexpr float MAX_ROTATION =				(0.5f * PI);
-constexpr float MAX_ROTATION_SQUARED =		(MAX_ROTATION * MAX_ROTATION);
+#define b2_maxRotation				(0.5f * b2_pi)
+#define b2_maxRotationSquared		(b2_maxRotation * b2_maxRotation)
 
 /// This scale factor controls how fast overlap is resolved. Ideally this would be 1 so
 /// that overlap is removed in one time step. However using values close to 1 often lead
 /// to overshoot.
-constexpr float BAUMGARTE =				0.2f;
-constexpr float TOI_BAUMGARTE =				0.75f;
+#define b2_baumgarte				0.2f
+#define b2_toiBaugarte				0.75f
 
 
 // Sleep
 
 /// The time that a body must be still before it will go to sleep.
-constexpr float TIME_TO_SLEEP =				0.5f;
+#define b2_timeToSleep				0.5f
 
 /// A body cannot sleep if its linear velocity is above this tolerance.
-constexpr float LINEAR_SLEEP_TOLERANCE =		0.01f;
+#define b2_linearSleepTolerance		0.01f
 
 /// A body cannot sleep if its angular velocity is above this tolerance.
-constexpr float ANGULAR_SLEEP_TOLERANCE =	(2.0f / 180.0f * PI);
+#define b2_angularSleepTolerance	(2.0f / 180.0f * b2_pi)
 
 // Memory Allocation
 
 /// Implement this function to use your own memory allocator.
-void* Alloc(int32 size);
+void* b2Alloc(int32 size);
 
 /// If you implement b2Alloc, you should also implement this function.
-void Free(void* mem);
+void b2Free(void* mem);
 
 /// Logging function.
-void Log(const char* string, ...);
+void b2Log(const char* string, ...);
 
 /// Version numbering scheme.
 /// See http://en.wikipedia.org/wiki/Software_versioning
-struct Version
+struct b2Version
 {
 	int32 major;		///< significant changes
 	int32 minor;		///< incremental changes
@@ -153,8 +146,6 @@ struct Version
 };
 
 /// Current version.
-extern Version b2_version;
-
-} // End of namespace b2d11
+extern b2Version b2_version;
 
 #endif

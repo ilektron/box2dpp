@@ -21,15 +21,12 @@
 
 #include <Box2D/Dynamics/Joints/b2Joint.h>
 
-namespace b2d11
-{
-	
 /// Weld joint definition. You need to specify local anchor points
 /// where they are attached and the relative body angle. The position
 /// of the anchor points is important for computing the reaction torque.
-struct WeldJointDef : public JointDef
+struct b2WeldJointDef : public b2JointDef
 {
-	WeldJointDef()
+	b2WeldJointDef()
 	{
 		type = e_weldJoint;
 		localAnchorA.Set(0.0f, 0.0f);
@@ -41,13 +38,13 @@ struct WeldJointDef : public JointDef
 
 	/// Initialize the bodies, anchors, and reference angle using a world
 	/// anchor point.
-	void Initialize(Body* bodyA, Body* bodyB, const Vec2& anchor);
+	void Initialize(b2Body* bodyA, b2Body* bodyB, const b2Vec2& anchor);
 
 	/// The local anchor point relative to bodyA's origin.
-	Vec2 localAnchorA;
+	b2Vec2 localAnchorA;
 
 	/// The local anchor point relative to bodyB's origin.
-	Vec2 localAnchorB;
+	b2Vec2 localAnchorB;
 
 	/// The bodyB angle minus bodyA angle in the reference state (radians).
 	float32 referenceAngle;
@@ -62,20 +59,20 @@ struct WeldJointDef : public JointDef
 
 /// A weld joint essentially glues two bodies together. A weld joint may
 /// distort somewhat because the island constraint solver is approximate.
-class WeldJoint : public Joint
+class b2WeldJoint : public b2Joint
 {
 public:
-	Vec2 GetAnchorA() const;
-	Vec2 GetAnchorB() const;
+	b2Vec2 GetAnchorA() const;
+	b2Vec2 GetAnchorB() const;
 
-	Vec2 GetReactionForce(float32 inv_dt) const;
+	b2Vec2 GetReactionForce(float32 inv_dt) const;
 	float32 GetReactionTorque(float32 inv_dt) const;
 
 	/// The local anchor point relative to bodyA's origin.
-	const Vec2& GetLocalAnchorA() const { return m_localAnchorA; }
+	const b2Vec2& GetLocalAnchorA() const { return m_localAnchorA; }
 
 	/// The local anchor point relative to bodyB's origin.
-	const Vec2& GetLocalAnchorB() const  { return m_localAnchorB; }
+	const b2Vec2& GetLocalAnchorB() const  { return m_localAnchorB; }
 
 	/// Get the reference angle.
 	float32 GetReferenceAngle() const { return m_referenceAngle; }
@@ -88,44 +85,42 @@ public:
 	void SetDampingRatio(float32 ratio) { m_dampingRatio = ratio; }
 	float32 GetDampingRatio() const { return m_dampingRatio; }
 
-	/// Dump to Log
+	/// Dump to b2Log
 	void Dump();
 
 protected:
 
-	friend class Joint;
+	friend class b2Joint;
 
-	WeldJoint(const WeldJointDef* def);
+	b2WeldJoint(const b2WeldJointDef* def);
 
-	void InitVelocityConstraints(const SolverData& data);
-	void SolveVelocityConstraints(const SolverData& data);
-	bool SolvePositionConstraints(const SolverData& data);
+	void InitVelocityConstraints(const b2SolverData& data);
+	void SolveVelocityConstraints(const b2SolverData& data);
+	bool SolvePositionConstraints(const b2SolverData& data);
 
 	float32 m_frequencyHz;
 	float32 m_dampingRatio;
 	float32 m_bias;
 
 	// Solver shared
-	Vec2 m_localAnchorA;
-	Vec2 m_localAnchorB;
+	b2Vec2 m_localAnchorA;
+	b2Vec2 m_localAnchorB;
 	float32 m_referenceAngle;
 	float32 m_gamma;
-	Vec3 m_impulse;
+	b2Vec3 m_impulse;
 
 	// Solver temp
 	int32 m_indexA;
 	int32 m_indexB;
-	Vec2 m_rA;
-	Vec2 m_rB;
-	Vec2 m_localCenterA;
-	Vec2 m_localCenterB;
+	b2Vec2 m_rA;
+	b2Vec2 m_rB;
+	b2Vec2 m_localCenterA;
+	b2Vec2 m_localCenterB;
 	float32 m_invMassA;
 	float32 m_invMassB;
 	float32 m_invIA;
 	float32 m_invIB;
-	Mat33 m_mass;
+	b2Mat33 m_mass;
 };
-
-} // End of namespace b2d11
 
 #endif

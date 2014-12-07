@@ -94,7 +94,7 @@ public:
 #if 1
 		b2Vec2 position = m_character->GetBody()->GetPosition();
 
-		if (position.y < m_top + m_radius - 3.0f * b2LINEAR_SLOP)
+		if (position.y < m_top + m_radius - 3.0f * b2_linearSlop)
 		{
 			contact->SetEnabled(false);
 		}

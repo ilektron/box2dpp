@@ -60,7 +60,7 @@ public:
 
 		{
 			b2Transform xf1;
-			xf1.q.Set(0.3524f * b2d11::PI);
+			xf1.q.Set(0.3524f * b2_pi);
 			xf1.p = xf1.q.GetXAxis();
 
 			b2Vec2 vertices[3];
@@ -76,7 +76,7 @@ public:
 			sd1.density = 4.0f;
 
 			b2Transform xf2;
-			xf2.q.Set(-0.3524f * b2d11::PI);
+			xf2.q.Set(-0.3524f * b2_pi);
 			xf2.p = -xf2.q.GetXAxis();
 
 			vertices[0] = b2Mul(xf2, b2Vec2(-1.0f, 0.0f));
@@ -96,7 +96,7 @@ public:
 			bd.linearDamping = 0.5f;
 
 			bd.position.Set(0.0f, 2.0);
-			bd.angle = b2d11::PI;
+			bd.angle = b2_pi;
 			bd.allowSleep = false;
 			m_body = m_world->CreateBody(&bd);
 			m_body->CreateFixture(&sd1);

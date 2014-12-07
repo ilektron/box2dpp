@@ -21,18 +21,15 @@
 
 #include <Box2D/Dynamics/Joints/b2Joint.h>
 
-namespace b2d11
-{
-
 /// Distance joint definition. This requires defining an
 /// anchor point on both bodies and the non-zero length of the
 /// distance joint. The definition uses local anchor points
 /// so that the initial configuration can violate the constraint
 /// slightly. This helps when saving and loading a game.
 /// @warning Do not use a zero or short length.
-struct DistanceJointDef : public JointDef
+struct b2DistanceJointDef : public b2JointDef
 {
-	DistanceJointDef()
+	b2DistanceJointDef()
 	{
 		type = e_distanceJoint;
 		localAnchorA.Set(0.0f, 0.0f);
@@ -44,14 +41,14 @@ struct DistanceJointDef : public JointDef
 
 	/// Initialize the bodies, anchors, and length using the world
 	/// anchors.
-	void Initialize(Body* bodyA, Body* bodyB,
-					const Vec2& anchorA, const Vec2& anchorB);
+	void Initialize(b2Body* bodyA, b2Body* bodyB,
+					const b2Vec2& anchorA, const b2Vec2& anchorB);
 
 	/// The local anchor point relative to bodyA's origin.
-	Vec2 localAnchorA;
+	b2Vec2 localAnchorA;
 
 	/// The local anchor point relative to bodyB's origin.
-	Vec2 localAnchorB;
+	b2Vec2 localAnchorB;
 
 	/// The natural length between the anchor points.
 	float32 length;
@@ -67,26 +64,26 @@ struct DistanceJointDef : public JointDef
 /// A distance joint constrains two points on two bodies
 /// to remain at a fixed distance from each other. You can view
 /// this as a massless, rigid rod.
-class DistanceJoint : public Joint
+class b2DistanceJoint : public b2Joint
 {
 public:
 
-	Vec2 GetAnchorA() const;
-	Vec2 GetAnchorB() const;
+	b2Vec2 GetAnchorA() const;
+	b2Vec2 GetAnchorB() const;
 
 	/// Get the reaction force given the inverse time step.
 	/// Unit is N.
-	Vec2 GetReactionForce(float32 inv_dt) const;
+	b2Vec2 GetReactionForce(float32 inv_dt) const;
 
 	/// Get the reaction torque given the inverse time step.
 	/// Unit is N*m. This is always zero for a distance joint.
 	float32 GetReactionTorque(float32 inv_dt) const;
 
 	/// The local anchor point relative to bodyA's origin.
-	const Vec2& GetLocalAnchorA() const { return m_localAnchorA; }
+	const b2Vec2& GetLocalAnchorA() const { return m_localAnchorA; }
 
 	/// The local anchor point relative to bodyB's origin.
-	const Vec2& GetLocalAnchorB() const  { return m_localAnchorB; }
+	const b2Vec2& GetLocalAnchorB() const  { return m_localAnchorB; }
 
 	/// Set/get the natural length.
 	/// Manipulating the length can lead to non-physical behavior when the frequency is zero.
@@ -106,20 +103,20 @@ public:
 
 protected:
 
-	friend class Joint;
-	DistanceJoint(const DistanceJointDef* data);
+	friend class b2Joint;
+	b2DistanceJoint(const b2DistanceJointDef* data);
 
-	void InitVelocityConstraints(const SolverData& data);
-	void SolveVelocityConstraints(const SolverData& data);
-	bool SolvePositionConstraints(const SolverData& data);
+	void InitVelocityConstraints(const b2SolverData& data);
+	void SolveVelocityConstraints(const b2SolverData& data);
+	bool SolvePositionConstraints(const b2SolverData& data);
 
 	float32 m_frequencyHz;
 	float32 m_dampingRatio;
 	float32 m_bias;
 
 	// Solver shared
-	Vec2 m_localAnchorA;
-	Vec2 m_localAnchorB;
+	b2Vec2 m_localAnchorA;
+	b2Vec2 m_localAnchorB;
 	float32 m_gamma;
 	float32 m_impulse;
 	float32 m_length;
@@ -127,11 +124,11 @@ protected:
 	// Solver temp
 	int32 m_indexA;
 	int32 m_indexB;
-	Vec2 m_u;
-	Vec2 m_rA;
-	Vec2 m_rB;
-	Vec2 m_localCenterA;
-	Vec2 m_localCenterB;
+	b2Vec2 m_u;
+	b2Vec2 m_rA;
+	b2Vec2 m_rB;
+	b2Vec2 m_localCenterA;
+	b2Vec2 m_localCenterB;
 	float32 m_invMassA;
 	float32 m_invMassB;
 	float32 m_invIA;
@@ -139,36 +136,34 @@ protected:
 	float32 m_mass;
 };
 
-inline void DistanceJoint::SetLength(float32 length)
+inline void b2DistanceJoint::SetLength(float32 length)
 {
 	m_length = length;
 }
 
-inline float32 DistanceJoint::GetLength() const
+inline float32 b2DistanceJoint::GetLength() const
 {
 	return m_length;
 }
 
-inline void DistanceJoint::SetFrequency(float32 hz)
+inline void b2DistanceJoint::SetFrequency(float32 hz)
 {
 	m_frequencyHz = hz;
 }
 
-inline float32 DistanceJoint::GetFrequency() const
+inline float32 b2DistanceJoint::GetFrequency() const
 {
 	return m_frequencyHz;
 }
 
-inline void DistanceJoint::SetDampingRatio(float32 ratio)
+inline void b2DistanceJoint::SetDampingRatio(float32 ratio)
 {
 	m_dampingRatio = ratio;
 }
 
-inline float32 DistanceJoint::GetDampingRatio() const
+inline float32 b2DistanceJoint::GetDampingRatio() const
 {
 	return m_dampingRatio;
 }
-
-} // End of namespace b2d11
 
 #endif

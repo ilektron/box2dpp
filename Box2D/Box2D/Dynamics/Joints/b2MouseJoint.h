@@ -21,14 +21,11 @@
 
 #include <Box2D/Dynamics/Joints/b2Joint.h>
 
-namespace b2d11
-{
-
 /// Mouse joint definition. This requires a world target point,
 /// tuning parameters, and the time step.
-struct MouseJointDef : public JointDef
+struct b2MouseJointDef : public b2JointDef
 {
-	MouseJointDef()
+	b2MouseJointDef()
 	{
 		type = e_mouseJoint;
 		target.Set(0.0f, 0.0f);
@@ -39,7 +36,7 @@ struct MouseJointDef : public JointDef
 
 	/// The initial world target point. This is assumed
 	/// to coincide with the body anchor initially.
-	Vec2 target;
+	b2Vec2 target;
 
 	/// The maximum constraint force that can be exerted
 	/// to move the candidate body. Usually you will express
@@ -60,25 +57,25 @@ struct MouseJointDef : public JointDef
 /// NOTE: this joint is not documented in the manual because it was
 /// developed to be used in the testbed. If you want to learn how to
 /// use the mouse joint, look at the testbed.
-class MouseJoint : public Joint
+class b2MouseJoint : public b2Joint
 {
 public:
 
-	/// Implements Joint.
-	Vec2 GetAnchorA() const;
+	/// Implements b2Joint.
+	b2Vec2 GetAnchorA() const;
 
-	/// Implements Joint.
-	Vec2 GetAnchorB() const;
+	/// Implements b2Joint.
+	b2Vec2 GetAnchorB() const;
 
-	/// Implements Joint.
-	Vec2 GetReactionForce(float32 inv_dt) const;
+	/// Implements b2Joint.
+	b2Vec2 GetReactionForce(float32 inv_dt) const;
 
-	/// Implements Joint.
+	/// Implements b2Joint.
 	float32 GetReactionTorque(float32 inv_dt) const;
 
 	/// Use this to update the target point.
-	void SetTarget(const Vec2& target);
-	const Vec2& GetTarget() const;
+	void SetTarget(const b2Vec2& target);
+	const b2Vec2& GetTarget() const;
 
 	/// Set/get the maximum force in Newtons.
 	void SetMaxForce(float32 force);
@@ -93,42 +90,40 @@ public:
 	float32 GetDampingRatio() const;
 
 	/// The mouse joint does not support dumping.
-	void Dump() { Log("Mouse joint dumping is not supported.\n"); }
+	void Dump() { b2Log("Mouse joint dumping is not supported.\n"); }
 
-	/// Implement Joint::ShiftOrigin
-	void ShiftOrigin(const Vec2& newOrigin);
+	/// Implement b2Joint::ShiftOrigin
+	void ShiftOrigin(const b2Vec2& newOrigin);
 
 protected:
-	friend class Joint;
+	friend class b2Joint;
 
-	MouseJoint(const MouseJointDef* def);
+	b2MouseJoint(const b2MouseJointDef* def);
 
-	void InitVelocityConstraints(const SolverData& data);
-	void SolveVelocityConstraints(const SolverData& data);
-	bool SolvePositionConstraints(const SolverData& data);
+	void InitVelocityConstraints(const b2SolverData& data);
+	void SolveVelocityConstraints(const b2SolverData& data);
+	bool SolvePositionConstraints(const b2SolverData& data);
 
-	Vec2 m_localAnchorB;
-	Vec2 m_targetA;
+	b2Vec2 m_localAnchorB;
+	b2Vec2 m_targetA;
 	float32 m_frequencyHz;
 	float32 m_dampingRatio;
 	float32 m_beta;
 	
 	// Solver shared
-	Vec2 m_impulse;
+	b2Vec2 m_impulse;
 	float32 m_maxForce;
 	float32 m_gamma;
 
 	// Solver temp
 	int32 m_indexA;
 	int32 m_indexB;
-	Vec2 m_rB;
-	Vec2 m_localCenterB;
+	b2Vec2 m_rB;
+	b2Vec2 m_localCenterB;
 	float32 m_invMassB;
 	float32 m_invIB;
-	Mat22 m_mass;
-	Vec2 m_C;
+	b2Mat22 m_mass;
+	b2Vec2 m_C;
 };
-
-} // End of namespace b2d11
 
 #endif

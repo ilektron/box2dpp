@@ -21,14 +21,11 @@
 
 #include <Box2D/Dynamics/Joints/b2Joint.h>
 
-namespace b2d11
-{
-
 /// Gear joint definition. This definition requires two existing
 /// revolute or prismatic joints (any combination will work).
-struct GearJointDef : public JointDef
+struct b2GearJointDef : public b2JointDef
 {
-	GearJointDef()
+	b2GearJointDef()
 	{
 		type = e_gearJoint;
 		joint1 = NULL;
@@ -37,13 +34,13 @@ struct GearJointDef : public JointDef
 	}
 
 	/// The first revolute/prismatic joint attached to the gear joint.
-	Joint* joint1;
+	b2Joint* joint1;
 
 	/// The second revolute/prismatic joint attached to the gear joint.
-	Joint* joint2;
+	b2Joint* joint2;
 
 	/// The gear ratio.
-	/// @see GearJoint for explanation.
+	/// @see b2GearJoint for explanation.
 	float32 ratio;
 };
 
@@ -56,20 +53,20 @@ struct GearJointDef : public JointDef
 /// of length or units of 1/length.
 /// @warning You have to manually destroy the gear joint if joint1 or joint2
 /// is destroyed.
-class GearJoint : public Joint
+class b2GearJoint : public b2Joint
 {
 public:
-	Vec2 GetAnchorA() const;
-	Vec2 GetAnchorB() const;
+	b2Vec2 GetAnchorA() const;
+	b2Vec2 GetAnchorB() const;
 
-	Vec2 GetReactionForce(float32 inv_dt) const;
+	b2Vec2 GetReactionForce(float32 inv_dt) const;
 	float32 GetReactionTorque(float32 inv_dt) const;
 
 	/// Get the first joint.
-	Joint* GetJoint1() { return m_joint1; }
+	b2Joint* GetJoint1() { return m_joint1; }
 
 	/// Get the second joint.
-	Joint* GetJoint2() { return m_joint2; }
+	b2Joint* GetJoint2() { return m_joint2; }
 
 	/// Set/Get the gear ratio.
 	void SetRatio(float32 ratio);
@@ -80,32 +77,32 @@ public:
 
 protected:
 
-	friend class Joint;
-	GearJoint(const GearJointDef* data);
+	friend class b2Joint;
+	b2GearJoint(const b2GearJointDef* data);
 
-	void InitVelocityConstraints(const SolverData& data);
-	void SolveVelocityConstraints(const SolverData& data);
-	bool SolvePositionConstraints(const SolverData& data);
+	void InitVelocityConstraints(const b2SolverData& data);
+	void SolveVelocityConstraints(const b2SolverData& data);
+	bool SolvePositionConstraints(const b2SolverData& data);
 
-	Joint* m_joint1;
-	Joint* m_joint2;
+	b2Joint* m_joint1;
+	b2Joint* m_joint2;
 
-	JointType m_typeA;
-	JointType m_typeB;
+	b2JointType m_typeA;
+	b2JointType m_typeB;
 
 	// Body A is connected to body C
 	// Body B is connected to body D
-	Body* m_bodyC;
-	Body* m_bodyD;
+	b2Body* m_bodyC;
+	b2Body* m_bodyD;
 
 	// Solver shared
-	Vec2 m_localAnchorA;
-	Vec2 m_localAnchorB;
-	Vec2 m_localAnchorC;
-	Vec2 m_localAnchorD;
+	b2Vec2 m_localAnchorA;
+	b2Vec2 m_localAnchorB;
+	b2Vec2 m_localAnchorC;
+	b2Vec2 m_localAnchorD;
 
-	Vec2 m_localAxisC;
-	Vec2 m_localAxisD;
+	b2Vec2 m_localAxisC;
+	b2Vec2 m_localAxisD;
 
 	float32 m_referenceAngleA;
 	float32 m_referenceAngleB;
@@ -117,14 +114,12 @@ protected:
 
 	// Solver temp
 	int32 m_indexA, m_indexB, m_indexC, m_indexD;
-	Vec2 m_lcA, m_lcB, m_lcC, m_lcD;
+	b2Vec2 m_lcA, m_lcB, m_lcC, m_lcD;
 	float32 m_mA, m_mB, m_mC, m_mD;
 	float32 m_iA, m_iB, m_iC, m_iD;
-	Vec2 m_JvAC, m_JvBD;
+	b2Vec2 m_JvAC, m_JvBD;
 	float32 m_JwA, m_JwB, m_JwC, m_JwD;
 	float32 m_mass;
 };
-
-} // End of namespace b2d11
 
 #endif

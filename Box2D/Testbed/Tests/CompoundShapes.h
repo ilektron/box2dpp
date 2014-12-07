@@ -51,7 +51,7 @@ public:
 				b2BodyDef bd;
 				bd.type = b2_dynamicBody;
 				bd.position.Set(x + 5.0f, 1.05f + 2.5f * i);
-				bd.angle = RandomFloat(-b2d11::PI, b2d11::PI);
+				bd.angle = RandomFloat(-b2_pi, b2_pi);
 				b2Body* body = m_world->CreateBody(&bd);
 				body->CreateFixture(&circle1, 2.0f);
 				body->CreateFixture(&circle2, 0.0f);
@@ -63,7 +63,7 @@ public:
 			polygon1.SetAsBox(0.25f, 0.5f);
 
 			b2PolygonShape polygon2;
-			polygon2.SetAsBox(0.25f, 0.5f, b2Vec2(0.0f, -0.5f), 0.5f * b2d11::PI);
+			polygon2.SetAsBox(0.25f, 0.5f, b2Vec2(0.0f, -0.5f), 0.5f * b2_pi);
 
 			for (int i = 0; i < 10; ++i)
 			{
@@ -71,7 +71,7 @@ public:
 				b2BodyDef bd;
 				bd.type = b2_dynamicBody;
 				bd.position.Set(x - 5.0f, 1.05f + 2.5f * i);
-				bd.angle = RandomFloat(-b2d11::PI, b2d11::PI);
+				bd.angle = RandomFloat(-b2_pi, b2_pi);
 				b2Body* body = m_world->CreateBody(&bd);
 				body->CreateFixture(&polygon1, 2.0f);
 				body->CreateFixture(&polygon2, 2.0f);
@@ -80,7 +80,7 @@ public:
 
 		{
 			b2Transform xf1;
-			xf1.q.Set(0.3524f * b2d11::PI);
+			xf1.q.Set(0.3524f * b2_pi);
 			xf1.p = xf1.q.GetXAxis();
 
 			b2Vec2 vertices[3];
@@ -92,7 +92,7 @@ public:
 			triangle1.Set(vertices, 3);
 
 			b2Transform xf2;
-			xf2.q.Set(-0.3524f * b2d11::PI);
+			xf2.q.Set(-0.3524f * b2_pi);
 			xf2.p = -xf2.q.GetXAxis();
 
 			b2PolygonShape triangle2;

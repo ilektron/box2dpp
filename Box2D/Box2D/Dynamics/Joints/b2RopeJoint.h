@@ -21,16 +21,13 @@
 
 #include <Box2D/Dynamics/Joints/b2Joint.h>
 
-namespace b2d11
-{
-	
 /// Rope joint definition. This requires two body anchor points and
 /// a maximum lengths.
 /// Note: by default the connected objects will not collide.
-/// see collideConnected in JointDef.
-struct RopeJointDef : public JointDef
+/// see collideConnected in b2JointDef.
+struct b2RopeJointDef : public b2JointDef
 {
-	RopeJointDef()
+	b2RopeJointDef()
 	{
 		type = e_ropeJoint;
 		localAnchorA.Set(-1.0f, 0.0f);
@@ -39,13 +36,13 @@ struct RopeJointDef : public JointDef
 	}
 
 	/// The local anchor point relative to bodyA's origin.
-	Vec2 localAnchorA;
+	b2Vec2 localAnchorA;
 
 	/// The local anchor point relative to bodyB's origin.
-	Vec2 localAnchorB;
+	b2Vec2 localAnchorB;
 
 	/// The maximum length of the rope.
-	/// Warning: this must be larger than LINEAR_SLOP or
+	/// Warning: this must be larger than b2_linearSlop or
 	/// the joint will have no effect.
 	float32 maxLength;
 };
@@ -56,44 +53,44 @@ struct RopeJointDef : public JointDef
 /// the simulation you will get some non-physical behavior.
 /// A model that would allow you to dynamically modify the length
 /// would have some sponginess, so I chose not to implement it
-/// that way. See DistanceJoint if you want to dynamically
+/// that way. See b2DistanceJoint if you want to dynamically
 /// control length.
-class RopeJoint : public Joint
+class b2RopeJoint : public b2Joint
 {
 public:
-	Vec2 GetAnchorA() const;
-	Vec2 GetAnchorB() const;
+	b2Vec2 GetAnchorA() const;
+	b2Vec2 GetAnchorB() const;
 
-	Vec2 GetReactionForce(float32 inv_dt) const;
+	b2Vec2 GetReactionForce(float32 inv_dt) const;
 	float32 GetReactionTorque(float32 inv_dt) const;
 
 	/// The local anchor point relative to bodyA's origin.
-	const Vec2& GetLocalAnchorA() const { return m_localAnchorA; }
+	const b2Vec2& GetLocalAnchorA() const { return m_localAnchorA; }
 
 	/// The local anchor point relative to bodyB's origin.
-	const Vec2& GetLocalAnchorB() const  { return m_localAnchorB; }
+	const b2Vec2& GetLocalAnchorB() const  { return m_localAnchorB; }
 
 	/// Set/Get the maximum length of the rope.
 	void SetMaxLength(float32 length) { m_maxLength = length; }
 	float32 GetMaxLength() const;
 
-	LimitState GetLimitState() const;
+	b2LimitState GetLimitState() const;
 
 	/// Dump joint to dmLog
 	void Dump();
 
 protected:
 
-	friend class Joint;
-	RopeJoint(const RopeJointDef* data);
+	friend class b2Joint;
+	b2RopeJoint(const b2RopeJointDef* data);
 
-	void InitVelocityConstraints(const SolverData& data);
-	void SolveVelocityConstraints(const SolverData& data);
-	bool SolvePositionConstraints(const SolverData& data);
+	void InitVelocityConstraints(const b2SolverData& data);
+	void SolveVelocityConstraints(const b2SolverData& data);
+	bool SolvePositionConstraints(const b2SolverData& data);
 
 	// Solver shared
-	Vec2 m_localAnchorA;
-	Vec2 m_localAnchorB;
+	b2Vec2 m_localAnchorA;
+	b2Vec2 m_localAnchorB;
 	float32 m_maxLength;
 	float32 m_length;
 	float32 m_impulse;
@@ -101,19 +98,17 @@ protected:
 	// Solver temp
 	int32 m_indexA;
 	int32 m_indexB;
-	Vec2 m_u;
-	Vec2 m_rA;
-	Vec2 m_rB;
-	Vec2 m_localCenterA;
-	Vec2 m_localCenterB;
+	b2Vec2 m_u;
+	b2Vec2 m_rA;
+	b2Vec2 m_rB;
+	b2Vec2 m_localCenterA;
+	b2Vec2 m_localCenterB;
 	float32 m_invMassA;
 	float32 m_invMassB;
 	float32 m_invIA;
 	float32 m_invIB;
 	float32 m_mass;
-	LimitState m_state;
+	b2LimitState m_state;
 };
-
-} // end of namepsace b2d11
 
 #endif

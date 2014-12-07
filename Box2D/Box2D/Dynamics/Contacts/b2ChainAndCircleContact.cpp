@@ -24,32 +24,30 @@
 
 #include <new>
 
-using namespace b2d11;
-
-Contact* ChainAndCircleContact::Create(Fixture* fixtureA, int32 indexA, Fixture* fixtureB, int32 indexB, BlockAllocator* allocator)
+b2Contact* b2ChainAndCircleContact::Create(b2Fixture* fixtureA, int32 indexA, b2Fixture* fixtureB, int32 indexB, b2BlockAllocator* allocator)
 {
-	void* mem = allocator->Allocate(sizeof(ChainAndCircleContact));
-	return new (mem) ChainAndCircleContact(fixtureA, indexA, fixtureB, indexB);
+	void* mem = allocator->Allocate(sizeof(b2ChainAndCircleContact));
+	return new (mem) b2ChainAndCircleContact(fixtureA, indexA, fixtureB, indexB);
 }
 
-void ChainAndCircleContact::Destroy(Contact* contact, BlockAllocator* allocator)
+void b2ChainAndCircleContact::Destroy(b2Contact* contact, b2BlockAllocator* allocator)
 {
-	((ChainAndCircleContact*)contact)->~ChainAndCircleContact();
-	allocator->Free(contact, sizeof(ChainAndCircleContact));
+	((b2ChainAndCircleContact*)contact)->~b2ChainAndCircleContact();
+	allocator->Free(contact, sizeof(b2ChainAndCircleContact));
 }
 
-ChainAndCircleContact::ChainAndCircleContact(Fixture* fixtureA, int32 indexA, Fixture* fixtureB, int32 indexB)
-: Contact(fixtureA, indexA, fixtureB, indexB)
+b2ChainAndCircleContact::b2ChainAndCircleContact(b2Fixture* fixtureA, int32 indexA, b2Fixture* fixtureB, int32 indexB)
+: b2Contact(fixtureA, indexA, fixtureB, indexB)
 {
-	Assert(m_fixtureA->GetType() == Shape::e_chain);
-	Assert(m_fixtureB->GetType() == Shape::e_circle);
+	b2Assert(m_fixtureA->GetType() == b2Shape::e_chain);
+	b2Assert(m_fixtureB->GetType() == b2Shape::e_circle);
 }
 
-void ChainAndCircleContact::Evaluate(Manifold* manifold, const Transform& xfA, const Transform& xfB)
+void b2ChainAndCircleContact::Evaluate(b2Manifold* manifold, const b2Transform& xfA, const b2Transform& xfB)
 {
-	ChainShape* chain = (ChainShape*)m_fixtureA->GetShape();
-	EdgeShape edge;
+	b2ChainShape* chain = (b2ChainShape*)m_fixtureA->GetShape();
+	b2EdgeShape edge;
 	chain->GetChildEdge(&edge, m_indexA);
-	CollideEdgeAndCircle(	manifold, &edge, xfA,
-							(CircleShape*)m_fixtureB->GetShape(), xfB);
+	b2CollideEdgeAndCircle(	manifold, &edge, xfA,
+							(b2CircleShape*)m_fixtureB->GetShape(), xfB);
 }

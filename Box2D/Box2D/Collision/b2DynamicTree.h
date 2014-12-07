@@ -20,24 +20,20 @@
 #define B2_DYNAMIC_TREE_H
 
 #include <Box2D/Collision/b2Collision.h>
+#include <Box2D/Common/b2GrowableStack.h>
 
-#include <vector>
-
-namespace b2d11
-{
-	
-constexpr int NULL_NODE = -1;
+#define b2_nullNode (-1)
 
 /// A node in the dynamic tree. The client does not interact with this directly.
-struct TreeNode
+struct b2TreeNode
 {
 	bool IsLeaf() const
 	{
-		return child1 == NULL_NODE;
+		return child1 == b2_nullNode;
 	}
 
 	/// Enlarged AABB
-	AABB aabb;
+	b2AABB aabb;
 
 	void* userData;
 
@@ -57,22 +53,22 @@ struct TreeNode
 /// A dynamic AABB tree broad-phase, inspired by Nathanael Presson's btDbvt.
 /// A dynamic tree arranges data in a binary tree to accelerate
 /// queries such as volume queries and ray casts. Leafs are proxies
-/// with an AABB. In the tree we expand the proxy AABB by _fatAABBFactor
+/// with an AABB. In the tree we expand the proxy AABB by b2_fatAABBFactor
 /// so that the proxy AABB is bigger than the client object. This allows the client
 /// object to move by small amounts without triggering a tree update.
 ///
 /// Nodes are pooled and relocatable, so we use node indices rather than pointers.
-class DynamicTree
+class b2DynamicTree
 {
 public:
 	/// Constructing the tree initializes the node pool.
-	DynamicTree();
+	b2DynamicTree();
 
 	/// Destroy the tree, freeing the node pool.
-	~DynamicTree();
+	~b2DynamicTree();
 
 	/// Create a proxy. Provide a tight fitting AABB and a userData pointer.
-	int32 CreateProxy(const AABB& aabb, void* userData);
+	int32 CreateProxy(const b2AABB& aabb, void* userData);
 
 	/// Destroy a proxy. This asserts if the id is invalid.
 	void DestroyProxy(int32 proxyId);
@@ -81,19 +77,19 @@ public:
 	/// then the proxy is removed from the tree and re-inserted. Otherwise
 	/// the function returns immediately.
 	/// @return true if the proxy was re-inserted.
-	bool MoveProxy(int32 proxyId, const AABB& aabb1, const Vec2& displacement);
+	bool MoveProxy(int32 proxyId, const b2AABB& aabb1, const b2Vec2& displacement);
 
 	/// Get proxy user data.
 	/// @return the proxy user data or 0 if the id is invalid.
 	void* GetUserData(int32 proxyId) const;
 
 	/// Get the fat AABB for a proxy.
-	const AABB& GetFatAABB(int32 proxyId) const;
+	const b2AABB& GetFatAABB(int32 proxyId) const;
 
 	/// Query an AABB for overlapping proxies. The callback class
 	/// is called for each proxy that overlaps the supplied AABB.
 	template <typename T>
-	void Query(T* callback, const AABB& aabb) const;
+	void Query(T* callback, const b2AABB& aabb) const;
 
 	/// Ray-cast against the proxies in the tree. This relies on the callback
 	/// to perform a exact ray-cast in the case were the proxy contains a shape.
@@ -103,7 +99,7 @@ public:
 	/// @param input the ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).
 	/// @param callback a callback class that is called for each proxy that is hit by the ray.
 	template <typename T>
-	void RayCast(T* callback, const RayCastInput& input) const;
+	void RayCast(T* callback, const b2RayCastInput& input) const;
 
 	/// Validate this tree. For testing.
 	void Validate() const;
@@ -125,7 +121,7 @@ public:
 	/// Shift the world origin. Useful for large worlds.
 	/// The shift formula is: position -= newOrigin
 	/// @param newOrigin the new origin with respect to the old origin
-	void ShiftOrigin(const Vec2& newOrigin);
+	void ShiftOrigin(const b2Vec2& newOrigin);
 
 private:
 
@@ -145,7 +141,7 @@ private:
 
 	int32 m_root;
 
-	TreeNode* m_nodes;
+	b2TreeNode* m_nodes;
 	int32 m_nodeCount;
 	int32 m_nodeCapacity;
 
@@ -157,36 +153,35 @@ private:
 	int32 m_insertionCount;
 };
 
-inline void* DynamicTree::GetUserData(int32 proxyId) const
+inline void* b2DynamicTree::GetUserData(int32 proxyId) const
 {
-	Assert(0 <= proxyId && proxyId < m_nodeCapacity);
+	b2Assert(0 <= proxyId && proxyId < m_nodeCapacity);
 	return m_nodes[proxyId].userData;
 }
 
-inline const AABB& DynamicTree::GetFatAABB(int32 proxyId) const
+inline const b2AABB& b2DynamicTree::GetFatAABB(int32 proxyId) const
 {
-	Assert(0 <= proxyId && proxyId < m_nodeCapacity);
+	b2Assert(0 <= proxyId && proxyId < m_nodeCapacity);
 	return m_nodes[proxyId].aabb;
 }
 
 template <typename T>
-inline void DynamicTree::Query(T* callback, const AABB& aabb) const
+inline void b2DynamicTree::Query(T* callback, const b2AABB& aabb) const
 {
-	std::vector<int32> stack(256);
-	stack.push_back(m_root);
+	b2GrowableStack<int32, 256> stack;
+	stack.Push(m_root);
 
-	while (stack.size() > 0)
+	while (stack.GetCount() > 0)
 	{
-		int32 nodeId = stack.back();
-		stack.pop_back();
-		if (nodeId == NULL_NODE)
+		int32 nodeId = stack.Pop();
+		if (nodeId == b2_nullNode)
 		{
 			continue;
 		}
 
-		const TreeNode* node = m_nodes + nodeId;
+		const b2TreeNode* node = m_nodes + nodeId;
 
-		if (TestOverlap(node->aabb, aabb))
+		if (b2TestOverlap(node->aabb, aabb))
 		{
 			if (node->IsLeaf())
 			{
@@ -198,25 +193,25 @@ inline void DynamicTree::Query(T* callback, const AABB& aabb) const
 			}
 			else
 			{
-				stack.push_back(node->child1);
-				stack.push_back(node->child2);
+				stack.Push(node->child1);
+				stack.Push(node->child2);
 			}
 		}
 	}
 }
 
 template <typename T>
-inline void DynamicTree::RayCast(T* callback, const RayCastInput& input) const
+inline void b2DynamicTree::RayCast(T* callback, const b2RayCastInput& input) const
 {
-	Vec2 p1 = input.p1;
-	Vec2 p2 = input.p2;
-	Vec2 r = p2 - p1;
-	Assert(r.LengthSquared() > 0.0f);
+	b2Vec2 p1 = input.p1;
+	b2Vec2 p2 = input.p2;
+	b2Vec2 r = p2 - p1;
+	b2Assert(r.LengthSquared() > 0.0f);
 	r.Normalize();
 
 	// v is perpendicular to the segment.
-	Vec2 v = Cross(1.0f, r);
-	Vec2 abs_v = Abs(v);
+	b2Vec2 v = b2Cross(1.0f, r);
+	b2Vec2 abs_v = b2Abs(v);
 
 	// Separating axis for segment (Gino, p80).
 	// |dot(v, p1 - c)| > dot(|v|, h)
@@ -224,37 +219,36 @@ inline void DynamicTree::RayCast(T* callback, const RayCastInput& input) const
 	float32 maxFraction = input.maxFraction;
 
 	// Build a bounding box for the segment.
-	AABB segmentAABB;
+	b2AABB segmentAABB;
 	{
-		Vec2 t = p1 + maxFraction * (p2 - p1);
-		segmentAABB.lowerBound = Min(p1, t);
-		segmentAABB.upperBound = Max(p1, t);
+		b2Vec2 t = p1 + maxFraction * (p2 - p1);
+		segmentAABB.lowerBound = b2Min(p1, t);
+		segmentAABB.upperBound = b2Max(p1, t);
 	}
 
-	std::vector<int32> stack(256);
-	stack.push_back(m_root);
+	b2GrowableStack<int32, 256> stack;
+	stack.Push(m_root);
 
-	while (stack.size() > 0)
+	while (stack.GetCount() > 0)
 	{
-		int32 nodeId = stack.back();
-		stack.pop_back();
-		if (nodeId == NULL_NODE)
+		int32 nodeId = stack.Pop();
+		if (nodeId == b2_nullNode)
 		{
 			continue;
 		}
 
-		const TreeNode* node = m_nodes + nodeId;
+		const b2TreeNode* node = m_nodes + nodeId;
 
-		if (TestOverlap(node->aabb, segmentAABB) == false)
+		if (b2TestOverlap(node->aabb, segmentAABB) == false)
 		{
 			continue;
 		}
 
 		// Separating axis for segment (Gino, p80).
 		// |dot(v, p1 - c)| > dot(|v|, h)
-		Vec2 c = node->aabb.GetCenter();
-		Vec2 h = node->aabb.GetExtents();
-		float32 separation = Abs(Dot(v, p1 - c)) - Dot(abs_v, h);
+		b2Vec2 c = node->aabb.GetCenter();
+		b2Vec2 h = node->aabb.GetExtents();
+		float32 separation = b2Abs(b2Dot(v, p1 - c)) - b2Dot(abs_v, h);
 		if (separation > 0.0f)
 		{
 			continue;
@@ -262,7 +256,7 @@ inline void DynamicTree::RayCast(T* callback, const RayCastInput& input) const
 
 		if (node->IsLeaf())
 		{
-			RayCastInput subInput;
+			b2RayCastInput subInput;
 			subInput.p1 = input.p1;
 			subInput.p2 = input.p2;
 			subInput.maxFraction = maxFraction;
@@ -279,19 +273,17 @@ inline void DynamicTree::RayCast(T* callback, const RayCastInput& input) const
 			{
 				// Update segment bounding box.
 				maxFraction = value;
-				Vec2 t = p1 + maxFraction * (p2 - p1);
-				segmentAABB.lowerBound = Min(p1, t);
-				segmentAABB.upperBound = Max(p1, t);
+				b2Vec2 t = p1 + maxFraction * (p2 - p1);
+				segmentAABB.lowerBound = b2Min(p1, t);
+				segmentAABB.upperBound = b2Max(p1, t);
 			}
 		}
 		else
 		{
-			stack.push_back(node->child1);
-			stack.push_back(node->child2);
+			stack.Push(node->child1);
+			stack.Push(node->child2);
 		}
 	}
 }
-
-} // End of namespace b2d11
 
 #endif

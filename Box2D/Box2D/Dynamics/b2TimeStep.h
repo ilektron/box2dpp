@@ -21,11 +21,8 @@
 
 #include <Box2D/Common/b2Math.h>
 
-namespace b2d11
-{
-
 /// Profiling data. Times are in milliseconds.
-struct Profile
+struct b2Profile
 {
 	float32 step;
 	float32 collide;
@@ -38,7 +35,7 @@ struct Profile
 };
 
 /// This is an internal structure.
-struct TimeStep
+struct b2TimeStep
 {
 	float32 dt;			// time step
 	float32 inv_dt;		// inverse time step (0 if dt == 0).
@@ -49,27 +46,25 @@ struct TimeStep
 };
 
 /// This is an internal structure.
-struct Position
+struct b2Position
 {
-	Vec2 c;
+	b2Vec2 c;
 	float32 a;
 };
 
 /// This is an internal structure.
-struct Velocity
+struct b2Velocity
 {
-	Vec2 v;
+	b2Vec2 v;
 	float32 w;
 };
 
 /// Solver Data
-struct SolverData
+struct b2SolverData
 {
-	TimeStep step;
-	Position* positions;
-	Velocity* velocities;
+	b2TimeStep step;
+	b2Position* positions;
+	b2Velocity* velocities;
 };
-
-} // End of namespace b2d11
 
 #endif

@@ -24,10 +24,7 @@
 #include <Box2D/Collision/b2DynamicTree.h>
 #include <algorithm>
 
-namespace b2d11
-{
-
-struct Pair
+struct b2Pair
 {
 	int32 proxyIdA;
 	int32 proxyIdB;
@@ -36,7 +33,7 @@ struct Pair
 /// The broad-phase is used for computing pairs and performing volume queries and ray casts.
 /// This broad-phase does not persist pairs. Instead, this reports potentially new pairs.
 /// It is up to the client to consume the new pairs and to track subsequent overlap.
-class BroadPhase
+class b2BroadPhase
 {
 public:
 
@@ -45,25 +42,25 @@ public:
 		e_nullProxy = -1
 	};
 
-	BroadPhase();
-	~BroadPhase();
+	b2BroadPhase();
+	~b2BroadPhase();
 
 	/// Create a proxy with an initial AABB. Pairs are not reported until
 	/// UpdatePairs is called.
-	int32 CreateProxy(const AABB& aabb, void* userData);
+	int32 CreateProxy(const b2AABB& aabb, void* userData);
 
 	/// Destroy a proxy. It is up to the client to remove any pairs.
 	void DestroyProxy(int32 proxyId);
 
 	/// Call MoveProxy as many times as you like, then when you are done
 	/// call UpdatePairs to finalized the proxy pairs (for your time step).
-	void MoveProxy(int32 proxyId, const AABB& aabb, const Vec2& displacement);
+	void MoveProxy(int32 proxyId, const b2AABB& aabb, const b2Vec2& displacement);
 
 	/// Call to trigger a re-processing of it's pairs on the next call to UpdatePairs.
 	void TouchProxy(int32 proxyId);
 
 	/// Get the fat AABB for a proxy.
-	const AABB& GetFatAABB(int32 proxyId) const;
+	const b2AABB& GetFatAABB(int32 proxyId) const;
 
 	/// Get user data from a proxy. Returns NULL if the id is invalid.
 	void* GetUserData(int32 proxyId) const;
@@ -81,7 +78,7 @@ public:
 	/// Query an AABB for overlapping proxies. The callback class
 	/// is called for each proxy that overlaps the supplied AABB.
 	template <typename T>
-	void Query(T* callback, const AABB& aabb) const;
+	void Query(T* callback, const b2AABB& aabb) const;
 
 	/// Ray-cast against the proxies in the tree. This relies on the callback
 	/// to perform a exact ray-cast in the case were the proxy contains a shape.
@@ -91,7 +88,7 @@ public:
 	/// @param input the ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).
 	/// @param callback a callback class that is called for each proxy that is hit by the ray.
 	template <typename T>
-	void RayCast(T* callback, const RayCastInput& input) const;
+	void RayCast(T* callback, const b2RayCastInput& input) const;
 
 	/// Get the height of the embedded tree.
 	int32 GetTreeHeight() const;
@@ -105,18 +102,18 @@ public:
 	/// Shift the world origin. Useful for large worlds.
 	/// The shift formula is: position -= newOrigin
 	/// @param newOrigin the new origin with respect to the old origin
-	void ShiftOrigin(const Vec2& newOrigin);
+	void ShiftOrigin(const b2Vec2& newOrigin);
 
 private:
 
-	friend class DynamicTree;
+	friend class b2DynamicTree;
 
 	void BufferMove(int32 proxyId);
 	void UnBufferMove(int32 proxyId);
 
 	bool QueryCallback(int32 proxyId);
 
-	DynamicTree m_tree;
+	b2DynamicTree m_tree;
 
 	int32 m_proxyCount;
 
@@ -124,7 +121,7 @@ private:
 	int32 m_moveCapacity;
 	int32 m_moveCount;
 
-	Pair* m_pairBuffer;
+	b2Pair* m_pairBuffer;
 	int32 m_pairCapacity;
 	int32 m_pairCount;
 
@@ -132,7 +129,7 @@ private:
 };
 
 /// This is used to sort pairs.
-inline bool PairLessThan(const Pair& pair1, const Pair& pair2)
+inline bool b2PairLessThan(const b2Pair& pair1, const b2Pair& pair2)
 {
 	if (pair1.proxyIdA < pair2.proxyIdA)
 	{
@@ -147,45 +144,45 @@ inline bool PairLessThan(const Pair& pair1, const Pair& pair2)
 	return false;
 }
 
-inline void* BroadPhase::GetUserData(int32 proxyId) const
+inline void* b2BroadPhase::GetUserData(int32 proxyId) const
 {
 	return m_tree.GetUserData(proxyId);
 }
 
-inline bool BroadPhase::TestOverlap(int32 proxyIdA, int32 proxyIdB) const
+inline bool b2BroadPhase::TestOverlap(int32 proxyIdA, int32 proxyIdB) const
 {
-	const AABB& aabbA = m_tree.GetFatAABB(proxyIdA);
-	const AABB& aabbB = m_tree.GetFatAABB(proxyIdB);
-	return b2d11::TestOverlap(aabbA, aabbB);
+	const b2AABB& aabbA = m_tree.GetFatAABB(proxyIdA);
+	const b2AABB& aabbB = m_tree.GetFatAABB(proxyIdB);
+	return b2TestOverlap(aabbA, aabbB);
 }
 
-inline const AABB& BroadPhase::GetFatAABB(int32 proxyId) const
+inline const b2AABB& b2BroadPhase::GetFatAABB(int32 proxyId) const
 {
 	return m_tree.GetFatAABB(proxyId);
 }
 
-inline int32 BroadPhase::GetProxyCount() const
+inline int32 b2BroadPhase::GetProxyCount() const
 {
 	return m_proxyCount;
 }
 
-inline int32 BroadPhase::GetTreeHeight() const
+inline int32 b2BroadPhase::GetTreeHeight() const
 {
 	return m_tree.GetHeight();
 }
 
-inline int32 BroadPhase::GetTreeBalance() const
+inline int32 b2BroadPhase::GetTreeBalance() const
 {
 	return m_tree.GetMaxBalance();
 }
 
-inline float32 BroadPhase::GetTreeQuality() const
+inline float32 b2BroadPhase::GetTreeQuality() const
 {
 	return m_tree.GetAreaRatio();
 }
 
 template <typename T>
-void BroadPhase::UpdatePairs(T* callback)
+void b2BroadPhase::UpdatePairs(T* callback)
 {
 	// Reset pair buffer
 	m_pairCount = 0;
@@ -201,7 +198,7 @@ void BroadPhase::UpdatePairs(T* callback)
 
 		// We have to query the tree with the fat AABB so that
 		// we don't fail to create a pair that may touch later.
-		const AABB& fatAABB = m_tree.GetFatAABB(m_queryProxyId);
+		const b2AABB& fatAABB = m_tree.GetFatAABB(m_queryProxyId);
 
 		// Query tree, create pairs and add them pair buffer.
 		m_tree.Query(this, fatAABB);
@@ -211,13 +208,13 @@ void BroadPhase::UpdatePairs(T* callback)
 	m_moveCount = 0;
 
 	// Sort the pair buffer to expose duplicates.
-	std::sort(m_pairBuffer, m_pairBuffer + m_pairCount, PairLessThan);
+	std::sort(m_pairBuffer, m_pairBuffer + m_pairCount, b2PairLessThan);
 
 	// Send the pairs back to the client.
 	int32 i = 0;
 	while (i < m_pairCount)
 	{
-		Pair* primaryPair = m_pairBuffer + i;
+		b2Pair* primaryPair = m_pairBuffer + i;
 		void* userDataA = m_tree.GetUserData(primaryPair->proxyIdA);
 		void* userDataB = m_tree.GetUserData(primaryPair->proxyIdB);
 
@@ -227,7 +224,7 @@ void BroadPhase::UpdatePairs(T* callback)
 		// Skip any duplicate pairs.
 		while (i < m_pairCount)
 		{
-			Pair* pair = m_pairBuffer + i;
+			b2Pair* pair = m_pairBuffer + i;
 			if (pair->proxyIdA != primaryPair->proxyIdA || pair->proxyIdB != primaryPair->proxyIdB)
 			{
 				break;
@@ -241,22 +238,20 @@ void BroadPhase::UpdatePairs(T* callback)
 }
 
 template <typename T>
-inline void BroadPhase::Query(T* callback, const AABB& aabb) const
+inline void b2BroadPhase::Query(T* callback, const b2AABB& aabb) const
 {
 	m_tree.Query(callback, aabb);
 }
 
 template <typename T>
-inline void BroadPhase::RayCast(T* callback, const RayCastInput& input) const
+inline void b2BroadPhase::RayCast(T* callback, const b2RayCastInput& input) const
 {
 	m_tree.RayCast(callback, input);
 }
 
-inline void BroadPhase::ShiftOrigin(const Vec2& newOrigin)
+inline void b2BroadPhase::ShiftOrigin(const b2Vec2& newOrigin)
 {
 	m_tree.ShiftOrigin(newOrigin);
 }
-
-} // End of namespace b2d11
 
 #endif

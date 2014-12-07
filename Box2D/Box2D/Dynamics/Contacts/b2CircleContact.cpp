@@ -25,30 +25,28 @@
 
 #include <new>
 
-using namespace b2d11;
-
-Contact* CircleContact::Create(Fixture* fixtureA, int32, Fixture* fixtureB, int32, BlockAllocator* allocator)
+b2Contact* b2CircleContact::Create(b2Fixture* fixtureA, int32, b2Fixture* fixtureB, int32, b2BlockAllocator* allocator)
 {
-	void* mem = allocator->Allocate(sizeof(CircleContact));
-	return new (mem) CircleContact(fixtureA, fixtureB);
+	void* mem = allocator->Allocate(sizeof(b2CircleContact));
+	return new (mem) b2CircleContact(fixtureA, fixtureB);
 }
 
-void CircleContact::Destroy(Contact* contact, BlockAllocator* allocator)
+void b2CircleContact::Destroy(b2Contact* contact, b2BlockAllocator* allocator)
 {
-	((CircleContact*)contact)->~CircleContact();
-	allocator->Free(contact, sizeof(CircleContact));
+	((b2CircleContact*)contact)->~b2CircleContact();
+	allocator->Free(contact, sizeof(b2CircleContact));
 }
 
-CircleContact::CircleContact(Fixture* fixtureA, Fixture* fixtureB)
-	: Contact(fixtureA, 0, fixtureB, 0)
+b2CircleContact::b2CircleContact(b2Fixture* fixtureA, b2Fixture* fixtureB)
+	: b2Contact(fixtureA, 0, fixtureB, 0)
 {
-	Assert(m_fixtureA->GetType() == Shape::e_circle);
-	Assert(m_fixtureB->GetType() == Shape::e_circle);
+	b2Assert(m_fixtureA->GetType() == b2Shape::e_circle);
+	b2Assert(m_fixtureB->GetType() == b2Shape::e_circle);
 }
 
-void CircleContact::Evaluate(Manifold* manifold, const Transform& xfA, const Transform& xfB)
+void b2CircleContact::Evaluate(b2Manifold* manifold, const b2Transform& xfA, const b2Transform& xfB)
 {
-	CollideCircles(manifold,
-					(CircleShape*)m_fixtureA->GetShape(), xfA,
-					(CircleShape*)m_fixtureB->GetShape(), xfB);
+	b2CollideCircles(manifold,
+					(b2CircleShape*)m_fixtureA->GetShape(), xfA,
+					(b2CircleShape*)m_fixtureB->GetShape(), xfB);
 }

@@ -59,11 +59,11 @@ public:
 			b2Body* ground = m_world->CreateBody(&bd);
 
 			float32 x1 = -20.0f;
-			float32 y1 = 2.0f * cosf(x1 / 10.0f * b2d11::PI);
+			float32 y1 = 2.0f * cosf(x1 / 10.0f * b2_pi);
 			for (int32 i = 0; i < 80; ++i)
 			{
 				float32 x2 = x1 + 0.5f;
-				float32 y2 = 2.0f * cosf(x2 / 10.0f * b2d11::PI);
+				float32 y2 = 2.0f * cosf(x2 / 10.0f * b2_pi);
 
 				b2EdgeShape shape;
 				shape.Set(b2Vec2(x1, y1), b2Vec2(x2, y2));
@@ -135,7 +135,7 @@ public:
 		float32 x = RandomFloat(-10.0f, 10.0f);
 		float32 y = RandomFloat(10.0f, 20.0f);
 		bd.position.Set(x, y);
-		bd.angle = RandomFloat(-b2d11::PI, b2d11::PI);
+		bd.angle = RandomFloat(-b2_pi, b2_pi);
 		bd.type = b2_dynamicBody;
 
 		if (index == 4)
@@ -215,21 +215,21 @@ public:
 
 		if (callback.m_fixture)
 		{
-			g_debugDraw.DrawPoint(callback.m_point, 5.0f, b2d11::Color(0.4f, 0.9f, 0.4f));
+			g_debugDraw.DrawPoint(callback.m_point, 5.0f, b2Color(0.4f, 0.9f, 0.4f));
 
-			g_debugDraw.DrawSegment(point1, callback.m_point, b2d11::Color(0.8f, 0.8f, 0.8f));
+			g_debugDraw.DrawSegment(point1, callback.m_point, b2Color(0.8f, 0.8f, 0.8f));
 
 			b2Vec2 head = callback.m_point + 0.5f * callback.m_normal;
-			g_debugDraw.DrawSegment(callback.m_point, head, b2d11::Color(0.9f, 0.9f, 0.4f));
+			g_debugDraw.DrawSegment(callback.m_point, head, b2Color(0.9f, 0.9f, 0.4f));
 		}
 		else
 		{
-			g_debugDraw.DrawSegment(point1, point2, b2d11::Color(0.8f, 0.8f, 0.8f));
+			g_debugDraw.DrawSegment(point1, point2, b2Color(0.8f, 0.8f, 0.8f));
 		}
 
 		if (advanceRay)
 		{
-			m_angle += 0.25f * b2d11::PI / 180.0f;
+			m_angle += 0.25f * b2_pi / 180.0f;
 		}
 	}
 

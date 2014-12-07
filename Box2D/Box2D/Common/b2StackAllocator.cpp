@@ -19,9 +19,7 @@
 #include <Box2D/Common/b2StackAllocator.h>
 #include <Box2D/Common/b2Math.h>
 
-using namespace b2d11;
-
-StackAllocator::StackAllocator()
+b2StackAllocator::b2StackAllocator()
 {
 	m_index = 0;
 	m_allocation = 0;
@@ -29,21 +27,21 @@ StackAllocator::StackAllocator()
 	m_entryCount = 0;
 }
 
-StackAllocator::~StackAllocator()
+b2StackAllocator::~b2StackAllocator()
 {
-	Assert(m_index == 0);
-	Assert(m_entryCount == 0);
+	b2Assert(m_index == 0);
+	b2Assert(m_entryCount == 0);
 }
 
-void* StackAllocator::Allocate(int32 size)
+void* b2StackAllocator::Allocate(int32 size)
 {
-	Assert(m_entryCount < MAX_STACK_ENTRIES);
+	b2Assert(m_entryCount < b2_maxStackEntries);
 
-	StackEntry* entry = m_entries + m_entryCount;
+	b2StackEntry* entry = m_entries + m_entryCount;
 	entry->size = size;
-	if (m_index + size > STACK_SIZE)
+	if (m_index + size > b2_stackSize)
 	{
-		entry->data = (char*)Alloc(size);
+		entry->data = (char*)b2Alloc(size);
 		entry->usedMalloc = true;
 	}
 	else
@@ -54,20 +52,20 @@ void* StackAllocator::Allocate(int32 size)
 	}
 
 	m_allocation += size;
-	m_maxAllocation = Max(m_maxAllocation, m_allocation);
+	m_maxAllocation = b2Max(m_maxAllocation, m_allocation);
 	++m_entryCount;
 
 	return entry->data;
 }
 
-void StackAllocator::Free(void* p)
+void b2StackAllocator::Free(void* p)
 {
-	Assert(m_entryCount > 0);
-	StackEntry* entry = m_entries + m_entryCount - 1;
-	Assert(p == entry->data);
+	b2Assert(m_entryCount > 0);
+	b2StackEntry* entry = m_entries + m_entryCount - 1;
+	b2Assert(p == entry->data);
 	if (entry->usedMalloc)
 	{
-		Free(p);
+		b2Free(p);
 	}
 	else
 	{
@@ -79,7 +77,7 @@ void StackAllocator::Free(void* p)
 	p = NULL;
 }
 
-int32 StackAllocator::GetMaxAllocation() const
+int32 b2StackAllocator::GetMaxAllocation() const
 {
 	return m_maxAllocation;
 }

@@ -21,30 +21,27 @@
 
 #include <Box2D/Collision/Shapes/b2Shape.h>
 
-namespace b2d11
-{
-
 /// A convex polygon. It is assumed that the interior of the polygon is to
 /// the left of each edge.
-/// Polygons have a maximum number of vertices equal to MAX_POLYGON_VERTICES.
+/// Polygons have a maximum number of vertices equal to b2_maxPolygonVertices.
 /// In most cases you should not need many vertices for a convex polygon.
-class PolygonShape : public Shape
+class b2PolygonShape : public b2Shape
 {
 public:
-	PolygonShape();
+	b2PolygonShape();
 
-	/// Implement Shape.
-	Shape* Clone(BlockAllocator* allocator) const;
+	/// Implement b2Shape.
+	b2Shape* Clone(b2BlockAllocator* allocator) const;
 
-	/// @see Shape::GetChildCount
+	/// @see b2Shape::GetChildCount
 	int32 GetChildCount() const;
 
 	/// Create a convex hull from the given array of local points.
-	/// The count must be in the range [3, MAX_POLYGON_VERTICES].
+	/// The count must be in the range [3, b2_maxPolygonVertices].
 	/// @warning the points may be re-ordered, even if they form a convex polygon
 	/// @warning collinear points are handled but not removed. Collinear points
 	/// may lead to poor stacking behavior.
-	void Set(const Vec2* points, int32 count);
+	void Set(const b2Vec2* points, int32 count);
 
 	/// Build vertices to represent an axis-aligned box centered on the local origin.
 	/// @param hx the half-width.
@@ -56,51 +53,49 @@ public:
 	/// @param hy the half-height.
 	/// @param center the center of the box in local coordinates.
 	/// @param angle the rotation of the box in local coordinates.
-	void SetAsBox(float32 hx, float32 hy, const Vec2& center, float32 angle);
+	void SetAsBox(float32 hx, float32 hy, const b2Vec2& center, float32 angle);
 
-	/// @see Shape::TestPoint
-	bool TestPoint(const Transform& transform, const Vec2& p) const;
+	/// @see b2Shape::TestPoint
+	bool TestPoint(const b2Transform& transform, const b2Vec2& p) const;
 
-	/// Implement Shape.
-	bool RayCast(RayCastOutput* output, const RayCastInput& input,
-					const Transform& transform, int32 childIndex) const;
+	/// Implement b2Shape.
+	bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input,
+					const b2Transform& transform, int32 childIndex) const;
 
-	/// @see Shape::ComputeAABB
-	void ComputeAABB(AABB* aabb, const Transform& transform, int32 childIndex) const;
+	/// @see b2Shape::ComputeAABB
+	void ComputeAABB(b2AABB* aabb, const b2Transform& transform, int32 childIndex) const;
 
-	/// @see Shape::ComputeMass
-	void ComputeMass(MassData* massData, float32 density) const;
+	/// @see b2Shape::ComputeMass
+	void ComputeMass(b2MassData* massData, float32 density) const;
 
 	/// Get the vertex count.
 	int32 GetVertexCount() const { return m_count; }
 
 	/// Get a vertex by index.
-	const Vec2& GetVertex(int32 index) const;
+	const b2Vec2& GetVertex(int32 index) const;
 
 	/// Validate convexity. This is a very time consuming operation.
 	/// @returns true if valid
 	bool Validate() const;
 
-	Vec2 m_centroid;
-	Vec2 m_vertices[MAX_POLYGON_VERTICES];
-	Vec2 m_normals[MAX_POLYGON_VERTICES];
+	b2Vec2 m_centroid;
+	b2Vec2 m_vertices[b2_maxPolygonVertices];
+	b2Vec2 m_normals[b2_maxPolygonVertices];
 	int32 m_count;
 };
 
-inline PolygonShape::PolygonShape()
+inline b2PolygonShape::b2PolygonShape()
 {
 	m_type = e_polygon;
-	m_radius = POLYGON_RADIUS;
+	m_radius = b2_polygonRadius;
 	m_count = 0;
 	m_centroid.SetZero();
 }
 
-inline const Vec2& PolygonShape::GetVertex(int32 index) const
+inline const b2Vec2& b2PolygonShape::GetVertex(int32 index) const
 {
-	Assert(0 <= index && index < m_count);
+	b2Assert(0 <= index && index < m_count);
 	return m_vertices[index];
 }
-
-} // End of namespace b2d11
 
 #endif

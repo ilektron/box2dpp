@@ -21,13 +21,10 @@
 
 #include <Box2D/Dynamics/Joints/b2Joint.h>
 
-namespace b2d11
-{
-
 /// Motor joint definition.
-struct MotorJointDef : public JointDef
+struct b2MotorJointDef : public b2JointDef
 {
-	MotorJointDef()
+	b2MotorJointDef()
 	{
 		type = e_motorJoint;
 		linearOffset.SetZero();
@@ -38,10 +35,10 @@ struct MotorJointDef : public JointDef
 	}
 
 	/// Initialize the bodies and offsets using the current transforms.
-	void Initialize(Body* bodyA, Body* bodyB);
+	void Initialize(b2Body* bodyA, b2Body* bodyB);
 
 	/// Position of bodyB minus the position of bodyA, in bodyA's frame, in meters.
-	Vec2 linearOffset;
+	b2Vec2 linearOffset;
 
 	/// The bodyB angle minus bodyA angle in radians.
 	float32 angularOffset;
@@ -59,18 +56,18 @@ struct MotorJointDef : public JointDef
 /// A motor joint is used to control the relative motion
 /// between two bodies. A typical usage is to control the movement
 /// of a dynamic body with respect to the ground.
-class MotorJoint : public Joint
+class b2MotorJoint : public b2Joint
 {
 public:
-	Vec2 GetAnchorA() const;
-	Vec2 GetAnchorB() const;
+	b2Vec2 GetAnchorA() const;
+	b2Vec2 GetAnchorB() const;
 
-	Vec2 GetReactionForce(float32 inv_dt) const;
+	b2Vec2 GetReactionForce(float32 inv_dt) const;
 	float32 GetReactionTorque(float32 inv_dt) const;
 
 	/// Set/get the target linear offset, in frame A, in meters.
-	void SetLinearOffset(const Vec2& linearOffset);
-	const Vec2& GetLinearOffset() const;
+	void SetLinearOffset(const b2Vec2& linearOffset);
+	const b2Vec2& GetLinearOffset() const;
 
 	/// Set/get the target angular offset, in radians.
 	void SetAngularOffset(float32 angularOffset);
@@ -94,23 +91,23 @@ public:
 	/// Get the position correction factor in the range [0,1].
 	float32 GetCorrectionFactor() const;
 
-	/// Dump to Log
+	/// Dump to b2Log
 	void Dump();
 
 protected:
 
-	friend class Joint;
+	friend class b2Joint;
 
-	MotorJoint(const MotorJointDef* def);
+	b2MotorJoint(const b2MotorJointDef* def);
 
-	void InitVelocityConstraints(const SolverData& data);
-	void SolveVelocityConstraints(const SolverData& data);
-	bool SolvePositionConstraints(const SolverData& data);
+	void InitVelocityConstraints(const b2SolverData& data);
+	void SolveVelocityConstraints(const b2SolverData& data);
+	bool SolvePositionConstraints(const b2SolverData& data);
 
 	// Solver shared
-	Vec2 m_linearOffset;
+	b2Vec2 m_linearOffset;
 	float32 m_angularOffset;
-	Vec2 m_linearImpulse;
+	b2Vec2 m_linearImpulse;
 	float32 m_angularImpulse;
 	float32 m_maxForce;
 	float32 m_maxTorque;
@@ -119,20 +116,18 @@ protected:
 	// Solver temp
 	int32 m_indexA;
 	int32 m_indexB;
-	Vec2 m_rA;
-	Vec2 m_rB;
-	Vec2 m_localCenterA;
-	Vec2 m_localCenterB;
-	Vec2 m_linearError;
+	b2Vec2 m_rA;
+	b2Vec2 m_rB;
+	b2Vec2 m_localCenterA;
+	b2Vec2 m_localCenterB;
+	b2Vec2 m_linearError;
 	float32 m_angularError;
 	float32 m_invMassA;
 	float32 m_invMassB;
 	float32 m_invIA;
 	float32 m_invIB;
-	Mat22 m_linearMass;
+	b2Mat22 m_linearMass;
 	float32 m_angularMass;
 };
-
-} // End of namespace b2d11
 
 #endif

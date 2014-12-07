@@ -21,18 +21,15 @@
 
 #include <Box2D/Dynamics/Joints/b2Joint.h>
 
-namespace b2d11
-{
-
 /// Prismatic joint definition. This requires defining a line of
 /// motion using an axis and an anchor point. The definition uses local
 /// anchor points and a local axis so that the initial configuration
 /// can violate the constraint slightly. The joint translation is zero
 /// when the local anchor points coincide in world space. Using local
 /// anchors and a local axis helps when saving and loading a game.
-struct PrismaticJointDef : public JointDef
+struct b2PrismaticJointDef : public b2JointDef
 {
-	PrismaticJointDef()
+	b2PrismaticJointDef()
 	{
 		type = e_prismaticJoint;
 		localAnchorA.SetZero();
@@ -49,16 +46,16 @@ struct PrismaticJointDef : public JointDef
 
 	/// Initialize the bodies, anchors, axis, and reference angle using the world
 	/// anchor and unit world axis.
-	void Initialize(Body* bodyA, Body* bodyB, const Vec2& anchor, const Vec2& axis);
+	void Initialize(b2Body* bodyA, b2Body* bodyB, const b2Vec2& anchor, const b2Vec2& axis);
 
 	/// The local anchor point relative to bodyA's origin.
-	Vec2 localAnchorA;
+	b2Vec2 localAnchorA;
 
 	/// The local anchor point relative to bodyB's origin.
-	Vec2 localAnchorB;
+	b2Vec2 localAnchorB;
 
 	/// The local translation unit axis in bodyA.
-	Vec2 localAxisA;
+	b2Vec2 localAxisA;
 
 	/// The constrained angle between the bodies: bodyB_angle - bodyA_angle.
 	float32 referenceAngle;
@@ -86,23 +83,23 @@ struct PrismaticJointDef : public JointDef
 /// along an axis fixed in bodyA. Relative rotation is prevented. You can
 /// use a joint limit to restrict the range of motion and a joint motor to
 /// drive the motion or to model joint friction.
-class PrismaticJoint : public Joint
+class b2PrismaticJoint : public b2Joint
 {
 public:
-	Vec2 GetAnchorA() const;
-	Vec2 GetAnchorB() const;
+	b2Vec2 GetAnchorA() const;
+	b2Vec2 GetAnchorB() const;
 
-	Vec2 GetReactionForce(float32 inv_dt) const;
+	b2Vec2 GetReactionForce(float32 inv_dt) const;
 	float32 GetReactionTorque(float32 inv_dt) const;
 
 	/// The local anchor point relative to bodyA's origin.
-	const Vec2& GetLocalAnchorA() const { return m_localAnchorA; }
+	const b2Vec2& GetLocalAnchorA() const { return m_localAnchorA; }
 
 	/// The local anchor point relative to bodyB's origin.
-	const Vec2& GetLocalAnchorB() const  { return m_localAnchorB; }
+	const b2Vec2& GetLocalAnchorB() const  { return m_localAnchorB; }
 
 	/// The local joint axis relative to bodyA.
-	const Vec2& GetLocalAxisA() const { return m_localXAxisA; }
+	const b2Vec2& GetLocalAxisA() const { return m_localXAxisA; }
 
 	/// Get the reference angle.
 	float32 GetReferenceAngle() const { return m_referenceAngle; }
@@ -147,25 +144,25 @@ public:
 	/// Get the current motor force given the inverse time step, usually in N.
 	float32 GetMotorForce(float32 inv_dt) const;
 
-	/// Dump to Log
+	/// Dump to b2Log
 	void Dump();
 
 protected:
-	friend class Joint;
-	friend class GearJoint;
-	PrismaticJoint(const PrismaticJointDef* def);
+	friend class b2Joint;
+	friend class b2GearJoint;
+	b2PrismaticJoint(const b2PrismaticJointDef* def);
 
-	void InitVelocityConstraints(const SolverData& data);
-	void SolveVelocityConstraints(const SolverData& data);
-	bool SolvePositionConstraints(const SolverData& data);
+	void InitVelocityConstraints(const b2SolverData& data);
+	void SolveVelocityConstraints(const b2SolverData& data);
+	bool SolvePositionConstraints(const b2SolverData& data);
 
 	// Solver shared
-	Vec2 m_localAnchorA;
-	Vec2 m_localAnchorB;
-	Vec2 m_localXAxisA;
-	Vec2 m_localYAxisA;
+	b2Vec2 m_localAnchorA;
+	b2Vec2 m_localAnchorB;
+	b2Vec2 m_localXAxisA;
+	b2Vec2 m_localYAxisA;
 	float32 m_referenceAngle;
-	Vec3 m_impulse;
+	b2Vec3 m_impulse;
 	float32 m_motorImpulse;
 	float32 m_lowerTranslation;
 	float32 m_upperTranslation;
@@ -173,29 +170,27 @@ protected:
 	float32 m_motorSpeed;
 	bool m_enableLimit;
 	bool m_enableMotor;
-	LimitState m_limitState;
+	b2LimitState m_limitState;
 
 	// Solver temp
 	int32 m_indexA;
 	int32 m_indexB;
-	Vec2 m_localCenterA;
-	Vec2 m_localCenterB;
+	b2Vec2 m_localCenterA;
+	b2Vec2 m_localCenterB;
 	float32 m_invMassA;
 	float32 m_invMassB;
 	float32 m_invIA;
 	float32 m_invIB;
-	Vec2 m_axis, m_perp;
+	b2Vec2 m_axis, m_perp;
 	float32 m_s1, m_s2;
 	float32 m_a1, m_a2;
-	Mat33 m_K;
+	b2Mat33 m_K;
 	float32 m_motorMass;
 };
 
-inline float32 PrismaticJoint::GetMotorSpeed() const
+inline float32 b2PrismaticJoint::GetMotorSpeed() const
 {
 	return m_motorSpeed;
 }
-
-} // End of namespace b2d11
 
 #endif
