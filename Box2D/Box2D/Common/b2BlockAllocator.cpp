@@ -23,6 +23,17 @@
 
 using namespace box2d;
 
+struct box2d::b2Block
+{
+	b2Block* next;
+};
+
+struct box2d::b2Chunk
+{
+	int32 blockSize;
+	b2Block* blocks;
+};
+
 int32 b2BlockAllocator::s_blockSizes[b2_blockSizes] = 
 {
 	16,		// 0

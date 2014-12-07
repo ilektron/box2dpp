@@ -29,16 +29,8 @@ const int32 b2_maxBlockSize = 640;
 const int32 b2_blockSizes = 14;
 const int32 b2_chunkArrayIncrement = 128;
 
-struct b2Block
-{
-	b2Block* next;
-};
-
-struct b2Chunk
-{
-	int32 blockSize;
-	b2Block* blocks;
-};
+struct b2Block;
+struct b2Chunk;
 
 /// This is a small object allocator used for allocating small
 /// objects that persist for more than one time step.

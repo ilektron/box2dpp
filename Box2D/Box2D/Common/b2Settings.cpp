@@ -23,7 +23,7 @@
 
 using namespace box2d;
 
-b2Version b2_version = {2, 3, 2};
+b2Version box2d::b2_version = {2, 3, 2};
 
 // Memory allocators. Modify these to use your own allocator.
 void* box2d::b2Alloc(int32 size)
