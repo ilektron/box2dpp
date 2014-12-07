@@ -76,7 +76,7 @@ void b2StackAllocator::Free(void* p)
 	m_allocation -= entry->size;
 	--m_entryCount;
 
-	p = NULL;
+	p = nullptr;
 }
 
 int32_t b2StackAllocator::GetMaxAllocation() const

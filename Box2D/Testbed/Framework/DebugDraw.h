@@ -51,8 +51,8 @@ struct Camera
 	b2Vec2 m_center;
 	float32 m_extent;
 	float32 m_zoom;
-	int32_t_t m_width;
-	int32_t_t m_height;
+	int32_t m_width;
+	int32_t m_height;
 };
 
 // This class implements debug drawing callbacks that are invoked
@@ -66,9 +66,9 @@ public:
 	void Create();
 	void Destroy();
 
-	void DrawPolygon(const b2Vec2* vertices, int32_t_t vertexCount, const b2Color& color);
+	void DrawPolygon(const b2Vec2* vertices, int32_t vertexCount, const b2Color& color);
 
-	void DrawSolidPolygon(const b2Vec2* vertices, int32_t_t vertexCount, const b2Color& color);
+	void DrawSolidPolygon(const b2Vec2* vertices, int32_t vertexCount, const b2Color& color);
 
 	void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color);
 

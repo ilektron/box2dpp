@@ -96,8 +96,8 @@ struct Settings
 	}
 
 	float32 hz;
-	int32_t_t velocityIterations;
-	int32_t_t positionIterations;
+	int32_t velocityIterations;
+	int32_t positionIterations;
 	bool drawShapes;
 	bool drawJoints;
 	bool drawAABBs;
@@ -135,7 +135,7 @@ public:
 	Test* test;
 };
 
-const int32_t_t k_maxContactPoints = 2048;
+const int32_t k_maxContactPoints = 2048;
 
 struct ContactPoint
 {
@@ -193,16 +193,16 @@ protected:
 	b2Body* m_groundBody;
 	b2AABB m_worldAABB;
 	ContactPoint m_points[k_maxContactPoints];
-	int32_t_t m_pointCount;
+	int32_t m_pointCount;
 	DestructionListener m_destructionListener;
-	int32_t_t m_textLine;
+	int32_t m_textLine;
 	b2World* m_world;
 	b2Body* m_bomb;
 	b2MouseJoint* m_mouseJoint;
 	b2Vec2 m_bombSpawnPoint;
 	bool m_bombSpawning;
 	b2Vec2 m_mouseWorld;
-	int32_t_t m_stepCount;
+	int32_t m_stepCount;
 
 	b2Profile m_maxProfile;
 	b2Profile m_totalProfile;
