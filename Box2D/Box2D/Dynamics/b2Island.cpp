@@ -291,7 +291,7 @@ void b2Island::Solve(b2Profile* profile, const b2TimeStep& step, const b2Vec2& g
         float32 rotation = h * w;
         if (rotation * rotation > MAX_ROTATION_SQUARED)
         {
-            float32 ratio = MAX_ROTATION / b2Abs(rotation);
+            float32 ratio = MAX_ROTATION / std::abs(rotation);
             w *= ratio;
         }
 
@@ -489,7 +489,7 @@ void b2Island::SolveTOI(const b2TimeStep& subStep, int32_t toiIndexA, int32_t to
         float32 rotation = h * w;
         if (rotation * rotation > MAX_ROTATION_SQUARED)
         {
-            float32 ratio = MAX_ROTATION / b2Abs(rotation);
+            float32 ratio = MAX_ROTATION / std::abs(rotation);
             w *= ratio;
         }
 

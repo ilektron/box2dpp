@@ -64,7 +64,7 @@ void b2DistanceProxy::Set(const b2Shape* shape, int32_t index)
                 m_buffer[1] = chain->m_vertices[0];
             }
 
-            m_vertices = m_buffer;
+            m_vertices = &m_buffer[0];
             m_count = 2;
             m_radius = chain->m_radius;
         }
@@ -533,7 +533,6 @@ void box2d::b2Distance(b2DistanceOutput* output, b2SimplexCache* cache,
         b2SimplexVertex* vertex = vertices + simplex.m_count;
         vertex->indexA = proxyA->GetSupport(b2MulT(transformA.q, -d));
         vertex->wA = b2Mul(transformA, proxyA->GetVertex(vertex->indexA));
-        b2Vec2 wBLocal;
         vertex->indexB = proxyB->GetSupport(b2MulT(transformB.q, d));
         vertex->wB = b2Mul(transformB, proxyB->GetVertex(vertex->indexB));
         vertex->w = vertex->wB - vertex->wA;

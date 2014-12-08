@@ -239,7 +239,7 @@ bool b2PulleyJoint::SolvePositionConstraints(const b2SolverData& data)
     }
 
     float32 C = m_constant - lengthA - m_ratio * lengthB;
-    float32 linearError = b2Abs(C);
+    float32 linearError = std::abs(C);
 
     float32 impulse = -mass * C;
 

@@ -23,16 +23,17 @@
 
 #include <vector>
 
-#define b2_nullNode (-1)
-
 namespace box2d
 {
+    
+constexpr int NULL_NODE = -1;
+
 /// A node in the dynamic tree. The client does not interact with this directly.
 struct b2TreeNode
 {
     bool IsLeaf() const
     {
-        return child1 == b2_nullNode;
+        return child1 == NULL_NODE;
     }
 
     /// Enlarged AABB
@@ -178,7 +179,7 @@ inline void b2DynamicTree::Query(T* callback, const b2AABB& aabb) const
     {
         int32_t nodeId = stack.back();
         stack.pop_back();
-        if (nodeId == b2_nullNode)
+        if (nodeId == NULL_NODE)
         {
             continue;
         }
@@ -237,7 +238,7 @@ inline void b2DynamicTree::RayCast(T* callback, const b2RayCastInput& input) con
     {
         int32_t nodeId = stack.back();
         stack.pop_back();
-        if (nodeId == b2_nullNode)
+        if (nodeId == NULL_NODE)
         {
             continue;
         }
@@ -253,7 +254,7 @@ inline void b2DynamicTree::RayCast(T* callback, const b2RayCastInput& input) con
         // |dot(v, p1 - c)| > dot(|v|, h)
         b2Vec2 c = node->aabb.GetCenter();
         b2Vec2 h = node->aabb.GetExtents();
-        float32 separation = b2Abs(b2Dot(v, p1 - c)) - b2Dot(abs_v, h);
+        float32 separation = std::abs(b2Dot(v, p1 - c)) - b2Dot(abs_v, h);
         if (separation > 0.0f)
         {
             continue;

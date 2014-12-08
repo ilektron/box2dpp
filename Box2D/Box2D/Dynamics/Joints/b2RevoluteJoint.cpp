@@ -124,7 +124,7 @@ void b2RevoluteJoint::InitVelocityConstraints(const b2SolverData& data)
     if (m_enableLimit && fixedRotation == false)
     {
         float32 jointAngle = aB - aA - m_referenceAngle;
-        if (b2Abs(m_upperAngle - m_lowerAngle) < 2.0f * ANGULAR_SLOP)
+        if (std::abs(m_upperAngle - m_lowerAngle) < 2.0f * ANGULAR_SLOP)
         {
             m_limitState = e_equalLimits;
         }
@@ -315,7 +315,7 @@ bool b2RevoluteJoint::SolvePositionConstraints(const b2SolverData& data)
             float32 C =
                 b2Clamp(angle - m_lowerAngle, -MAX_ANGULAR_CORRECTION, MAX_ANGULAR_CORRECTION);
             limitImpulse = -m_motorMass * C;
-            angularError = b2Abs(C);
+            angularError = std::abs(C);
         }
         else if (m_limitState == e_atLowerLimit)
         {

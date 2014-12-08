@@ -88,7 +88,7 @@ class DynamicTreeTest : public Test
         for (int32_t i = 0; i < e_actorCount; ++i)
         {
             Actor* actor = m_actors + i;
-            if (actor->proxyId == b2_nullNode)
+            if (actor->proxyId == NULL_NODE)
                 continue;
 
             b2Color c(0.9f, 0.9f, 0.9f);
@@ -229,7 +229,7 @@ class DynamicTreeTest : public Test
         {
             int32_t j = rand() % e_actorCount;
             Actor* actor = m_actors + j;
-            if (actor->proxyId == b2_nullNode)
+            if (actor->proxyId == NULL_NODE)
             {
                 GetRandomAABB(&actor->aabb);
                 actor->proxyId = m_tree.CreateProxy(actor->aabb, actor);
@@ -244,10 +244,10 @@ class DynamicTreeTest : public Test
         {
             int32_t j = rand() % e_actorCount;
             Actor* actor = m_actors + j;
-            if (actor->proxyId != b2_nullNode)
+            if (actor->proxyId != NULL_NODE)
             {
                 m_tree.DestroyProxy(actor->proxyId);
-                actor->proxyId = b2_nullNode;
+                actor->proxyId = NULL_NODE;
                 return;
             }
         }
@@ -259,7 +259,7 @@ class DynamicTreeTest : public Test
         {
             int32_t j = rand() % e_actorCount;
             Actor* actor = m_actors + j;
-            if (actor->proxyId == b2_nullNode)
+            if (actor->proxyId == NULL_NODE)
             {
                 continue;
             }
@@ -297,7 +297,7 @@ class DynamicTreeTest : public Test
 
         for (auto& elem : m_actors)
         {
-            if (elem.proxyId == b2_nullNode)
+            if (elem.proxyId == NULL_NODE)
             {
                 continue;
             }
@@ -322,7 +322,7 @@ class DynamicTreeTest : public Test
         b2RayCastOutput bruteOutput;
         for (int32_t i = 0; i < e_actorCount; ++i)
         {
-            if (m_actors[i].proxyId == b2_nullNode)
+            if (m_actors[i].proxyId == NULL_NODE)
             {
                 continue;
             }

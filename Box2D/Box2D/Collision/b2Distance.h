@@ -21,6 +21,7 @@
 #define B2_DISTANCE_H
 
 #include <Box2D/Common/b2Math.h>
+#include <vector>
 
 namespace box2d
 {
@@ -30,7 +31,7 @@ class b2Shape;
 /// It encapsulates any shape.
 struct b2DistanceProxy
 {
-    b2DistanceProxy() : m_vertices(nullptr), m_count(0), m_radius(0.0f)
+    b2DistanceProxy() : m_buffer(2), m_vertices(nullptr), m_count(0), m_radius(0.0f)
     {
     }
 
@@ -50,7 +51,7 @@ struct b2DistanceProxy
     /// Get a vertex by index. Used by b2Distance.
     const b2Vec2& GetVertex(int32_t index) const;
 
-    b2Vec2 m_buffer[2];
+    std::vector<b2Vec2> m_buffer;
     const b2Vec2* m_vertices;
     int32_t m_count;
     float32 m_radius;

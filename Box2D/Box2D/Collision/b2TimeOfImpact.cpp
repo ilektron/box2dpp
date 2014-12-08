@@ -427,7 +427,7 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 
                 float32 s = fcn.Evaluate(indexA, indexB, t);
 
-                if (b2Abs(s - target) < tolerance)
+                if (std::abs(s - target) < tolerance)
                 {
                     // t2 holds a tentative value for t1
                     t2 = t;

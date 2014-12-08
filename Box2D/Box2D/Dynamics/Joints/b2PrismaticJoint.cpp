@@ -200,7 +200,7 @@ void b2PrismaticJoint::InitVelocityConstraints(const b2SolverData& data)
     if (m_enableLimit)
     {
         float32 jointTranslation = b2Dot(m_axis, d);
-        if (b2Abs(m_upperTranslation - m_lowerTranslation) < 2.0f * LINEAR_SLOP)
+        if (std::abs(m_upperTranslation - m_lowerTranslation) < 2.0f * LINEAR_SLOP)
         {
             m_limitState = e_equalLimits;
         }
@@ -392,19 +392,19 @@ bool b2PrismaticJoint::SolvePositionConstraints(const b2SolverData& data)
     C1.x = b2Dot(perp, d);
     C1.y = aB - aA - m_referenceAngle;
 
-    float32 linearError = b2Abs(C1.x);
-    float32 angularError = b2Abs(C1.y);
+    float32 linearError = std::abs(C1.x);
+    float32 angularError = std::abs(C1.y);
 
     bool active = false;
     float32 C2 = 0.0f;
     if (m_enableLimit)
     {
         float32 translation = b2Dot(axis, d);
-        if (b2Abs(m_upperTranslation - m_lowerTranslation) < 2.0f * LINEAR_SLOP)
+        if (std::abs(m_upperTranslation - m_lowerTranslation) < 2.0f * LINEAR_SLOP)
         {
             // Prevent large angular corrections
             C2 = b2Clamp(translation, -MAX_LINEAR_CORRECTION, MAX_LINEAR_CORRECTION);
-            linearError = b2Max(linearError, b2Abs(translation));
+            linearError = b2Max(linearError, std::abs(translation));
             active = true;
         }
         else if (translation <= m_lowerTranslation)

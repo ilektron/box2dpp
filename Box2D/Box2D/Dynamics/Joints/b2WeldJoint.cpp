@@ -274,7 +274,7 @@ bool b2WeldJoint::SolvePositionConstraints(const b2SolverData& data)
         float32 C2 = aB - aA - m_referenceAngle;
 
         positionError = C1.Length();
-        angularError = b2Abs(C2);
+        angularError = std::abs(C2);
 
         b2Vec3 C(C1.x, C1.y, C2);
 

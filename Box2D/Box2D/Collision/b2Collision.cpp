@@ -145,19 +145,19 @@ bool b2AABB::RayCast(b2RayCastOutput* output, const b2RayCastInput& input) const
 
     for (int32_t i = 0; i < 2; ++i)
     {
-        if (absD(i) < EPSILON)
+        if (absD[i] < EPSILON)
         {
             // Parallel.
-            if (p(i) < lowerBound(i) || upperBound(i) < p(i))
+            if (p[i] < lowerBound[i] || upperBound[i] < p[i])
             {
                 return false;
             }
         }
         else
         {
-            float32 inv_d = 1.0f / d(i);
-            float32 t1 = (lowerBound(i) - p(i)) * inv_d;
-            float32 t2 = (upperBound(i) - p(i)) * inv_d;
+            float32 inv_d = 1.0f / d[i];
+            float32 t1 = (lowerBound[i] - p[i]) * inv_d;
+            float32 t2 = (upperBound[i] - p[i]) * inv_d;
 
             // Sign of the normal vector.
             float32 s = -1.0f;
@@ -172,7 +172,7 @@ bool b2AABB::RayCast(b2RayCastOutput* output, const b2RayCastInput& input) const
             if (t1 > tmin)
             {
                 normal.SetZero();
-                normal(i) = s;
+                normal[i] = s;
                 tmin = t1;
             }
 

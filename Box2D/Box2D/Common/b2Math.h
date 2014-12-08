@@ -85,17 +85,39 @@ struct b2Vec2
         return v;
     }
 
-    /// Read from and indexed element.
-    //     float32 operator()(int32_t i) const
-    //     {
-    //         return (&x)[i];
-    //     }
+    // Read from and indexed element.
+    float32 operator[](int32_t i) const
+    {
+        switch (i)
+        {
+            case 0:
+                return x;
+                break;
+            case 1:
+                return y;
+                break;
+            default:
+                assert(false);
+                break;
+        }
+    }
 
-    /// Write to an indexed element.
-    //     float32& operator()(int32_t i)
-    //     {
-    //         return (&x)[i];
-    //     }
+    // Write to an indexed element.
+    float32& operator[](int32_t i)
+    {
+        switch (i)
+        {
+            case 0:
+                return x;
+                break;
+            case 1:
+                return y;
+                break;
+            default:
+                assert(false);
+                break;
+        }
+    }
 
     /// Add a vector to this vector.
     void operator+=(const b2Vec2& v)
@@ -676,16 +698,17 @@ inline b2Transform b2MulT(const b2Transform& A, const b2Transform& B)
     C.p = b2MulT(A.q, B.p - A.p);
     return C;
 }
-
+/*
 template <typename T>
 inline T b2Abs(T a)
 {
-    return a > T(0) ? a : -a;
-}
+	return std::abs(a);
+//     return a > T(0) ? a : -a;
+}*/
 
 inline b2Vec2 b2Abs(const b2Vec2& a)
 {
-    return b2Vec2(b2Abs(a.x), b2Abs(a.y));
+    return b2Vec2(std::abs(a.x), std::abs(a.y));
 }
 
 inline b2Mat22 b2Abs(const b2Mat22& A)

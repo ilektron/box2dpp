@@ -324,7 +324,7 @@ bool b2WheelJoint::SolvePositionConstraints(const b2SolverData& data)
     data.positions[m_indexB].c = cB;
     data.positions[m_indexB].a = aB;
 
-    return b2Abs(C) <= LINEAR_SLOP;
+    return std::abs(C) <= LINEAR_SLOP;
 }
 
 b2Vec2 b2WheelJoint::GetAnchorA() const
