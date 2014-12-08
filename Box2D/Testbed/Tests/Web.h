@@ -150,31 +150,31 @@ class Web : public Test
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_B:
-                    for (auto& elem : m_bodies)
-                        {
-                            if (elem)
-                                {
-                                    m_world->DestroyBody(elem);
-                                    elem = nullptr;
-                                    break;
-                                }
-                        }
-                    break;
+        {
+            case GLFW_KEY_B:
+                for (auto& elem : m_bodies)
+                {
+                    if (elem)
+                    {
+                        m_world->DestroyBody(elem);
+                        elem = nullptr;
+                        break;
+                    }
+                }
+                break;
 
-                case GLFW_KEY_J:
-                    for (auto& elem : m_joints)
-                        {
-                            if (elem)
-                                {
-                                    m_world->DestroyJoint(elem);
-                                    elem = nullptr;
-                                    break;
-                                }
-                        }
-                    break;
-            }
+            case GLFW_KEY_J:
+                for (auto& elem : m_joints)
+                {
+                    if (elem)
+                    {
+                        m_world->DestroyJoint(elem);
+                        elem = nullptr;
+                        break;
+                    }
+                }
+                break;
+        }
     }
 
     void Step(Settings* settings) override
@@ -189,13 +189,13 @@ class Web : public Test
     void JointDestroyed(b2Joint* joint) override
     {
         for (auto& elem : m_joints)
+        {
+            if (elem == joint)
             {
-                if (elem == joint)
-                    {
-                        elem = nullptr;
-                        break;
-                    }
+                elem = nullptr;
+                break;
             }
+        }
     }
 
     static Test* Create()

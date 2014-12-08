@@ -36,13 +36,13 @@ class AddPair : public Test
             float maxY = 6.0f;
 
             for (int32_t i = 0; i < 400; ++i)
-                {
-                    b2BodyDef bd;
-                    bd.type = b2_dynamicBody;
-                    bd.position = b2Vec2(RandomFloat(minX, maxX), RandomFloat(minY, maxY));
-                    b2Body* body = m_world->CreateBody(&bd);
-                    body->CreateFixture(&shape, 0.01f);
-                }
+            {
+                b2BodyDef bd;
+                bd.type = b2_dynamicBody;
+                bd.position = b2Vec2(RandomFloat(minX, maxX), RandomFloat(minY, maxY));
+                b2Body* body = m_world->CreateBody(&bd);
+                body->CreateFixture(&shape, 0.01f);
+            }
         }
 
         {

@@ -49,22 +49,22 @@ class Pyramid : public Test
             b2Vec2 deltaY(1.125f, 0.0f);
 
             for (int32_t i = 0; i < e_count; ++i)
+            {
+                y = x;
+
+                for (int32_t j = i; j < e_count; ++j)
                 {
-                    y = x;
+                    b2BodyDef bd;
+                    bd.type = b2_dynamicBody;
+                    bd.position = y;
+                    b2Body* body = m_world->CreateBody(&bd);
+                    body->CreateFixture(&shape, 5.0f);
 
-                    for (int32_t j = i; j < e_count; ++j)
-                        {
-                            b2BodyDef bd;
-                            bd.type = b2_dynamicBody;
-                            bd.position = y;
-                            b2Body* body = m_world->CreateBody(&bd);
-                            body->CreateFixture(&shape, 5.0f);
-
-                            y += deltaY;
-                        }
-
-                    x += deltaX;
+                    y += deltaY;
                 }
+
+                x += deltaX;
+            }
         }
     }
 

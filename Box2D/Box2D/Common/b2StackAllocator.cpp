@@ -42,16 +42,16 @@ void* b2StackAllocator::Allocate(int32_t size)
     b2StackEntry* entry = m_entries + m_entryCount;
     entry->size = size;
     if (m_index + size > b2_stackSize)
-        {
-            entry->data = (char*)b2Alloc(size);
-            entry->usedMalloc = true;
-        }
+    {
+        entry->data = (char*)b2Alloc(size);
+        entry->usedMalloc = true;
+    }
     else
-        {
-            entry->data = m_data + m_index;
-            entry->usedMalloc = false;
-            m_index += size;
-        }
+    {
+        entry->data = m_data + m_index;
+        entry->usedMalloc = false;
+        m_index += size;
+    }
 
     m_allocation += size;
     m_maxAllocation = b2Max(m_maxAllocation, m_allocation);
@@ -66,13 +66,13 @@ void b2StackAllocator::Free(void* p)
     b2StackEntry* entry = m_entries + m_entryCount - 1;
     b2Assert(p == entry->data);
     if (entry->usedMalloc)
-        {
-            b2Free(p);
-        }
+    {
+        b2Free(p);
+    }
     else
-        {
-            m_index -= entry->size;
-        }
+    {
+        m_index -= entry->size;
+    }
     m_allocation -= entry->size;
     --m_entryCount;
 

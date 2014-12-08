@@ -28,9 +28,9 @@ b2Vec3 b2Mat33::Solve33(const b2Vec3& b) const
 {
     float32 det = b2Dot(ex, b2Cross(ey, ez));
     if (det != 0.0f)
-        {
-            det = 1.0f / det;
-        }
+    {
+        det = 1.0f / det;
+    }
     b2Vec3 x;
     x.x = det * b2Dot(b, b2Cross(ey, ez));
     x.y = det * b2Dot(ex, b2Cross(b, ez));
@@ -45,9 +45,9 @@ b2Vec2 b2Mat33::Solve22(const b2Vec2& b) const
     float32 a11 = ex.x, a12 = ey.x, a21 = ex.y, a22 = ey.y;
     float32 det = a11 * a22 - a12 * a21;
     if (det != 0.0f)
-        {
-            det = 1.0f / det;
-        }
+    {
+        det = 1.0f / det;
+    }
     b2Vec2 x;
     x.x = det * (a22 * b.x - a12 * b.y);
     x.y = det * (a11 * b.y - a21 * b.x);
@@ -60,9 +60,9 @@ void b2Mat33::GetInverse22(b2Mat33* M) const
     float32 a = ex.x, b = ey.x, c = ex.y, d = ey.y;
     float32 det = a * d - b * c;
     if (det != 0.0f)
-        {
-            det = 1.0f / det;
-        }
+    {
+        det = 1.0f / det;
+    }
 
     M->ex.x = det * d;
     M->ey.x = -det * b;
@@ -80,9 +80,9 @@ void b2Mat33::GetSymInverse33(b2Mat33* M) const
 {
     float32 det = b2Dot(ex, b2Cross(ey, ez));
     if (det != 0.0f)
-        {
-            det = 1.0f / det;
-        }
+    {
+        det = 1.0f / det;
+    }
 
     float32 a11 = ex.x, a12 = ey.x, a13 = ez.x;
     float32 a22 = ey.y, a23 = ez.y;

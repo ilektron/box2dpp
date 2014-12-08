@@ -68,21 +68,21 @@ void b2Contact::AddType(b2ContactCreateFcn* createFcn, b2ContactDestroyFcn* dest
     s_registers[type1][type2].primary = true;
 
     if (type1 != type2)
-        {
-            s_registers[type2][type1].createFcn = createFcn;
-            s_registers[type2][type1].destroyFcn = destoryFcn;
-            s_registers[type2][type1].primary = false;
-        }
+    {
+        s_registers[type2][type1].createFcn = createFcn;
+        s_registers[type2][type1].destroyFcn = destoryFcn;
+        s_registers[type2][type1].primary = false;
+    }
 }
 
 b2Contact* b2Contact::Create(b2Fixture* fixtureA, int32_t indexA, b2Fixture* fixtureB,
                              int32_t indexB, b2BlockAllocator* allocator)
 {
     if (s_initialized == false)
-        {
-            InitializeRegisters();
-            s_initialized = true;
-        }
+    {
+        InitializeRegisters();
+        s_initialized = true;
+    }
 
     b2Shape::Type type1 = fixtureA->GetType();
     b2Shape::Type type2 = fixtureB->GetType();
@@ -92,20 +92,20 @@ b2Contact* b2Contact::Create(b2Fixture* fixtureA, int32_t indexA, b2Fixture* fix
 
     b2ContactCreateFcn* createFcn = s_registers[type1][type2].createFcn;
     if (createFcn)
+    {
+        if (s_registers[type1][type2].primary)
         {
-            if (s_registers[type1][type2].primary)
-                {
-                    return createFcn(fixtureA, indexA, fixtureB, indexB, allocator);
-                }
-            else
-                {
-                    return createFcn(fixtureB, indexB, fixtureA, indexA, allocator);
-                }
+            return createFcn(fixtureA, indexA, fixtureB, indexB, allocator);
         }
+        else
+        {
+            return createFcn(fixtureB, indexB, fixtureA, indexA, allocator);
+        }
+    }
     else
-        {
-            return nullptr;
-        }
+    {
+        return nullptr;
+    }
 }
 
 void b2Contact::Destroy(b2Contact* contact, b2BlockAllocator* allocator)
@@ -117,10 +117,10 @@ void b2Contact::Destroy(b2Contact* contact, b2BlockAllocator* allocator)
 
     if (contact->m_manifold.pointCount > 0 && fixtureA->IsSensor() == false &&
         fixtureB->IsSensor() == false)
-        {
-            fixtureA->GetBody()->SetAwake(true);
-            fixtureB->GetBody()->SetAwake(true);
-        }
+    {
+        fixtureA->GetBody()->SetAwake(true);
+        fixtureB->GetBody()->SetAwake(true);
+    }
 
     b2Shape::Type typeA = fixtureA->GetType();
     b2Shape::Type typeB = fixtureB->GetType();
@@ -188,69 +188,69 @@ void b2Contact::Update(b2ContactListener* listener)
 
     // Is this contact a sensor?
     if (sensor)
-        {
-            const b2Shape* shapeA = m_fixtureA->GetShape();
-            const b2Shape* shapeB = m_fixtureB->GetShape();
-            touching = b2TestOverlap(shapeA, m_indexA, shapeB, m_indexB, xfA, xfB);
+    {
+        const b2Shape* shapeA = m_fixtureA->GetShape();
+        const b2Shape* shapeB = m_fixtureB->GetShape();
+        touching = b2TestOverlap(shapeA, m_indexA, shapeB, m_indexB, xfA, xfB);
 
-            // Sensors don't generate manifolds.
-            m_manifold.pointCount = 0;
-        }
+        // Sensors don't generate manifolds.
+        m_manifold.pointCount = 0;
+    }
     else
+    {
+        Evaluate(&m_manifold, xfA, xfB);
+        touching = m_manifold.pointCount > 0;
+
+        // Match old contact ids to new contact ids and copy the
+        // stored impulses to warm start the solver.
+        for (int32_t i = 0; i < m_manifold.pointCount; ++i)
         {
-            Evaluate(&m_manifold, xfA, xfB);
-            touching = m_manifold.pointCount > 0;
+            b2ManifoldPoint* mp2 = m_manifold.points + i;
+            mp2->normalImpulse = 0.0f;
+            mp2->tangentImpulse = 0.0f;
+            b2ContactID id2 = mp2->id;
 
-            // Match old contact ids to new contact ids and copy the
-            // stored impulses to warm start the solver.
-            for (int32_t i = 0; i < m_manifold.pointCount; ++i)
+            for (int32_t j = 0; j < oldManifold.pointCount; ++j)
+            {
+                b2ManifoldPoint* mp1 = oldManifold.points + j;
+
+                if (mp1->id.key == id2.key)
                 {
-                    b2ManifoldPoint* mp2 = m_manifold.points + i;
-                    mp2->normalImpulse = 0.0f;
-                    mp2->tangentImpulse = 0.0f;
-                    b2ContactID id2 = mp2->id;
-
-                    for (int32_t j = 0; j < oldManifold.pointCount; ++j)
-                        {
-                            b2ManifoldPoint* mp1 = oldManifold.points + j;
-
-                            if (mp1->id.key == id2.key)
-                                {
-                                    mp2->normalImpulse = mp1->normalImpulse;
-                                    mp2->tangentImpulse = mp1->tangentImpulse;
-                                    break;
-                                }
-                        }
+                    mp2->normalImpulse = mp1->normalImpulse;
+                    mp2->tangentImpulse = mp1->tangentImpulse;
+                    break;
                 }
-
-            if (touching != wasTouching)
-                {
-                    bodyA->SetAwake(true);
-                    bodyB->SetAwake(true);
-                }
+            }
         }
+
+        if (touching != wasTouching)
+        {
+            bodyA->SetAwake(true);
+            bodyB->SetAwake(true);
+        }
+    }
 
     if (touching)
-        {
-            m_flags |= e_touchingFlag;
-        }
+    {
+        m_flags |= e_touchingFlag;
+    }
     else
-        {
-            m_flags &= ~e_touchingFlag;
-        }
+    {
+        m_flags &= ~e_touchingFlag;
+    }
 
     if (wasTouching == false && touching == true && listener)
-        {
-            listener->BeginContact(this);
-        }
+    {
+        listener->BeginContact(this);
+    }
 
     if (wasTouching == true && touching == false && listener)
-        {
-            listener->EndContact(this);
-        }
+    {
+        listener->EndContact(this);
+    }
 
     if (sensor == false && touching && listener)
-        {
-            listener->PreSolve(this, &oldManifold);
-        }
+    {
+        listener->PreSolve(this, &oldManifold);
+    }
 }

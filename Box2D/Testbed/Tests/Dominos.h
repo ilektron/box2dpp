@@ -54,13 +54,13 @@ class Dominos : public Test
             fd.friction = 0.1f;
 
             for (int i = 0; i < 10; ++i)
-                {
-                    b2BodyDef bd;
-                    bd.type = b2_dynamicBody;
-                    bd.position.Set(-6.0f + 1.0f * i, 11.25f);
-                    b2Body* body = m_world->CreateBody(&bd);
-                    body->CreateFixture(&fd);
-                }
+            {
+                b2BodyDef bd;
+                bd.type = b2_dynamicBody;
+                bd.position.Set(-6.0f + 1.0f * i, 11.25f);
+                b2Body* body = m_world->CreateBody(&bd);
+                body->CreateFixture(&fd);
+            }
         }
 
         {
@@ -196,13 +196,13 @@ class Dominos : public Test
             shape.m_radius = radius;
 
             for (int32_t i = 0; i < 4; ++i)
-                {
-                    b2BodyDef bd;
-                    bd.type = b2_dynamicBody;
-                    bd.position.Set(5.9f + 2.0f * radius * i, 2.4f);
-                    b2Body* body = m_world->CreateBody(&bd);
-                    body->CreateFixture(&shape, 10.0f);
-                }
+            {
+                b2BodyDef bd;
+                bd.type = b2_dynamicBody;
+                bd.position.Set(5.9f + 2.0f * radius * i, 2.4f);
+                b2Body* body = m_world->CreateBody(&bd);
+                body->CreateFixture(&shape, 10.0f);
+            }
         }
     }
 

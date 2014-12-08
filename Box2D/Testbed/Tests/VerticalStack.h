@@ -49,36 +49,36 @@ class VerticalStack : public Test
         float32 xs[5] = {0.0f, -10.0f, -5.0f, 5.0f, 10.0f};
 
         for (int32_t j = 0; j < e_columnCount; ++j)
+        {
+            b2PolygonShape shape;
+            shape.SetAsBox(0.5f, 0.5f);
+
+            b2FixtureDef fd;
+            fd.shape = &shape;
+            fd.density = 1.0f;
+            fd.friction = 0.3f;
+
+            for (int i = 0; i < e_rowCount; ++i)
             {
-                b2PolygonShape shape;
-                shape.SetAsBox(0.5f, 0.5f);
+                b2BodyDef bd;
+                bd.type = b2_dynamicBody;
 
-                b2FixtureDef fd;
-                fd.shape = &shape;
-                fd.density = 1.0f;
-                fd.friction = 0.3f;
+                int32_t n = j * e_rowCount + i;
+                b2Assert(n < e_rowCount * e_columnCount);
+                m_indices[n] = n;
+                bd.userData = m_indices + n;
 
-                for (int i = 0; i < e_rowCount; ++i)
-                    {
-                        b2BodyDef bd;
-                        bd.type = b2_dynamicBody;
+                float32 x = 0.0f;
+                // float32 x = RandomFloat(-0.02f, 0.02f);
+                // float32 x = i % 2 == 0 ? -0.01f : 0.01f;
+                bd.position.Set(xs[j] + x, 0.55f + 1.1f * i);
+                b2Body* body = m_world->CreateBody(&bd);
 
-                        int32_t n = j * e_rowCount + i;
-                        b2Assert(n < e_rowCount * e_columnCount);
-                        m_indices[n] = n;
-                        bd.userData = m_indices + n;
+                m_bodies[n] = body;
 
-                        float32 x = 0.0f;
-                        // float32 x = RandomFloat(-0.02f, 0.02f);
-                        // float32 x = i % 2 == 0 ? -0.01f : 0.01f;
-                        bd.position.Set(xs[j] + x, 0.55f + 1.1f * i);
-                        b2Body* body = m_world->CreateBody(&bd);
-
-                        m_bodies[n] = body;
-
-                        body->CreateFixture(&fd);
-                    }
+                body->CreateFixture(&fd);
             }
+        }
 
         m_bullet = nullptr;
     }
@@ -86,39 +86,39 @@ class VerticalStack : public Test
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_COMMA:
-                    if (m_bullet != nullptr)
-                        {
-                            m_world->DestroyBody(m_bullet);
-                            m_bullet = nullptr;
-                        }
+        {
+            case GLFW_KEY_COMMA:
+                if (m_bullet != nullptr)
+                {
+                    m_world->DestroyBody(m_bullet);
+                    m_bullet = nullptr;
+                }
 
-                    {
-                        b2CircleShape shape;
-                        shape.m_radius = 0.25f;
+                {
+                    b2CircleShape shape;
+                    shape.m_radius = 0.25f;
 
-                        b2FixtureDef fd;
-                        fd.shape = &shape;
-                        fd.density = 20.0f;
-                        fd.restitution = 0.05f;
+                    b2FixtureDef fd;
+                    fd.shape = &shape;
+                    fd.density = 20.0f;
+                    fd.restitution = 0.05f;
 
-                        b2BodyDef bd;
-                        bd.type = b2_dynamicBody;
-                        bd.bullet = true;
-                        bd.position.Set(-31.0f, 5.0f);
+                    b2BodyDef bd;
+                    bd.type = b2_dynamicBody;
+                    bd.bullet = true;
+                    bd.position.Set(-31.0f, 5.0f);
 
-                        m_bullet = m_world->CreateBody(&bd);
-                        m_bullet->CreateFixture(&fd);
+                    m_bullet = m_world->CreateBody(&bd);
+                    m_bullet->CreateFixture(&fd);
 
-                        m_bullet->SetLinearVelocity(b2Vec2(400.0f, 0.0f));
-                    }
-                    break;
+                    m_bullet->SetLinearVelocity(b2Vec2(400.0f, 0.0f));
+                }
+                break;
 
-                case GLFW_KEY_B:
-                    g_blockSolve = !g_blockSolve;
-                    break;
-            }
+            case GLFW_KEY_B:
+                g_blockSolve = !g_blockSolve;
+                break;
+        }
     }
 
     void Step(Settings* settings) override

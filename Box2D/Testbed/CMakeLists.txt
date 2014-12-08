@@ -89,8 +89,8 @@ add_executable(Testbed
 find_package(GLEW REQUIRED)
 #pkg_search_module(GLFW REQUIRED glfw3)
 
-add_subdirectory(glfw)
-include_directories(glfw/include)
+#add_subdirectory(glfw)
+#include_directories(glfw/include)
 
 target_link_libraries (
 	Testbed

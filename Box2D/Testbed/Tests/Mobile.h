@@ -69,9 +69,9 @@ class Mobile : public Test
         body->CreateFixture(&shape, density);
 
         if (depth == e_depth)
-            {
-                return body;
-            }
+        {
+            return body;
+        }
 
         b2Vec2 a1 = b2Vec2(offset, -a);
         b2Vec2 a2 = b2Vec2(-offset, -a);

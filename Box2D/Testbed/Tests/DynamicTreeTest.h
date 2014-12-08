@@ -35,11 +35,11 @@ class DynamicTreeTest : public Test
         srand(888);
 
         for (int32_t i = 0; i < e_actorCount; ++i)
-            {
-                Actor* actor = m_actors + i;
-                GetRandomAABB(&actor->aabb);
-                actor->proxyId = m_tree.CreateProxy(actor->aabb, actor);
-            }
+        {
+            Actor* actor = m_actors + i;
+            GetRandomAABB(&actor->aabb);
+            actor->proxyId = m_tree.CreateProxy(actor->aabb, actor);
+        }
 
         m_stepCount = 0;
 
@@ -67,46 +67,46 @@ class DynamicTreeTest : public Test
 
         m_rayActor = nullptr;
         for (auto& elem : m_actors)
-            {
-                elem.fraction = 1.0f;
-                elem.overlap = false;
-            }
+        {
+            elem.fraction = 1.0f;
+            elem.overlap = false;
+        }
 
         if (m_automated == true)
-            {
-                int32_t actionCount = b2Max(1, e_actorCount >> 2);
+        {
+            int32_t actionCount = b2Max(1, e_actorCount >> 2);
 
-                for (int32_t i = 0; i < actionCount; ++i)
-                    {
-                        Action();
-                    }
+            for (int32_t i = 0; i < actionCount; ++i)
+            {
+                Action();
             }
+        }
 
         Query();
         RayCast();
 
         for (int32_t i = 0; i < e_actorCount; ++i)
+        {
+            Actor* actor = m_actors + i;
+            if (actor->proxyId == b2_nullNode)
+                continue;
+
+            b2Color c(0.9f, 0.9f, 0.9f);
+            if (actor == m_rayActor && actor->overlap)
             {
-                Actor* actor = m_actors + i;
-                if (actor->proxyId == b2_nullNode)
-                    continue;
-
-                b2Color c(0.9f, 0.9f, 0.9f);
-                if (actor == m_rayActor && actor->overlap)
-                    {
-                        c.Set(0.9f, 0.6f, 0.6f);
-                    }
-                else if (actor == m_rayActor)
-                    {
-                        c.Set(0.6f, 0.9f, 0.6f);
-                    }
-                else if (actor->overlap)
-                    {
-                        c.Set(0.6f, 0.6f, 0.9f);
-                    }
-
-                g_debugDraw.DrawAABB(&actor->aabb, c);
+                c.Set(0.9f, 0.6f, 0.6f);
             }
+            else if (actor == m_rayActor)
+            {
+                c.Set(0.6f, 0.9f, 0.6f);
+            }
+            else if (actor->overlap)
+            {
+                c.Set(0.6f, 0.6f, 0.9f);
+            }
+
+            g_debugDraw.DrawAABB(&actor->aabb, c);
+        }
 
         b2Color c(0.7f, 0.7f, 0.7f);
         g_debugDraw.DrawAABB(&m_queryAABB, c);
@@ -119,12 +119,12 @@ class DynamicTreeTest : public Test
         g_debugDraw.DrawPoint(m_rayCastInput.p2, 6.0f, c2);
 
         if (m_rayActor)
-            {
-                b2Color cr(0.2f, 0.2f, 0.9f);
-                b2Vec2 p = m_rayCastInput.p1 +
-                           m_rayActor->fraction * (m_rayCastInput.p2 - m_rayCastInput.p1);
-                g_debugDraw.DrawPoint(p, 6.0f, cr);
-            }
+        {
+            b2Color cr(0.2f, 0.2f, 0.9f);
+            b2Vec2 p =
+                m_rayCastInput.p1 + m_rayActor->fraction * (m_rayCastInput.p2 - m_rayCastInput.p1);
+            g_debugDraw.DrawPoint(p, 6.0f, cr);
+        }
 
         {
             int32_t height = m_tree.GetHeight();
@@ -138,23 +138,23 @@ class DynamicTreeTest : public Test
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_A:
-                    m_automated = !m_automated;
-                    break;
+        {
+            case GLFW_KEY_A:
+                m_automated = !m_automated;
+                break;
 
-                case GLFW_KEY_C:
-                    CreateProxy();
-                    break;
+            case GLFW_KEY_C:
+                CreateProxy();
+                break;
 
-                case GLFW_KEY_D:
-                    DestroyProxy();
-                    break;
+            case GLFW_KEY_D:
+                DestroyProxy();
+                break;
 
-                case GLFW_KEY_M:
-                    MoveProxy();
-                    break;
-            }
+            case GLFW_KEY_M:
+                MoveProxy();
+                break;
+        }
     }
 
     bool QueryCallback(int32_t proxyId)
@@ -172,12 +172,12 @@ class DynamicTreeTest : public Test
         bool hit = actor->aabb.RayCast(&output, input);
 
         if (hit)
-            {
-                m_rayCastOutput = output;
-                m_rayActor = actor;
-                m_rayActor->fraction = output.fraction;
-                return output.fraction;
-            }
+        {
+            m_rayCastOutput = output;
+            m_rayActor = actor;
+            m_rayActor->fraction = output.fraction;
+            return output.fraction;
+        }
 
         return input.maxFraction;
     }
@@ -226,50 +226,50 @@ class DynamicTreeTest : public Test
     void CreateProxy()
     {
         for (int32_t i = 0; i < e_actorCount; ++i)
+        {
+            int32_t j = rand() % e_actorCount;
+            Actor* actor = m_actors + j;
+            if (actor->proxyId == b2_nullNode)
             {
-                int32_t j = rand() % e_actorCount;
-                Actor* actor = m_actors + j;
-                if (actor->proxyId == b2_nullNode)
-                    {
-                        GetRandomAABB(&actor->aabb);
-                        actor->proxyId = m_tree.CreateProxy(actor->aabb, actor);
-                        return;
-                    }
+                GetRandomAABB(&actor->aabb);
+                actor->proxyId = m_tree.CreateProxy(actor->aabb, actor);
+                return;
             }
+        }
     }
 
     void DestroyProxy()
     {
         for (int32_t i = 0; i < e_actorCount; ++i)
+        {
+            int32_t j = rand() % e_actorCount;
+            Actor* actor = m_actors + j;
+            if (actor->proxyId != b2_nullNode)
             {
-                int32_t j = rand() % e_actorCount;
-                Actor* actor = m_actors + j;
-                if (actor->proxyId != b2_nullNode)
-                    {
-                        m_tree.DestroyProxy(actor->proxyId);
-                        actor->proxyId = b2_nullNode;
-                        return;
-                    }
+                m_tree.DestroyProxy(actor->proxyId);
+                actor->proxyId = b2_nullNode;
+                return;
             }
+        }
     }
 
     void MoveProxy()
     {
         for (int32_t i = 0; i < e_actorCount; ++i)
+        {
+            int32_t j = rand() % e_actorCount;
+            Actor* actor = m_actors + j;
+            if (actor->proxyId == b2_nullNode)
             {
-                int32_t j = rand() % e_actorCount;
-                Actor* actor = m_actors + j;
-                if (actor->proxyId == b2_nullNode)
-                    {
-                        continue;
-                    }
-
-                b2AABB aabb0 = actor->aabb;
-                MoveAABB(&actor->aabb);
-                b2Vec2 displacement = actor->aabb.GetCenter() - aabb0.GetCenter();
-                m_tree.MoveProxy(actor->proxyId, actor->aabb, displacement);
-                return;
+                continue;
             }
+
+            b2AABB aabb0 = actor->aabb;
+            MoveAABB(&actor->aabb);
+            b2Vec2 displacement = actor->aabb.GetCenter() - aabb0.GetCenter();
+            m_tree.MoveProxy(actor->proxyId, actor->aabb, displacement);
+            return;
+        }
     }
 
     void Action()
@@ -277,18 +277,18 @@ class DynamicTreeTest : public Test
         int32_t choice = rand() % 20;
 
         switch (choice)
-            {
-                case 0:
-                    CreateProxy();
-                    break;
+        {
+            case 0:
+                CreateProxy();
+                break;
 
-                case 1:
-                    DestroyProxy();
-                    break;
+            case 1:
+                DestroyProxy();
+                break;
 
-                default:
-                    MoveProxy();
-            }
+            default:
+                MoveProxy();
+        }
     }
 
     void Query()
@@ -296,16 +296,16 @@ class DynamicTreeTest : public Test
         m_tree.Query(this, m_queryAABB);
 
         for (auto& elem : m_actors)
+        {
+            if (elem.proxyId == b2_nullNode)
             {
-                if (elem.proxyId == b2_nullNode)
-                    {
-                        continue;
-                    }
-
-                bool overlap = b2TestOverlap(m_queryAABB, elem.aabb);
-                B2_NOT_USED(overlap);
-                b2Assert(overlap == elem.overlap);
+                continue;
             }
+
+            bool overlap = b2TestOverlap(m_queryAABB, elem.aabb);
+            B2_NOT_USED(overlap);
+            b2Assert(overlap == elem.overlap);
+        }
     }
 
     void RayCast()
@@ -321,26 +321,26 @@ class DynamicTreeTest : public Test
         Actor* bruteActor = nullptr;
         b2RayCastOutput bruteOutput;
         for (int32_t i = 0; i < e_actorCount; ++i)
+        {
+            if (m_actors[i].proxyId == b2_nullNode)
             {
-                if (m_actors[i].proxyId == b2_nullNode)
-                    {
-                        continue;
-                    }
-
-                b2RayCastOutput output;
-                bool hit = m_actors[i].aabb.RayCast(&output, input);
-                if (hit)
-                    {
-                        bruteActor = m_actors + i;
-                        bruteOutput = output;
-                        input.maxFraction = output.fraction;
-                    }
+                continue;
             }
+
+            b2RayCastOutput output;
+            bool hit = m_actors[i].aabb.RayCast(&output, input);
+            if (hit)
+            {
+                bruteActor = m_actors + i;
+                bruteOutput = output;
+                input.maxFraction = output.fraction;
+            }
+        }
 
         if (bruteActor != nullptr)
-            {
-                b2Assert(bruteOutput.fraction == m_rayCastOutput.fraction);
-            }
+        {
+            b2Assert(bruteOutput.fraction == m_rayCastOutput.fraction);
+        }
     }
 
     float32 m_worldExtent;

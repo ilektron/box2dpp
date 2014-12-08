@@ -46,35 +46,35 @@ class Tiles : public Test
             b2Vec2 position;
             position.y = 0.0f;
             for (int32_t j = 0; j < M; ++j)
+            {
+                position.x = -N * a;
+                for (int32_t i = 0; i < N; ++i)
                 {
-                    position.x = -N * a;
-                    for (int32_t i = 0; i < N; ++i)
-                        {
-                            b2PolygonShape shape;
-                            shape.SetAsBox(a, a, position, 0.0f);
-                            ground->CreateFixture(&shape, 0.0f);
-                            ++m_fixtureCount;
-                            position.x += 2.0f * a;
-                        }
-                    position.y -= 2.0f * a;
+                    b2PolygonShape shape;
+                    shape.SetAsBox(a, a, position, 0.0f);
+                    ground->CreateFixture(&shape, 0.0f);
+                    ++m_fixtureCount;
+                    position.x += 2.0f * a;
                 }
+                position.y -= 2.0f * a;
+            }
 #else
             int32_t N = 200;
             int32_t M = 10;
             b2Vec2 position;
             position.x = -N * a;
             for (int32_t i = 0; i < N; ++i)
+            {
+                position.y = 0.0f;
+                for (int32_t j = 0; j < M; ++j)
                 {
-                    position.y = 0.0f;
-                    for (int32_t j = 0; j < M; ++j)
-                        {
-                            b2PolygonShape shape;
-                            shape.SetAsBox(a, a, position, 0.0f);
-                            ground->CreateFixture(&shape, 0.0f);
-                            position.y -= 2.0f * a;
-                        }
-                    position.x += 2.0f * a;
+                    b2PolygonShape shape;
+                    shape.SetAsBox(a, a, position, 0.0f);
+                    ground->CreateFixture(&shape, 0.0f);
+                    position.y -= 2.0f * a;
                 }
+                position.x += 2.0f * a;
+            }
 #endif
         }
 
@@ -89,32 +89,32 @@ class Tiles : public Test
             b2Vec2 deltaY(1.125f, 0.0f);
 
             for (int32_t i = 0; i < e_count; ++i)
+            {
+                y = x;
+
+                for (int32_t j = i; j < e_count; ++j)
                 {
-                    y = x;
+                    b2BodyDef bd;
+                    bd.type = b2_dynamicBody;
+                    bd.position = y;
 
-                    for (int32_t j = i; j < e_count; ++j)
-                        {
-                            b2BodyDef bd;
-                            bd.type = b2_dynamicBody;
-                            bd.position = y;
+                    // if (i == 0 && j == 0)
+                    //{
+                    //	bd.allowSleep = false;
+                    //}
+                    // else
+                    //{
+                    //	bd.allowSleep = true;
+                    //}
 
-                            // if (i == 0 && j == 0)
-                            //{
-                            //	bd.allowSleep = false;
-                            //}
-                            // else
-                            //{
-                            //	bd.allowSleep = true;
-                            //}
-
-                            b2Body* body = m_world->CreateBody(&bd);
-                            body->CreateFixture(&shape, 5.0f);
-                            ++m_fixtureCount;
-                            y += deltaY;
-                        }
-
-                    x += deltaX;
+                    b2Body* body = m_world->CreateBody(&bd);
+                    body->CreateFixture(&shape, 5.0f);
+                    ++m_fixtureCount;
+                    y += deltaY;
                 }
+
+                x += deltaX;
+            }
         }
 
         m_createTime = timer.GetMilliseconds();

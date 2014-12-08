@@ -113,60 +113,60 @@ class ApplyForce : public Test
             fd.friction = 0.3f;
 
             for (int i = 0; i < 10; ++i)
-                {
-                    b2BodyDef bd;
-                    bd.type = b2_dynamicBody;
+            {
+                b2BodyDef bd;
+                bd.type = b2_dynamicBody;
 
-                    bd.position.Set(0.0f, 5.0f + 1.54f * i);
-                    b2Body* body = m_world->CreateBody(&bd);
+                bd.position.Set(0.0f, 5.0f + 1.54f * i);
+                b2Body* body = m_world->CreateBody(&bd);
 
-                    body->CreateFixture(&fd);
+                body->CreateFixture(&fd);
 
-                    float32 gravity = 10.0f;
-                    float32 I = body->GetInertia();
-                    float32 mass = body->GetMass();
+                float32 gravity = 10.0f;
+                float32 I = body->GetInertia();
+                float32 mass = body->GetMass();
 
-                    // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
-                    float32 radius = b2Sqrt(2.0f * I / mass);
+                // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
+                float32 radius = b2Sqrt(2.0f * I / mass);
 
-                    b2FrictionJointDef jd;
-                    jd.localAnchorA.SetZero();
-                    jd.localAnchorB.SetZero();
-                    jd.bodyA = ground;
-                    jd.bodyB = body;
-                    jd.collideConnected = true;
-                    jd.maxForce = mass * gravity;
-                    jd.maxTorque = mass * radius * gravity;
+                b2FrictionJointDef jd;
+                jd.localAnchorA.SetZero();
+                jd.localAnchorB.SetZero();
+                jd.bodyA = ground;
+                jd.bodyB = body;
+                jd.collideConnected = true;
+                jd.maxForce = mass * gravity;
+                jd.maxTorque = mass * radius * gravity;
 
-                    m_world->CreateJoint(&jd);
-                }
+                m_world->CreateJoint(&jd);
+            }
         }
     }
 
     void Keyboard(int key) override
     {
         switch (key)
+        {
+            case GLFW_KEY_W:
             {
-                case GLFW_KEY_W:
-                    {
-                        b2Vec2 f = m_body->GetWorldVector(b2Vec2(0.0f, -200.0f));
-                        b2Vec2 p = m_body->GetWorldPoint(b2Vec2(0.0f, 2.0f));
-                        m_body->ApplyForce(f, p, true);
-                    }
-                    break;
-
-                case GLFW_KEY_A:
-                    {
-                        m_body->ApplyTorque(50.0f, true);
-                    }
-                    break;
-
-                case GLFW_KEY_D:
-                    {
-                        m_body->ApplyTorque(-50.0f, true);
-                    }
-                    break;
+                b2Vec2 f = m_body->GetWorldVector(b2Vec2(0.0f, -200.0f));
+                b2Vec2 p = m_body->GetWorldPoint(b2Vec2(0.0f, 2.0f));
+                m_body->ApplyForce(f, p, true);
             }
+            break;
+
+            case GLFW_KEY_A:
+            {
+                m_body->ApplyTorque(50.0f, true);
+            }
+            break;
+
+            case GLFW_KEY_D:
+            {
+                m_body->ApplyTorque(-50.0f, true);
+            }
+            break;
+        }
     }
 
     static Test* Create()

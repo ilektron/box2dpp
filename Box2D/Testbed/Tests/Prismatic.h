@@ -71,19 +71,19 @@ class Prismatic : public Test
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_L:
-                    m_joint->EnableLimit(!m_joint->IsLimitEnabled());
-                    break;
+        {
+            case GLFW_KEY_L:
+                m_joint->EnableLimit(!m_joint->IsLimitEnabled());
+                break;
 
-                case GLFW_KEY_M:
-                    m_joint->EnableMotor(!m_joint->IsMotorEnabled());
-                    break;
+            case GLFW_KEY_M:
+                m_joint->EnableMotor(!m_joint->IsMotorEnabled());
+                break;
 
-                case GLFW_KEY_S:
-                    m_joint->SetMotorSpeed(-m_joint->GetMotorSpeed());
-                    break;
-            }
+            case GLFW_KEY_S:
+                m_joint->SetMotorSpeed(-m_joint->GetMotorSpeed());
+                break;
+        }
     }
 
     void Step(Settings* settings) override

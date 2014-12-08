@@ -108,37 +108,37 @@ class BodyTypes : public Test
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_D:
-                    m_platform->SetType(b2_dynamicBody);
-                    break;
+        {
+            case GLFW_KEY_D:
+                m_platform->SetType(b2_dynamicBody);
+                break;
 
-                case GLFW_KEY_S:
-                    m_platform->SetType(b2_staticBody);
-                    break;
+            case GLFW_KEY_S:
+                m_platform->SetType(b2_staticBody);
+                break;
 
-                case GLFW_KEY_K:
-                    m_platform->SetType(b2_kinematicBody);
-                    m_platform->SetLinearVelocity(b2Vec2(-m_speed, 0.0f));
-                    m_platform->SetAngularVelocity(0.0f);
-                    break;
-            }
+            case GLFW_KEY_K:
+                m_platform->SetType(b2_kinematicBody);
+                m_platform->SetLinearVelocity(b2Vec2(-m_speed, 0.0f));
+                m_platform->SetAngularVelocity(0.0f);
+                break;
+        }
     }
 
     void Step(Settings* settings) override
     {
         // Drive the kinematic body.
         if (m_platform->GetType() == b2_kinematicBody)
-            {
-                b2Vec2 p = m_platform->GetTransform().p;
-                b2Vec2 v = m_platform->GetLinearVelocity();
+        {
+            b2Vec2 p = m_platform->GetTransform().p;
+            b2Vec2 v = m_platform->GetLinearVelocity();
 
-                if ((p.x < -10.0f && v.x < 0.0f) || (p.x > 10.0f && v.x > 0.0f))
-                    {
-                        v.x = -v.x;
-                        m_platform->SetLinearVelocity(v);
-                    }
+            if ((p.x < -10.0f && v.x < 0.0f) || (p.x > 10.0f && v.x > 0.0f))
+            {
+                v.x = -v.x;
+                m_platform->SetLinearVelocity(v);
             }
+        }
 
         Test::Step(settings);
         g_debugDraw.DrawString(5, m_textLine, "Keys: (d) dynamic, (s) static, (k) kinematic");

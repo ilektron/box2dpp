@@ -71,19 +71,19 @@ class MotorJoint : public Test
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_S:
-                    m_go = !m_go;
-                    break;
-            }
+        {
+            case GLFW_KEY_S:
+                m_go = !m_go;
+                break;
+        }
     }
 
     void Step(Settings* settings) override
     {
         if (m_go && settings->hz > 0.0f)
-            {
-                m_time += 1.0f / settings->hz;
-            }
+        {
+            m_time += 1.0f / settings->hz;
+        }
 
         b2Vec2 linearOffset;
         linearOffset.x = 6.0f * sinf(2.0f * m_time);

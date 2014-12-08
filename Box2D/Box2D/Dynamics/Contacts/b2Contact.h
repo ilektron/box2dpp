@@ -249,13 +249,13 @@ inline void b2Contact::GetWorldManifold(b2WorldManifold* worldManifold) const
 inline void b2Contact::SetEnabled(bool flag)
 {
     if (flag)
-        {
-            m_flags |= e_enabledFlag;
-        }
+    {
+        m_flags |= e_enabledFlag;
+    }
     else
-        {
-            m_flags &= ~e_enabledFlag;
-        }
+    {
+        m_flags &= ~e_enabledFlag;
+    }
 }
 
 inline bool b2Contact::IsEnabled() const

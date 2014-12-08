@@ -72,18 +72,18 @@ class Tumbler : public Test
         Test::Step(settings);
 
         if (m_count < e_count)
-            {
-                b2BodyDef bd;
-                bd.type = b2_dynamicBody;
-                bd.position.Set(0.0f, 10.0f);
-                b2Body* body = m_world->CreateBody(&bd);
+        {
+            b2BodyDef bd;
+            bd.type = b2_dynamicBody;
+            bd.position.Set(0.0f, 10.0f);
+            b2Body* body = m_world->CreateBody(&bd);
 
-                b2PolygonShape shape;
-                shape.SetAsBox(0.125f, 0.125f);
-                body->CreateFixture(&shape, 1.0f);
+            b2PolygonShape shape;
+            shape.SetAsBox(0.125f, 0.125f);
+            body->CreateFixture(&shape, 1.0f);
 
-                ++m_count;
-            }
+            ++m_count;
+        }
     }
 
     static Test* Create()

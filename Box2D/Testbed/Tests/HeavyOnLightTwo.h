@@ -52,31 +52,31 @@ class HeavyOnLightTwo : public Test
     void ToggleHeavy()
     {
         if (m_heavy)
-            {
-                m_world->DestroyBody(m_heavy);
-                m_heavy = nullptr;
-            }
+        {
+            m_world->DestroyBody(m_heavy);
+            m_heavy = nullptr;
+        }
         else
-            {
-                b2BodyDef bd;
-                bd.type = b2_dynamicBody;
-                bd.position.Set(0.0f, 9.0f);
-                m_heavy = m_world->CreateBody(&bd);
+        {
+            b2BodyDef bd;
+            bd.type = b2_dynamicBody;
+            bd.position.Set(0.0f, 9.0f);
+            m_heavy = m_world->CreateBody(&bd);
 
-                b2CircleShape shape;
-                shape.m_radius = 5.0f;
-                m_heavy->CreateFixture(&shape, 10.0f);
-            }
+            b2CircleShape shape;
+            shape.m_radius = 5.0f;
+            m_heavy->CreateFixture(&shape, 10.0f);
+        }
     }
 
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_H:
-                    ToggleHeavy();
-                    break;
-            }
+        {
+            case GLFW_KEY_H:
+                ToggleHeavy();
+                break;
+        }
     }
 
     static Test* Create()

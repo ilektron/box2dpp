@@ -53,9 +53,9 @@ b2MouseJoint::b2MouseJoint(const b2MouseJointDef* def) : b2Joint(def)
 void b2MouseJoint::SetTarget(const b2Vec2& target)
 {
     if (m_bodyB->IsAwake() == false)
-        {
-            m_bodyB->SetAwake(true);
-        }
+    {
+        m_bodyB->SetAwake(true);
+    }
     m_targetA = target;
 }
 
@@ -126,9 +126,9 @@ void b2MouseJoint::InitVelocityConstraints(const b2SolverData& data)
     b2Assert(d + h * k > EPSILON);
     m_gamma = h * (d + h * k);
     if (m_gamma != 0.0f)
-        {
-            m_gamma = 1.0f / m_gamma;
-        }
+    {
+        m_gamma = 1.0f / m_gamma;
+    }
     m_beta = h * k * m_gamma;
 
     // Compute the effective mass matrix.
@@ -154,15 +154,15 @@ void b2MouseJoint::InitVelocityConstraints(const b2SolverData& data)
     wB *= 0.98f;
 
     if (data.step.warmStarting)
-        {
-            m_impulse *= data.step.dtRatio;
-            vB += m_invMassB * m_impulse;
-            wB += m_invIB * b2Cross(m_rB, m_impulse);
-        }
+    {
+        m_impulse *= data.step.dtRatio;
+        vB += m_invMassB * m_impulse;
+        wB += m_invIB * b2Cross(m_rB, m_impulse);
+    }
     else
-        {
-            m_impulse.SetZero();
-        }
+    {
+        m_impulse.SetZero();
+    }
 
     data.velocities[m_indexB].v = vB;
     data.velocities[m_indexB].w = wB;
@@ -181,9 +181,9 @@ void b2MouseJoint::SolveVelocityConstraints(const b2SolverData& data)
     m_impulse += impulse;
     float32 maxImpulse = data.step.dt * m_maxForce;
     if (m_impulse.LengthSquared() > maxImpulse * maxImpulse)
-        {
-            m_impulse *= maxImpulse / m_impulse.Length();
-        }
+    {
+        m_impulse *= maxImpulse / m_impulse.Length();
+    }
     impulse = m_impulse - oldImpulse;
 
     vB += m_invMassB * impulse;

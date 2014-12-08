@@ -62,29 +62,29 @@ class RopeJoint : public Test
 
             b2Body* prevBody = ground;
             for (int32_t i = 0; i < N; ++i)
+            {
+                b2BodyDef bd;
+                bd.type = b2_dynamicBody;
+                bd.position.Set(0.5f + 1.0f * i, y);
+                if (i == N - 1)
                 {
-                    b2BodyDef bd;
-                    bd.type = b2_dynamicBody;
-                    bd.position.Set(0.5f + 1.0f * i, y);
-                    if (i == N - 1)
-                        {
-                            shape.SetAsBox(1.5f, 1.5f);
-                            fd.density = 100.0f;
-                            fd.filter.categoryBits = 0x0002;
-                            bd.position.Set(1.0f * i, y);
-                            bd.angularDamping = 0.4f;
-                        }
-
-                    b2Body* body = m_world->CreateBody(&bd);
-
-                    body->CreateFixture(&fd);
-
-                    b2Vec2 anchor(float32(i), y);
-                    jd.Initialize(prevBody, body, anchor);
-                    m_world->CreateJoint(&jd);
-
-                    prevBody = body;
+                    shape.SetAsBox(1.5f, 1.5f);
+                    fd.density = 100.0f;
+                    fd.filter.categoryBits = 0x0002;
+                    bd.position.Set(1.0f * i, y);
+                    bd.angularDamping = 0.4f;
                 }
+
+                b2Body* body = m_world->CreateBody(&bd);
+
+                body->CreateFixture(&fd);
+
+                b2Vec2 anchor(float32(i), y);
+                jd.Initialize(prevBody, body, anchor);
+                m_world->CreateJoint(&jd);
+
+                prevBody = body;
+            }
 
             m_ropeDef.localAnchorB.SetZero();
 
@@ -102,19 +102,19 @@ class RopeJoint : public Test
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_J:
-                    if (m_rope)
-                        {
-                            m_world->DestroyJoint(m_rope);
-                            m_rope = nullptr;
-                        }
-                    else
-                        {
-                            m_rope = m_world->CreateJoint(&m_ropeDef);
-                        }
-                    break;
-            }
+        {
+            case GLFW_KEY_J:
+                if (m_rope)
+                {
+                    m_world->DestroyJoint(m_rope);
+                    m_rope = nullptr;
+                }
+                else
+                {
+                    m_rope = m_world->CreateJoint(&m_ropeDef);
+                }
+                break;
+        }
     }
 
     void Step(Settings* settings) override
@@ -123,13 +123,13 @@ class RopeJoint : public Test
         g_debugDraw.DrawString(5, m_textLine, "Press (j) to toggle the rope joint.");
         m_textLine += DRAW_STRING_NEW_LINE;
         if (m_rope)
-            {
-                g_debugDraw.DrawString(5, m_textLine, "Rope ON");
-            }
+        {
+            g_debugDraw.DrawString(5, m_textLine, "Rope ON");
+        }
         else
-            {
-                g_debugDraw.DrawString(5, m_textLine, "Rope OFF");
-            }
+        {
+            g_debugDraw.DrawString(5, m_textLine, "Rope OFF");
+        }
         m_textLine += DRAW_STRING_NEW_LINE;
     }
 

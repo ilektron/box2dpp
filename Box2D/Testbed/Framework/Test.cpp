@@ -24,13 +24,13 @@ using namespace box2d;
 void DestructionListener::SayGoodbye(b2Joint* joint)
 {
     if (test->m_mouseJoint == joint)
-        {
-            test->m_mouseJoint = nullptr;
-        }
+    {
+        test->m_mouseJoint = nullptr;
+    }
     else
-        {
-            test->JointDestroyed(joint);
-        }
+    {
+        test->JointDestroyed(joint);
+    }
 }
 
 Test::Test()
@@ -71,9 +71,9 @@ void Test::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
     const b2Manifold* manifold = contact->GetManifold();
 
     if (manifold->pointCount == 0)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     b2Fixture* fixtureA = contact->GetFixtureA();
     b2Fixture* fixtureB = contact->GetFixtureB();
@@ -85,18 +85,18 @@ void Test::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
     contact->GetWorldManifold(&worldManifold);
 
     for (int32_t i = 0; i < manifold->pointCount && m_pointCount < k_maxContactPoints; ++i)
-        {
-            ContactPoint* cp = m_points + m_pointCount;
-            cp->fixtureA = fixtureA;
-            cp->fixtureB = fixtureB;
-            cp->position = worldManifold.points[i];
-            cp->normal = worldManifold.normal;
-            cp->state = state2[i];
-            cp->normalImpulse = manifold->points[i].normalImpulse;
-            cp->tangentImpulse = manifold->points[i].tangentImpulse;
-            cp->separation = worldManifold.separations[i];
-            ++m_pointCount;
-        }
+    {
+        ContactPoint* cp = m_points + m_pointCount;
+        cp->fixtureA = fixtureA;
+        cp->fixtureB = fixtureB;
+        cp->position = worldManifold.points[i];
+        cp->normal = worldManifold.normal;
+        cp->state = state2[i];
+        cp->normalImpulse = manifold->points[i].normalImpulse;
+        cp->tangentImpulse = manifold->points[i].tangentImpulse;
+        cp->separation = worldManifold.separations[i];
+        ++m_pointCount;
+    }
 }
 
 void Test::DrawTitle(const char* string)
@@ -118,16 +118,16 @@ class QueryCallback : public b2QueryCallback
     {
         b2Body* body = fixture->GetBody();
         if (body->GetType() == b2_dynamicBody)
+        {
+            bool inside = fixture->TestPoint(m_point);
+            if (inside)
             {
-                bool inside = fixture->TestPoint(m_point);
-                if (inside)
-                    {
-                        m_fixture = fixture;
+                m_fixture = fixture;
 
-                        // We are done, terminate the query.
-                        return false;
-                    }
+                // We are done, terminate the query.
+                return false;
             }
+        }
 
         // Continue the query.
         return true;
@@ -142,9 +142,9 @@ void Test::MouseDown(const b2Vec2& p)
     m_mouseWorld = p;
 
     if (m_mouseJoint != nullptr)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     // Make a small box.
     b2AABB aabb;
@@ -158,16 +158,16 @@ void Test::MouseDown(const b2Vec2& p)
     m_world->QueryAABB(&callback, aabb);
 
     if (callback.m_fixture)
-        {
-            b2Body* body = callback.m_fixture->GetBody();
-            b2MouseJointDef md;
-            md.bodyA = m_groundBody;
-            md.bodyB = body;
-            md.target = p;
-            md.maxForce = 1000.0f * body->GetMass();
-            m_mouseJoint = (b2MouseJoint*)m_world->CreateJoint(&md);
-            body->SetAwake(true);
-        }
+    {
+        b2Body* body = callback.m_fixture->GetBody();
+        b2MouseJointDef md;
+        md.bodyA = m_groundBody;
+        md.bodyB = body;
+        md.target = p;
+        md.maxForce = 1000.0f * body->GetMass();
+        m_mouseJoint = (b2MouseJoint*)m_world->CreateJoint(&md);
+        body->SetAwake(true);
+    }
 }
 
 void Test::SpawnBomb(const b2Vec2& worldPt)
@@ -179,9 +179,9 @@ void Test::SpawnBomb(const b2Vec2& worldPt)
 void Test::CompleteBombSpawn(const b2Vec2& p)
 {
     if (m_bombSpawning == false)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     const float multiplier = 30.0f;
     b2Vec2 vel = m_bombSpawnPoint - p;
@@ -195,9 +195,9 @@ void Test::ShiftMouseDown(const b2Vec2& p)
     m_mouseWorld = p;
 
     if (m_mouseJoint != nullptr)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     SpawnBomb(p);
 }
@@ -205,15 +205,15 @@ void Test::ShiftMouseDown(const b2Vec2& p)
 void Test::MouseUp(const b2Vec2& p)
 {
     if (m_mouseJoint)
-        {
-            m_world->DestroyJoint(m_mouseJoint);
-            m_mouseJoint = nullptr;
-        }
+    {
+        m_world->DestroyJoint(m_mouseJoint);
+        m_mouseJoint = nullptr;
+    }
 
     if (m_bombSpawning)
-        {
-            CompleteBombSpawn(p);
-        }
+    {
+        CompleteBombSpawn(p);
+    }
 }
 
 void Test::MouseMove(const b2Vec2& p)
@@ -221,9 +221,9 @@ void Test::MouseMove(const b2Vec2& p)
     m_mouseWorld = p;
 
     if (m_mouseJoint)
-        {
-            m_mouseJoint->SetTarget(p);
-        }
+    {
+        m_mouseJoint->SetTarget(p);
+    }
 }
 
 void Test::LaunchBomb()
@@ -236,10 +236,10 @@ void Test::LaunchBomb()
 void Test::LaunchBomb(const b2Vec2& position, const b2Vec2& velocity)
 {
     if (m_bomb)
-        {
-            m_world->DestroyBody(m_bomb);
-            m_bomb = nullptr;
-        }
+    {
+        m_world->DestroyBody(m_bomb);
+        m_bomb = nullptr;
+    }
 
     b2BodyDef bd;
     bd.type = b2_dynamicBody;
@@ -271,19 +271,19 @@ void Test::Step(Settings* settings)
     float32 timeStep = settings->hz > 0.0f ? 1.0f / settings->hz : float32(0.0f);
 
     if (settings->pause)
+    {
+        if (settings->singleStep)
         {
-            if (settings->singleStep)
-                {
-                    settings->singleStep = 0;
-                }
-            else
-                {
-                    timeStep = 0.0f;
-                }
-
-            g_debugDraw.DrawString(5, m_textLine, "****PAUSED****");
-            m_textLine += DRAW_STRING_NEW_LINE;
+            settings->singleStep = 0;
         }
+        else
+        {
+            timeStep = 0.0f;
+        }
+
+        g_debugDraw.DrawString(5, m_textLine, "****PAUSED****");
+        m_textLine += DRAW_STRING_NEW_LINE;
+    }
 
     uint32_t flags = 0;
     flags += settings->drawShapes * b2Draw::e_shapeBit;
@@ -305,27 +305,27 @@ void Test::Step(Settings* settings)
     g_debugDraw.Flush();
 
     if (timeStep > 0.0f)
-        {
-            ++m_stepCount;
-        }
+    {
+        ++m_stepCount;
+    }
 
     if (settings->drawStats)
-        {
-            int32_t bodyCount = m_world->GetBodyCount();
-            int32_t contactCount = m_world->GetContactCount();
-            int32_t jointCount = m_world->GetJointCount();
-            g_debugDraw.DrawString(5, m_textLine, "bodies/contacts/joints = %d/%d/%d", bodyCount,
-                                   contactCount, jointCount);
-            m_textLine += DRAW_STRING_NEW_LINE;
+    {
+        int32_t bodyCount = m_world->GetBodyCount();
+        int32_t contactCount = m_world->GetContactCount();
+        int32_t jointCount = m_world->GetJointCount();
+        g_debugDraw.DrawString(5, m_textLine, "bodies/contacts/joints = %d/%d/%d", bodyCount,
+                               contactCount, jointCount);
+        m_textLine += DRAW_STRING_NEW_LINE;
 
-            int32_t proxyCount = m_world->GetProxyCount();
-            int32_t height = m_world->GetTreeHeight();
-            int32_t balance = m_world->GetTreeBalance();
-            float32 quality = m_world->GetTreeQuality();
-            g_debugDraw.DrawString(5, m_textLine, "proxies/height/balance/quality = %d/%d/%d/%g",
-                                   proxyCount, height, balance, quality);
-            m_textLine += DRAW_STRING_NEW_LINE;
-        }
+        int32_t proxyCount = m_world->GetProxyCount();
+        int32_t height = m_world->GetTreeHeight();
+        int32_t balance = m_world->GetTreeBalance();
+        float32 quality = m_world->GetTreeQuality();
+        g_debugDraw.DrawString(5, m_textLine, "proxies/height/balance/quality = %d/%d/%d/%g",
+                               proxyCount, height, balance, quality);
+        m_textLine += DRAW_STRING_NEW_LINE;
+    }
 
     // Track maximum profile times
     {
@@ -350,120 +350,118 @@ void Test::Step(Settings* settings)
     }
 
     if (settings->drawProfile)
+    {
+        const b2Profile& p = m_world->GetProfile();
+
+        b2Profile aveProfile;
+        memset(&aveProfile, 0, sizeof(b2Profile));
+        if (m_stepCount > 0)
         {
-            const b2Profile& p = m_world->GetProfile();
-
-            b2Profile aveProfile;
-            memset(&aveProfile, 0, sizeof(b2Profile));
-            if (m_stepCount > 0)
-                {
-                    float32 scale = 1.0f / m_stepCount;
-                    aveProfile.step = scale * m_totalProfile.step;
-                    aveProfile.collide = scale * m_totalProfile.collide;
-                    aveProfile.solve = scale * m_totalProfile.solve;
-                    aveProfile.solveInit = scale * m_totalProfile.solveInit;
-                    aveProfile.solveVelocity = scale * m_totalProfile.solveVelocity;
-                    aveProfile.solvePosition = scale * m_totalProfile.solvePosition;
-                    aveProfile.solveTOI = scale * m_totalProfile.solveTOI;
-                    aveProfile.broadphase = scale * m_totalProfile.broadphase;
-                }
-
-            g_debugDraw.DrawString(5, m_textLine, "step [ave] (max) = %5.2f [%6.2f] (%6.2f)",
-                                   p.step, aveProfile.step, m_maxProfile.step);
-            m_textLine += DRAW_STRING_NEW_LINE;
-            g_debugDraw.DrawString(5, m_textLine, "collide [ave] (max) = %5.2f [%6.2f] (%6.2f)",
-                                   p.collide, aveProfile.collide, m_maxProfile.collide);
-            m_textLine += DRAW_STRING_NEW_LINE;
-            g_debugDraw.DrawString(5, m_textLine, "solve [ave] (max) = %5.2f [%6.2f] (%6.2f)",
-                                   p.solve, aveProfile.solve, m_maxProfile.solve);
-            m_textLine += DRAW_STRING_NEW_LINE;
-            g_debugDraw.DrawString(5, m_textLine, "solve init [ave] (max) = %5.2f [%6.2f] (%6.2f)",
-                                   p.solveInit, aveProfile.solveInit, m_maxProfile.solveInit);
-            m_textLine += DRAW_STRING_NEW_LINE;
-            g_debugDraw.DrawString(
-                5, m_textLine, "solve velocity [ave] (max) = %5.2f [%6.2f] (%6.2f)",
-                p.solveVelocity, aveProfile.solveVelocity, m_maxProfile.solveVelocity);
-            m_textLine += DRAW_STRING_NEW_LINE;
-            g_debugDraw.DrawString(
-                5, m_textLine, "solve position [ave] (max) = %5.2f [%6.2f] (%6.2f)",
-                p.solvePosition, aveProfile.solvePosition, m_maxProfile.solvePosition);
-            m_textLine += DRAW_STRING_NEW_LINE;
-            g_debugDraw.DrawString(5, m_textLine, "solveTOI [ave] (max) = %5.2f [%6.2f] (%6.2f)",
-                                   p.solveTOI, aveProfile.solveTOI, m_maxProfile.solveTOI);
-            m_textLine += DRAW_STRING_NEW_LINE;
-            g_debugDraw.DrawString(5, m_textLine, "broad-phase [ave] (max) = %5.2f [%6.2f] (%6.2f)",
-                                   p.broadphase, aveProfile.broadphase, m_maxProfile.broadphase);
-            m_textLine += DRAW_STRING_NEW_LINE;
+            float32 scale = 1.0f / m_stepCount;
+            aveProfile.step = scale * m_totalProfile.step;
+            aveProfile.collide = scale * m_totalProfile.collide;
+            aveProfile.solve = scale * m_totalProfile.solve;
+            aveProfile.solveInit = scale * m_totalProfile.solveInit;
+            aveProfile.solveVelocity = scale * m_totalProfile.solveVelocity;
+            aveProfile.solvePosition = scale * m_totalProfile.solvePosition;
+            aveProfile.solveTOI = scale * m_totalProfile.solveTOI;
+            aveProfile.broadphase = scale * m_totalProfile.broadphase;
         }
+
+        g_debugDraw.DrawString(5, m_textLine, "step [ave] (max) = %5.2f [%6.2f] (%6.2f)", p.step,
+                               aveProfile.step, m_maxProfile.step);
+        m_textLine += DRAW_STRING_NEW_LINE;
+        g_debugDraw.DrawString(5, m_textLine, "collide [ave] (max) = %5.2f [%6.2f] (%6.2f)",
+                               p.collide, aveProfile.collide, m_maxProfile.collide);
+        m_textLine += DRAW_STRING_NEW_LINE;
+        g_debugDraw.DrawString(5, m_textLine, "solve [ave] (max) = %5.2f [%6.2f] (%6.2f)", p.solve,
+                               aveProfile.solve, m_maxProfile.solve);
+        m_textLine += DRAW_STRING_NEW_LINE;
+        g_debugDraw.DrawString(5, m_textLine, "solve init [ave] (max) = %5.2f [%6.2f] (%6.2f)",
+                               p.solveInit, aveProfile.solveInit, m_maxProfile.solveInit);
+        m_textLine += DRAW_STRING_NEW_LINE;
+        g_debugDraw.DrawString(5, m_textLine, "solve velocity [ave] (max) = %5.2f [%6.2f] (%6.2f)",
+                               p.solveVelocity, aveProfile.solveVelocity,
+                               m_maxProfile.solveVelocity);
+        m_textLine += DRAW_STRING_NEW_LINE;
+        g_debugDraw.DrawString(5, m_textLine, "solve position [ave] (max) = %5.2f [%6.2f] (%6.2f)",
+                               p.solvePosition, aveProfile.solvePosition,
+                               m_maxProfile.solvePosition);
+        m_textLine += DRAW_STRING_NEW_LINE;
+        g_debugDraw.DrawString(5, m_textLine, "solveTOI [ave] (max) = %5.2f [%6.2f] (%6.2f)",
+                               p.solveTOI, aveProfile.solveTOI, m_maxProfile.solveTOI);
+        m_textLine += DRAW_STRING_NEW_LINE;
+        g_debugDraw.DrawString(5, m_textLine, "broad-phase [ave] (max) = %5.2f [%6.2f] (%6.2f)",
+                               p.broadphase, aveProfile.broadphase, m_maxProfile.broadphase);
+        m_textLine += DRAW_STRING_NEW_LINE;
+    }
 
     if (m_mouseJoint)
-        {
-            b2Vec2 p1 = m_mouseJoint->GetAnchorB();
-            b2Vec2 p2 = m_mouseJoint->GetTarget();
+    {
+        b2Vec2 p1 = m_mouseJoint->GetAnchorB();
+        b2Vec2 p2 = m_mouseJoint->GetTarget();
 
-            b2Color c;
-            c.Set(0.0f, 1.0f, 0.0f);
-            g_debugDraw.DrawPoint(p1, 4.0f, c);
-            g_debugDraw.DrawPoint(p2, 4.0f, c);
+        b2Color c;
+        c.Set(0.0f, 1.0f, 0.0f);
+        g_debugDraw.DrawPoint(p1, 4.0f, c);
+        g_debugDraw.DrawPoint(p2, 4.0f, c);
 
-            c.Set(0.8f, 0.8f, 0.8f);
-            g_debugDraw.DrawSegment(p1, p2, c);
-        }
+        c.Set(0.8f, 0.8f, 0.8f);
+        g_debugDraw.DrawSegment(p1, p2, c);
+    }
 
     if (m_bombSpawning)
-        {
-            b2Color c;
-            c.Set(0.0f, 0.0f, 1.0f);
-            g_debugDraw.DrawPoint(m_bombSpawnPoint, 4.0f, c);
+    {
+        b2Color c;
+        c.Set(0.0f, 0.0f, 1.0f);
+        g_debugDraw.DrawPoint(m_bombSpawnPoint, 4.0f, c);
 
-            c.Set(0.8f, 0.8f, 0.8f);
-            g_debugDraw.DrawSegment(m_mouseWorld, m_bombSpawnPoint, c);
-        }
+        c.Set(0.8f, 0.8f, 0.8f);
+        g_debugDraw.DrawSegment(m_mouseWorld, m_bombSpawnPoint, c);
+    }
 
     if (settings->drawContactPoints)
+    {
+        const float32 k_impulseScale = 0.1f;
+        const float32 k_axisScale = 0.3f;
+
+        for (int32_t i = 0; i < m_pointCount; ++i)
         {
-            const float32 k_impulseScale = 0.1f;
-            const float32 k_axisScale = 0.3f;
+            ContactPoint* point = m_points + i;
 
-            for (int32_t i = 0; i < m_pointCount; ++i)
-                {
-                    ContactPoint* point = m_points + i;
+            if (point->state == b2_addState)
+            {
+                // Add
+                g_debugDraw.DrawPoint(point->position, 10.0f, b2Color(0.3f, 0.95f, 0.3f));
+            }
+            else if (point->state == b2_persistState)
+            {
+                // Persist
+                g_debugDraw.DrawPoint(point->position, 5.0f, b2Color(0.3f, 0.3f, 0.95f));
+            }
 
-                    if (point->state == b2_addState)
-                        {
-                            // Add
-                            g_debugDraw.DrawPoint(point->position, 10.0f,
-                                                  b2Color(0.3f, 0.95f, 0.3f));
-                        }
-                    else if (point->state == b2_persistState)
-                        {
-                            // Persist
-                            g_debugDraw.DrawPoint(point->position, 5.0f,
-                                                  b2Color(0.3f, 0.3f, 0.95f));
-                        }
+            if (settings->drawContactNormals == 1)
+            {
+                b2Vec2 p1 = point->position;
+                b2Vec2 p2 = p1 + k_axisScale * point->normal;
+                g_debugDraw.DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.9f));
+            }
+            else if (settings->drawContactImpulse == 1)
+            {
+                b2Vec2 p1 = point->position;
+                b2Vec2 p2 = p1 + k_impulseScale * point->normalImpulse * point->normal;
+                g_debugDraw.DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
+            }
 
-                    if (settings->drawContactNormals == 1)
-                        {
-                            b2Vec2 p1 = point->position;
-                            b2Vec2 p2 = p1 + k_axisScale * point->normal;
-                            g_debugDraw.DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.9f));
-                        }
-                    else if (settings->drawContactImpulse == 1)
-                        {
-                            b2Vec2 p1 = point->position;
-                            b2Vec2 p2 = p1 + k_impulseScale * point->normalImpulse * point->normal;
-                            g_debugDraw.DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
-                        }
-
-                    if (settings->drawFrictionImpulse == 1)
-                        {
-                            b2Vec2 tangent = b2Cross(point->normal, 1.0f);
-                            b2Vec2 p1 = point->position;
-                            b2Vec2 p2 = p1 + k_impulseScale * point->tangentImpulse * tangent;
-                            g_debugDraw.DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
-                        }
-                }
+            if (settings->drawFrictionImpulse == 1)
+            {
+                b2Vec2 tangent = b2Cross(point->normal, 1.0f);
+                b2Vec2 p1 = point->position;
+                b2Vec2 p2 = p1 + k_impulseScale * point->tangentImpulse * tangent;
+                g_debugDraw.DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
+            }
         }
+    }
 }
 
 void Test::ShiftOrigin(const b2Vec2& newOrigin)

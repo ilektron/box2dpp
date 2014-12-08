@@ -25,67 +25,65 @@ void b2WorldManifold::Initialize(const b2Manifold* manifold, const b2Transform& 
                                  float32 radiusA, const b2Transform& xfB, float32 radiusB)
 {
     if (manifold->pointCount == 0)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     switch (manifold->type)
+    {
+        case b2Manifold::e_circles:
         {
-            case b2Manifold::e_circles:
-                {
-                    normal.Set(1.0f, 0.0f);
-                    b2Vec2 pointA = b2Mul(xfA, manifold->localPoint);
-                    b2Vec2 pointB = b2Mul(xfB, manifold->points[0].localPoint);
-                    if (b2DistanceSquared(pointA, pointB) > EPSILON * EPSILON)
-                        {
-                            normal = pointB - pointA;
-                            normal.Normalize();
-                        }
+            normal.Set(1.0f, 0.0f);
+            b2Vec2 pointA = b2Mul(xfA, manifold->localPoint);
+            b2Vec2 pointB = b2Mul(xfB, manifold->points[0].localPoint);
+            if (b2DistanceSquared(pointA, pointB) > EPSILON * EPSILON)
+            {
+                normal = pointB - pointA;
+                normal.Normalize();
+            }
 
-                    b2Vec2 cA = pointA + radiusA * normal;
-                    b2Vec2 cB = pointB - radiusB * normal;
-                    points[0] = 0.5f * (cA + cB);
-                    separations[0] = b2Dot(cB - cA, normal);
-                }
-                break;
-
-            case b2Manifold::e_faceA:
-                {
-                    normal = b2Mul(xfA.q, manifold->localNormal);
-                    b2Vec2 planePoint = b2Mul(xfA, manifold->localPoint);
-
-                    for (int32_t i = 0; i < manifold->pointCount; ++i)
-                        {
-                            b2Vec2 clipPoint = b2Mul(xfB, manifold->points[i].localPoint);
-                            b2Vec2 cA = clipPoint +
-                                        (radiusA - b2Dot(clipPoint - planePoint, normal)) * normal;
-                            b2Vec2 cB = clipPoint - radiusB * normal;
-                            points[i] = 0.5f * (cA + cB);
-                            separations[i] = b2Dot(cB - cA, normal);
-                        }
-                }
-                break;
-
-            case b2Manifold::e_faceB:
-                {
-                    normal = b2Mul(xfB.q, manifold->localNormal);
-                    b2Vec2 planePoint = b2Mul(xfB, manifold->localPoint);
-
-                    for (int32_t i = 0; i < manifold->pointCount; ++i)
-                        {
-                            b2Vec2 clipPoint = b2Mul(xfA, manifold->points[i].localPoint);
-                            b2Vec2 cB = clipPoint +
-                                        (radiusB - b2Dot(clipPoint - planePoint, normal)) * normal;
-                            b2Vec2 cA = clipPoint - radiusA * normal;
-                            points[i] = 0.5f * (cA + cB);
-                            separations[i] = b2Dot(cA - cB, normal);
-                        }
-
-                    // Ensure normal points from A to B.
-                    normal = -normal;
-                }
-                break;
+            b2Vec2 cA = pointA + radiusA * normal;
+            b2Vec2 cB = pointB - radiusB * normal;
+            points[0] = 0.5f * (cA + cB);
+            separations[0] = b2Dot(cB - cA, normal);
         }
+        break;
+
+        case b2Manifold::e_faceA:
+        {
+            normal = b2Mul(xfA.q, manifold->localNormal);
+            b2Vec2 planePoint = b2Mul(xfA, manifold->localPoint);
+
+            for (int32_t i = 0; i < manifold->pointCount; ++i)
+            {
+                b2Vec2 clipPoint = b2Mul(xfB, manifold->points[i].localPoint);
+                b2Vec2 cA = clipPoint + (radiusA - b2Dot(clipPoint - planePoint, normal)) * normal;
+                b2Vec2 cB = clipPoint - radiusB * normal;
+                points[i] = 0.5f * (cA + cB);
+                separations[i] = b2Dot(cB - cA, normal);
+            }
+        }
+        break;
+
+        case b2Manifold::e_faceB:
+        {
+            normal = b2Mul(xfB.q, manifold->localNormal);
+            b2Vec2 planePoint = b2Mul(xfB, manifold->localPoint);
+
+            for (int32_t i = 0; i < manifold->pointCount; ++i)
+            {
+                b2Vec2 clipPoint = b2Mul(xfA, manifold->points[i].localPoint);
+                b2Vec2 cB = clipPoint + (radiusB - b2Dot(clipPoint - planePoint, normal)) * normal;
+                b2Vec2 cA = clipPoint - radiusA * normal;
+                points[i] = 0.5f * (cA + cB);
+                separations[i] = b2Dot(cA - cB, normal);
+            }
+
+            // Ensure normal points from A to B.
+            normal = -normal;
+        }
+        break;
+    }
 }
 
 void box2d::b2GetPointStates(b2PointState state1[MAX_MANIFOLD_POINTS],
@@ -93,44 +91,44 @@ void box2d::b2GetPointStates(b2PointState state1[MAX_MANIFOLD_POINTS],
                              const b2Manifold* manifold2)
 {
     for (int32_t i = 0; i < MAX_MANIFOLD_POINTS; ++i)
-        {
-            state1[i] = b2_nullState;
-            state2[i] = b2_nullState;
-        }
+    {
+        state1[i] = b2_nullState;
+        state2[i] = b2_nullState;
+    }
 
     // Detect persists and removes.
     for (int32_t i = 0; i < manifold1->pointCount; ++i)
+    {
+        b2ContactID id = manifold1->points[i].id;
+
+        state1[i] = b2_removeState;
+
+        for (int32_t j = 0; j < manifold2->pointCount; ++j)
         {
-            b2ContactID id = manifold1->points[i].id;
-
-            state1[i] = b2_removeState;
-
-            for (int32_t j = 0; j < manifold2->pointCount; ++j)
-                {
-                    if (manifold2->points[j].id.key == id.key)
-                        {
-                            state1[i] = b2_persistState;
-                            break;
-                        }
-                }
+            if (manifold2->points[j].id.key == id.key)
+            {
+                state1[i] = b2_persistState;
+                break;
+            }
         }
+    }
 
     // Detect persists and adds.
     for (int32_t i = 0; i < manifold2->pointCount; ++i)
+    {
+        b2ContactID id = manifold2->points[i].id;
+
+        state2[i] = b2_addState;
+
+        for (int32_t j = 0; j < manifold1->pointCount; ++j)
         {
-            b2ContactID id = manifold2->points[i].id;
-
-            state2[i] = b2_addState;
-
-            for (int32_t j = 0; j < manifold1->pointCount; ++j)
-                {
-                    if (manifold1->points[j].id.key == id.key)
-                        {
-                            state2[i] = b2_persistState;
-                            break;
-                        }
-                }
+            if (manifold1->points[j].id.key == id.key)
+            {
+                state2[i] = b2_persistState;
+                break;
+            }
         }
+    }
 }
 
 // From Real-time Collision Detection, p179.
@@ -146,54 +144,54 @@ bool b2AABB::RayCast(b2RayCastOutput* output, const b2RayCastInput& input) const
     b2Vec2 normal;
 
     for (int32_t i = 0; i < 2; ++i)
+    {
+        if (absD(i) < EPSILON)
         {
-            if (absD(i) < EPSILON)
-                {
-                    // Parallel.
-                    if (p(i) < lowerBound(i) || upperBound(i) < p(i))
-                        {
-                            return false;
-                        }
-                }
-            else
-                {
-                    float32 inv_d = 1.0f / d(i);
-                    float32 t1 = (lowerBound(i) - p(i)) * inv_d;
-                    float32 t2 = (upperBound(i) - p(i)) * inv_d;
-
-                    // Sign of the normal vector.
-                    float32 s = -1.0f;
-
-                    if (t1 > t2)
-                        {
-                            b2Swap(t1, t2);
-                            s = 1.0f;
-                        }
-
-                    // Push the min up
-                    if (t1 > tmin)
-                        {
-                            normal.SetZero();
-                            normal(i) = s;
-                            tmin = t1;
-                        }
-
-                    // Pull the max down
-                    tmax = b2Min(tmax, t2);
-
-                    if (tmin > tmax)
-                        {
-                            return false;
-                        }
-                }
+            // Parallel.
+            if (p(i) < lowerBound(i) || upperBound(i) < p(i))
+            {
+                return false;
+            }
         }
+        else
+        {
+            float32 inv_d = 1.0f / d(i);
+            float32 t1 = (lowerBound(i) - p(i)) * inv_d;
+            float32 t2 = (upperBound(i) - p(i)) * inv_d;
+
+            // Sign of the normal vector.
+            float32 s = -1.0f;
+
+            if (t1 > t2)
+            {
+                b2Swap(t1, t2);
+                s = 1.0f;
+            }
+
+            // Push the min up
+            if (t1 > tmin)
+            {
+                normal.SetZero();
+                normal(i) = s;
+                tmin = t1;
+            }
+
+            // Pull the max down
+            tmax = b2Min(tmax, t2);
+
+            if (tmin > tmax)
+            {
+                return false;
+            }
+        }
+    }
 
     // Does the ray start inside the box?
     // Does the ray intersect beyond the max fraction?
     if (tmin < 0.0f || input.maxFraction < tmin)
-        {
-            return false;
-        }
+    {
+        return false;
+    }
 
     // Intersection.
     output->fraction = tmin;
@@ -220,18 +218,18 @@ int32_t box2d::b2ClipSegmentToLine(b2ClipVertex vOut[2], const b2ClipVertex vIn[
 
     // If the points are on different sides of the plane
     if (distance0 * distance1 < 0.0f)
-        {
-            // Find intersection point of edge and plane
-            float32 interp = distance0 / (distance0 - distance1);
-            vOut[numOut].v = vIn[0].v + interp * (vIn[1].v - vIn[0].v);
+    {
+        // Find intersection point of edge and plane
+        float32 interp = distance0 / (distance0 - distance1);
+        vOut[numOut].v = vIn[0].v + interp * (vIn[1].v - vIn[0].v);
 
-            // VertexA is hitting edgeB.
-            vOut[numOut].id.cf.indexA = static_cast<uint8_t>(vertexIndexA);
-            vOut[numOut].id.cf.indexB = vIn[0].id.cf.indexB;
-            vOut[numOut].id.cf.typeA = b2ContactFeature::e_vertex;
-            vOut[numOut].id.cf.typeB = b2ContactFeature::e_face;
-            ++numOut;
-        }
+        // VertexA is hitting edgeB.
+        vOut[numOut].id.cf.indexA = static_cast<uint8_t>(vertexIndexA);
+        vOut[numOut].id.cf.indexB = vIn[0].id.cf.indexB;
+        vOut[numOut].id.cf.typeA = b2ContactFeature::e_vertex;
+        vOut[numOut].id.cf.typeB = b2ContactFeature::e_face;
+        ++numOut;
+    }
 
     return numOut;
 }

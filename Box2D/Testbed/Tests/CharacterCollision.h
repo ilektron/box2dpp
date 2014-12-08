@@ -174,10 +174,10 @@ class CharacterCollision : public Test
             float32 delta = PI / 3.0f;
             b2Vec2 vertices[6];
             for (auto& vertice : vertices)
-                {
-                    vertice.Set(0.5f * cosf(angle), 0.5f * sinf(angle));
-                    angle += delta;
-                }
+            {
+                vertice.Set(0.5f * cosf(angle), 0.5f * sinf(angle));
+                angle += delta;
+            }
 
             b2PolygonShape shape;
             shape.Set(vertices, 6);

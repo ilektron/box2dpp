@@ -86,16 +86,16 @@ struct b2Vec2
     }
 
     /// Read from and indexed element.
-    float32 operator()(int32_t i) const
-    {
-        return (&x)[i];
-    }
+    //     float32 operator()(int32_t i) const
+    //     {
+    //         return (&x)[i];
+    //     }
 
     /// Write to an indexed element.
-    float32& operator()(int32_t i)
-    {
-        return (&x)[i];
-    }
+    //     float32& operator()(int32_t i)
+    //     {
+    //         return (&x)[i];
+    //     }
 
     /// Add a vector to this vector.
     void operator+=(const b2Vec2& v)
@@ -136,9 +136,9 @@ struct b2Vec2
     {
         float32 length = Length();
         if (length < EPSILON)
-            {
-                return 0.0f;
-            }
+        {
+            return 0.0f;
+        }
         float32 invLength = 1.0f / length;
         x *= invLength;
         y *= invLength;
@@ -280,9 +280,9 @@ struct b2Mat22
         b2Mat22 B;
         float32 det = a * d - b * c;
         if (det != 0.0f)
-            {
-                det = 1.0f / det;
-            }
+        {
+            det = 1.0f / det;
+        }
         B.ex.x = det * d;
         B.ey.x = -det * b;
         B.ex.y = -det * c;
@@ -297,9 +297,9 @@ struct b2Mat22
         float32 a11 = ex.x, a12 = ey.x, a21 = ex.y, a22 = ey.y;
         float32 det = a11 * a22 - a12 * a21;
         if (det != 0.0f)
-            {
-                det = 1.0f / det;
-            }
+        {
+            det = 1.0f / det;
+        }
         b2Vec2 x;
         x.x = det * (a22 * b.x - a12 * b.y);
         x.y = det * (a11 * b.y - a21 * b.x);

@@ -222,21 +222,21 @@ static void sDrawPolygon(const float* coords, unsigned numCoords, float r, unsig
         numCoords = TEMP_COORD_COUNT;
 
     for (unsigned i = 0, j = numCoords - 1; i < numCoords; j = i++)
+    {
+        const float* v0 = &coords[j * 2];
+        const float* v1 = &coords[i * 2];
+        float dx = v1[0] - v0[0];
+        float dy = v1[1] - v0[1];
+        float d = sqrtf(dx * dx + dy * dy);
+        if (d > 0)
         {
-            const float* v0 = &coords[j * 2];
-            const float* v1 = &coords[i * 2];
-            float dx = v1[0] - v0[0];
-            float dy = v1[1] - v0[1];
-            float d = sqrtf(dx * dx + dy * dy);
-            if (d > 0)
-                {
-                    d = 1.0f / d;
-                    dx *= d;
-                    dy *= d;
-                }
-            g_tempNormals[j * 2 + 0] = dy;
-            g_tempNormals[j * 2 + 1] = -dx;
+            d = 1.0f / d;
+            dx *= d;
+            dy *= d;
         }
+        g_tempNormals[j * 2 + 0] = dy;
+        g_tempNormals[j * 2 + 1] = -dx;
+    }
 
     float colf[4] = {(float)(col & 0xff) / 255.f, (float)((col >> 8) & 0xff) / 255.f,
                      (float)((col >> 16) & 0xff) / 255.f, (float)((col >> 24) & 0xff) / 255.f};
@@ -244,25 +244,25 @@ static void sDrawPolygon(const float* coords, unsigned numCoords, float r, unsig
                           (float)((col >> 16) & 0xff) / 255.f, 0};
 
     for (unsigned i = 0, j = numCoords - 1; i < numCoords; j = i++)
+    {
+        float dlx0 = g_tempNormals[j * 2 + 0];
+        float dly0 = g_tempNormals[j * 2 + 1];
+        float dlx1 = g_tempNormals[i * 2 + 0];
+        float dly1 = g_tempNormals[i * 2 + 1];
+        float dmx = (dlx0 + dlx1) * 0.5f;
+        float dmy = (dly0 + dly1) * 0.5f;
+        float dmr2 = dmx * dmx + dmy * dmy;
+        if (dmr2 > 0.000001f)
         {
-            float dlx0 = g_tempNormals[j * 2 + 0];
-            float dly0 = g_tempNormals[j * 2 + 1];
-            float dlx1 = g_tempNormals[i * 2 + 0];
-            float dly1 = g_tempNormals[i * 2 + 1];
-            float dmx = (dlx0 + dlx1) * 0.5f;
-            float dmy = (dly0 + dly1) * 0.5f;
-            float dmr2 = dmx * dmx + dmy * dmy;
-            if (dmr2 > 0.000001f)
-                {
-                    float scale = 1.0f / dmr2;
-                    if (scale > 10.0f)
-                        scale = 10.0f;
-                    dmx *= scale;
-                    dmy *= scale;
-                }
-            g_tempCoords[i * 2 + 0] = coords[i * 2 + 0] + dmx * r;
-            g_tempCoords[i * 2 + 1] = coords[i * 2 + 1] + dmy * r;
+            float scale = 1.0f / dmr2;
+            if (scale > 10.0f)
+                scale = 10.0f;
+            dmx *= scale;
+            dmy *= scale;
         }
+        g_tempCoords[i * 2 + 0] = coords[i * 2 + 0] + dmx * r;
+        g_tempCoords[i * 2 + 1] = coords[i * 2 + 1] + dmy * r;
+    }
 
     int vSize = numCoords * 12 + (numCoords - 2) * 6;
     int uvSize = numCoords * 2 * 6 + (numCoords - 2) * 2 * 3;
@@ -276,86 +276,86 @@ static void sDrawPolygon(const float* coords, unsigned numCoords, float r, unsig
     float* ptrV = v;
     float* ptrC = c;
     for (unsigned i = 0, j = numCoords - 1; i < numCoords; j = i++)
-        {
-            *ptrV = coords[i * 2];
-            *(ptrV + 1) = coords[i * 2 + 1];
-            ptrV += 2;
-            *ptrV = coords[j * 2];
-            *(ptrV + 1) = coords[j * 2 + 1];
-            ptrV += 2;
-            *ptrV = g_tempCoords[j * 2];
-            *(ptrV + 1) = g_tempCoords[j * 2 + 1];
-            ptrV += 2;
-            *ptrV = g_tempCoords[j * 2];
-            *(ptrV + 1) = g_tempCoords[j * 2 + 1];
-            ptrV += 2;
-            *ptrV = g_tempCoords[i * 2];
-            *(ptrV + 1) = g_tempCoords[i * 2 + 1];
-            ptrV += 2;
-            *ptrV = coords[i * 2];
-            *(ptrV + 1) = coords[i * 2 + 1];
-            ptrV += 2;
+    {
+        *ptrV = coords[i * 2];
+        *(ptrV + 1) = coords[i * 2 + 1];
+        ptrV += 2;
+        *ptrV = coords[j * 2];
+        *(ptrV + 1) = coords[j * 2 + 1];
+        ptrV += 2;
+        *ptrV = g_tempCoords[j * 2];
+        *(ptrV + 1) = g_tempCoords[j * 2 + 1];
+        ptrV += 2;
+        *ptrV = g_tempCoords[j * 2];
+        *(ptrV + 1) = g_tempCoords[j * 2 + 1];
+        ptrV += 2;
+        *ptrV = g_tempCoords[i * 2];
+        *(ptrV + 1) = g_tempCoords[i * 2 + 1];
+        ptrV += 2;
+        *ptrV = coords[i * 2];
+        *(ptrV + 1) = coords[i * 2 + 1];
+        ptrV += 2;
 
-            *ptrC = colf[0];
-            *(ptrC + 1) = colf[1];
-            *(ptrC + 2) = colf[2];
-            *(ptrC + 3) = colf[3];
-            ptrC += 4;
-            *ptrC = colf[0];
-            *(ptrC + 1) = colf[1];
-            *(ptrC + 2) = colf[2];
-            *(ptrC + 3) = colf[3];
-            ptrC += 4;
-            *ptrC = colTransf[0];
-            *(ptrC + 1) = colTransf[1];
-            *(ptrC + 2) = colTransf[2];
-            *(ptrC + 3) = colTransf[3];
-            ptrC += 4;
-            *ptrC = colTransf[0];
-            *(ptrC + 1) = colTransf[1];
-            *(ptrC + 2) = colTransf[2];
-            *(ptrC + 3) = colTransf[3];
-            ptrC += 4;
-            *ptrC = colTransf[0];
-            *(ptrC + 1) = colTransf[1];
-            *(ptrC + 2) = colTransf[2];
-            *(ptrC + 3) = colTransf[3];
-            ptrC += 4;
-            *ptrC = colf[0];
-            *(ptrC + 1) = colf[1];
-            *(ptrC + 2) = colf[2];
-            *(ptrC + 3) = colf[3];
-            ptrC += 4;
-        }
+        *ptrC = colf[0];
+        *(ptrC + 1) = colf[1];
+        *(ptrC + 2) = colf[2];
+        *(ptrC + 3) = colf[3];
+        ptrC += 4;
+        *ptrC = colf[0];
+        *(ptrC + 1) = colf[1];
+        *(ptrC + 2) = colf[2];
+        *(ptrC + 3) = colf[3];
+        ptrC += 4;
+        *ptrC = colTransf[0];
+        *(ptrC + 1) = colTransf[1];
+        *(ptrC + 2) = colTransf[2];
+        *(ptrC + 3) = colTransf[3];
+        ptrC += 4;
+        *ptrC = colTransf[0];
+        *(ptrC + 1) = colTransf[1];
+        *(ptrC + 2) = colTransf[2];
+        *(ptrC + 3) = colTransf[3];
+        ptrC += 4;
+        *ptrC = colTransf[0];
+        *(ptrC + 1) = colTransf[1];
+        *(ptrC + 2) = colTransf[2];
+        *(ptrC + 3) = colTransf[3];
+        ptrC += 4;
+        *ptrC = colf[0];
+        *(ptrC + 1) = colf[1];
+        *(ptrC + 2) = colf[2];
+        *(ptrC + 3) = colf[3];
+        ptrC += 4;
+    }
 
     for (unsigned i = 2; i < numCoords; ++i)
-        {
-            *ptrV = coords[0];
-            *(ptrV + 1) = coords[1];
-            ptrV += 2;
-            *ptrV = coords[(i - 1) * 2];
-            *(ptrV + 1) = coords[(i - 1) * 2 + 1];
-            ptrV += 2;
-            *ptrV = coords[i * 2];
-            *(ptrV + 1) = coords[i * 2 + 1];
-            ptrV += 2;
+    {
+        *ptrV = coords[0];
+        *(ptrV + 1) = coords[1];
+        ptrV += 2;
+        *ptrV = coords[(i - 1) * 2];
+        *(ptrV + 1) = coords[(i - 1) * 2 + 1];
+        ptrV += 2;
+        *ptrV = coords[i * 2];
+        *(ptrV + 1) = coords[i * 2 + 1];
+        ptrV += 2;
 
-            *ptrC = colf[0];
-            *(ptrC + 1) = colf[1];
-            *(ptrC + 2) = colf[2];
-            *(ptrC + 3) = colf[3];
-            ptrC += 4;
-            *ptrC = colf[0];
-            *(ptrC + 1) = colf[1];
-            *(ptrC + 2) = colf[2];
-            *(ptrC + 3) = colf[3];
-            ptrC += 4;
-            *ptrC = colf[0];
-            *(ptrC + 1) = colf[1];
-            *(ptrC + 2) = colf[2];
-            *(ptrC + 3) = colf[3];
-            ptrC += 4;
-        }
+        *ptrC = colf[0];
+        *(ptrC + 1) = colf[1];
+        *(ptrC + 2) = colf[2];
+        *(ptrC + 3) = colf[3];
+        ptrC += 4;
+        *ptrC = colf[0];
+        *(ptrC + 1) = colf[1];
+        *(ptrC + 2) = colf[2];
+        *(ptrC + 3) = colf[3];
+        ptrC += 4;
+        *ptrC = colf[0];
+        *(ptrC + 1) = colf[1];
+        *(ptrC + 2) = colf[2];
+        *(ptrC + 3) = colf[3];
+        ptrC += 4;
+    }
     glBindTexture(GL_TEXTURE_2D, g_whitetex);
 
     glBindVertexArray(g_vao);
@@ -403,28 +403,28 @@ static void sDrawRoundedRect(float x, float y, float w, float h, float r, float 
     float* v = verts;
 
     for (unsigned i = 0; i <= n; ++i)
-        {
-            *v++ = x + w - r + cverts[i * 2] * r;
-            *v++ = y + h - r + cverts[i * 2 + 1] * r;
-        }
+    {
+        *v++ = x + w - r + cverts[i * 2] * r;
+        *v++ = y + h - r + cverts[i * 2 + 1] * r;
+    }
 
     for (unsigned i = n; i <= n * 2; ++i)
-        {
-            *v++ = x + r + cverts[i * 2] * r;
-            *v++ = y + h - r + cverts[i * 2 + 1] * r;
-        }
+    {
+        *v++ = x + r + cverts[i * 2] * r;
+        *v++ = y + h - r + cverts[i * 2 + 1] * r;
+    }
 
     for (unsigned i = n * 2; i <= n * 3; ++i)
-        {
-            *v++ = x + r + cverts[i * 2] * r;
-            *v++ = y + r + cverts[i * 2 + 1] * r;
-        }
+    {
+        *v++ = x + r + cverts[i * 2] * r;
+        *v++ = y + r + cverts[i * 2 + 1] * r;
+    }
 
     for (unsigned i = n * 3; i < n * 4; ++i)
-        {
-            *v++ = x + w - r + cverts[i * 2] * r;
-            *v++ = y + r + cverts[i * 2 + 1] * r;
-        }
+    {
+        *v++ = x + w - r + cverts[i * 2] * r;
+        *v++ = y + r + cverts[i * 2 + 1] * r;
+    }
     *v++ = x + w - r + cverts[0] * r;
     *v++ = y + r + cverts[1] * r;
 
@@ -438,11 +438,11 @@ void sRenderLine(float x0, float y0, float x1, float y1, float r, float fth, uns
     float dy = y1 - y0;
     float d = sqrtf(dx * dx + dy * dy);
     if (d > 0.0001f)
-        {
-            d = 1.0f / d;
-            dx *= d;
-            dy *= d;
-        }
+    {
+        d = 1.0f / d;
+        dx *= d;
+        dy *= d;
+    }
     float nx = dy;
     float ny = -dx;
     float verts[4 * 2];
@@ -474,11 +474,11 @@ void sRenderLine(float x0, float y0, float x1, float y1, float r, float fth, uns
 bool RenderGLInit(const char* fontpath)
 {
     for (int i = 0; i < CIRCLE_VERTS; ++i)
-        {
-            float a = (float)i / (float)CIRCLE_VERTS * PI * 2;
-            g_circleVerts[i * 2 + 0] = cosf(a);
-            g_circleVerts[i * 2 + 1] = sinf(a);
-        }
+    {
+        float a = (float)i / (float)CIRCLE_VERTS * PI * 2;
+        g_circleVerts[i * 2 + 0] = cosf(a);
+        g_circleVerts[i * 2 + 1] = sinf(a);
+    }
 
     // Load font.
     FILE* fp = fopen(fontpath, "rb");
@@ -490,10 +490,10 @@ bool RenderGLInit(const char* fontpath)
 
     unsigned char* ttfBuffer = (unsigned char*)malloc(size);
     if (!ttfBuffer)
-        {
-            fclose(fp);
-            return false;
-        }
+    {
+        fclose(fp);
+        return false;
+    }
 
     fread(ttfBuffer, 1, size, fp);
     fclose(fp);
@@ -501,10 +501,10 @@ bool RenderGLInit(const char* fontpath)
 
     unsigned char* bmap = (unsigned char*)malloc(512 * 512);
     if (!bmap)
-        {
-            free(ttfBuffer);
-            return false;
-        }
+    {
+        free(ttfBuffer);
+        return false;
+    }
 
     stbtt_BakeFontBitmap(ttfBuffer, 0, 15.0f, bmap, 512, 512, 32, 96, g_cdata);
 
@@ -602,23 +602,23 @@ bool RenderGLInit(const char* fontpath)
 void RenderGLDestroy()
 {
     if (g_ftex)
-        {
-            glDeleteTextures(1, &g_ftex);
-            g_ftex = 0;
-        }
+    {
+        glDeleteTextures(1, &g_ftex);
+        g_ftex = 0;
+    }
 
     if (g_vao)
-        {
-            glDeleteVertexArrays(1, &g_vao);
-            glDeleteBuffers(3, g_vbos);
-            g_vao = 0;
-        }
+    {
+        glDeleteVertexArrays(1, &g_vao);
+        glDeleteBuffers(3, g_vbos);
+        g_vao = 0;
+    }
 
     if (g_program)
-        {
-            glDeleteProgram(g_program);
-            g_program = 0;
-        }
+    {
+        glDeleteProgram(g_program);
+        g_program = 0;
+    }
 }
 
 static void sGetBakedQuad(stbtt_bakedchar* chardata, int pw, int ph, int char_index, float* xpos,
@@ -648,28 +648,28 @@ static float sGetTextLength(stbtt_bakedchar* chardata, const char* text)
     float xpos = 0;
     float len = 0;
     while (*text)
+    {
+        int c = (unsigned char)*text;
+        if (c == '\t')
         {
-            int c = (unsigned char)*text;
-            if (c == '\t')
+            for (auto& g_tabStop : g_tabStops)
+            {
+                if (xpos < g_tabStop)
                 {
-                    for (auto& g_tabStop : g_tabStops)
-                        {
-                            if (xpos < g_tabStop)
-                                {
-                                    xpos = g_tabStop;
-                                    break;
-                                }
-                        }
+                    xpos = g_tabStop;
+                    break;
                 }
-            else if (c >= 32 && c < 128)
-                {
-                    stbtt_bakedchar* b = chardata + c - 32;
-                    int round_x = STBTT_ifloor((xpos + b->xoff) + 0.5);
-                    len = round_x + b->x1 - b->x0 + 0.5f;
-                    xpos += b->xadvance;
-                }
-            ++text;
+            }
         }
+        else if (c >= 32 && c < 128)
+        {
+            stbtt_bakedchar* b = chardata + c - 32;
+            int round_x = STBTT_ifloor((xpos + b->xoff) + 0.5);
+            len = round_x + b->x1 - b->x0 + 0.5f;
+            xpos += b->xadvance;
+        }
+        ++text;
+    }
     return len;
 }
 
@@ -697,44 +697,44 @@ void sRenderString(float x, float y, const char* text, TextAlign align, unsigned
     const float ox = x;
 
     while (*text)
+    {
+        int c = (unsigned char)*text;
+        if (c == '\t')
         {
-            int c = (unsigned char)*text;
-            if (c == '\t')
+            for (auto& g_tabStop : g_tabStops)
+            {
+                if (x < g_tabStop + ox)
                 {
-                    for (auto& g_tabStop : g_tabStops)
-                        {
-                            if (x < g_tabStop + ox)
-                                {
-                                    x = g_tabStop + ox;
-                                    break;
-                                }
-                        }
+                    x = g_tabStop + ox;
+                    break;
                 }
-            else if (c >= 32 && c < 128)
-                {
-                    stbtt_aligned_quad q;
-                    sGetBakedQuad(g_cdata, 512, 512, c - 32, &x, &y, &q);
-
-                    float v[12] = {
-                        q.x0, q.y0, q.x1, q.y1, q.x1, q.y0, q.x0, q.y0, q.x0, q.y1, q.x1, q.y1,
-                    };
-                    float uv[12] = {
-                        q.s0, q.t0, q.s1, q.t1, q.s1, q.t0, q.s0, q.t0, q.s0, q.t1, q.s1, q.t1,
-                    };
-                    float color[24] = {
-                        r, g, b, a, r, g, b, a, r, g, b, a, r, g, b, a, r, g, b, a, r, g, b, a,
-                    };
-                    glBindVertexArray(g_vao);
-                    glBindBuffer(GL_ARRAY_BUFFER, g_vbos[0]);
-                    glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), v, GL_STATIC_DRAW);
-                    glBindBuffer(GL_ARRAY_BUFFER, g_vbos[1]);
-                    glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), uv, GL_STATIC_DRAW);
-                    glBindBuffer(GL_ARRAY_BUFFER, g_vbos[2]);
-                    glBufferData(GL_ARRAY_BUFFER, 24 * sizeof(float), color, GL_STATIC_DRAW);
-                    glDrawArrays(GL_TRIANGLES, 0, 6);
-                }
-            ++text;
+            }
         }
+        else if (c >= 32 && c < 128)
+        {
+            stbtt_aligned_quad q;
+            sGetBakedQuad(g_cdata, 512, 512, c - 32, &x, &y, &q);
+
+            float v[12] = {
+                q.x0, q.y0, q.x1, q.y1, q.x1, q.y0, q.x0, q.y0, q.x0, q.y1, q.x1, q.y1,
+            };
+            float uv[12] = {
+                q.s0, q.t0, q.s1, q.t1, q.s1, q.t0, q.s0, q.t0, q.s0, q.t1, q.s1, q.t1,
+            };
+            float color[24] = {
+                r, g, b, a, r, g, b, a, r, g, b, a, r, g, b, a, r, g, b, a, r, g, b, a,
+            };
+            glBindVertexArray(g_vao);
+            glBindBuffer(GL_ARRAY_BUFFER, g_vbos[0]);
+            glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), v, GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, g_vbos[1]);
+            glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), uv, GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, g_vbos[2]);
+            glBufferData(GL_ARRAY_BUFFER, 24 * sizeof(float), color, GL_STATIC_DRAW);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+        ++text;
+    }
 }
 
 //
@@ -752,72 +752,70 @@ void RenderGLFlush(int width, int height)
 
     glDisable(GL_SCISSOR_TEST);
     for (int i = 0; i < nq; ++i)
+    {
+        const GfxCmd& cmd = q[i];
+        if (cmd.type == GFXCMD_RECT)
         {
-            const GfxCmd& cmd = q[i];
-            if (cmd.type == GFXCMD_RECT)
-                {
-                    if (cmd.rect.r == 0)
-                        {
-                            sDrawRect((float)cmd.rect.x * s + 0.5f, (float)cmd.rect.y * s + 0.5f,
-                                      (float)cmd.rect.w * s - 1, (float)cmd.rect.h * s - 1, 1.0f,
-                                      cmd.col);
-                        }
-                    else
-                        {
-                            sDrawRoundedRect((float)cmd.rect.x * s + 0.5f,
-                                             (float)cmd.rect.y * s + 0.5f,
-                                             (float)cmd.rect.w * s - 1, (float)cmd.rect.h * s - 1,
-                                             (float)cmd.rect.r * s, 1.0f, cmd.col);
-                        }
-                }
-            else if (cmd.type == GFXCMD_LINE)
-                {
-                    sRenderLine(cmd.line.x0 * s, cmd.line.y0 * s, cmd.line.x1 * s, cmd.line.y1 * s,
-                                cmd.line.r * s, 1.0f, cmd.col);
-                }
-            else if (cmd.type == GFXCMD_TRIANGLE)
-                {
-                    if (cmd.flags == 1)
-                        {
-                            const float verts[3 * 2] = {
-                                (float)cmd.rect.x * s + 0.5f, (float)cmd.rect.y * s + 0.5f,
-                                (float)cmd.rect.x * s + 0.5f + (float)cmd.rect.w * s - 1,
-                                (float)cmd.rect.y * s + 0.5f + (float)cmd.rect.h * s / 2 - 0.5f,
-                                (float)cmd.rect.x * s + 0.5f,
-                                (float)cmd.rect.y * s + 0.5f + (float)cmd.rect.h * s - 1,
-                            };
-                            sDrawPolygon(verts, 3, 1.0f, cmd.col);
-                        }
-                    if (cmd.flags == 2)
-                        {
-                            const float verts[3 * 2] = {
-                                (float)cmd.rect.x * s + 0.5f,
-                                (float)cmd.rect.y * s + 0.5f + (float)cmd.rect.h * s - 1,
-                                (float)cmd.rect.x * s + 0.5f + (float)cmd.rect.w * s / 2 - 0.5f,
-                                (float)cmd.rect.y * s + 0.5f,
-                                (float)cmd.rect.x * s + 0.5f + (float)cmd.rect.w * s - 1,
-                                (float)cmd.rect.y * s + 0.5f + (float)cmd.rect.h * s - 1,
-                            };
-                            sDrawPolygon(verts, 3, 1.0f, cmd.col);
-                        }
-                }
-            else if (cmd.type == GFXCMD_TEXT)
-                {
-                    sRenderString(cmd.text.x, cmd.text.y, cmd.text.text, cmd.text.align, cmd.col);
-                }
-            else if (cmd.type == GFXCMD_SCISSOR)
-                {
-                    if (cmd.flags)
-                        {
-                            glEnable(GL_SCISSOR_TEST);
-                            glScissor(cmd.rect.x, cmd.rect.y, cmd.rect.w, cmd.rect.h);
-                        }
-                    else
-                        {
-                            glDisable(GL_SCISSOR_TEST);
-                        }
-                }
+            if (cmd.rect.r == 0)
+            {
+                sDrawRect((float)cmd.rect.x * s + 0.5f, (float)cmd.rect.y * s + 0.5f,
+                          (float)cmd.rect.w * s - 1, (float)cmd.rect.h * s - 1, 1.0f, cmd.col);
+            }
+            else
+            {
+                sDrawRoundedRect((float)cmd.rect.x * s + 0.5f, (float)cmd.rect.y * s + 0.5f,
+                                 (float)cmd.rect.w * s - 1, (float)cmd.rect.h * s - 1,
+                                 (float)cmd.rect.r * s, 1.0f, cmd.col);
+            }
         }
+        else if (cmd.type == GFXCMD_LINE)
+        {
+            sRenderLine(cmd.line.x0 * s, cmd.line.y0 * s, cmd.line.x1 * s, cmd.line.y1 * s,
+                        cmd.line.r * s, 1.0f, cmd.col);
+        }
+        else if (cmd.type == GFXCMD_TRIANGLE)
+        {
+            if (cmd.flags == 1)
+            {
+                const float verts[3 * 2] = {
+                    (float)cmd.rect.x * s + 0.5f, (float)cmd.rect.y * s + 0.5f,
+                    (float)cmd.rect.x * s + 0.5f + (float)cmd.rect.w * s - 1,
+                    (float)cmd.rect.y * s + 0.5f + (float)cmd.rect.h * s / 2 - 0.5f,
+                    (float)cmd.rect.x * s + 0.5f,
+                    (float)cmd.rect.y * s + 0.5f + (float)cmd.rect.h * s - 1,
+                };
+                sDrawPolygon(verts, 3, 1.0f, cmd.col);
+            }
+            if (cmd.flags == 2)
+            {
+                const float verts[3 * 2] = {
+                    (float)cmd.rect.x * s + 0.5f,
+                    (float)cmd.rect.y * s + 0.5f + (float)cmd.rect.h * s - 1,
+                    (float)cmd.rect.x * s + 0.5f + (float)cmd.rect.w * s / 2 - 0.5f,
+                    (float)cmd.rect.y * s + 0.5f,
+                    (float)cmd.rect.x * s + 0.5f + (float)cmd.rect.w * s - 1,
+                    (float)cmd.rect.y * s + 0.5f + (float)cmd.rect.h * s - 1,
+                };
+                sDrawPolygon(verts, 3, 1.0f, cmd.col);
+            }
+        }
+        else if (cmd.type == GFXCMD_TEXT)
+        {
+            sRenderString(cmd.text.x, cmd.text.y, cmd.text.text, cmd.text.align, cmd.col);
+        }
+        else if (cmd.type == GFXCMD_SCISSOR)
+        {
+            if (cmd.flags)
+            {
+                glEnable(GL_SCISSOR_TEST);
+                glScissor(cmd.rect.x, cmd.rect.y, cmd.rect.w, cmd.rect.h);
+            }
+            else
+            {
+                glDisable(GL_SCISSOR_TEST);
+            }
+        }
+    }
     glDisable(GL_SCISSOR_TEST);
     glUseProgram(0);
 

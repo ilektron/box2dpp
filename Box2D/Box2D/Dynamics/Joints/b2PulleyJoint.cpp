@@ -104,22 +104,22 @@ void b2PulleyJoint::InitVelocityConstraints(const b2SolverData& data)
     float32 lengthB = m_uB.Length();
 
     if (lengthA > 10.0f * LINEAR_SLOP)
-        {
-            m_uA *= 1.0f / lengthA;
-        }
+    {
+        m_uA *= 1.0f / lengthA;
+    }
     else
-        {
-            m_uA.SetZero();
-        }
+    {
+        m_uA.SetZero();
+    }
 
     if (lengthB > 10.0f * LINEAR_SLOP)
-        {
-            m_uB *= 1.0f / lengthB;
-        }
+    {
+        m_uB *= 1.0f / lengthB;
+    }
     else
-        {
-            m_uB.SetZero();
-        }
+    {
+        m_uB.SetZero();
+    }
 
     // Compute effective mass.
     float32 ruA = b2Cross(m_rA, m_uA);
@@ -131,28 +131,28 @@ void b2PulleyJoint::InitVelocityConstraints(const b2SolverData& data)
     m_mass = mA + m_ratio * m_ratio * mB;
 
     if (m_mass > 0.0f)
-        {
-            m_mass = 1.0f / m_mass;
-        }
+    {
+        m_mass = 1.0f / m_mass;
+    }
 
     if (data.step.warmStarting)
-        {
-            // Scale impulses to support variable time steps.
-            m_impulse *= data.step.dtRatio;
+    {
+        // Scale impulses to support variable time steps.
+        m_impulse *= data.step.dtRatio;
 
-            // Warm starting.
-            b2Vec2 PA = -(m_impulse)*m_uA;
-            b2Vec2 PB = (-m_ratio * m_impulse) * m_uB;
+        // Warm starting.
+        b2Vec2 PA = -(m_impulse)*m_uA;
+        b2Vec2 PB = (-m_ratio * m_impulse) * m_uB;
 
-            vA += m_invMassA * PA;
-            wA += m_invIA * b2Cross(m_rA, PA);
-            vB += m_invMassB * PB;
-            wB += m_invIB * b2Cross(m_rB, PB);
-        }
+        vA += m_invMassA * PA;
+        wA += m_invIA * b2Cross(m_rA, PA);
+        vB += m_invMassB * PB;
+        wB += m_invIB * b2Cross(m_rB, PB);
+    }
     else
-        {
-            m_impulse = 0.0f;
-        }
+    {
+        m_impulse = 0.0f;
+    }
 
     data.velocities[m_indexA].v = vA;
     data.velocities[m_indexA].w = wA;
@@ -207,22 +207,22 @@ bool b2PulleyJoint::SolvePositionConstraints(const b2SolverData& data)
     float32 lengthB = uB.Length();
 
     if (lengthA > 10.0f * LINEAR_SLOP)
-        {
-            uA *= 1.0f / lengthA;
-        }
+    {
+        uA *= 1.0f / lengthA;
+    }
     else
-        {
-            uA.SetZero();
-        }
+    {
+        uA.SetZero();
+    }
 
     if (lengthB > 10.0f * LINEAR_SLOP)
-        {
-            uB *= 1.0f / lengthB;
-        }
+    {
+        uB *= 1.0f / lengthB;
+    }
     else
-        {
-            uB.SetZero();
-        }
+    {
+        uB.SetZero();
+    }
 
     // Compute effective mass.
     float32 ruA = b2Cross(rA, uA);
@@ -234,9 +234,9 @@ bool b2PulleyJoint::SolvePositionConstraints(const b2SolverData& data)
     float32 mass = mA + m_ratio * m_ratio * mB;
 
     if (mass > 0.0f)
-        {
-            mass = 1.0f / mass;
-        }
+    {
+        mass = 1.0f / mass;
+    }
 
     float32 C = m_constant - lengthA - m_ratio * lengthB;
     float32 linearError = b2Abs(C);

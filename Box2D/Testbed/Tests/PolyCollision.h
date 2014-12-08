@@ -60,52 +60,52 @@ class PolyCollision : public Test
             b2Color color(0.9f, 0.9f, 0.9f);
             b2Vec2 v[MAX_POLYGON_VERTICES];
             for (int32_t i = 0; i < m_polygonA.m_count; ++i)
-                {
-                    v[i] = b2Mul(m_transformA, m_polygonA.m_vertices[i]);
-                }
+            {
+                v[i] = b2Mul(m_transformA, m_polygonA.m_vertices[i]);
+            }
             g_debugDraw.DrawPolygon(v, m_polygonA.m_count, color);
 
             for (int32_t i = 0; i < m_polygonB.m_count; ++i)
-                {
-                    v[i] = b2Mul(m_transformB, m_polygonB.m_vertices[i]);
-                }
+            {
+                v[i] = b2Mul(m_transformB, m_polygonB.m_vertices[i]);
+            }
             g_debugDraw.DrawPolygon(v, m_polygonB.m_count, color);
         }
 
         for (int32_t i = 0; i < manifold.pointCount; ++i)
-            {
-                g_debugDraw.DrawPoint(worldManifold.points[i], 4.0f, b2Color(0.9f, 0.3f, 0.3f));
-            }
+        {
+            g_debugDraw.DrawPoint(worldManifold.points[i], 4.0f, b2Color(0.9f, 0.3f, 0.3f));
+        }
     }
 
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_A:
-                    m_positionB.x -= 0.1f;
-                    break;
+        {
+            case GLFW_KEY_A:
+                m_positionB.x -= 0.1f;
+                break;
 
-                case GLFW_KEY_D:
-                    m_positionB.x += 0.1f;
-                    break;
+            case GLFW_KEY_D:
+                m_positionB.x += 0.1f;
+                break;
 
-                case GLFW_KEY_S:
-                    m_positionB.y -= 0.1f;
-                    break;
+            case GLFW_KEY_S:
+                m_positionB.y -= 0.1f;
+                break;
 
-                case GLFW_KEY_W:
-                    m_positionB.y += 0.1f;
-                    break;
+            case GLFW_KEY_W:
+                m_positionB.y += 0.1f;
+                break;
 
-                case GLFW_KEY_Q:
-                    m_angleB += 0.1f * PI;
-                    break;
+            case GLFW_KEY_Q:
+                m_angleB += 0.1f * PI;
+                break;
 
-                case GLFW_KEY_E:
-                    m_angleB -= 0.1f * PI;
-                    break;
-            }
+            case GLFW_KEY_E:
+                m_angleB -= 0.1f * PI;
+                break;
+        }
 
         m_transformB.Set(m_positionB, m_angleB);
     }

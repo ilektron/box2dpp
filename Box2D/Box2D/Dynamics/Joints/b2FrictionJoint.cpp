@@ -101,27 +101,27 @@ void b2FrictionJoint::InitVelocityConstraints(const b2SolverData& data)
 
     m_angularMass = iA + iB;
     if (m_angularMass > 0.0f)
-        {
-            m_angularMass = 1.0f / m_angularMass;
-        }
+    {
+        m_angularMass = 1.0f / m_angularMass;
+    }
 
     if (data.step.warmStarting)
-        {
-            // Scale impulses to support a variable time step.
-            m_linearImpulse *= data.step.dtRatio;
-            m_angularImpulse *= data.step.dtRatio;
+    {
+        // Scale impulses to support a variable time step.
+        m_linearImpulse *= data.step.dtRatio;
+        m_angularImpulse *= data.step.dtRatio;
 
-            b2Vec2 P(m_linearImpulse.x, m_linearImpulse.y);
-            vA -= mA * P;
-            wA -= iA * (b2Cross(m_rA, P) + m_angularImpulse);
-            vB += mB * P;
-            wB += iB * (b2Cross(m_rB, P) + m_angularImpulse);
-        }
+        b2Vec2 P(m_linearImpulse.x, m_linearImpulse.y);
+        vA -= mA * P;
+        wA -= iA * (b2Cross(m_rA, P) + m_angularImpulse);
+        vB += mB * P;
+        wB += iB * (b2Cross(m_rB, P) + m_angularImpulse);
+    }
     else
-        {
-            m_linearImpulse.SetZero();
-            m_angularImpulse = 0.0f;
-        }
+    {
+        m_linearImpulse.SetZero();
+        m_angularImpulse = 0.0f;
+    }
 
     data.velocities[m_indexA].v = vA;
     data.velocities[m_indexA].w = wA;
@@ -166,10 +166,10 @@ void b2FrictionJoint::SolveVelocityConstraints(const b2SolverData& data)
         float32 maxImpulse = h * m_maxForce;
 
         if (m_linearImpulse.LengthSquared() > maxImpulse * maxImpulse)
-            {
-                m_linearImpulse.Normalize();
-                m_linearImpulse *= maxImpulse;
-            }
+        {
+            m_linearImpulse.Normalize();
+            m_linearImpulse *= maxImpulse;
+        }
 
         impulse = m_linearImpulse - oldImpulse;
 

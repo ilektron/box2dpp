@@ -50,35 +50,35 @@ class ShapeEditing : public Test
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_C:
-                    if (m_fixture2 == nullptr)
-                        {
-                            b2CircleShape shape;
-                            shape.m_radius = 3.0f;
-                            shape.m_p.Set(0.5f, -4.0f);
-                            m_fixture2 = m_body->CreateFixture(&shape, 10.0f);
-                            m_body->SetAwake(true);
-                        }
-                    break;
+        {
+            case GLFW_KEY_C:
+                if (m_fixture2 == nullptr)
+                {
+                    b2CircleShape shape;
+                    shape.m_radius = 3.0f;
+                    shape.m_p.Set(0.5f, -4.0f);
+                    m_fixture2 = m_body->CreateFixture(&shape, 10.0f);
+                    m_body->SetAwake(true);
+                }
+                break;
 
-                case GLFW_KEY_D:
-                    if (m_fixture2 != nullptr)
-                        {
-                            m_body->DestroyFixture(m_fixture2);
-                            m_fixture2 = nullptr;
-                            m_body->SetAwake(true);
-                        }
-                    break;
+            case GLFW_KEY_D:
+                if (m_fixture2 != nullptr)
+                {
+                    m_body->DestroyFixture(m_fixture2);
+                    m_fixture2 = nullptr;
+                    m_body->SetAwake(true);
+                }
+                break;
 
-                case GLFW_KEY_S:
-                    if (m_fixture2 != nullptr)
-                        {
-                            m_sensor = !m_sensor;
-                            m_fixture2->SetSensor(m_sensor);
-                        }
-                    break;
-            }
+            case GLFW_KEY_S:
+                if (m_fixture2 != nullptr)
+                {
+                    m_sensor = !m_sensor;
+                    m_fixture2->SetSensor(m_sensor);
+                }
+                break;
+        }
     }
 
     void Step(Settings* settings) override

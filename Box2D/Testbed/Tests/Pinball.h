@@ -116,15 +116,15 @@ class Pinball : public Test
     void Step(Settings* settings) override
     {
         if (m_button)
-            {
-                m_leftJoint->SetMotorSpeed(20.0f);
-                m_rightJoint->SetMotorSpeed(-20.0f);
-            }
+        {
+            m_leftJoint->SetMotorSpeed(20.0f);
+            m_rightJoint->SetMotorSpeed(-20.0f);
+        }
         else
-            {
-                m_leftJoint->SetMotorSpeed(-10.0f);
-                m_rightJoint->SetMotorSpeed(10.0f);
-            }
+        {
+            m_leftJoint->SetMotorSpeed(-10.0f);
+            m_rightJoint->SetMotorSpeed(10.0f);
+        }
 
         Test::Step(settings);
 
@@ -135,21 +135,21 @@ class Pinball : public Test
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_A:
-                    m_button = true;
-                    break;
-            }
+        {
+            case GLFW_KEY_A:
+                m_button = true;
+                break;
+        }
     }
 
     void KeyboardUp(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_A:
-                    m_button = false;
-                    break;
-            }
+        {
+            case GLFW_KEY_A:
+                m_button = false;
+                break;
+        }
     }
 
     static Test* Create()

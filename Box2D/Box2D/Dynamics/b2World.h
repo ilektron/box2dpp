@@ -347,13 +347,13 @@ inline bool b2World::IsLocked() const
 inline void b2World::SetAutoClearForces(bool flag)
 {
     if (flag)
-        {
-            m_flags |= e_clearForces;
-        }
+    {
+        m_flags |= e_clearForces;
+    }
     else
-        {
-            m_flags &= ~e_clearForces;
-        }
+    {
+        m_flags &= ~e_clearForces;
+    }
 }
 
 /// Get the flag that controls automatic clearing of forces after each time step.

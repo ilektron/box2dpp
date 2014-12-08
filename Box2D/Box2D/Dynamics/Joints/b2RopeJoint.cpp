@@ -74,25 +74,25 @@ void b2RopeJoint::InitVelocityConstraints(const b2SolverData& data)
 
     float32 C = m_length - m_maxLength;
     if (C > 0.0f)
-        {
-            m_state = e_atUpperLimit;
-        }
+    {
+        m_state = e_atUpperLimit;
+    }
     else
-        {
-            m_state = e_inactiveLimit;
-        }
+    {
+        m_state = e_inactiveLimit;
+    }
 
     if (m_length > LINEAR_SLOP)
-        {
-            m_u *= 1.0f / m_length;
-        }
+    {
+        m_u *= 1.0f / m_length;
+    }
     else
-        {
-            m_u.SetZero();
-            m_mass = 0.0f;
-            m_impulse = 0.0f;
-            return;
-        }
+    {
+        m_u.SetZero();
+        m_mass = 0.0f;
+        m_impulse = 0.0f;
+        return;
+    }
 
     // Compute effective mass.
     float32 crA = b2Cross(m_rA, m_u);
@@ -102,20 +102,20 @@ void b2RopeJoint::InitVelocityConstraints(const b2SolverData& data)
     m_mass = invMass != 0.0f ? 1.0f / invMass : 0.0f;
 
     if (data.step.warmStarting)
-        {
-            // Scale the impulse to support a variable time step.
-            m_impulse *= data.step.dtRatio;
+    {
+        // Scale the impulse to support a variable time step.
+        m_impulse *= data.step.dtRatio;
 
-            b2Vec2 P = m_impulse * m_u;
-            vA -= m_invMassA * P;
-            wA -= m_invIA * b2Cross(m_rA, P);
-            vB += m_invMassB * P;
-            wB += m_invIB * b2Cross(m_rB, P);
-        }
+        b2Vec2 P = m_impulse * m_u;
+        vA -= m_invMassA * P;
+        wA -= m_invIA * b2Cross(m_rA, P);
+        vB += m_invMassB * P;
+        wB += m_invIB * b2Cross(m_rB, P);
+    }
     else
-        {
-            m_impulse = 0.0f;
-        }
+    {
+        m_impulse = 0.0f;
+    }
 
     data.velocities[m_indexA].v = vA;
     data.velocities[m_indexA].w = wA;
@@ -138,9 +138,9 @@ void b2RopeJoint::SolveVelocityConstraints(const b2SolverData& data)
 
     // Predictive constraint.
     if (C < 0.0f)
-        {
-            Cdot += data.step.inv_dt * C;
-        }
+    {
+        Cdot += data.step.inv_dt * C;
+    }
 
     float32 impulse = -m_mass * Cdot;
     float32 oldImpulse = m_impulse;

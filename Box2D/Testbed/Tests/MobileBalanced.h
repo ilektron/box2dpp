@@ -69,9 +69,9 @@ class MobileBalanced : public Test
         body->CreateFixture(&shape, density);
 
         if (depth == e_depth)
-            {
-                return body;
-            }
+        {
+            return body;
+        }
 
         shape.SetAsBox(offset, 0.25f * a, b2Vec2(0, -a), 0.0f);
         body->CreateFixture(&shape, density);

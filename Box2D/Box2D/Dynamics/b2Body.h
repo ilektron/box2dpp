@@ -500,14 +500,14 @@ inline const b2Vec2& b2Body::GetLocalCenter() const
 inline void b2Body::SetLinearVelocity(const b2Vec2& v)
 {
     if (m_type == b2_staticBody)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     if (b2Dot(v, v) > 0.0f)
-        {
-            SetAwake(true);
-        }
+    {
+        SetAwake(true);
+    }
 
     m_linearVelocity = v;
 }
@@ -520,14 +520,14 @@ inline const b2Vec2& b2Body::GetLinearVelocity() const
 inline void b2Body::SetAngularVelocity(float32 w)
 {
     if (m_type == b2_staticBody)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     if (w * w > 0.0f)
-        {
-            SetAwake(true);
-        }
+    {
+        SetAwake(true);
+    }
 
     m_angularVelocity = w;
 }
@@ -617,13 +617,13 @@ inline void b2Body::SetGravityScale(float32 scale)
 inline void b2Body::SetBullet(bool flag)
 {
     if (flag)
-        {
-            m_flags |= e_bulletFlag;
-        }
+    {
+        m_flags |= e_bulletFlag;
+    }
     else
-        {
-            m_flags &= ~e_bulletFlag;
-        }
+    {
+        m_flags &= ~e_bulletFlag;
+    }
 }
 
 inline bool b2Body::IsBullet() const
@@ -634,22 +634,22 @@ inline bool b2Body::IsBullet() const
 inline void b2Body::SetAwake(bool flag)
 {
     if (flag)
+    {
+        if ((m_flags & e_awakeFlag) == 0)
         {
-            if ((m_flags & e_awakeFlag) == 0)
-                {
-                    m_flags |= e_awakeFlag;
-                    m_sleepTime = 0.0f;
-                }
-        }
-    else
-        {
-            m_flags &= ~e_awakeFlag;
+            m_flags |= e_awakeFlag;
             m_sleepTime = 0.0f;
-            m_linearVelocity.SetZero();
-            m_angularVelocity = 0.0f;
-            m_force.SetZero();
-            m_torque = 0.0f;
         }
+    }
+    else
+    {
+        m_flags &= ~e_awakeFlag;
+        m_sleepTime = 0.0f;
+        m_linearVelocity.SetZero();
+        m_angularVelocity = 0.0f;
+        m_force.SetZero();
+        m_torque = 0.0f;
+    }
 }
 
 inline bool b2Body::IsAwake() const
@@ -670,14 +670,14 @@ inline bool b2Body::IsFixedRotation() const
 inline void b2Body::SetSleepingAllowed(bool flag)
 {
     if (flag)
-        {
-            m_flags |= e_autoSleepFlag;
-        }
+    {
+        m_flags |= e_autoSleepFlag;
+    }
     else
-        {
-            m_flags &= ~e_autoSleepFlag;
-            SetAwake(true);
-        }
+    {
+        m_flags &= ~e_autoSleepFlag;
+        SetAwake(true);
+    }
 }
 
 inline bool b2Body::IsSleepingAllowed() const
@@ -738,98 +738,98 @@ inline void* b2Body::GetUserData() const
 inline void b2Body::ApplyForce(const b2Vec2& force, const b2Vec2& point, bool wake)
 {
     if (m_type != b2_dynamicBody)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     if (wake && (m_flags & e_awakeFlag) == 0)
-        {
-            SetAwake(true);
-        }
+    {
+        SetAwake(true);
+    }
 
     // Don't accumulate a force if the body is sleeping.
     if (m_flags & e_awakeFlag)
-        {
-            m_force += force;
-            m_torque += b2Cross(point - m_sweep.c, force);
-        }
+    {
+        m_force += force;
+        m_torque += b2Cross(point - m_sweep.c, force);
+    }
 }
 
 inline void b2Body::ApplyForceToCenter(const b2Vec2& force, bool wake)
 {
     if (m_type != b2_dynamicBody)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     if (wake && (m_flags & e_awakeFlag) == 0)
-        {
-            SetAwake(true);
-        }
+    {
+        SetAwake(true);
+    }
 
     // Don't accumulate a force if the body is sleeping
     if (m_flags & e_awakeFlag)
-        {
-            m_force += force;
-        }
+    {
+        m_force += force;
+    }
 }
 
 inline void b2Body::ApplyTorque(float32 torque, bool wake)
 {
     if (m_type != b2_dynamicBody)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     if (wake && (m_flags & e_awakeFlag) == 0)
-        {
-            SetAwake(true);
-        }
+    {
+        SetAwake(true);
+    }
 
     // Don't accumulate a force if the body is sleeping
     if (m_flags & e_awakeFlag)
-        {
-            m_torque += torque;
-        }
+    {
+        m_torque += torque;
+    }
 }
 
 inline void b2Body::ApplyLinearImpulse(const b2Vec2& impulse, const b2Vec2& point, bool wake)
 {
     if (m_type != b2_dynamicBody)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     if (wake && (m_flags & e_awakeFlag) == 0)
-        {
-            SetAwake(true);
-        }
+    {
+        SetAwake(true);
+    }
 
     // Don't accumulate velocity if the body is sleeping
     if (m_flags & e_awakeFlag)
-        {
-            m_linearVelocity += m_invMass * impulse;
-            m_angularVelocity += m_invI * b2Cross(point - m_sweep.c, impulse);
-        }
+    {
+        m_linearVelocity += m_invMass * impulse;
+        m_angularVelocity += m_invI * b2Cross(point - m_sweep.c, impulse);
+    }
 }
 
 inline void b2Body::ApplyAngularImpulse(float32 impulse, bool wake)
 {
     if (m_type != b2_dynamicBody)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     if (wake && (m_flags & e_awakeFlag) == 0)
-        {
-            SetAwake(true);
-        }
+    {
+        SetAwake(true);
+    }
 
     // Don't accumulate velocity if the body is sleeping
     if (m_flags & e_awakeFlag)
-        {
-            m_angularVelocity += m_invI * impulse;
-        }
+    {
+        m_angularVelocity += m_invI * impulse;
+    }
 }
 
 inline void b2Body::SynchronizeTransform()

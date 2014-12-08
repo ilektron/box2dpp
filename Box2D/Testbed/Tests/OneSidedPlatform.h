@@ -81,28 +81,28 @@ class OneSidedPlatform : public Test
         b2Fixture* fixtureB = contact->GetFixtureB();
 
         if (fixtureA != m_platform && fixtureA != m_character)
-            {
-                return;
-            }
+        {
+            return;
+        }
 
         if (fixtureB != m_platform && fixtureB != m_character)
-            {
-                return;
-            }
+        {
+            return;
+        }
 
 #if 1
         b2Vec2 position = m_character->GetBody()->GetPosition();
 
         if (position.y < m_top + m_radius - 3.0f * LINEAR_SLOP)
-            {
-                contact->SetEnabled(false);
-            }
+        {
+            contact->SetEnabled(false);
+        }
 #else
         b2Vec2 v = m_character->GetBody()->GetLinearVelocity();
         if (v.y > 0.0f)
-            {
-                contact->SetEnabled(false);
-            }
+        {
+            contact->SetEnabled(false);
+        }
 #endif
     }
 

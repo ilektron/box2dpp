@@ -118,10 +118,10 @@ static void sCheckGLError()
 {
     GLenum errCode = glGetError();
     if (errCode != GL_NO_ERROR)
-        {
-            fprintf(stderr, "OpenGL error = %d\n", errCode);
-            assert(false);
-        }
+    {
+        fprintf(stderr, "OpenGL error = %d\n", errCode);
+        assert(false);
+    }
 }
 
 // Prints shader compilation errors
@@ -133,10 +133,10 @@ static void sPrintLog(GLuint object)
     else if (glIsProgram(object))
         glGetProgramiv(object, GL_INFO_LOG_LENGTH, &log_length);
     else
-        {
-            fprintf(stderr, "printlog: Not a shader or a program\n");
-            return;
-        }
+    {
+        fprintf(stderr, "printlog: Not a shader or a program\n");
+        return;
+    }
 
     char* log = (char*)malloc(log_length);
 
@@ -159,12 +159,12 @@ static GLuint sCreateShaderFromString(const char* source, GLenum type)
     GLint compile_ok = GL_FALSE;
     glGetShaderiv(res, GL_COMPILE_STATUS, &compile_ok);
     if (compile_ok == GL_FALSE)
-        {
-            fprintf(stderr, "Error compiling shader of type %d!\n", type);
-            sPrintLog(res);
-            glDeleteShader(res);
-            return 0;
-        }
+    {
+        fprintf(stderr, "Error compiling shader of type %d!\n", type);
+        sPrintLog(res);
+        glDeleteShader(res);
+        return 0;
+    }
 
     return res;
 }
@@ -260,17 +260,17 @@ struct GLRenderPoints
     void Destroy()
     {
         if (m_vaoId)
-            {
-                glDeleteVertexArrays(1, &m_vaoId);
-                glDeleteBuffers(2, m_vboIds);
-                m_vaoId = 0;
-            }
+        {
+            glDeleteVertexArrays(1, &m_vaoId);
+            glDeleteBuffers(2, m_vboIds);
+            m_vaoId = 0;
+        }
 
         if (m_programId)
-            {
-                glDeleteProgram(m_programId);
-                m_programId = 0;
-            }
+        {
+            glDeleteProgram(m_programId);
+            m_programId = 0;
+        }
     }
 
     void Vertex(const b2Vec2& v, const b2Color& c, float32 size)
@@ -399,17 +399,17 @@ struct GLRenderLines
     void Destroy()
     {
         if (m_vaoId)
-            {
-                glDeleteVertexArrays(1, &m_vaoId);
-                glDeleteBuffers(2, m_vboIds);
-                m_vaoId = 0;
-            }
+        {
+            glDeleteVertexArrays(1, &m_vaoId);
+            glDeleteBuffers(2, m_vboIds);
+            m_vaoId = 0;
+        }
 
         if (m_programId)
-            {
-                glDeleteProgram(m_programId);
-                m_programId = 0;
-            }
+        {
+            glDeleteProgram(m_programId);
+            m_programId = 0;
+        }
     }
 
     void Vertex(const b2Vec2& v, const b2Color& c)
@@ -530,17 +530,17 @@ struct GLRenderTriangles
     void Destroy()
     {
         if (m_vaoId)
-            {
-                glDeleteVertexArrays(1, &m_vaoId);
-                glDeleteBuffers(2, m_vboIds);
-                m_vaoId = 0;
-            }
+        {
+            glDeleteVertexArrays(1, &m_vaoId);
+            glDeleteBuffers(2, m_vboIds);
+            m_vaoId = 0;
+        }
 
         if (m_programId)
-            {
-                glDeleteProgram(m_programId);
-                m_programId = 0;
-            }
+        {
+            glDeleteProgram(m_programId);
+            m_programId = 0;
+        }
     }
 
     void Vertex(const b2Vec2& v, const b2Color& c)
@@ -652,12 +652,12 @@ void DebugDraw::DrawPolygon(const b2Vec2* vertices, int32_t vertexCount, const b
 {
     b2Vec2 p1 = vertices[vertexCount - 1];
     for (int32_t i = 0; i < vertexCount; ++i)
-        {
-            b2Vec2 p2 = vertices[i];
-            m_lines->Vertex(p1, color);
-            m_lines->Vertex(p2, color);
-            p1 = p2;
-        }
+    {
+        b2Vec2 p2 = vertices[i];
+        m_lines->Vertex(p1, color);
+        m_lines->Vertex(p2, color);
+        p1 = p2;
+    }
 }
 
 //
@@ -666,20 +666,20 @@ void DebugDraw::DrawSolidPolygon(const b2Vec2* vertices, int32_t vertexCount, co
     b2Color fillColor(0.5f * color.r, 0.5f * color.g, 0.5f * color.b, 0.5f);
 
     for (int32_t i = 1; i < vertexCount - 1; ++i)
-        {
-            m_triangles->Vertex(vertices[0], fillColor);
-            m_triangles->Vertex(vertices[i], fillColor);
-            m_triangles->Vertex(vertices[i + 1], fillColor);
-        }
+    {
+        m_triangles->Vertex(vertices[0], fillColor);
+        m_triangles->Vertex(vertices[i], fillColor);
+        m_triangles->Vertex(vertices[i + 1], fillColor);
+    }
 
     b2Vec2 p1 = vertices[vertexCount - 1];
     for (int32_t i = 0; i < vertexCount; ++i)
-        {
-            b2Vec2 p2 = vertices[i];
-            m_lines->Vertex(p1, color);
-            m_lines->Vertex(p2, color);
-            p1 = p2;
-        }
+    {
+        b2Vec2 p2 = vertices[i];
+        m_lines->Vertex(p1, color);
+        m_lines->Vertex(p2, color);
+        p1 = p2;
+    }
 }
 
 //
@@ -692,17 +692,17 @@ void DebugDraw::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& 
     b2Vec2 r1(1.0f, 0.0f);
     b2Vec2 v1 = center + radius * r1;
     for (int32_t i = 0; i < k_segments; ++i)
-        {
-            // Perform rotation to avoid additional trigonometry.
-            b2Vec2 r2;
-            r2.x = cosInc * r1.x - sinInc * r1.y;
-            r2.y = sinInc * r1.x + cosInc * r1.y;
-            b2Vec2 v2 = center + radius * r2;
-            m_lines->Vertex(v1, color);
-            m_lines->Vertex(v2, color);
-            r1 = r2;
-            v1 = v2;
-        }
+    {
+        // Perform rotation to avoid additional trigonometry.
+        b2Vec2 r2;
+        r2.x = cosInc * r1.x - sinInc * r1.y;
+        r2.y = sinInc * r1.x + cosInc * r1.y;
+        b2Vec2 v2 = center + radius * r2;
+        m_lines->Vertex(v1, color);
+        m_lines->Vertex(v2, color);
+        r1 = r2;
+        v1 = v2;
+    }
 }
 
 //
@@ -718,32 +718,32 @@ void DebugDraw::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Ve
     b2Vec2 v1 = center + radius * r1;
     b2Color fillColor(0.5f * color.r, 0.5f * color.g, 0.5f * color.b, 0.5f);
     for (int32_t i = 0; i < k_segments; ++i)
-        {
-            // Perform rotation to avoid additional trigonometry.
-            b2Vec2 r2;
-            r2.x = cosInc * r1.x - sinInc * r1.y;
-            r2.y = sinInc * r1.x + cosInc * r1.y;
-            b2Vec2 v2 = center + radius * r2;
-            m_triangles->Vertex(v0, fillColor);
-            m_triangles->Vertex(v1, fillColor);
-            m_triangles->Vertex(v2, fillColor);
-            r1 = r2;
-            v1 = v2;
-        }
+    {
+        // Perform rotation to avoid additional trigonometry.
+        b2Vec2 r2;
+        r2.x = cosInc * r1.x - sinInc * r1.y;
+        r2.y = sinInc * r1.x + cosInc * r1.y;
+        b2Vec2 v2 = center + radius * r2;
+        m_triangles->Vertex(v0, fillColor);
+        m_triangles->Vertex(v1, fillColor);
+        m_triangles->Vertex(v2, fillColor);
+        r1 = r2;
+        v1 = v2;
+    }
 
     r1.Set(1.0f, 0.0f);
     v1 = center + radius * r1;
     for (int32_t i = 0; i < k_segments; ++i)
-        {
-            b2Vec2 r2;
-            r2.x = cosInc * r1.x - sinInc * r1.y;
-            r2.y = sinInc * r1.x + cosInc * r1.y;
-            b2Vec2 v2 = center + radius * r2;
-            m_lines->Vertex(v1, color);
-            m_lines->Vertex(v2, color);
-            r1 = r2;
-            v1 = v2;
-        }
+    {
+        b2Vec2 r2;
+        r2.x = cosInc * r1.x - sinInc * r1.y;
+        r2.y = sinInc * r1.x + cosInc * r1.y;
+        b2Vec2 v2 = center + radius * r2;
+        m_lines->Vertex(v1, color);
+        m_lines->Vertex(v2, color);
+        r1 = r2;
+        v1 = v2;
+    }
 
     // Draw a line fixed in the circle to animate rotation.
     b2Vec2 p = center + radius * axis;
