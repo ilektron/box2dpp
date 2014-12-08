@@ -23,15 +23,14 @@
 
 namespace box2d
 {
-
-const int32_t b2_stackSize = 100 * 1024;	// 100k
+const int32_t b2_stackSize = 100 * 1024;  // 100k
 const int32_t b2_maxStackEntries = 32;
 
 struct b2StackEntry
 {
-	char* data;
-	int32_t size;
-	bool usedMalloc;
+    char* data;
+    int32_t size;
+    bool usedMalloc;
 };
 
 // This is a stack allocator used for fast per step allocations.
@@ -39,27 +38,25 @@ struct b2StackEntry
 // if you try to interleave multiple allocate/free pairs.
 class b2StackAllocator
 {
-public:
-	b2StackAllocator();
-	~b2StackAllocator();
+   public:
+    b2StackAllocator();
+    ~b2StackAllocator();
 
-	void* Allocate(int32_t size);
-	void Free(void* p);
+    void* Allocate(int32_t size);
+    void Free(void* p);
 
-	int32_t GetMaxAllocation() const;
+    int32_t GetMaxAllocation() const;
 
-private:
+   private:
+    char m_data[b2_stackSize];
+    int32_t m_index;
 
-	char m_data[b2_stackSize];
-	int32_t m_index;
+    int32_t m_allocation;
+    int32_t m_maxAllocation;
 
-	int32_t m_allocation;
-	int32_t m_maxAllocation;
-
-	b2StackEntry m_entries[b2_maxStackEntries];
-	int32_t m_entryCount;
+    b2StackEntry m_entries[b2_maxStackEntries];
+    int32_t m_entryCount;
 };
-
 }
 
 #endif

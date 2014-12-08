@@ -21,147 +21,147 @@
 
 class Confined : public Test
 {
-public:
+   public:
+    enum
+    {
+        e_columnCount = 0,
+        e_rowCount = 0
+    };
 
-	enum
-	{
-		e_columnCount = 0,
-		e_rowCount = 0
-	};
+    Confined()
+    {
+        {
+            b2BodyDef bd;
+            b2Body* ground = m_world->CreateBody(&bd);
 
-	Confined()
-	{
-		{
-			b2BodyDef bd;
-			b2Body* ground = m_world->CreateBody(&bd);
+            b2EdgeShape shape;
 
-			b2EdgeShape shape;
+            // Floor
+            shape.Set(b2Vec2(-10.0f, 0.0f), b2Vec2(10.0f, 0.0f));
+            ground->CreateFixture(&shape, 0.0f);
 
-			// Floor
-			shape.Set(b2Vec2(-10.0f, 0.0f), b2Vec2(10.0f, 0.0f));
-			ground->CreateFixture(&shape, 0.0f);
+            // Left wall
+            shape.Set(b2Vec2(-10.0f, 0.0f), b2Vec2(-10.0f, 20.0f));
+            ground->CreateFixture(&shape, 0.0f);
 
-			// Left wall
-			shape.Set(b2Vec2(-10.0f, 0.0f), b2Vec2(-10.0f, 20.0f));
-			ground->CreateFixture(&shape, 0.0f);
+            // Right wall
+            shape.Set(b2Vec2(10.0f, 0.0f), b2Vec2(10.0f, 20.0f));
+            ground->CreateFixture(&shape, 0.0f);
 
-			// Right wall
-			shape.Set(b2Vec2(10.0f, 0.0f), b2Vec2(10.0f, 20.0f));
-			ground->CreateFixture(&shape, 0.0f);
+            // Roof
+            shape.Set(b2Vec2(-10.0f, 20.0f), b2Vec2(10.0f, 20.0f));
+            ground->CreateFixture(&shape, 0.0f);
+        }
 
-			// Roof
-			shape.Set(b2Vec2(-10.0f, 20.0f), b2Vec2(10.0f, 20.0f));
-			ground->CreateFixture(&shape, 0.0f);
-		}
+        float32 radius = 0.5f;
+        b2CircleShape shape;
+        shape.m_p.SetZero();
+        shape.m_radius = radius;
 
-		float32 radius = 0.5f;
-		b2CircleShape shape;
-		shape.m_p.SetZero();
-		shape.m_radius = radius;
+        b2FixtureDef fd;
+        fd.shape = &shape;
+        fd.density = 1.0f;
+        fd.friction = 0.1f;
 
-		b2FixtureDef fd;
-		fd.shape = &shape;
-		fd.density = 1.0f;
-		fd.friction = 0.1f;
+        for (int32_t j = 0; j < e_columnCount; ++j)
+            {
+                for (int i = 0; i < e_rowCount; ++i)
+                    {
+                        b2BodyDef bd;
+                        bd.type = b2_dynamicBody;
+                        bd.position.Set(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
+                                        (2.0f * i + 1.0f) * radius);
+                        b2Body* body = m_world->CreateBody(&bd);
 
-		for (int32_t j = 0; j < e_columnCount; ++j)
-		{
-			for (int i = 0; i < e_rowCount; ++i)
-			{
-				b2BodyDef bd;
-				bd.type = b2_dynamicBody;
-				bd.position.Set(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius, (2.0f * i + 1.0f) * radius);
-				b2Body* body = m_world->CreateBody(&bd);
+                        body->CreateFixture(&fd);
+                    }
+            }
 
-				body->CreateFixture(&fd);
-			}
-		}
+        m_world->SetGravity(b2Vec2(0.0f, 0.0f));
+    }
 
-		m_world->SetGravity(b2Vec2(0.0f, 0.0f));
-	}
+    void CreateCircle()
+    {
+        float32 radius = 2.0f;
+        b2CircleShape shape;
+        shape.m_p.SetZero();
+        shape.m_radius = radius;
 
-	void CreateCircle()
-	{
-		float32 radius = 2.0f;
-		b2CircleShape shape;
-		shape.m_p.SetZero();
-		shape.m_radius = radius;
+        b2FixtureDef fd;
+        fd.shape = &shape;
+        fd.density = 1.0f;
+        fd.friction = 0.0f;
 
-		b2FixtureDef fd;
-		fd.shape = &shape;
-		fd.density = 1.0f;
-		fd.friction = 0.0f;
+        b2Vec2 p(RandomFloat(), 3.0f + RandomFloat());
+        b2BodyDef bd;
+        bd.type = b2_dynamicBody;
+        bd.position = p;
+        // bd.allowSleep = false;
+        b2Body* body = m_world->CreateBody(&bd);
 
-		b2Vec2 p(RandomFloat(), 3.0f + RandomFloat());
-		b2BodyDef bd;
-		bd.type = b2_dynamicBody;
-		bd.position = p;
-		//bd.allowSleep = false;
-		b2Body* body = m_world->CreateBody(&bd);
+        body->CreateFixture(&fd);
+    }
 
-		body->CreateFixture(&fd);
-	}
+    void Keyboard(int key) override
+    {
+        switch (key)
+            {
+                case GLFW_KEY_C:
+                    CreateCircle();
+                    break;
+            }
+    }
 
-	void Keyboard(int key)
-	{
-		switch (key)
-		{
-		case GLFW_KEY_C:
-			CreateCircle();
-			break;
-		}
-	}
+    void Step(Settings* settings) override
+    {
+        bool sleeping = true;
+        for (b2Body* b = m_world->GetBodyList(); b; b = b->GetNext())
+            {
+                if (b->GetType() != b2_dynamicBody)
+                    {
+                        continue;
+                    }
 
-	void Step(Settings* settings)
-	{
-		bool sleeping = true;
-		for (b2Body* b = m_world->GetBodyList(); b; b = b->GetNext())
-		{
-			if (b->GetType() != b2_dynamicBody)
-			{
-				continue;
-			}
+                if (b->IsAwake())
+                    {
+                        sleeping = false;
+                    }
+            }
 
-			if (b->IsAwake())
-			{
-				sleeping = false;
-			}
-		}
+        if (m_stepCount == 180)
+            {
+                m_stepCount += 0;
+            }
 
-		if (m_stepCount == 180)
-		{
-			m_stepCount += 0;
-		}
+        // if (sleeping)
+        //{
+        //	CreateCircle();
+        //}
 
-		//if (sleeping)
-		//{
-		//	CreateCircle();
-		//}
+        Test::Step(settings);
 
-		Test::Step(settings);
+        for (b2Body* b = m_world->GetBodyList(); b; b = b->GetNext())
+            {
+                if (b->GetType() != b2_dynamicBody)
+                    {
+                        continue;
+                    }
 
-		for (b2Body* b = m_world->GetBodyList(); b; b = b->GetNext())
-		{
-			if (b->GetType() != b2_dynamicBody)
-			{
-				continue;
-			}
+                b2Vec2 p = b->GetPosition();
+                if (p.x <= -10.0f || 10.0f <= p.x || p.y <= 0.0f || 20.0f <= p.y)
+                    {
+                        p.x += 0.0f;
+                    }
+            }
 
-			b2Vec2 p = b->GetPosition();
-			if (p.x <= -10.0f || 10.0f <= p.x || p.y <= 0.0f || 20.0f <= p.y)
-			{
-				p.x += 0.0f;
-			}
-		}
+        g_debugDraw.DrawString(5, m_textLine, "Press 'c' to create a circle.");
+        m_textLine += DRAW_STRING_NEW_LINE;
+    }
 
-		g_debugDraw.DrawString(5, m_textLine, "Press 'c' to create a circle.");
-		m_textLine += DRAW_STRING_NEW_LINE;
-	}
-
-	static Test* Create()
-	{
-		return new Confined;
-	}
+    static Test* Create()
+    {
+        return new Confined;
+    }
 };
 
 #endif

@@ -22,80 +22,80 @@
 ///
 class Rope : public Test
 {
-public:
-	Rope()
-	{
-		const int32_t N = 40;
-		b2Vec2 vertices[N];
-		float32 masses[N];
+   public:
+    Rope()
+    {
+        const int32_t N = 40;
+        b2Vec2 vertices[N];
+        float32 masses[N];
 
-		for (int32_t i = 0; i < N; ++i)
-		{
-			vertices[i].Set(0.0f, 20.0f - 0.25f * i);
-			masses[i] = 1.0f;
-		}
-		masses[0] = 0.0f;
-		masses[1] = 0.0f;
+        for (int32_t i = 0; i < N; ++i)
+            {
+                vertices[i].Set(0.0f, 20.0f - 0.25f * i);
+                masses[i] = 1.0f;
+            }
+        masses[0] = 0.0f;
+        masses[1] = 0.0f;
 
-		b2RopeDef def;
-		def.vertices = vertices;
-		def.count = N;
-		def.gravity.Set(0.0f, -10.0f);
-		def.masses = masses;
-		def.damping = 0.1f;
-		def.k2 = 1.0f;
-		def.k3 = 0.5f;
+        b2RopeDef def;
+        def.vertices = vertices;
+        def.count = N;
+        def.gravity.Set(0.0f, -10.0f);
+        def.masses = masses;
+        def.damping = 0.1f;
+        def.k2 = 1.0f;
+        def.k3 = 0.5f;
 
-		m_rope.Initialize(&def);
+        m_rope.Initialize(&def);
 
-		m_angle = 0.0f;
-		m_rope.SetAngle(m_angle);
-	}
+        m_angle = 0.0f;
+        m_rope.SetAngle(m_angle);
+    }
 
-	void Keyboard(unsigned char key)
-	{
-		switch (key)
-		{
-		case 'q':
-			m_angle = b2Max(-PI, m_angle - 0.05f * PI);
-			m_rope.SetAngle(m_angle);
-			break;
+    void Keyboard(unsigned char key)
+    {
+        switch (key)
+            {
+                case 'q':
+                    m_angle = b2Max(-PI, m_angle - 0.05f * PI);
+                    m_rope.SetAngle(m_angle);
+                    break;
 
-		case 'e':
-			m_angle = b2Min(PI, m_angle + 0.05f * PI);
-			m_rope.SetAngle(m_angle);
-			break;
-		}
-	}
+                case 'e':
+                    m_angle = b2Min(PI, m_angle + 0.05f * PI);
+                    m_rope.SetAngle(m_angle);
+                    break;
+            }
+    }
 
-	void Step(Settings* settings)
-	{
-		float32 dt = settings->hz > 0.0f ? 1.0f / settings->hz : 0.0f;
+    void Step(Settings* settings)
+    {
+        float32 dt = settings->hz > 0.0f ? 1.0f / settings->hz : 0.0f;
 
-		if (settings->pause == 1 && settings->singleStep == 0)
-		{
-			dt = 0.0f;
-		}
+        if (settings->pause == 1 && settings->singleStep == 0)
+            {
+                dt = 0.0f;
+            }
 
-		m_rope.Step(dt, 1);
+        m_rope.Step(dt, 1);
 
-		Test::Step(settings);
+        Test::Step(settings);
 
-		m_rope.Draw(&m_debugDraw);
+        m_rope.Draw(&m_debugDraw);
 
-		m_debugDraw.DrawString(5, m_textLine, "Press (q,e) to adjust target angle");
-		m_textLine += DRAW_STRING_NEW_LINE;
-		m_debugDraw.DrawString(5, m_textLine, "Target angle = %g degrees", m_angle * 180.0f / PI);
-		m_textLine += DRAW_STRING_NEW_LINE;
-	}
+        m_debugDraw.DrawString(5, m_textLine, "Press (q,e) to adjust target angle");
+        m_textLine += DRAW_STRING_NEW_LINE;
+        m_debugDraw.DrawString(5, m_textLine, "Target angle = %g degrees", m_angle * 180.0f / PI);
+        m_textLine += DRAW_STRING_NEW_LINE;
+    }
 
-	static Test* Create()
-	{
-		return new Rope;
-	}
+    static Test* Create()
+    {
+        return new Rope;
+    }
 
-	b2Rope m_rope;
-	float32 m_angle;
+    b2Rope m_rope;
+    float32 m_angle;
 };
 
 #endif

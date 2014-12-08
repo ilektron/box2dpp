@@ -157,8 +157,8 @@ struct b2Vec2
     {
         return b2Vec2(-y, x);
     }
-    
-// private:
+
+    // private:
     float32 x, y;
 };
 
@@ -220,8 +220,8 @@ struct b2Vec3
         y *= s;
         z *= s;
     }
-    
-// private:
+
+    // private:
     float32 x, y, z;
 };
 
@@ -306,7 +306,7 @@ struct b2Mat22
         return x;
     }
 
-// private:
+    // private:
     b2Vec2 ex, ey;
 };
 
@@ -416,7 +416,7 @@ struct b2Transform
     }
 
     /// Initialize using a position vector and a rotation.
-    b2Transform(b2Vec2  position, b2Rot  rotation) : p(std::move(position)), q(std::move(rotation))
+    b2Transform(b2Vec2 position, b2Rot rotation) : p(std::move(position)), q(std::move(rotation))
     {
     }
 

@@ -23,52 +23,50 @@
 
 namespace box2d
 {
-
 const float32 b2_minPulleyLength = 2.0f;
 
 /// Pulley joint definition. This requires two ground anchors,
 /// two dynamic body anchor points, and a pulley ratio.
 struct b2PulleyJointDef : public b2JointDef
 {
-	b2PulleyJointDef()
-	{
-		type = e_pulleyJoint;
-		groundAnchorA.Set(-1.0f, 1.0f);
-		groundAnchorB.Set(1.0f, 1.0f);
-		localAnchorA.Set(-1.0f, 0.0f);
-		localAnchorB.Set(1.0f, 0.0f);
-		lengthA = 0.0f;
-		lengthB = 0.0f;
-		ratio = 1.0f;
-		collideConnected = true;
-	}
+    b2PulleyJointDef()
+    {
+        type = e_pulleyJoint;
+        groundAnchorA.Set(-1.0f, 1.0f);
+        groundAnchorB.Set(1.0f, 1.0f);
+        localAnchorA.Set(-1.0f, 0.0f);
+        localAnchorB.Set(1.0f, 0.0f);
+        lengthA = 0.0f;
+        lengthB = 0.0f;
+        ratio = 1.0f;
+        collideConnected = true;
+    }
 
-	/// Initialize the bodies, anchors, lengths, max lengths, and ratio using the world anchors.
-	void Initialize(b2Body* bodyA, b2Body* bodyB,
-					const b2Vec2& groundAnchorA, const b2Vec2& groundAnchorB,
-					const b2Vec2& anchorA, const b2Vec2& anchorB,
-					float32 ratio);
+    /// Initialize the bodies, anchors, lengths, max lengths, and ratio using the world anchors.
+    void Initialize(b2Body* bodyA, b2Body* bodyB, const b2Vec2& groundAnchorA,
+                    const b2Vec2& groundAnchorB, const b2Vec2& anchorA, const b2Vec2& anchorB,
+                    float32 ratio);
 
-	/// The first ground anchor in world coordinates. This point never moves.
-	b2Vec2 groundAnchorA;
+    /// The first ground anchor in world coordinates. This point never moves.
+    b2Vec2 groundAnchorA;
 
-	/// The second ground anchor in world coordinates. This point never moves.
-	b2Vec2 groundAnchorB;
+    /// The second ground anchor in world coordinates. This point never moves.
+    b2Vec2 groundAnchorB;
 
-	/// The local anchor point relative to bodyA's origin.
-	b2Vec2 localAnchorA;
+    /// The local anchor point relative to bodyA's origin.
+    b2Vec2 localAnchorA;
 
-	/// The local anchor point relative to bodyB's origin.
-	b2Vec2 localAnchorB;
+    /// The local anchor point relative to bodyB's origin.
+    b2Vec2 localAnchorB;
 
-	/// The a reference length for the segment attached to bodyA.
-	float32 lengthA;
+    /// The a reference length for the segment attached to bodyA.
+    float32 lengthA;
 
-	/// The a reference length for the segment attached to bodyB.
-	float32 lengthB;
+    /// The a reference length for the segment attached to bodyB.
+    float32 lengthB;
 
-	/// The pulley ratio, used to simulate a block-and-tackle.
-	float32 ratio;
+    /// The pulley ratio, used to simulate a block-and-tackle.
+    float32 ratio;
 };
 
 /// The pulley joint is connected to two bodies and two fixed ground points.
@@ -81,77 +79,75 @@ struct b2PulleyJointDef : public b2JointDef
 /// zero length.
 class b2PulleyJoint : public b2Joint
 {
-public:
-	b2Vec2 GetAnchorA() const;
-	b2Vec2 GetAnchorB() const;
+   public:
+    b2Vec2 GetAnchorA() const override;
+    b2Vec2 GetAnchorB() const override;
 
-	b2Vec2 GetReactionForce(float32 inv_dt) const;
-	float32 GetReactionTorque(float32 inv_dt) const;
+    b2Vec2 GetReactionForce(float32 inv_dt) const override;
+    float32 GetReactionTorque(float32 inv_dt) const override;
 
-	/// Get the first ground anchor.
-	b2Vec2 GetGroundAnchorA() const;
+    /// Get the first ground anchor.
+    b2Vec2 GetGroundAnchorA() const;
 
-	/// Get the second ground anchor.
-	b2Vec2 GetGroundAnchorB() const;
+    /// Get the second ground anchor.
+    b2Vec2 GetGroundAnchorB() const;
 
-	/// Get the current length of the segment attached to bodyA.
-	float32 GetLengthA() const;
+    /// Get the current length of the segment attached to bodyA.
+    float32 GetLengthA() const;
 
-	/// Get the current length of the segment attached to bodyB.
-	float32 GetLengthB() const;
+    /// Get the current length of the segment attached to bodyB.
+    float32 GetLengthB() const;
 
-	/// Get the pulley ratio.
-	float32 GetRatio() const;
+    /// Get the pulley ratio.
+    float32 GetRatio() const;
 
-	/// Get the current length of the segment attached to bodyA.
-	float32 GetCurrentLengthA() const;
+    /// Get the current length of the segment attached to bodyA.
+    float32 GetCurrentLengthA() const;
 
-	/// Get the current length of the segment attached to bodyB.
-	float32 GetCurrentLengthB() const;
+    /// Get the current length of the segment attached to bodyB.
+    float32 GetCurrentLengthB() const;
 
-	/// Dump joint to dmLog
-	void Dump();
+    /// Dump joint to dmLog
+    void Dump() override;
 
-	/// Implement b2Joint::ShiftOrigin
-	void ShiftOrigin(const b2Vec2& newOrigin);
+    /// Implement b2Joint::ShiftOrigin
+    void ShiftOrigin(const b2Vec2& newOrigin) override;
 
-protected:
+   protected:
+    friend class b2Joint;
+    b2PulleyJoint(const b2PulleyJointDef* data);
 
-	friend class b2Joint;
-	b2PulleyJoint(const b2PulleyJointDef* data);
+    void InitVelocityConstraints(const b2SolverData& data) override;
+    void SolveVelocityConstraints(const b2SolverData& data) override;
+    bool SolvePositionConstraints(const b2SolverData& data) override;
 
-	void InitVelocityConstraints(const b2SolverData& data);
-	void SolveVelocityConstraints(const b2SolverData& data);
-	bool SolvePositionConstraints(const b2SolverData& data);
+    b2Vec2 m_groundAnchorA;
+    b2Vec2 m_groundAnchorB;
+    float32 m_lengthA;
+    float32 m_lengthB;
 
-	b2Vec2 m_groundAnchorA;
-	b2Vec2 m_groundAnchorB;
-	float32 m_lengthA;
-	float32 m_lengthB;
-	
-	// Solver shared
-	b2Vec2 m_localAnchorA;
-	b2Vec2 m_localAnchorB;
-	float32 m_constant;
-	float32 m_ratio;
-	float32 m_impulse;
+    // Solver shared
+    b2Vec2 m_localAnchorA;
+    b2Vec2 m_localAnchorB;
+    float32 m_constant;
+    float32 m_ratio;
+    float32 m_impulse;
 
-	// Solver temp
-	int32_t m_indexA;
-	int32_t m_indexB;
-	b2Vec2 m_uA;
-	b2Vec2 m_uB;
-	b2Vec2 m_rA;
-	b2Vec2 m_rB;
-	b2Vec2 m_localCenterA;
-	b2Vec2 m_localCenterB;
-	float32 m_invMassA;
-	float32 m_invMassB;
-	float32 m_invIA;
-	float32 m_invIB;
-	float32 m_mass;
+    // Solver temp
+    int32_t m_indexA;
+    int32_t m_indexB;
+    b2Vec2 m_uA;
+    b2Vec2 m_uB;
+    b2Vec2 m_rA;
+    b2Vec2 m_rB;
+    b2Vec2 m_localCenterA;
+    b2Vec2 m_localCenterB;
+    float32 m_invMassA;
+    float32 m_invMassB;
+    float32 m_invIA;
+    float32 m_invIB;
+    float32 m_mass;
 };
-
 }
 
 #endif

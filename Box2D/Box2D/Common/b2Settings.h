@@ -28,7 +28,10 @@
 namespace box2d
 {
 #define B2_NOT_USED(x) ((void)(x))
-inline void b2Assert(bool a) { assert(a); }
+inline void b2Assert(bool a)
+{
+    assert(a);
+}
 
 typedef float float32;
 typedef double float64;

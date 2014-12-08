@@ -24,8 +24,8 @@
 
 enum imguiMouseButton
 {
-	IMGUI_MBUT_LEFT = 0x01,
-	IMGUI_MBUT_RIGHT = 0x02,
+    IMGUI_MBUT_LEFT = 0x01,
+    IMGUI_MBUT_RIGHT = 0x02,
 };
 
 void imguiBeginFrame(int mx, int my, unsigned char mbut, int scroll);
@@ -48,4 +48,4 @@ void imguiValue(const char* text);
 bool imguiSlider(const char* text, float* val, float vmin, float vmax, float vinc, bool enabled);
 bool imguiSlider(const char* text, int* val, int vmin, int vmax, int vinc, bool enabled);
 
-#endif // IMGUI_H
+#endif  // IMGUI_H

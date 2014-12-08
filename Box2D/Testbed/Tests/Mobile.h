@@ -21,82 +21,82 @@
 
 class Mobile : public Test
 {
-public:
+   public:
+    enum
+    {
+        e_depth = 4
+    };
 
-	enum
-	{
-		e_depth = 4
-	};
+    Mobile()
+    {
+        b2Body* ground;
 
-	Mobile()
-	{
-		b2Body* ground;
+        // Create ground body.
+        {
+            b2BodyDef bodyDef;
+            bodyDef.position.Set(0.0f, 20.0f);
+            ground = m_world->CreateBody(&bodyDef);
+        }
 
-		// Create ground body.
-		{
-			b2BodyDef bodyDef;
-			bodyDef.position.Set(0.0f, 20.0f);
-			ground = m_world->CreateBody(&bodyDef);
-		}
+        float32 a = 0.5f;
+        b2Vec2 h(0.0f, a);
 
-		float32 a = 0.5f;
-		b2Vec2 h(0.0f, a);
+        b2Body* root = AddNode(ground, b2Vec2_zero, 0, 3.0f, a);
 
-		b2Body* root = AddNode(ground, b2Vec2_zero, 0, 3.0f, a);
+        b2RevoluteJointDef jointDef;
+        jointDef.bodyA = ground;
+        jointDef.bodyB = root;
+        jointDef.localAnchorA.SetZero();
+        jointDef.localAnchorB = h;
+        m_world->CreateJoint(&jointDef);
+    }
 
-		b2RevoluteJointDef jointDef;
-		jointDef.bodyA = ground;
-		jointDef.bodyB = root;
-		jointDef.localAnchorA.SetZero();
-		jointDef.localAnchorB = h;
-		m_world->CreateJoint(&jointDef);
-	}
+    b2Body* AddNode(b2Body* parent, const b2Vec2& localAnchor, int32_t depth, float32 offset,
+                    float32 a)
+    {
+        float32 density = 20.0f;
+        b2Vec2 h(0.0f, a);
 
-	b2Body* AddNode(b2Body* parent, const b2Vec2& localAnchor, int32_t depth, float32 offset, float32 a)
-	{
-		float32 density = 20.0f;
-		b2Vec2 h(0.0f, a);
+        b2Vec2 p = parent->GetPosition() + localAnchor - h;
 
-		b2Vec2 p = parent->GetPosition() + localAnchor - h;
+        b2BodyDef bodyDef;
+        bodyDef.type = b2_dynamicBody;
+        bodyDef.position = p;
+        b2Body* body = m_world->CreateBody(&bodyDef);
 
-		b2BodyDef bodyDef;
-		bodyDef.type = b2_dynamicBody;
-		bodyDef.position = p;
-		b2Body* body = m_world->CreateBody(&bodyDef);
+        b2PolygonShape shape;
+        shape.SetAsBox(0.25f * a, a);
+        body->CreateFixture(&shape, density);
 
-		b2PolygonShape shape;
-		shape.SetAsBox(0.25f * a, a);
-		body->CreateFixture(&shape, density);
+        if (depth == e_depth)
+            {
+                return body;
+            }
 
-		if (depth == e_depth)
-		{
-			return body;
-		}
+        b2Vec2 a1 = b2Vec2(offset, -a);
+        b2Vec2 a2 = b2Vec2(-offset, -a);
+        b2Body* body1 = AddNode(body, a1, depth + 1, 0.5f * offset, a);
+        b2Body* body2 = AddNode(body, a2, depth + 1, 0.5f * offset, a);
 
-		b2Vec2 a1 = b2Vec2(offset, -a);
-		b2Vec2 a2 = b2Vec2(-offset, -a);
-		b2Body* body1 = AddNode(body, a1, depth + 1, 0.5f * offset, a);
-		b2Body* body2 = AddNode(body, a2, depth + 1, 0.5f * offset, a);
+        b2RevoluteJointDef jointDef;
+        jointDef.bodyA = body;
+        jointDef.localAnchorB = h;
 
-		b2RevoluteJointDef jointDef;
-		jointDef.bodyA = body;
-		jointDef.localAnchorB = h;
+        jointDef.localAnchorA = a1;
+        jointDef.bodyB = body1;
+        m_world->CreateJoint(&jointDef);
 
-		jointDef.localAnchorA = a1;
-		jointDef.bodyB = body1;
-		m_world->CreateJoint(&jointDef);
+        jointDef.localAnchorA = a2;
+        jointDef.bodyB = body2;
+        m_world->CreateJoint(&jointDef);
 
-		jointDef.localAnchorA = a2;
-		jointDef.bodyB = body2;
-		m_world->CreateJoint(&jointDef);
+        return body;
+    }
 
-		return body;
-	}
-
-	static Test* Create()
-	{
-		return new Mobile;
-	}
+    static Test* Create()
+    {
+        return new Mobile;
+    }
 };
 
 #endif

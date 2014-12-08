@@ -23,7 +23,6 @@
 
 namespace box2d
 {
-
 const int32_t b2_chunkSize = 16 * 1024;
 const int32_t b2_maxBlockSize = 640;
 const int32_t b2_blockSizes = 14;
@@ -37,31 +36,29 @@ struct b2Chunk;
 /// See: http://www.codeproject.com/useritems/Small_Block_Allocator.asp
 class b2BlockAllocator
 {
-public:
-	b2BlockAllocator();
-	~b2BlockAllocator();
+   public:
+    b2BlockAllocator();
+    ~b2BlockAllocator();
 
-	/// Allocate memory. This will use b2Alloc if the size is larger than b2_maxBlockSize.
-	void* Allocate(int32_t size);
+    /// Allocate memory. This will use b2Alloc if the size is larger than b2_maxBlockSize.
+    void* Allocate(int32_t size);
 
-	/// Free memory. This will use b2Free if the size is larger than b2_maxBlockSize.
-	void Free(void* p, int32_t size);
+    /// Free memory. This will use b2Free if the size is larger than b2_maxBlockSize.
+    void Free(void* p, int32_t size);
 
-	void Clear();
+    void Clear();
 
-private:
+   private:
+    b2Chunk* m_chunks;
+    int32_t m_chunkCount;
+    int32_t m_chunkSpace;
 
-	b2Chunk* m_chunks;
-	int32_t m_chunkCount;
-	int32_t m_chunkSpace;
+    b2Block* m_freeLists[b2_blockSizes];
 
-	b2Block* m_freeLists[b2_blockSizes];
-
-	static int32_t s_blockSizes[b2_blockSizes];
-	static uint8_t s_blockSizeLookup[b2_maxBlockSize + 1];
-	static bool s_blockSizeLookupInitialized;
+    static int32_t s_blockSizes[b2_blockSizes];
+    static uint8_t s_blockSizeLookup[b2_maxBlockSize + 1];
+    static bool s_blockSizeLookupInitialized;
 };
-
 }
 
 #endif

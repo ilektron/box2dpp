@@ -24,123 +24,120 @@
 
 namespace box2d
 {
-
 class b2Shape;
 
 /// A distance proxy is used by the GJK algorithm.
 /// It encapsulates any shape.
 struct b2DistanceProxy
 {
-	b2DistanceProxy() : m_vertices(NULL), m_count(0), m_radius(0.0f) {}
+    b2DistanceProxy() : m_vertices(nullptr), m_count(0), m_radius(0.0f)
+    {
+    }
 
-	/// Initialize the proxy using the given shape. The shape
-	/// must remain in scope while the proxy is in use.
-	void Set(const b2Shape* shape, int32_t index);
+    /// Initialize the proxy using the given shape. The shape
+    /// must remain in scope while the proxy is in use.
+    void Set(const b2Shape* shape, int32_t index);
 
-	/// Get the supporting vertex index in the given direction.
-	int32_t GetSupport(const b2Vec2& d) const;
+    /// Get the supporting vertex index in the given direction.
+    int32_t GetSupport(const b2Vec2& d) const;
 
-	/// Get the supporting vertex in the given direction.
-	const b2Vec2& GetSupportVertex(const b2Vec2& d) const;
+    /// Get the supporting vertex in the given direction.
+    const b2Vec2& GetSupportVertex(const b2Vec2& d) const;
 
-	/// Get the vertex count.
-	int32_t GetVertexCount() const;
+    /// Get the vertex count.
+    int32_t GetVertexCount() const;
 
-	/// Get a vertex by index. Used by b2Distance.
-	const b2Vec2& GetVertex(int32_t index) const;
+    /// Get a vertex by index. Used by b2Distance.
+    const b2Vec2& GetVertex(int32_t index) const;
 
-	b2Vec2 m_buffer[2];
-	const b2Vec2* m_vertices;
-	int32_t m_count;
-	float32 m_radius;
+    b2Vec2 m_buffer[2];
+    const b2Vec2* m_vertices;
+    int32_t m_count;
+    float32 m_radius;
 };
 
 /// Used to warm start b2Distance.
 /// Set count to zero on first call.
 struct b2SimplexCache
 {
-	float32 metric;		///< length or area
-	uint16_t count;
-	uint8_t indexA[3];	///< vertices on shape A
-	uint8_t indexB[3];	///< vertices on shape B
+    float32 metric;  ///< length or area
+    uint16_t count;
+    uint8_t indexA[3];  ///< vertices on shape A
+    uint8_t indexB[3];  ///< vertices on shape B
 };
 
 /// Input for b2Distance.
 /// You have to option to use the shape radii
-/// in the computation. Even 
+/// in the computation. Even
 struct b2DistanceInput
 {
-	b2DistanceProxy proxyA;
-	b2DistanceProxy proxyB;
-	b2Transform transformA;
-	b2Transform transformB;
-	bool useRadii;
+    b2DistanceProxy proxyA;
+    b2DistanceProxy proxyB;
+    b2Transform transformA;
+    b2Transform transformB;
+    bool useRadii;
 };
 
 /// Output for b2Distance.
 struct b2DistanceOutput
 {
-	b2Vec2 pointA;		///< closest point on shapeA
-	b2Vec2 pointB;		///< closest point on shapeB
-	float32 distance;
-	int32_t iterations;	///< number of GJK iterations used
+    b2Vec2 pointA;  ///< closest point on shapeA
+    b2Vec2 pointB;  ///< closest point on shapeB
+    float32 distance;
+    int32_t iterations;  ///< number of GJK iterations used
 };
 
 /// Compute the closest points between two shapes. Supports any combination of:
 /// b2CircleShape, b2PolygonShape, b2EdgeShape. The simplex cache is input/output.
 /// On the first call set b2SimplexCache.count to zero.
-void b2Distance(b2DistanceOutput* output,
-				b2SimplexCache* cache, 
-				const b2DistanceInput* input);
-
+void b2Distance(b2DistanceOutput* output, b2SimplexCache* cache, const b2DistanceInput* input);
 
 //////////////////////////////////////////////////////////////////////////
 
 inline int32_t b2DistanceProxy::GetVertexCount() const
 {
-	return m_count;
+    return m_count;
 }
 
 inline const b2Vec2& b2DistanceProxy::GetVertex(int32_t index) const
 {
-	b2Assert(0 <= index && index < m_count);
-	return m_vertices[index];
+    b2Assert(0 <= index && index < m_count);
+    return m_vertices[index];
 }
 
 inline int32_t b2DistanceProxy::GetSupport(const b2Vec2& d) const
 {
-	int32_t bestIndex = 0;
-	float32 bestValue = b2Dot(m_vertices[0], d);
-	for (int32_t i = 1; i < m_count; ++i)
-	{
-		float32 value = b2Dot(m_vertices[i], d);
-		if (value > bestValue)
-		{
-			bestIndex = i;
-			bestValue = value;
-		}
-	}
+    int32_t bestIndex = 0;
+    float32 bestValue = b2Dot(m_vertices[0], d);
+    for (int32_t i = 1; i < m_count; ++i)
+        {
+            float32 value = b2Dot(m_vertices[i], d);
+            if (value > bestValue)
+                {
+                    bestIndex = i;
+                    bestValue = value;
+                }
+        }
 
-	return bestIndex;
+    return bestIndex;
 }
 
 inline const b2Vec2& b2DistanceProxy::GetSupportVertex(const b2Vec2& d) const
 {
-	int32_t bestIndex = 0;
-	float32 bestValue = b2Dot(m_vertices[0], d);
-	for (int32_t i = 1; i < m_count; ++i)
-	{
-		float32 value = b2Dot(m_vertices[i], d);
-		if (value > bestValue)
-		{
-			bestIndex = i;
-			bestValue = value;
-		}
-	}
+    int32_t bestIndex = 0;
+    float32 bestValue = b2Dot(m_vertices[0], d);
+    for (int32_t i = 1; i < m_count; ++i)
+        {
+            float32 value = b2Dot(m_vertices[i], d);
+            if (value > bestValue)
+                {
+                    bestIndex = i;
+                    bestValue = value;
+                }
+        }
 
-	return m_vertices[bestIndex];
+    return m_vertices[bestIndex];
 }
-
 }
 
 #endif

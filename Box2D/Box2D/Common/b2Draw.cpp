@@ -22,25 +22,25 @@ using namespace box2d;
 
 b2Draw::b2Draw()
 {
-	m_drawFlags = 0;
+    m_drawFlags = 0;
 }
 
 void b2Draw::SetFlags(uint32_t flags)
 {
-	m_drawFlags = flags;
+    m_drawFlags = flags;
 }
 
 uint32_t b2Draw::GetFlags() const
 {
-	return m_drawFlags;
+    return m_drawFlags;
 }
 
 void b2Draw::AppendFlags(uint32_t flags)
 {
-	m_drawFlags |= flags;
+    m_drawFlags |= flags;
 }
 
 void b2Draw::ClearFlags(uint32_t flags)
 {
-	m_drawFlags &= ~flags;
+    m_drawFlags &= ~flags;
 }

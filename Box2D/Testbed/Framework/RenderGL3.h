@@ -30,14 +30,14 @@
 
 enum TextAlign
 {
-	TEXT_ALIGN_LEFT,
-	TEXT_ALIGN_CENTER,
-	TEXT_ALIGN_RIGHT,
+    TEXT_ALIGN_LEFT,
+    TEXT_ALIGN_CENTER,
+    TEXT_ALIGN_RIGHT,
 };
 
 inline unsigned int SetRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 {
-	return (r) | (g << 8) | (b << 16) | (a << 24);
+    return (r) | (g << 8) | (b << 16) | (a << 24);
 }
 
 bool RenderGLInit(const char* fontpath);

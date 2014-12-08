@@ -28,19 +28,19 @@ b2Version box2d::b2_version = {2, 3, 2};
 // Memory allocators. Modify these to use your own allocator.
 void* box2d::b2Alloc(int32_t size)
 {
-	return malloc(size);
+    return malloc(size);
 }
 
 void box2d::b2Free(void* mem)
 {
-	free(mem);
+    free(mem);
 }
 
 // You can modify this to use your logging facility.
 void box2d::b2Log(const char* string, ...)
 {
-	va_list args;
-	va_start(args, string);
-	vprintf(string, args);
-	va_end(args);
+    va_list args;
+    va_start(args, string);
+    vprintf(string, args);
+    va_end(args);
 }

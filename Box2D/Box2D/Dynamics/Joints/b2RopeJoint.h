@@ -23,31 +23,30 @@
 
 namespace box2d
 {
-
 /// Rope joint definition. This requires two body anchor points and
 /// a maximum lengths.
 /// Note: by default the connected objects will not collide.
 /// see collideConnected in b2JointDef.
 struct b2RopeJointDef : public b2JointDef
 {
-	b2RopeJointDef()
-	{
-		type = e_ropeJoint;
-		localAnchorA.Set(-1.0f, 0.0f);
-		localAnchorB.Set(1.0f, 0.0f);
-		maxLength = 0.0f;
-	}
+    b2RopeJointDef()
+    {
+        type = e_ropeJoint;
+        localAnchorA.Set(-1.0f, 0.0f);
+        localAnchorB.Set(1.0f, 0.0f);
+        maxLength = 0.0f;
+    }
 
-	/// The local anchor point relative to bodyA's origin.
-	b2Vec2 localAnchorA;
+    /// The local anchor point relative to bodyA's origin.
+    b2Vec2 localAnchorA;
 
-	/// The local anchor point relative to bodyB's origin.
-	b2Vec2 localAnchorB;
+    /// The local anchor point relative to bodyB's origin.
+    b2Vec2 localAnchorB;
 
-	/// The maximum length of the rope.
-	/// Warning: this must be larger than LINEAR_SLOP or
-	/// the joint will have no effect.
-	float32 maxLength;
+    /// The maximum length of the rope.
+    /// Warning: this must be larger than LINEAR_SLOP or
+    /// the joint will have no effect.
+    float32 maxLength;
 };
 
 /// A rope joint enforces a maximum distance between two points
@@ -60,60 +59,67 @@ struct b2RopeJointDef : public b2JointDef
 /// control length.
 class b2RopeJoint : public b2Joint
 {
-public:
-	b2Vec2 GetAnchorA() const;
-	b2Vec2 GetAnchorB() const;
+   public:
+    b2Vec2 GetAnchorA() const override;
+    b2Vec2 GetAnchorB() const override;
 
-	b2Vec2 GetReactionForce(float32 inv_dt) const;
-	float32 GetReactionTorque(float32 inv_dt) const;
+    b2Vec2 GetReactionForce(float32 inv_dt) const override;
+    float32 GetReactionTorque(float32 inv_dt) const override;
 
-	/// The local anchor point relative to bodyA's origin.
-	const b2Vec2& GetLocalAnchorA() const { return m_localAnchorA; }
+    /// The local anchor point relative to bodyA's origin.
+    const b2Vec2& GetLocalAnchorA() const
+    {
+        return m_localAnchorA;
+    }
 
-	/// The local anchor point relative to bodyB's origin.
-	const b2Vec2& GetLocalAnchorB() const  { return m_localAnchorB; }
+    /// The local anchor point relative to bodyB's origin.
+    const b2Vec2& GetLocalAnchorB() const
+    {
+        return m_localAnchorB;
+    }
 
-	/// Set/Get the maximum length of the rope.
-	void SetMaxLength(float32 length) { m_maxLength = length; }
-	float32 GetMaxLength() const;
+    /// Set/Get the maximum length of the rope.
+    void SetMaxLength(float32 length)
+    {
+        m_maxLength = length;
+    }
+    float32 GetMaxLength() const;
 
-	b2LimitState GetLimitState() const;
+    b2LimitState GetLimitState() const;
 
-	/// Dump joint to dmLog
-	void Dump();
+    /// Dump joint to dmLog
+    void Dump() override;
 
-protected:
+   protected:
+    friend class b2Joint;
+    b2RopeJoint(const b2RopeJointDef* data);
 
-	friend class b2Joint;
-	b2RopeJoint(const b2RopeJointDef* data);
+    void InitVelocityConstraints(const b2SolverData& data) override;
+    void SolveVelocityConstraints(const b2SolverData& data) override;
+    bool SolvePositionConstraints(const b2SolverData& data) override;
 
-	void InitVelocityConstraints(const b2SolverData& data);
-	void SolveVelocityConstraints(const b2SolverData& data);
-	bool SolvePositionConstraints(const b2SolverData& data);
+    // Solver shared
+    b2Vec2 m_localAnchorA;
+    b2Vec2 m_localAnchorB;
+    float32 m_maxLength;
+    float32 m_length;
+    float32 m_impulse;
 
-	// Solver shared
-	b2Vec2 m_localAnchorA;
-	b2Vec2 m_localAnchorB;
-	float32 m_maxLength;
-	float32 m_length;
-	float32 m_impulse;
-
-	// Solver temp
-	int32_t m_indexA;
-	int32_t m_indexB;
-	b2Vec2 m_u;
-	b2Vec2 m_rA;
-	b2Vec2 m_rB;
-	b2Vec2 m_localCenterA;
-	b2Vec2 m_localCenterB;
-	float32 m_invMassA;
-	float32 m_invMassB;
-	float32 m_invIA;
-	float32 m_invIB;
-	float32 m_mass;
-	b2LimitState m_state;
+    // Solver temp
+    int32_t m_indexA;
+    int32_t m_indexB;
+    b2Vec2 m_u;
+    b2Vec2 m_rA;
+    b2Vec2 m_rB;
+    b2Vec2 m_localCenterA;
+    b2Vec2 m_localCenterB;
+    float32 m_invMassA;
+    float32 m_invMassB;
+    float32 m_invIA;
+    float32 m_invIB;
+    float32 m_mass;
+    b2LimitState m_state;
 };
-
 }
 
 #endif

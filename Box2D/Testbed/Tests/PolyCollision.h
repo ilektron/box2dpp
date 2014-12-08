@@ -21,102 +21,103 @@
 
 class PolyCollision : public Test
 {
-public:
-	PolyCollision()
-	{
-		{
-			m_polygonA.SetAsBox(0.2f, 0.4f);
-			m_transformA.Set(b2Vec2(0.0f, 0.0f), 0.0f);
-		}
+   public:
+    PolyCollision()
+    {
+        {
+            m_polygonA.SetAsBox(0.2f, 0.4f);
+            m_transformA.Set(b2Vec2(0.0f, 0.0f), 0.0f);
+        }
 
-		{
-			m_polygonB.SetAsBox(0.5f, 0.5f);
-			m_positionB.Set(19.345284f, 1.5632932f);
-			m_angleB = 1.9160721f;
-			m_transformB.Set(m_positionB, m_angleB);
-		}
-	}
+        {
+            m_polygonB.SetAsBox(0.5f, 0.5f);
+            m_positionB.Set(19.345284f, 1.5632932f);
+            m_angleB = 1.9160721f;
+            m_transformB.Set(m_positionB, m_angleB);
+        }
+    }
 
-	static Test* Create()
-	{
-		return new PolyCollision;
-	}
+    static Test* Create()
+    {
+        return new PolyCollision;
+    }
 
-	void Step(Settings* settings)
-	{
-		B2_NOT_USED(settings);
+    void Step(Settings* settings) override
+    {
+        B2_NOT_USED(settings);
 
-		b2Manifold manifold;
-		b2CollidePolygons(&manifold, &m_polygonA, m_transformA, &m_polygonB, m_transformB);
+        b2Manifold manifold;
+        b2CollidePolygons(&manifold, &m_polygonA, m_transformA, &m_polygonB, m_transformB);
 
-		b2WorldManifold worldManifold;
-		worldManifold.Initialize(&manifold, m_transformA, m_polygonA.m_radius, m_transformB, m_polygonB.m_radius);
+        b2WorldManifold worldManifold;
+        worldManifold.Initialize(&manifold, m_transformA, m_polygonA.m_radius, m_transformB,
+                                 m_polygonB.m_radius);
 
-		g_debugDraw.DrawString(5, m_textLine, "point count = %d", manifold.pointCount);
-		m_textLine += DRAW_STRING_NEW_LINE;
+        g_debugDraw.DrawString(5, m_textLine, "point count = %d", manifold.pointCount);
+        m_textLine += DRAW_STRING_NEW_LINE;
 
-		{
-			b2Color color(0.9f, 0.9f, 0.9f);
-			b2Vec2 v[MAX_POLYGON_VERTICES];
-			for (int32_t i = 0; i < m_polygonA.m_count; ++i)
-			{
-				v[i] = b2Mul(m_transformA, m_polygonA.m_vertices[i]);
-			}
-			g_debugDraw.DrawPolygon(v, m_polygonA.m_count, color);
+        {
+            b2Color color(0.9f, 0.9f, 0.9f);
+            b2Vec2 v[MAX_POLYGON_VERTICES];
+            for (int32_t i = 0; i < m_polygonA.m_count; ++i)
+                {
+                    v[i] = b2Mul(m_transformA, m_polygonA.m_vertices[i]);
+                }
+            g_debugDraw.DrawPolygon(v, m_polygonA.m_count, color);
 
-			for (int32_t i = 0; i < m_polygonB.m_count; ++i)
-			{
-				v[i] = b2Mul(m_transformB, m_polygonB.m_vertices[i]);
-			}
-			g_debugDraw.DrawPolygon(v, m_polygonB.m_count, color);
-		}
+            for (int32_t i = 0; i < m_polygonB.m_count; ++i)
+                {
+                    v[i] = b2Mul(m_transformB, m_polygonB.m_vertices[i]);
+                }
+            g_debugDraw.DrawPolygon(v, m_polygonB.m_count, color);
+        }
 
-		for (int32_t i = 0; i < manifold.pointCount; ++i)
-		{
-			g_debugDraw.DrawPoint(worldManifold.points[i], 4.0f, b2Color(0.9f, 0.3f, 0.3f));
-		}
-	}
+        for (int32_t i = 0; i < manifold.pointCount; ++i)
+            {
+                g_debugDraw.DrawPoint(worldManifold.points[i], 4.0f, b2Color(0.9f, 0.3f, 0.3f));
+            }
+    }
 
-	void Keyboard(int key)
-	{
-		switch (key)
-		{
-		case GLFW_KEY_A:
-			m_positionB.x -= 0.1f;
-			break;
+    void Keyboard(int key) override
+    {
+        switch (key)
+            {
+                case GLFW_KEY_A:
+                    m_positionB.x -= 0.1f;
+                    break;
 
-		case GLFW_KEY_D:
-			m_positionB.x += 0.1f;
-			break;
+                case GLFW_KEY_D:
+                    m_positionB.x += 0.1f;
+                    break;
 
-		case GLFW_KEY_S:
-			m_positionB.y -= 0.1f;
-			break;
+                case GLFW_KEY_S:
+                    m_positionB.y -= 0.1f;
+                    break;
 
-		case GLFW_KEY_W:
-			m_positionB.y += 0.1f;
-			break;
+                case GLFW_KEY_W:
+                    m_positionB.y += 0.1f;
+                    break;
 
-		case GLFW_KEY_Q:
-			m_angleB += 0.1f * PI;
-			break;
+                case GLFW_KEY_Q:
+                    m_angleB += 0.1f * PI;
+                    break;
 
-		case GLFW_KEY_E:
-			m_angleB -= 0.1f * PI;
-			break;
-		}
+                case GLFW_KEY_E:
+                    m_angleB -= 0.1f * PI;
+                    break;
+            }
 
-		m_transformB.Set(m_positionB, m_angleB);
-	}
+        m_transformB.Set(m_positionB, m_angleB);
+    }
 
-	b2PolygonShape m_polygonA;
-	b2PolygonShape m_polygonB;
+    b2PolygonShape m_polygonA;
+    b2PolygonShape m_polygonB;
 
-	b2Transform m_transformA;
-	b2Transform m_transformB;
+    b2Transform m_transformA;
+    b2Transform m_transformB;
 
-	b2Vec2 m_positionB;
-	float32 m_angleB;
+    b2Vec2 m_positionB;
+    float32 m_angleB;
 };
 
 #endif
