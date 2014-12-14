@@ -57,7 +57,7 @@ public:
         b2Vec2 p = parent->GetPosition() + localAnchor - h;
 
         b2BodyDef bodyDef;
-        bodyDef.type = b2Body::DYNAMIC_BODY;
+        bodyDef.type = b2BodyType::DYNAMIC_BODY;
         bodyDef.position = p;
         b2Body* body = m_world->CreateBody(&bodyDef);
 
@@ -66,9 +66,9 @@ public:
         body->CreateFixture(&shape, density);
 
         if (depth == MOBILE_BALANCED_DEPTH)
-            {
-                return body;
-            }
+        {
+            return body;
+        }
 
         shape.SetAsBox(offset, 0.25f * a, b2Vec2(0, -a), 0.0f);
         body->CreateFixture(&shape, density);

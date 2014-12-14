@@ -59,7 +59,7 @@ public:
         triangleShapeDef.density = 1.0f;
 
         b2BodyDef triangleBodyDef;
-        triangleBodyDef.type = b2Body::DYNAMIC_BODY;
+        triangleBodyDef.type = b2BodyType::DYNAMIC_BODY;
         triangleBodyDef.position.Set(RandomFloat(xLo, xHi), RandomFloat(yLo, yHi));
 
         b2Body* body1 = m_world->CreateBody(&triangleBodyDef);
@@ -84,7 +84,7 @@ public:
         boxShapeDef.density = 1.0f;
 
         b2BodyDef boxBodyDef;
-        boxBodyDef.type = b2Body::DYNAMIC_BODY;
+        boxBodyDef.type = b2BodyType::DYNAMIC_BODY;
         boxBodyDef.position.Set(RandomFloat(xLo, xHi), RandomFloat(yLo, yHi));
 
         b2Body* body3 = m_world->CreateBody(&boxBodyDef);
@@ -106,7 +106,7 @@ public:
         circleShapeDef.density = 1.0f;
 
         b2BodyDef circleBodyDef;
-        circleBodyDef.type = b2Body::DYNAMIC_BODY;
+        circleBodyDef.type = b2BodyType::DYNAMIC_BODY;
         circleBodyDef.position.Set(RandomFloat(xLo, xHi), RandomFloat(yLo, yHi));
 
         b2Body* body5 = m_world->CreateBody(&circleBodyDef);
@@ -134,31 +134,31 @@ public:
         // Traverse the contact results. Destroy bodies that
         // are touching heavier bodies.
         for (int32_t i = 0; i < m_pointCount; ++i)
+        {
+            ContactPoint* point = m_points + i;
+
+            b2Body* body1 = point->fixtureA->GetBody();
+            b2Body* body2 = point->fixtureB->GetBody();
+            float32 mass1 = body1->GetMass();
+            float32 mass2 = body2->GetMass();
+
+            if (mass1 > 0.0f && mass2 > 0.0f)
             {
-                ContactPoint* point = m_points + i;
+                if (mass2 > mass1)
+                {
+                    nuke[nukeCount++] = body1;
+                }
+                else
+                {
+                    nuke[nukeCount++] = body2;
+                }
 
-                b2Body* body1 = point->fixtureA->GetBody();
-                b2Body* body2 = point->fixtureB->GetBody();
-                float32 mass1 = body1->GetMass();
-                float32 mass2 = body2->GetMass();
-
-                if (mass1 > 0.0f && mass2 > 0.0f)
-                    {
-                        if (mass2 > mass1)
-                            {
-                                nuke[nukeCount++] = body1;
-                            }
-                        else
-                            {
-                                nuke[nukeCount++] = body2;
-                            }
-
-                        if (nukeCount == k_maxNuke)
-                            {
-                                break;
-                            }
-                    }
+                if (nukeCount == k_maxNuke)
+                {
+                    break;
+                }
             }
+        }
 
         // Sort the nuke array to group duplicates.
         std::sort(nuke, nuke + nukeCount);
@@ -166,18 +166,18 @@ public:
         // Destroy the bodies, skipping duplicates.
         int32_t i = 0;
         while (i < nukeCount)
+        {
+            b2Body* b = nuke[i++];
+            while (i < nukeCount && nuke[i] == b)
             {
-                b2Body* b = nuke[i++];
-                while (i < nukeCount && nuke[i] == b)
-                    {
-                        ++i;
-                    }
-
-                if (b != m_bomb)
-                    {
-                        m_world->DestroyBody(b);
-                    }
+                ++i;
             }
+
+            if (b != m_bomb)
+            {
+                m_world->DestroyBody(b);
+            }
+        }
     }
 
     static Test* Create()

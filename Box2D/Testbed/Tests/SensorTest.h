@@ -66,17 +66,17 @@ public:
             shape.m_radius = 1.0f;
 
             for (int32_t i = 0; i < e_count; ++i)
-                {
-                    b2BodyDef bd;
-                    bd.type = b2Body::DYNAMIC_BODY;
-                    bd.position.Set(-10.0f + 3.0f * i, 20.0f);
-                    bd.userData = m_touching + i;
+            {
+                b2BodyDef bd;
+                bd.type = b2BodyType::DYNAMIC_BODY;
+                bd.position.Set(-10.0f + 3.0f * i, 20.0f);
+                bd.userData = m_touching + i;
 
-                    m_touching[i] = false;
-                    m_bodies[i] = m_world->CreateBody(&bd);
+                m_touching[i] = false;
+                m_bodies[i] = m_world->CreateBody(&bd);
 
-                    m_bodies[i]->CreateFixture(&shape, 1.0f);
-                }
+                m_bodies[i]->CreateFixture(&shape, 1.0f);
+            }
         }
     }
 
@@ -87,24 +87,24 @@ public:
         b2Fixture* fixtureB = contact->GetFixtureB();
 
         if (fixtureA == m_sensor)
+        {
+            void* userData = fixtureB->GetBody()->GetUserData();
+            if (userData)
             {
-                void* userData = fixtureB->GetBody()->GetUserData();
-                if (userData)
-                    {
-                        bool* touching = (bool*)userData;
-                        *touching = true;
-                    }
+                bool* touching = (bool*)userData;
+                *touching = true;
             }
+        }
 
         if (fixtureB == m_sensor)
+        {
+            void* userData = fixtureA->GetBody()->GetUserData();
+            if (userData)
             {
-                void* userData = fixtureA->GetBody()->GetUserData();
-                if (userData)
-                    {
-                        bool* touching = (bool*)userData;
-                        *touching = true;
-                    }
+                bool* touching = (bool*)userData;
+                *touching = true;
             }
+        }
     }
 
     // Implement contact listener.
@@ -114,24 +114,24 @@ public:
         b2Fixture* fixtureB = contact->GetFixtureB();
 
         if (fixtureA == m_sensor)
+        {
+            void* userData = fixtureB->GetBody()->GetUserData();
+            if (userData)
             {
-                void* userData = fixtureB->GetBody()->GetUserData();
-                if (userData)
-                    {
-                        bool* touching = (bool*)userData;
-                        *touching = false;
-                    }
+                bool* touching = (bool*)userData;
+                *touching = false;
             }
+        }
 
         if (fixtureB == m_sensor)
+        {
+            void* userData = fixtureA->GetBody()->GetUserData();
+            if (userData)
             {
-                void* userData = fixtureA->GetBody()->GetUserData();
-                if (userData)
-                    {
-                        bool* touching = (bool*)userData;
-                        *touching = false;
-                    }
+                bool* touching = (bool*)userData;
+                *touching = false;
             }
+        }
     }
 
     void Step(Settings* settings) override
@@ -141,30 +141,30 @@ public:
         // Traverse the contact results. Apply a force on shapes
         // that overlap the sensor.
         for (int32_t i = 0; i < e_count; ++i)
+        {
+            if (m_touching[i] == false)
             {
-                if (m_touching[i] == false)
-                    {
-                        continue;
-                    }
-
-                b2Body* body = m_bodies[i];
-                b2Body* ground = m_sensor->GetBody();
-
-                b2CircleShape* circle = (b2CircleShape*)m_sensor->GetShape();
-                b2Vec2 center = ground->GetWorldPoint(circle->m_p);
-
-                b2Vec2 position = body->GetPosition();
-
-                b2Vec2 d = center - position;
-                if (d.LengthSquared() < FLT_EPSILON * FLT_EPSILON)
-                    {
-                        continue;
-                    }
-
-                d.Normalize();
-                b2Vec2 F = 100.0f * d;
-                body->ApplyForce(F, position, false);
+                continue;
             }
+
+            b2Body* body = m_bodies[i];
+            b2Body* ground = m_sensor->GetBody();
+
+            b2CircleShape* circle = (b2CircleShape*)m_sensor->GetShape();
+            b2Vec2 center = ground->GetWorldPoint(circle->m_p);
+
+            b2Vec2 position = body->GetPosition();
+
+            b2Vec2 d = center - position;
+            if (d.LengthSquared() < FLT_EPSILON * FLT_EPSILON)
+            {
+                continue;
+            }
+
+            d.Normalize();
+            b2Vec2 F = 100.0f * d;
+            body->ApplyForce(F, position, false);
+        }
     }
 
     static Test* Create()

@@ -57,17 +57,17 @@ public:
             float32 x1 = -20.0f;
             float32 y1 = 2.0f * cosf(x1 / 10.0f * PI);
             for (int32_t i = 0; i < 80; ++i)
-                {
-                    float32 x2 = x1 + 0.5f;
-                    float32 y2 = 2.0f * cosf(x2 / 10.0f * PI);
+            {
+                float32 x2 = x1 + 0.5f;
+                float32 y2 = 2.0f * cosf(x2 / 10.0f * PI);
 
-                    b2EdgeShape shape;
-                    shape.Set(b2Vec2(x1, y1), b2Vec2(x2, y2));
-                    ground->CreateFixture(&shape, 0.0f);
+                b2EdgeShape shape;
+                shape.Set(b2Vec2(x1, y1), b2Vec2(x2, y2));
+                ground->CreateFixture(&shape, 0.0f);
 
-                    x1 = x2;
-                    y1 = y2;
-                }
+                x1 = x2;
+                y1 = y2;
+            }
         }
 
         {
@@ -121,10 +121,10 @@ public:
     void Create(int32_t index)
     {
         if (m_bodies[m_bodyIndex] != nullptr)
-            {
-                m_world->DestroyBody(m_bodies[m_bodyIndex]);
-                m_bodies[m_bodyIndex] = nullptr;
-            }
+        {
+            m_world->DestroyBody(m_bodies[m_bodyIndex]);
+            m_bodies[m_bodyIndex] = nullptr;
+        }
 
         b2BodyDef bd;
 
@@ -132,31 +132,31 @@ public:
         float32 y = RandomFloat(10.0f, 20.0f);
         bd.position.Set(x, y);
         bd.angle = RandomFloat(-PI, PI);
-        bd.type = b2Body::DYNAMIC_BODY;
+        bd.type = b2BodyType::DYNAMIC_BODY;
 
         if (index == 4)
-            {
-                bd.angularDamping = 0.02f;
-            }
+        {
+            bd.angularDamping = 0.02f;
+        }
 
         m_bodies[m_bodyIndex] = m_world->CreateBody(&bd);
 
         if (index < 4)
-            {
-                b2FixtureDef fd;
-                fd.shape = m_polygons + index;
-                fd.friction = 0.3f;
-                fd.density = 20.0f;
-                m_bodies[m_bodyIndex]->CreateFixture(&fd);
-            }
+        {
+            b2FixtureDef fd;
+            fd.shape = m_polygons + index;
+            fd.friction = 0.3f;
+            fd.density = 20.0f;
+            m_bodies[m_bodyIndex]->CreateFixture(&fd);
+        }
         else
-            {
-                b2FixtureDef fd;
-                fd.shape = &m_circle;
-                fd.friction = 0.3f;
-                fd.density = 20.0f;
-                m_bodies[m_bodyIndex]->CreateFixture(&fd);
-            }
+        {
+            b2FixtureDef fd;
+            fd.shape = &m_circle;
+            fd.friction = 0.3f;
+            fd.density = 20.0f;
+            m_bodies[m_bodyIndex]->CreateFixture(&fd);
+        }
 
         m_bodyIndex = (m_bodyIndex + 1) % EDGE_SHAPES_MAX_BODIES;
     }
@@ -164,32 +164,32 @@ public:
     void DestroyBody()
     {
         for (auto& elem : m_bodies)
+        {
+            if (elem != nullptr)
             {
-                if (elem != nullptr)
-                    {
-                        m_world->DestroyBody(elem);
-                        elem = nullptr;
-                        return;
-                    }
+                m_world->DestroyBody(elem);
+                elem = nullptr;
+                return;
             }
+        }
     }
 
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_1:
-                case GLFW_KEY_2:
-                case GLFW_KEY_3:
-                case GLFW_KEY_4:
-                case GLFW_KEY_5:
-                    Create(key - GLFW_KEY_1);
-                    break;
+        {
+            case GLFW_KEY_1:
+            case GLFW_KEY_2:
+            case GLFW_KEY_3:
+            case GLFW_KEY_4:
+            case GLFW_KEY_5:
+                Create(key - GLFW_KEY_1);
+                break;
 
-                case GLFW_KEY_D:
-                    DestroyBody();
-                    break;
-            }
+            case GLFW_KEY_D:
+                DestroyBody();
+                break;
+        }
     }
 
     void Step(Settings* settings) override
@@ -210,23 +210,23 @@ public:
         m_world->RayCast(&callback, point1, point2);
 
         if (callback.m_fixture)
-            {
-                g_debugDraw.DrawPoint(callback.m_point, 5.0f, b2Color(0.4f, 0.9f, 0.4f));
+        {
+            g_debugDraw.DrawPoint(callback.m_point, 5.0f, b2Color(0.4f, 0.9f, 0.4f));
 
-                g_debugDraw.DrawSegment(point1, callback.m_point, b2Color(0.8f, 0.8f, 0.8f));
+            g_debugDraw.DrawSegment(point1, callback.m_point, b2Color(0.8f, 0.8f, 0.8f));
 
-                b2Vec2 head = callback.m_point + 0.5f * callback.m_normal;
-                g_debugDraw.DrawSegment(callback.m_point, head, b2Color(0.9f, 0.9f, 0.4f));
-            }
+            b2Vec2 head = callback.m_point + 0.5f * callback.m_normal;
+            g_debugDraw.DrawSegment(callback.m_point, head, b2Color(0.9f, 0.9f, 0.4f));
+        }
         else
-            {
-                g_debugDraw.DrawSegment(point1, point2, b2Color(0.8f, 0.8f, 0.8f));
-            }
+        {
+            g_debugDraw.DrawSegment(point1, point2, b2Color(0.8f, 0.8f, 0.8f));
+        }
 
         if (advanceRay)
-            {
-                m_angle += 0.25f * PI / 180.0f;
-            }
+        {
+            m_angle += 0.25f * PI / 180.0f;
+        }
     }
 
     static Test* Create()

@@ -41,7 +41,7 @@ void box2d::b2CollideEdgeAndCircle(b2Manifold* manifold, const b2EdgeShape* edge
     float32 u = b2Dot(e, B - Q);
     float32 v = b2Dot(e, Q - A);
 
-    float32 radius = edgeA->m_radius + circleB->m_radius;
+    float32 radius = edgeA->GetRadius() + circleB->GetRadius();
 
     b2ContactFeature cf;
     cf.indexB = 0;
@@ -49,79 +49,79 @@ void box2d::b2CollideEdgeAndCircle(b2Manifold* manifold, const b2EdgeShape* edge
 
     // Region A
     if (v <= 0.0f)
+    {
+        b2Vec2 P = A;
+        b2Vec2 d = Q - P;
+        float32 dd = b2Dot(d, d);
+        if (dd > radius * radius)
         {
-            b2Vec2 P = A;
-            b2Vec2 d = Q - P;
-            float32 dd = b2Dot(d, d);
-            if (dd > radius * radius)
-                {
-                    return;
-                }
-
-            // Is there an edge connected to A?
-            if (edgeA->m_hasVertex0)
-                {
-                    b2Vec2 A1 = edgeA->m_vertex0;
-                    b2Vec2 B1 = A;
-                    b2Vec2 e1 = B1 - A1;
-                    float32 u1 = b2Dot(e1, B1 - Q);
-
-                    // Is the circle in Region AB of the previous edge?
-                    if (u1 > 0.0f)
-                        {
-                            return;
-                        }
-                }
-
-            cf.indexA = 0;
-            cf.typeA = b2ContactFeature::e_vertex;
-            manifold->pointCount = 1;
-            manifold->type = b2Manifold::e_circles;
-            manifold->localNormal.SetZero();
-            manifold->localPoint = P;
-            manifold->points[0].id.key = 0;
-            manifold->points[0].id.cf = cf;
-            manifold->points[0].localPoint = circleB->m_p;
             return;
         }
+
+        // Is there an edge connected to A?
+        if (edgeA->m_hasVertex0)
+        {
+            b2Vec2 A1 = edgeA->m_vertex0;
+            b2Vec2 B1 = A;
+            b2Vec2 e1 = B1 - A1;
+            float32 u1 = b2Dot(e1, B1 - Q);
+
+            // Is the circle in Region AB of the previous edge?
+            if (u1 > 0.0f)
+            {
+                return;
+            }
+        }
+
+        cf.indexA = 0;
+        cf.typeA = b2ContactFeature::e_vertex;
+        manifold->pointCount = 1;
+        manifold->type = b2Manifold::e_circles;
+        manifold->localNormal.SetZero();
+        manifold->localPoint = P;
+        manifold->points[0].id.key = 0;
+        manifold->points[0].id.cf = cf;
+        manifold->points[0].localPoint = circleB->m_p;
+        return;
+    }
 
     // Region B
     if (u <= 0.0f)
+    {
+        b2Vec2 P = B;
+        b2Vec2 d = Q - P;
+        float32 dd = b2Dot(d, d);
+        if (dd > radius * radius)
         {
-            b2Vec2 P = B;
-            b2Vec2 d = Q - P;
-            float32 dd = b2Dot(d, d);
-            if (dd > radius * radius)
-                {
-                    return;
-                }
-
-            // Is there an edge connected to B?
-            if (edgeA->m_hasVertex3)
-                {
-                    b2Vec2 B2 = edgeA->m_vertex3;
-                    b2Vec2 A2 = B;
-                    b2Vec2 e2 = B2 - A2;
-                    float32 v2 = b2Dot(e2, Q - A2);
-
-                    // Is the circle in Region AB of the next edge?
-                    if (v2 > 0.0f)
-                        {
-                            return;
-                        }
-                }
-
-            cf.indexA = 1;
-            cf.typeA = b2ContactFeature::e_vertex;
-            manifold->pointCount = 1;
-            manifold->type = b2Manifold::e_circles;
-            manifold->localNormal.SetZero();
-            manifold->localPoint = P;
-            manifold->points[0].id.key = 0;
-            manifold->points[0].id.cf = cf;
-            manifold->points[0].localPoint = circleB->m_p;
             return;
         }
+
+        // Is there an edge connected to B?
+        if (edgeA->m_hasVertex3)
+        {
+            b2Vec2 B2 = edgeA->m_vertex3;
+            b2Vec2 A2 = B;
+            b2Vec2 e2 = B2 - A2;
+            float32 v2 = b2Dot(e2, Q - A2);
+
+            // Is the circle in Region AB of the next edge?
+            if (v2 > 0.0f)
+            {
+                return;
+            }
+        }
+
+        cf.indexA = 1;
+        cf.typeA = b2ContactFeature::e_vertex;
+        manifold->pointCount = 1;
+        manifold->type = b2Manifold::e_circles;
+        manifold->localNormal.SetZero();
+        manifold->localPoint = P;
+        manifold->points[0].id.key = 0;
+        manifold->points[0].id.cf = cf;
+        manifold->points[0].localPoint = circleB->m_p;
+        return;
+    }
 
     // Region AB
     float32 den = b2Dot(e, e);
@@ -130,15 +130,15 @@ void box2d::b2CollideEdgeAndCircle(b2Manifold* manifold, const b2EdgeShape* edge
     b2Vec2 d = Q - P;
     float32 dd = b2Dot(d, d);
     if (dd > radius * radius)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     b2Vec2 n(-e.y, e.x);
     if (b2Dot(n, Q - A) < 0.0f)
-        {
-            n.Set(-n.x, -n.y);
-        }
+    {
+        n.Set(-n.x, -n.y);
+    }
     n.Normalize();
 
     cf.indexA = 0;
@@ -253,186 +253,186 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
 
     // Is there a preceding edge?
     if (hasVertex0)
-        {
-            b2Vec2 edge0 = m_v1 - m_v0;
-            edge0.Normalize();
-            m_normal0.Set(edge0.y, -edge0.x);
-            convex1 = b2Cross(edge0, edge1) >= 0.0f;
-            offset0 = b2Dot(m_normal0, m_centroidB - m_v0);
-        }
+    {
+        b2Vec2 edge0 = m_v1 - m_v0;
+        edge0.Normalize();
+        m_normal0.Set(edge0.y, -edge0.x);
+        convex1 = b2Cross(edge0, edge1) >= 0.0f;
+        offset0 = b2Dot(m_normal0, m_centroidB - m_v0);
+    }
 
     // Is there a following edge?
     if (hasVertex3)
-        {
-            b2Vec2 edge2 = m_v3 - m_v2;
-            edge2.Normalize();
-            m_normal2.Set(edge2.y, -edge2.x);
-            convex2 = b2Cross(edge1, edge2) > 0.0f;
-            offset2 = b2Dot(m_normal2, m_centroidB - m_v2);
-        }
+    {
+        b2Vec2 edge2 = m_v3 - m_v2;
+        edge2.Normalize();
+        m_normal2.Set(edge2.y, -edge2.x);
+        convex2 = b2Cross(edge1, edge2) > 0.0f;
+        offset2 = b2Dot(m_normal2, m_centroidB - m_v2);
+    }
 
     // Determine front or back collision. Determine collision normal limits.
     if (hasVertex0 && hasVertex3)
+    {
+        if (convex1 && convex2)
         {
-            if (convex1 && convex2)
-                {
-                    m_front = offset0 >= 0.0f || offset1 >= 0.0f || offset2 >= 0.0f;
-                    if (m_front)
-                        {
-                            m_normal = m_normal1;
-                            m_lowerLimit = m_normal0;
-                            m_upperLimit = m_normal2;
-                        }
-                    else
-                        {
-                            m_normal = -m_normal1;
-                            m_lowerLimit = -m_normal1;
-                            m_upperLimit = -m_normal1;
-                        }
-                }
-            else if (convex1)
-                {
-                    m_front = offset0 >= 0.0f || (offset1 >= 0.0f && offset2 >= 0.0f);
-                    if (m_front)
-                        {
-                            m_normal = m_normal1;
-                            m_lowerLimit = m_normal0;
-                            m_upperLimit = m_normal1;
-                        }
-                    else
-                        {
-                            m_normal = -m_normal1;
-                            m_lowerLimit = -m_normal2;
-                            m_upperLimit = -m_normal1;
-                        }
-                }
-            else if (convex2)
-                {
-                    m_front = offset2 >= 0.0f || (offset0 >= 0.0f && offset1 >= 0.0f);
-                    if (m_front)
-                        {
-                            m_normal = m_normal1;
-                            m_lowerLimit = m_normal1;
-                            m_upperLimit = m_normal2;
-                        }
-                    else
-                        {
-                            m_normal = -m_normal1;
-                            m_lowerLimit = -m_normal1;
-                            m_upperLimit = -m_normal0;
-                        }
-                }
-            else
-                {
-                    m_front = offset0 >= 0.0f && offset1 >= 0.0f && offset2 >= 0.0f;
-                    if (m_front)
-                        {
-                            m_normal = m_normal1;
-                            m_lowerLimit = m_normal1;
-                            m_upperLimit = m_normal1;
-                        }
-                    else
-                        {
-                            m_normal = -m_normal1;
-                            m_lowerLimit = -m_normal2;
-                            m_upperLimit = -m_normal0;
-                        }
-                }
-        }
-    else if (hasVertex0)
-        {
-            if (convex1)
-                {
-                    m_front = offset0 >= 0.0f || offset1 >= 0.0f;
-                    if (m_front)
-                        {
-                            m_normal = m_normal1;
-                            m_lowerLimit = m_normal0;
-                            m_upperLimit = -m_normal1;
-                        }
-                    else
-                        {
-                            m_normal = -m_normal1;
-                            m_lowerLimit = m_normal1;
-                            m_upperLimit = -m_normal1;
-                        }
-                }
-            else
-                {
-                    m_front = offset0 >= 0.0f && offset1 >= 0.0f;
-                    if (m_front)
-                        {
-                            m_normal = m_normal1;
-                            m_lowerLimit = m_normal1;
-                            m_upperLimit = -m_normal1;
-                        }
-                    else
-                        {
-                            m_normal = -m_normal1;
-                            m_lowerLimit = m_normal1;
-                            m_upperLimit = -m_normal0;
-                        }
-                }
-        }
-    else if (hasVertex3)
-        {
-            if (convex2)
-                {
-                    m_front = offset1 >= 0.0f || offset2 >= 0.0f;
-                    if (m_front)
-                        {
-                            m_normal = m_normal1;
-                            m_lowerLimit = -m_normal1;
-                            m_upperLimit = m_normal2;
-                        }
-                    else
-                        {
-                            m_normal = -m_normal1;
-                            m_lowerLimit = -m_normal1;
-                            m_upperLimit = m_normal1;
-                        }
-                }
-            else
-                {
-                    m_front = offset1 >= 0.0f && offset2 >= 0.0f;
-                    if (m_front)
-                        {
-                            m_normal = m_normal1;
-                            m_lowerLimit = -m_normal1;
-                            m_upperLimit = m_normal1;
-                        }
-                    else
-                        {
-                            m_normal = -m_normal1;
-                            m_lowerLimit = -m_normal2;
-                            m_upperLimit = m_normal1;
-                        }
-                }
-        }
-    else
-        {
-            m_front = offset1 >= 0.0f;
+            m_front = offset0 >= 0.0f || offset1 >= 0.0f || offset2 >= 0.0f;
             if (m_front)
-                {
-                    m_normal = m_normal1;
-                    m_lowerLimit = -m_normal1;
-                    m_upperLimit = -m_normal1;
-                }
+            {
+                m_normal = m_normal1;
+                m_lowerLimit = m_normal0;
+                m_upperLimit = m_normal2;
+            }
             else
-                {
-                    m_normal = -m_normal1;
-                    m_lowerLimit = m_normal1;
-                    m_upperLimit = m_normal1;
-                }
+            {
+                m_normal = -m_normal1;
+                m_lowerLimit = -m_normal1;
+                m_upperLimit = -m_normal1;
+            }
         }
+        else if (convex1)
+        {
+            m_front = offset0 >= 0.0f || (offset1 >= 0.0f && offset2 >= 0.0f);
+            if (m_front)
+            {
+                m_normal = m_normal1;
+                m_lowerLimit = m_normal0;
+                m_upperLimit = m_normal1;
+            }
+            else
+            {
+                m_normal = -m_normal1;
+                m_lowerLimit = -m_normal2;
+                m_upperLimit = -m_normal1;
+            }
+        }
+        else if (convex2)
+        {
+            m_front = offset2 >= 0.0f || (offset0 >= 0.0f && offset1 >= 0.0f);
+            if (m_front)
+            {
+                m_normal = m_normal1;
+                m_lowerLimit = m_normal1;
+                m_upperLimit = m_normal2;
+            }
+            else
+            {
+                m_normal = -m_normal1;
+                m_lowerLimit = -m_normal1;
+                m_upperLimit = -m_normal0;
+            }
+        }
+        else
+        {
+            m_front = offset0 >= 0.0f && offset1 >= 0.0f && offset2 >= 0.0f;
+            if (m_front)
+            {
+                m_normal = m_normal1;
+                m_lowerLimit = m_normal1;
+                m_upperLimit = m_normal1;
+            }
+            else
+            {
+                m_normal = -m_normal1;
+                m_lowerLimit = -m_normal2;
+                m_upperLimit = -m_normal0;
+            }
+        }
+    }
+    else if (hasVertex0)
+    {
+        if (convex1)
+        {
+            m_front = offset0 >= 0.0f || offset1 >= 0.0f;
+            if (m_front)
+            {
+                m_normal = m_normal1;
+                m_lowerLimit = m_normal0;
+                m_upperLimit = -m_normal1;
+            }
+            else
+            {
+                m_normal = -m_normal1;
+                m_lowerLimit = m_normal1;
+                m_upperLimit = -m_normal1;
+            }
+        }
+        else
+        {
+            m_front = offset0 >= 0.0f && offset1 >= 0.0f;
+            if (m_front)
+            {
+                m_normal = m_normal1;
+                m_lowerLimit = m_normal1;
+                m_upperLimit = -m_normal1;
+            }
+            else
+            {
+                m_normal = -m_normal1;
+                m_lowerLimit = m_normal1;
+                m_upperLimit = -m_normal0;
+            }
+        }
+    }
+    else if (hasVertex3)
+    {
+        if (convex2)
+        {
+            m_front = offset1 >= 0.0f || offset2 >= 0.0f;
+            if (m_front)
+            {
+                m_normal = m_normal1;
+                m_lowerLimit = -m_normal1;
+                m_upperLimit = m_normal2;
+            }
+            else
+            {
+                m_normal = -m_normal1;
+                m_lowerLimit = -m_normal1;
+                m_upperLimit = m_normal1;
+            }
+        }
+        else
+        {
+            m_front = offset1 >= 0.0f && offset2 >= 0.0f;
+            if (m_front)
+            {
+                m_normal = m_normal1;
+                m_lowerLimit = -m_normal1;
+                m_upperLimit = m_normal1;
+            }
+            else
+            {
+                m_normal = -m_normal1;
+                m_lowerLimit = -m_normal2;
+                m_upperLimit = m_normal1;
+            }
+        }
+    }
+    else
+    {
+        m_front = offset1 >= 0.0f;
+        if (m_front)
+        {
+            m_normal = m_normal1;
+            m_lowerLimit = -m_normal1;
+            m_upperLimit = -m_normal1;
+        }
+        else
+        {
+            m_normal = -m_normal1;
+            m_lowerLimit = m_normal1;
+            m_upperLimit = m_normal1;
+        }
+    }
 
     // Get polygonB in frameA
     m_polygonB.count = polygonB->m_count;
     for (int32_t i = 0; i < polygonB->m_count; ++i)
-        {
-            m_polygonB.vertices[i] = b2Mul(m_xf, polygonB->m_vertices[i]);
-            m_polygonB.normals[i] = b2Mul(m_xf.q, polygonB->m_normals[i]);
-        }
+    {
+        m_polygonB.vertices[i] = b2Mul(m_xf, polygonB->m_vertices[i]);
+        m_polygonB.normals[i] = b2Mul(m_xf.q, polygonB->m_normals[i]);
+    }
 
     m_radius = 2.0f * POLYGON_RADIUS;
 
@@ -442,20 +442,20 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
 
     // If no valid normal can be found than this edge should not collide.
     if (edgeAxis.type == b2EPAxis::e_unknown)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     if (edgeAxis.separation > m_radius)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     b2EPAxis polygonAxis = ComputePolygonSeparation();
     if (polygonAxis.type != b2EPAxis::e_unknown && polygonAxis.separation > m_radius)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     // Use hysteresis for jitter reduction.
     const float32 k_relativeTol = 0.98f;
@@ -463,92 +463,92 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
 
     b2EPAxis primaryAxis;
     if (polygonAxis.type == b2EPAxis::e_unknown)
-        {
-            primaryAxis = edgeAxis;
-        }
+    {
+        primaryAxis = edgeAxis;
+    }
     else if (polygonAxis.separation > k_relativeTol * edgeAxis.separation + k_absoluteTol)
-        {
-            primaryAxis = polygonAxis;
-        }
+    {
+        primaryAxis = polygonAxis;
+    }
     else
-        {
-            primaryAxis = edgeAxis;
-        }
+    {
+        primaryAxis = edgeAxis;
+    }
 
     b2ClipVertex ie[2];
     b2ReferenceFace rf;
     if (primaryAxis.type == b2EPAxis::e_edgeA)
+    {
+        manifold->type = b2Manifold::e_faceA;
+
+        // Search for the polygon normal that is most anti-parallel to the edge
+        // normal.
+        int32_t bestIndex = 0;
+        float32 bestValue = b2Dot(m_normal, m_polygonB.normals[0]);
+        for (int32_t i = 1; i < m_polygonB.count; ++i)
         {
-            manifold->type = b2Manifold::e_faceA;
-
-            // Search for the polygon normal that is most anti-parallel to the edge
-            // normal.
-            int32_t bestIndex = 0;
-            float32 bestValue = b2Dot(m_normal, m_polygonB.normals[0]);
-            for (int32_t i = 1; i < m_polygonB.count; ++i)
-                {
-                    float32 value = b2Dot(m_normal, m_polygonB.normals[i]);
-                    if (value < bestValue)
-                        {
-                            bestValue = value;
-                            bestIndex = i;
-                        }
-                }
-
-            int32_t i1 = bestIndex;
-            int32_t i2 = i1 + 1 < m_polygonB.count ? i1 + 1 : 0;
-
-            ie[0].v = m_polygonB.vertices[i1];
-            ie[0].id.cf.indexA = 0;
-            ie[0].id.cf.indexB = static_cast<uint8_t>(i1);
-            ie[0].id.cf.typeA = b2ContactFeature::e_face;
-            ie[0].id.cf.typeB = b2ContactFeature::e_vertex;
-
-            ie[1].v = m_polygonB.vertices[i2];
-            ie[1].id.cf.indexA = 0;
-            ie[1].id.cf.indexB = static_cast<uint8_t>(i2);
-            ie[1].id.cf.typeA = b2ContactFeature::e_face;
-            ie[1].id.cf.typeB = b2ContactFeature::e_vertex;
-
-            if (m_front)
-                {
-                    rf.i1 = 0;
-                    rf.i2 = 1;
-                    rf.v1 = m_v1;
-                    rf.v2 = m_v2;
-                    rf.normal = m_normal1;
-                }
-            else
-                {
-                    rf.i1 = 1;
-                    rf.i2 = 0;
-                    rf.v1 = m_v2;
-                    rf.v2 = m_v1;
-                    rf.normal = -m_normal1;
-                }
+            float32 value = b2Dot(m_normal, m_polygonB.normals[i]);
+            if (value < bestValue)
+            {
+                bestValue = value;
+                bestIndex = i;
+            }
         }
+
+        int32_t i1 = bestIndex;
+        int32_t i2 = i1 + 1 < m_polygonB.count ? i1 + 1 : 0;
+
+        ie[0].v = m_polygonB.vertices[i1];
+        ie[0].id.cf.indexA = 0;
+        ie[0].id.cf.indexB = static_cast<uint8_t>(i1);
+        ie[0].id.cf.typeA = b2ContactFeature::e_face;
+        ie[0].id.cf.typeB = b2ContactFeature::e_vertex;
+
+        ie[1].v = m_polygonB.vertices[i2];
+        ie[1].id.cf.indexA = 0;
+        ie[1].id.cf.indexB = static_cast<uint8_t>(i2);
+        ie[1].id.cf.typeA = b2ContactFeature::e_face;
+        ie[1].id.cf.typeB = b2ContactFeature::e_vertex;
+
+        if (m_front)
+        {
+            rf.i1 = 0;
+            rf.i2 = 1;
+            rf.v1 = m_v1;
+            rf.v2 = m_v2;
+            rf.normal = m_normal1;
+        }
+        else
+        {
+            rf.i1 = 1;
+            rf.i2 = 0;
+            rf.v1 = m_v2;
+            rf.v2 = m_v1;
+            rf.normal = -m_normal1;
+        }
+    }
     else
-        {
-            manifold->type = b2Manifold::e_faceB;
+    {
+        manifold->type = b2Manifold::e_faceB;
 
-            ie[0].v = m_v1;
-            ie[0].id.cf.indexA = 0;
-            ie[0].id.cf.indexB = static_cast<uint8_t>(primaryAxis.index);
-            ie[0].id.cf.typeA = b2ContactFeature::e_vertex;
-            ie[0].id.cf.typeB = b2ContactFeature::e_face;
+        ie[0].v = m_v1;
+        ie[0].id.cf.indexA = 0;
+        ie[0].id.cf.indexB = static_cast<uint8_t>(primaryAxis.index);
+        ie[0].id.cf.typeA = b2ContactFeature::e_vertex;
+        ie[0].id.cf.typeB = b2ContactFeature::e_face;
 
-            ie[1].v = m_v2;
-            ie[1].id.cf.indexA = 0;
-            ie[1].id.cf.indexB = static_cast<uint8_t>(primaryAxis.index);
-            ie[1].id.cf.typeA = b2ContactFeature::e_vertex;
-            ie[1].id.cf.typeB = b2ContactFeature::e_face;
+        ie[1].v = m_v2;
+        ie[1].id.cf.indexA = 0;
+        ie[1].id.cf.indexB = static_cast<uint8_t>(primaryAxis.index);
+        ie[1].id.cf.typeA = b2ContactFeature::e_vertex;
+        ie[1].id.cf.typeB = b2ContactFeature::e_face;
 
-            rf.i1 = primaryAxis.index;
-            rf.i2 = rf.i1 + 1 < m_polygonB.count ? rf.i1 + 1 : 0;
-            rf.v1 = m_polygonB.vertices[rf.i1];
-            rf.v2 = m_polygonB.vertices[rf.i2];
-            rf.normal = m_polygonB.normals[rf.i1];
-        }
+        rf.i1 = primaryAxis.index;
+        rf.i2 = rf.i1 + 1 < m_polygonB.count ? rf.i1 + 1 : 0;
+        rf.v1 = m_polygonB.vertices[rf.i1];
+        rf.v2 = m_polygonB.vertices[rf.i2];
+        rf.normal = m_polygonB.normals[rf.i1];
+    }
 
     rf.sideNormal1.Set(rf.normal.y, -rf.normal.x);
     rf.sideNormal2 = -rf.sideNormal1;
@@ -564,58 +564,58 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
     np = b2ClipSegmentToLine(clipPoints1, ie, rf.sideNormal1, rf.sideOffset1, rf.i1);
 
     if (np < MAX_MANIFOLD_POINTS)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     // Clip to negative box side 1
     np = b2ClipSegmentToLine(clipPoints2, clipPoints1, rf.sideNormal2, rf.sideOffset2, rf.i2);
 
     if (np < MAX_MANIFOLD_POINTS)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     // Now clipPoints2 contains the clipped points.
     if (primaryAxis.type == b2EPAxis::e_edgeA)
-        {
-            manifold->localNormal = rf.normal;
-            manifold->localPoint = rf.v1;
-        }
+    {
+        manifold->localNormal = rf.normal;
+        manifold->localPoint = rf.v1;
+    }
     else
-        {
-            manifold->localNormal = polygonB->m_normals[rf.i1];
-            manifold->localPoint = polygonB->m_vertices[rf.i1];
-        }
+    {
+        manifold->localNormal = polygonB->m_normals[rf.i1];
+        manifold->localPoint = polygonB->m_vertices[rf.i1];
+    }
 
     int32_t pointCount = 0;
     for (auto& elem : clipPoints2)
+    {
+        float32 separation;
+
+        separation = b2Dot(rf.normal, elem.v - rf.v1);
+
+        if (separation <= m_radius)
         {
-            float32 separation;
+            b2ManifoldPoint* cp = manifold->points + pointCount;
 
-            separation = b2Dot(rf.normal, elem.v - rf.v1);
+            if (primaryAxis.type == b2EPAxis::e_edgeA)
+            {
+                cp->localPoint = b2MulT(m_xf, elem.v);
+                cp->id = elem.id;
+            }
+            else
+            {
+                cp->localPoint = elem.v;
+                cp->id.cf.typeA = elem.id.cf.typeB;
+                cp->id.cf.typeB = elem.id.cf.typeA;
+                cp->id.cf.indexA = elem.id.cf.indexB;
+                cp->id.cf.indexB = elem.id.cf.indexA;
+            }
 
-            if (separation <= m_radius)
-                {
-                    b2ManifoldPoint* cp = manifold->points + pointCount;
-
-                    if (primaryAxis.type == b2EPAxis::e_edgeA)
-                        {
-                            cp->localPoint = b2MulT(m_xf, elem.v);
-                            cp->id = elem.id;
-                        }
-                    else
-                        {
-                            cp->localPoint = elem.v;
-                            cp->id.cf.typeA = elem.id.cf.typeB;
-                            cp->id.cf.typeB = elem.id.cf.typeA;
-                            cp->id.cf.indexA = elem.id.cf.indexB;
-                            cp->id.cf.indexB = elem.id.cf.indexA;
-                        }
-
-                    ++pointCount;
-                }
+            ++pointCount;
         }
+    }
 
     manifold->pointCount = pointCount;
 }
@@ -628,13 +628,13 @@ b2EPAxis b2EPCollider::ComputeEdgeSeparation()
     axis.separation = FLT_MAX;
 
     for (int32_t i = 0; i < m_polygonB.count; ++i)
+    {
+        float32 s = b2Dot(m_normal, m_polygonB.vertices[i] - m_v1);
+        if (s < axis.separation)
         {
-            float32 s = b2Dot(m_normal, m_polygonB.vertices[i] - m_v1);
-            if (s < axis.separation)
-                {
-                    axis.separation = s;
-                }
+            axis.separation = s;
         }
+    }
 
     return axis;
 }
@@ -649,45 +649,45 @@ b2EPAxis b2EPCollider::ComputePolygonSeparation()
     b2Vec2 perp(-m_normal.y, m_normal.x);
 
     for (int32_t i = 0; i < m_polygonB.count; ++i)
+    {
+        b2Vec2 n = -m_polygonB.normals[i];
+
+        float32 s1 = b2Dot(n, m_polygonB.vertices[i] - m_v1);
+        float32 s2 = b2Dot(n, m_polygonB.vertices[i] - m_v2);
+        float32 s = b2Min(s1, s2);
+
+        if (s > m_radius)
         {
-            b2Vec2 n = -m_polygonB.normals[i];
-
-            float32 s1 = b2Dot(n, m_polygonB.vertices[i] - m_v1);
-            float32 s2 = b2Dot(n, m_polygonB.vertices[i] - m_v2);
-            float32 s = b2Min(s1, s2);
-
-            if (s > m_radius)
-                {
-                    // No collision
-                    axis.type = b2EPAxis::e_edgeB;
-                    axis.index = i;
-                    axis.separation = s;
-                    return axis;
-                }
-
-            // Adjacency
-            if (b2Dot(n, perp) >= 0.0f)
-                {
-                    if (b2Dot(n - m_upperLimit, m_normal) < -ANGULAR_SLOP)
-                        {
-                            continue;
-                        }
-                }
-            else
-                {
-                    if (b2Dot(n - m_lowerLimit, m_normal) < -ANGULAR_SLOP)
-                        {
-                            continue;
-                        }
-                }
-
-            if (s > axis.separation)
-                {
-                    axis.type = b2EPAxis::e_edgeB;
-                    axis.index = i;
-                    axis.separation = s;
-                }
+            // No collision
+            axis.type = b2EPAxis::e_edgeB;
+            axis.index = i;
+            axis.separation = s;
+            return axis;
         }
+
+        // Adjacency
+        if (b2Dot(n, perp) >= 0.0f)
+        {
+            if (b2Dot(n - m_upperLimit, m_normal) < -ANGULAR_SLOP)
+            {
+                continue;
+            }
+        }
+        else
+        {
+            if (b2Dot(n - m_lowerLimit, m_normal) < -ANGULAR_SLOP)
+            {
+                continue;
+            }
+        }
+
+        if (s > axis.separation)
+        {
+            axis.type = b2EPAxis::e_edgeB;
+            axis.index = i;
+            axis.separation = s;
+        }
+    }
 
     return axis;
 }

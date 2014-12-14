@@ -90,13 +90,13 @@ void b2DistanceJoint::InitVelocityConstraints(const b2SolverData& data)
     // Handle singularity.
     float32 length = m_u.Length();
     if (length > LINEAR_SLOP)
-        {
-            m_u *= 1.0f / length;
-        }
+    {
+        m_u *= 1.0f / length;
+    }
     else
-        {
-            m_u.Set(0.0f, 0.0f);
-        }
+    {
+        m_u.Set(0.0f, 0.0f);
+    }
 
     float32 crAu = b2Cross(m_rA, m_u);
     float32 crBu = b2Cross(m_rB, m_u);
@@ -106,48 +106,48 @@ void b2DistanceJoint::InitVelocityConstraints(const b2SolverData& data)
     m_mass = invMass != 0.0f ? 1.0f / invMass : 0.0f;
 
     if (m_frequencyHz > 0.0f)
-        {
-            float32 C = length - m_length;
+    {
+        float32 C = length - m_length;
 
-            // Frequency
-            float32 omega = 2.0f * PI * m_frequencyHz;
+        // Frequency
+        float32 omega = 2.0f * PI * m_frequencyHz;
 
-            // Damping coefficient
-            float32 d = 2.0f * m_mass * m_dampingRatio * omega;
+        // Damping coefficient
+        float32 d = 2.0f * m_mass * m_dampingRatio * omega;
 
-            // Spring stiffness
-            float32 k = m_mass * omega * omega;
+        // Spring stiffness
+        float32 k = m_mass * omega * omega;
 
-            // magic formulas
-            float32 h = data.step.dt;
-            m_gamma = h * (d + h * k);
-            m_gamma = m_gamma != 0.0f ? 1.0f / m_gamma : 0.0f;
-            m_bias = C * h * k * m_gamma;
+        // magic formulas
+        float32 h = data.step.dt;
+        m_gamma = h * (d + h * k);
+        m_gamma = m_gamma != 0.0f ? 1.0f / m_gamma : 0.0f;
+        m_bias = C * h * k * m_gamma;
 
-            invMass += m_gamma;
-            m_mass = invMass != 0.0f ? 1.0f / invMass : 0.0f;
-        }
+        invMass += m_gamma;
+        m_mass = invMass != 0.0f ? 1.0f / invMass : 0.0f;
+    }
     else
-        {
-            m_gamma = 0.0f;
-            m_bias = 0.0f;
-        }
+    {
+        m_gamma = 0.0f;
+        m_bias = 0.0f;
+    }
 
     if (data.step.warmStarting)
-        {
-            // Scale the impulse to support a variable time step.
-            m_impulse *= data.step.dtRatio;
+    {
+        // Scale the impulse to support a variable time step.
+        m_impulse *= data.step.dtRatio;
 
-            b2Vec2 P = m_impulse * m_u;
-            vA -= m_invMassA * P;
-            wA -= m_invIA * b2Cross(m_rA, P);
-            vB += m_invMassB * P;
-            wB += m_invIB * b2Cross(m_rB, P);
-        }
+        b2Vec2 P = m_impulse * m_u;
+        vA -= m_invMassA * P;
+        wA -= m_invIA * b2Cross(m_rA, P);
+        vB += m_invMassB * P;
+        wB += m_invIB * b2Cross(m_rB, P);
+    }
     else
-        {
-            m_impulse = 0.0f;
-        }
+    {
+        m_impulse = 0.0f;
+    }
 
     data.velocities[m_indexA].v = vA;
     data.velocities[m_indexA].w = wA;
@@ -185,10 +185,10 @@ void b2DistanceJoint::SolveVelocityConstraints(const b2SolverData& data)
 bool b2DistanceJoint::SolvePositionConstraints(const b2SolverData& data)
 {
     if (m_frequencyHz > 0.0f)
-        {
-            // There is no position correction for soft distance constraints.
-            return true;
-        }
+    {
+        // There is no position correction for soft distance constraints.
+        return true;
+    }
 
     b2Vec2 cA = data.positions[m_indexA].c;
     float32 aA = data.positions[m_indexA].a;

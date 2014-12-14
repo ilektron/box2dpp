@@ -40,7 +40,7 @@ public:
         // Breakable dynamic body
         {
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(0.0f, 40.0f);
             bd.angle = 0.25f * PI;
             m_body1 = m_world->CreateBody(&bd);
@@ -59,25 +59,25 @@ public:
     void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override
     {
         if (m_broke)
-            {
-                // The body already broke.
-                return;
-            }
+        {
+            // The body already broke.
+            return;
+        }
 
         // Should the body break?
         int32_t count = contact->GetManifold()->pointCount;
 
         float32 maxImpulse = 0.0f;
         for (int32_t i = 0; i < count; ++i)
-            {
-                maxImpulse = b2Max(maxImpulse, impulse->normalImpulses[i]);
-            }
+        {
+            maxImpulse = b2Max(maxImpulse, impulse->normalImpulses[i]);
+        }
 
         if (maxImpulse > 40.0f)
-            {
-                // Flag the body for breaking.
-                m_break = true;
-            }
+        {
+            // Flag the body for breaking.
+            m_break = true;
+        }
     }
 
     void Break()
@@ -90,7 +90,7 @@ public:
         m_piece2 = nullptr;
 
         b2BodyDef bd;
-        bd.type = b2Body::DYNAMIC_BODY;
+        bd.type = b2BodyType::DYNAMIC_BODY;
         bd.position = body1->GetPosition();
         bd.angle = body1->GetAngle();
 
@@ -115,18 +115,18 @@ public:
     void Step(Settings* settings) override
     {
         if (m_break)
-            {
-                Break();
-                m_broke = true;
-                m_break = false;
-            }
+        {
+            Break();
+            m_broke = true;
+            m_break = false;
+        }
 
         // Cache velocities to improve movement on breakage.
         if (m_broke == false)
-            {
-                m_velocity = m_body1->GetLinearVelocity();
-                m_angularVelocity = m_body1->GetAngularVelocity();
-            }
+        {
+            m_velocity = m_body1->GetLinearVelocity();
+            m_angularVelocity = m_body1->GetAngularVelocity();
+        }
 
         Test::Step(settings);
     }

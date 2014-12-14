@@ -40,17 +40,17 @@ public:
             shape.m_radius = 1.0f;
 
             for (int32_t i = 0; i < SPHERE_STACK_COUNT; ++i)
-                {
-                    b2BodyDef bd;
-                    bd.type = b2Body::DYNAMIC_BODY;
-                    bd.position.Set(0.0, 4.0f + 3.0f * i);
+            {
+                b2BodyDef bd;
+                bd.type = b2BodyType::DYNAMIC_BODY;
+                bd.position.Set(0.0, 4.0f + 3.0f * i);
 
-                    m_bodies[i] = m_world->CreateBody(&bd);
+                m_bodies[i] = m_world->CreateBody(&bd);
 
-                    m_bodies[i]->CreateFixture(&shape, 1.0f);
+                m_bodies[i]->CreateFixture(&shape, 1.0f);
 
-                    m_bodies[i]->SetLinearVelocity(b2Vec2(0.0f, -50.0f));
-                }
+                m_bodies[i]->SetLinearVelocity(b2Vec2(0.0f, -50.0f));
+            }
         }
     }
 

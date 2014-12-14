@@ -32,14 +32,14 @@ b2Timer::b2Timer()
     LARGE_INTEGER largeInteger;
 
     if (s_invFrequency == 0.0f)
+    {
+        QueryPerformanceFrequency(&largeInteger);
+        s_invFrequency = float64(largeInteger.QuadPart);
+        if (s_invFrequency > 0.0f)
         {
-            QueryPerformanceFrequency(&largeInteger);
-            s_invFrequency = float64(largeInteger.QuadPart);
-            if (s_invFrequency > 0.0f)
-                {
-                    s_invFrequency = 1000.0f / s_invFrequency;
-                }
+            s_invFrequency = 1000.0f / s_invFrequency;
         }
+    }
 
     QueryPerformanceCounter(&largeInteger);
     m_start = float64(largeInteger.QuadPart);

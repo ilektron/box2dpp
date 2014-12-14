@@ -141,14 +141,14 @@ private:
 inline bool b2PairLessThan(const b2Pair& pair1, const b2Pair& pair2)
 {
     if (pair1.proxyIdA < pair2.proxyIdA)
-        {
-            return true;
-        }
+    {
+        return true;
+    }
 
     if (pair1.proxyIdA == pair2.proxyIdA)
-        {
-            return pair1.proxyIdB < pair2.proxyIdB;
-        }
+    {
+        return pair1.proxyIdB < pair2.proxyIdB;
+    }
 
     return false;
 }
@@ -198,20 +198,20 @@ void b2BroadPhase::UpdatePairs(T* callback)
 
     // Perform tree queries for all moving proxies.
     for (int32_t i = 0; i < m_moveCount; ++i)
+    {
+        m_queryProxyId = m_moveBuffer[i];
+        if (m_queryProxyId == e_nullProxy)
         {
-            m_queryProxyId = m_moveBuffer[i];
-            if (m_queryProxyId == e_nullProxy)
-                {
-                    continue;
-                }
-
-            // We have to query the tree with the fat AABB so that
-            // we don't fail to create a pair that may touch later.
-            const b2AABB& fatAABB = m_tree.GetFatAABB(m_queryProxyId);
-
-            // Query tree, create pairs and add them pair buffer.
-            m_tree.Query(this, fatAABB);
+            continue;
         }
+
+        // We have to query the tree with the fat AABB so that
+        // we don't fail to create a pair that may touch later.
+        const b2AABB& fatAABB = m_tree.GetFatAABB(m_queryProxyId);
+
+        // Query tree, create pairs and add them pair buffer.
+        m_tree.Query(this, fatAABB);
+    }
 
     // Reset move buffer
     m_moveCount = 0;
@@ -222,26 +222,25 @@ void b2BroadPhase::UpdatePairs(T* callback)
     // Send the pairs back to the client.
     int32_t i = 0;
     while (i < m_pairCount)
+    {
+        b2Pair* primaryPair = m_pairBuffer + i;
+        void* userDataA = m_tree.GetUserData(primaryPair->proxyIdA);
+        void* userDataB = m_tree.GetUserData(primaryPair->proxyIdB);
+
+        callback->AddPair(userDataA, userDataB);
+        ++i;
+
+        // Skip any duplicate pairs.
+        while (i < m_pairCount)
         {
-            b2Pair* primaryPair = m_pairBuffer + i;
-            void* userDataA = m_tree.GetUserData(primaryPair->proxyIdA);
-            void* userDataB = m_tree.GetUserData(primaryPair->proxyIdB);
-
-            callback->AddPair(userDataA, userDataB);
+            b2Pair* pair = m_pairBuffer + i;
+            if (pair->proxyIdA != primaryPair->proxyIdA || pair->proxyIdB != primaryPair->proxyIdB)
+            {
+                break;
+            }
             ++i;
-
-            // Skip any duplicate pairs.
-            while (i < m_pairCount)
-                {
-                    b2Pair* pair = m_pairBuffer + i;
-                    if (pair->proxyIdA != primaryPair->proxyIdA ||
-                        pair->proxyIdB != primaryPair->proxyIdB)
-                        {
-                            break;
-                        }
-                    ++i;
-                }
         }
+    }
 
     // Try to keep the tree balanced.
     // m_tree.Rebalance(4);

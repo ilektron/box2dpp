@@ -38,7 +38,7 @@ bool b2CircleShape::TestPoint(const b2Transform& transform, const b2Vec2& p) con
 {
     b2Vec2 center = transform.p + b2Mul(transform.q, m_p);
     b2Vec2 d = p - center;
-    return b2Dot(d, d) <= m_radius * m_radius;
+    return b2Dot(d, d) <= GetRadius() * GetRadius();
 }
 
 // Collision Detection in Interactive 3D Environments by Gino van den Bergen
@@ -52,7 +52,7 @@ bool b2CircleShape::RayCast(b2RayCastOutput* output, const b2RayCastInput& input
 
     b2Vec2 position = transform.p + b2Mul(transform.q, m_p);
     b2Vec2 s = input.p1 - position;
-    float32 b = b2Dot(s, s) - m_radius * m_radius;
+    float32 b = b2Dot(s, s) - GetRadius() * GetRadius();
 
     // Solve quadratic equation.
     b2Vec2 r = input.p2 - input.p1;
@@ -62,22 +62,22 @@ bool b2CircleShape::RayCast(b2RayCastOutput* output, const b2RayCastInput& input
 
     // Check for negative discriminant and short segment.
     if (sigma < 0.0f || rr < EPSILON)
-        {
-            return false;
-        }
+    {
+        return false;
+    }
 
     // Find the point of intersection of the line with the circle.
     float32 a = -(c + b2Sqrt(sigma));
 
     // Is the intersection point on the segment?
     if (0.0f <= a && a <= input.maxFraction * rr)
-        {
-            a /= rr;
-            output->fraction = a;
-            output->normal = s + a * r;
-            output->normal.Normalize();
-            return true;
-        }
+    {
+        a /= rr;
+        output->fraction = a;
+        output->normal = s + a * r;
+        output->normal.Normalize();
+        return true;
+    }
 
     return false;
 }
@@ -88,15 +88,15 @@ void b2CircleShape::ComputeAABB(b2AABB* aabb, const b2Transform& transform,
     B2_NOT_USED(childIndex);
 
     b2Vec2 p = transform.p + b2Mul(transform.q, m_p);
-    aabb->lowerBound.Set(p.x - m_radius, p.y - m_radius);
-    aabb->upperBound.Set(p.x + m_radius, p.y + m_radius);
+    aabb->lowerBound.Set(p.x - GetRadius(), p.y - GetRadius());
+    aabb->upperBound.Set(p.x + GetRadius(), p.y + GetRadius());
 }
 
 void b2CircleShape::ComputeMass(b2MassData* massData, float32 density) const
 {
-    massData->mass = density * PI * m_radius * m_radius;
+    massData->mass = density * PI * GetRadius() * GetRadius();
     massData->center = m_p;
 
     // inertia about the local origin
-    massData->I = massData->mass * (0.5f * m_radius * m_radius + b2Dot(m_p, m_p));
+    massData->I = massData->mass * (0.5f * GetRadius() * GetRadius() + b2Dot(m_p, m_p));
 }

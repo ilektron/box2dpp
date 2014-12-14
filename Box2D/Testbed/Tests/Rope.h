@@ -30,10 +30,10 @@ public:
         float32 masses[N];
 
         for (int32_t i = 0; i < N; ++i)
-            {
-                vertices[i].Set(0.0f, 20.0f - 0.25f * i);
-                masses[i] = 1.0f;
-            }
+        {
+            vertices[i].Set(0.0f, 20.0f - 0.25f * i);
+            masses[i] = 1.0f;
+        }
         masses[0] = 0.0f;
         masses[1] = 0.0f;
 
@@ -55,17 +55,17 @@ public:
     void Keyboard(unsigned char key)
     {
         switch (key)
-            {
-                case 'q':
-                    m_angle = b2Max(-PI, m_angle - 0.05f * PI);
-                    m_rope.SetAngle(m_angle);
-                    break;
+        {
+            case 'q':
+                m_angle = b2Max(-PI, m_angle - 0.05f * PI);
+                m_rope.SetAngle(m_angle);
+                break;
 
-                case 'e':
-                    m_angle = b2Min(PI, m_angle + 0.05f * PI);
-                    m_rope.SetAngle(m_angle);
-                    break;
-            }
+            case 'e':
+                m_angle = b2Min(PI, m_angle + 0.05f * PI);
+                m_rope.SetAngle(m_angle);
+                break;
+        }
     }
 
     void Step(Settings* settings)
@@ -73,9 +73,9 @@ public:
         float32 dt = settings->hz > 0.0f ? 1.0f / settings->hz : 0.0f;
 
         if (settings->pause == 1 && settings->singleStep == 0)
-            {
-                dt = 0.0f;
-            }
+        {
+            dt = 0.0f;
+        }
 
         m_rope.Step(dt, 1);
 

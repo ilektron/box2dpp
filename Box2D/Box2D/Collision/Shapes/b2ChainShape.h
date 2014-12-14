@@ -94,10 +94,8 @@ public:
     bool m_hasPrevVertex, m_hasNextVertex;
 };
 
-inline b2ChainShape::b2ChainShape()
+inline b2ChainShape::b2ChainShape() : b2Shape(b2Shape::e_chain, POLYGON_RADIUS)
 {
-    m_type = e_chain;
-    m_radius = POLYGON_RADIUS;
     m_vertices = nullptr;
     m_count = 0;
     m_hasPrevVertex = false;

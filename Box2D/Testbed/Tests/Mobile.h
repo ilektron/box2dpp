@@ -57,7 +57,7 @@ public:
         b2Vec2 p = parent->GetPosition() + localAnchor - h;
 
         b2BodyDef bodyDef;
-        bodyDef.type = b2Body::DYNAMIC_BODY;
+        bodyDef.type = b2BodyType::DYNAMIC_BODY;
         bodyDef.position = p;
         b2Body* body = m_world->CreateBody(&bodyDef);
 
@@ -66,9 +66,9 @@ public:
         body->CreateFixture(&shape, density);
 
         if (depth == MOBILE_DEPTH)
-            {
-                return body;
-            }
+        {
+            return body;
+        }
 
         b2Vec2 a1 = b2Vec2(offset, -a);
         b2Vec2 a2 = b2Vec2(-offset, -a);

@@ -53,19 +53,19 @@ public:
 
             b2Body* prevBody = ground;
             for (int32_t i = 0; i < CANTILEVER_COUNT; ++i)
-                {
-                    b2BodyDef bd;
-                    bd.type = b2Body::DYNAMIC_BODY;
-                    bd.position.Set(-14.5f + 1.0f * i, 5.0f);
-                    b2Body* body = m_world->CreateBody(&bd);
-                    body->CreateFixture(&fd);
+            {
+                b2BodyDef bd;
+                bd.type = b2BodyType::DYNAMIC_BODY;
+                bd.position.Set(-14.5f + 1.0f * i, 5.0f);
+                b2Body* body = m_world->CreateBody(&bd);
+                body->CreateFixture(&fd);
 
-                    b2Vec2 anchor(-15.0f + 1.0f * i, 5.0f);
-                    jd.Initialize(prevBody, body, anchor);
-                    m_world->CreateJoint(&jd);
+                b2Vec2 anchor(-15.0f + 1.0f * i, 5.0f);
+                jd.Initialize(prevBody, body, anchor);
+                m_world->CreateJoint(&jd);
 
-                    prevBody = body;
-                }
+                prevBody = body;
+            }
         }
 
         {
@@ -82,19 +82,19 @@ public:
 
             b2Body* prevBody = ground;
             for (int32_t i = 0; i < 3; ++i)
-                {
-                    b2BodyDef bd;
-                    bd.type = b2Body::DYNAMIC_BODY;
-                    bd.position.Set(-14.0f + 2.0f * i, 15.0f);
-                    b2Body* body = m_world->CreateBody(&bd);
-                    body->CreateFixture(&fd);
+            {
+                b2BodyDef bd;
+                bd.type = b2BodyType::DYNAMIC_BODY;
+                bd.position.Set(-14.0f + 2.0f * i, 15.0f);
+                b2Body* body = m_world->CreateBody(&bd);
+                body->CreateFixture(&fd);
 
-                    b2Vec2 anchor(-15.0f + 2.0f * i, 15.0f);
-                    jd.Initialize(prevBody, body, anchor);
-                    m_world->CreateJoint(&jd);
+                b2Vec2 anchor(-15.0f + 2.0f * i, 15.0f);
+                jd.Initialize(prevBody, body, anchor);
+                m_world->CreateJoint(&jd);
 
-                    prevBody = body;
-                }
+                prevBody = body;
+            }
         }
 
         {
@@ -109,22 +109,22 @@ public:
 
             b2Body* prevBody = ground;
             for (int32_t i = 0; i < CANTILEVER_COUNT; ++i)
+            {
+                b2BodyDef bd;
+                bd.type = b2BodyType::DYNAMIC_BODY;
+                bd.position.Set(-4.5f + 1.0f * i, 5.0f);
+                b2Body* body = m_world->CreateBody(&bd);
+                body->CreateFixture(&fd);
+
+                if (i > 0)
                 {
-                    b2BodyDef bd;
-                    bd.type = b2Body::DYNAMIC_BODY;
-                    bd.position.Set(-4.5f + 1.0f * i, 5.0f);
-                    b2Body* body = m_world->CreateBody(&bd);
-                    body->CreateFixture(&fd);
-
-                    if (i > 0)
-                        {
-                            b2Vec2 anchor(-5.0f + 1.0f * i, 5.0f);
-                            jd.Initialize(prevBody, body, anchor);
-                            m_world->CreateJoint(&jd);
-                        }
-
-                    prevBody = body;
+                    b2Vec2 anchor(-5.0f + 1.0f * i, 5.0f);
+                    jd.Initialize(prevBody, body, anchor);
+                    m_world->CreateJoint(&jd);
                 }
+
+                prevBody = body;
+            }
         }
 
         {
@@ -141,60 +141,60 @@ public:
 
             b2Body* prevBody = ground;
             for (int32_t i = 0; i < CANTILEVER_COUNT; ++i)
+            {
+                b2BodyDef bd;
+                bd.type = b2BodyType::DYNAMIC_BODY;
+                bd.position.Set(5.5f + 1.0f * i, 10.0f);
+                b2Body* body = m_world->CreateBody(&bd);
+                body->CreateFixture(&fd);
+
+                if (i > 0)
                 {
-                    b2BodyDef bd;
-                    bd.type = b2Body::DYNAMIC_BODY;
-                    bd.position.Set(5.5f + 1.0f * i, 10.0f);
-                    b2Body* body = m_world->CreateBody(&bd);
-                    body->CreateFixture(&fd);
-
-                    if (i > 0)
-                        {
-                            b2Vec2 anchor(5.0f + 1.0f * i, 10.0f);
-                            jd.Initialize(prevBody, body, anchor);
-                            m_world->CreateJoint(&jd);
-                        }
-
-                    prevBody = body;
+                    b2Vec2 anchor(5.0f + 1.0f * i, 10.0f);
+                    jd.Initialize(prevBody, body, anchor);
+                    m_world->CreateJoint(&jd);
                 }
+
+                prevBody = body;
+            }
         }
 
         for (int32_t i = 0; i < 2; ++i)
-            {
-                b2Vec2 vertices[3];
-                vertices[0].Set(-0.5f, 0.0f);
-                vertices[1].Set(0.5f, 0.0f);
-                vertices[2].Set(0.0f, 1.5f);
+        {
+            b2Vec2 vertices[3];
+            vertices[0].Set(-0.5f, 0.0f);
+            vertices[1].Set(0.5f, 0.0f);
+            vertices[2].Set(0.0f, 1.5f);
 
-                b2PolygonShape shape;
-                shape.Set(vertices, 3);
+            b2PolygonShape shape;
+            shape.Set(vertices, 3);
 
-                b2FixtureDef fd;
-                fd.shape = &shape;
-                fd.density = 1.0f;
+            b2FixtureDef fd;
+            fd.shape = &shape;
+            fd.density = 1.0f;
 
-                b2BodyDef bd;
-                bd.type = b2Body::DYNAMIC_BODY;
-                bd.position.Set(-8.0f + 8.0f * i, 12.0f);
-                b2Body* body = m_world->CreateBody(&bd);
-                body->CreateFixture(&fd);
-            }
+            b2BodyDef bd;
+            bd.type = b2BodyType::DYNAMIC_BODY;
+            bd.position.Set(-8.0f + 8.0f * i, 12.0f);
+            b2Body* body = m_world->CreateBody(&bd);
+            body->CreateFixture(&fd);
+        }
 
         for (int32_t i = 0; i < 2; ++i)
-            {
-                b2CircleShape shape;
-                shape.m_radius = 0.5f;
+        {
+            b2CircleShape shape;
+            shape.m_radius = 0.5f;
 
-                b2FixtureDef fd;
-                fd.shape = &shape;
-                fd.density = 1.0f;
+            b2FixtureDef fd;
+            fd.shape = &shape;
+            fd.density = 1.0f;
 
-                b2BodyDef bd;
-                bd.type = b2Body::DYNAMIC_BODY;
-                bd.position.Set(-6.0f + 6.0f * i, 10.0f);
-                b2Body* body = m_world->CreateBody(&bd);
-                body->CreateFixture(&fd);
-            }
+            b2BodyDef bd;
+            bd.type = b2BodyType::DYNAMIC_BODY;
+            bd.position.Set(-6.0f + 6.0f * i, 10.0f);
+            b2Body* body = m_world->CreateBody(&bd);
+            body->CreateFixture(&fd);
+        }
     }
 
     static Test* Create()

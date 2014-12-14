@@ -34,7 +34,7 @@ public:
         }
 
         b2BodyDef bd;
-        bd.type = b2Body::DYNAMIC_BODY;
+        bd.type = b2BodyType::DYNAMIC_BODY;
         bd.position.Set(0.0f, 0.5f);
         b2Body* body = m_world->CreateBody(&bd);
 

@@ -40,7 +40,7 @@ public:
             shape.SetAsBox(2.0f, 0.5f);
 
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(-10.0f, 10.0f);
             bd.angle = 0.5f * PI;
             bd.allowSleep = false;
@@ -71,19 +71,19 @@ public:
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_L:
-                    m_joint->EnableLimit(!m_joint->IsLimitEnabled());
-                    break;
+        {
+            case GLFW_KEY_L:
+                m_joint->EnableLimit(!m_joint->IsLimitEnabled());
+                break;
 
-                case GLFW_KEY_M:
-                    m_joint->EnableMotor(!m_joint->IsMotorEnabled());
-                    break;
+            case GLFW_KEY_M:
+                m_joint->EnableMotor(!m_joint->IsMotorEnabled());
+                break;
 
-                case GLFW_KEY_S:
-                    m_joint->SetMotorSpeed(-m_joint->GetMotorSpeed());
-                    break;
-            }
+            case GLFW_KEY_S:
+                m_joint->SetMotorSpeed(-m_joint->GetMotorSpeed());
+                break;
+        }
     }
 
     void Step(Settings* settings) override

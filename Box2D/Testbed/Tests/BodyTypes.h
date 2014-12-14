@@ -41,7 +41,7 @@ public:
         // Define attachment
         {
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(0.0f, 3.0f);
             m_attachment = m_world->CreateBody(&bd);
 
@@ -53,7 +53,7 @@ public:
         // Define platform
         {
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(-4.0f, 5.0f);
             m_platform = m_world->CreateBody(&bd);
 
@@ -89,7 +89,7 @@ public:
         // Create a payload
         {
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(0.0f, 8.0f);
             b2Body* body = m_world->CreateBody(&bd);
 
@@ -108,37 +108,37 @@ public:
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_D:
-                    m_platform->SetType(b2Body::DYNAMIC_BODY);
-                    break;
+        {
+            case GLFW_KEY_D:
+                m_platform->SetType(b2BodyType::DYNAMIC_BODY);
+                break;
 
-                case GLFW_KEY_S:
-                    m_platform->SetType(b2Body::STATIC_BODY);
-                    break;
+            case GLFW_KEY_S:
+                m_platform->SetType(b2BodyType::STATIC_BODY);
+                break;
 
-                case GLFW_KEY_K:
-                    m_platform->SetType(b2Body::KINEMATIC_BODY);
-                    m_platform->SetLinearVelocity(b2Vec2(-m_speed, 0.0f));
-                    m_platform->SetAngularVelocity(0.0f);
-                    break;
-            }
+            case GLFW_KEY_K:
+                m_platform->SetType(b2BodyType::KINEMATIC_BODY);
+                m_platform->SetLinearVelocity(b2Vec2(-m_speed, 0.0f));
+                m_platform->SetAngularVelocity(0.0f);
+                break;
+        }
     }
 
     void Step(Settings* settings) override
     {
         // Drive the kinematic body.
-        if (m_platform->GetType() == b2Body::KINEMATIC_BODY)
-            {
-                b2Vec2 p = m_platform->GetTransform().p;
-                b2Vec2 v = m_platform->GetLinearVelocity();
+        if (m_platform->GetType() == b2BodyType::KINEMATIC_BODY)
+        {
+            b2Vec2 p = m_platform->GetTransform().p;
+            b2Vec2 v = m_platform->GetLinearVelocity();
 
-                if ((p.x < -10.0f && v.x < 0.0f) || (p.x > 10.0f && v.x > 0.0f))
-                    {
-                        v.x = -v.x;
-                        m_platform->SetLinearVelocity(v);
-                    }
+            if ((p.x < -10.0f && v.x < 0.0f) || (p.x > 10.0f && v.x > 0.0f))
+            {
+                v.x = -v.x;
+                m_platform->SetLinearVelocity(v);
             }
+        }
 
         Test::Step(settings);
         g_debugDraw.DrawString(5, m_textLine, "Keys: (d) dynamic, (s) static, (k) kinematic");

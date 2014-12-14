@@ -36,16 +36,16 @@ public:
         b2Vec2 upperBound(8.0f, 8.0f);
 
         for (auto& elem : m_points)
-            {
-                float32 x = 10.0f * RandomFloat();
-                float32 y = 10.0f * RandomFloat();
+        {
+            float32 x = 10.0f * RandomFloat();
+            float32 y = 10.0f * RandomFloat();
 
-                // Clamp onto a square to help create collinearities.
-                // This will stress the convex hull algorithm.
-                b2Vec2 v(x, y);
-                v = b2Clamp(v, lowerBound, upperBound);
-                elem = v;
-            }
+            // Clamp onto a square to help create collinearities.
+            // This will stress the convex hull algorithm.
+            b2Vec2 v(x, y);
+            v = b2Clamp(v, lowerBound, upperBound);
+            elem = v;
+        }
 
         m_count = CONVEX_HULL_COUNT;
     }
@@ -58,15 +58,15 @@ public:
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_A:
-                    m_auto = !m_auto;
-                    break;
+        {
+            case GLFW_KEY_A:
+                m_auto = !m_auto;
+                break;
 
-                case GLFW_KEY_G:
-                    Generate();
-                    break;
-            }
+            case GLFW_KEY_G:
+                Generate();
+                break;
+        }
     }
 
     void Step(Settings* settings) override
@@ -82,20 +82,20 @@ public:
         g_debugDraw.DrawPolygon(shape.m_vertices, shape.m_count, b2Color(0.9f, 0.9f, 0.9f));
 
         for (int32_t i = 0; i < m_count; ++i)
-            {
-                g_debugDraw.DrawPoint(m_points[i], 3.0f, b2Color(0.3f, 0.9f, 0.3f));
-                g_debugDraw.DrawString(m_points[i] + b2Vec2(0.05f, 0.05f), "%d", i);
-            }
+        {
+            g_debugDraw.DrawPoint(m_points[i], 3.0f, b2Color(0.3f, 0.9f, 0.3f));
+            g_debugDraw.DrawString(m_points[i] + b2Vec2(0.05f, 0.05f), "%d", i);
+        }
 
         if (shape.Validate() == false)
-            {
-                m_textLine += 0;
-            }
+        {
+            m_textLine += 0;
+        }
 
         if (m_auto)
-            {
-                Generate();
-            }
+        {
+            Generate();
+        }
     }
 
     b2Vec2 m_points[MAX_POLYGON_VERTICES];

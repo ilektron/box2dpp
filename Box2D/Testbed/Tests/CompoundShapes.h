@@ -46,16 +46,16 @@ public:
             circle2.m_p.Set(0.5f, 0.5f);
 
             for (int i = 0; i < 10; ++i)
-                {
-                    float32 x = RandomFloat(-0.1f, 0.1f);
-                    b2BodyDef bd;
-                    bd.type = b2Body::DYNAMIC_BODY;
-                    bd.position.Set(x + 5.0f, 1.05f + 2.5f * i);
-                    bd.angle = RandomFloat(-PI, PI);
-                    b2Body* body = m_world->CreateBody(&bd);
-                    body->CreateFixture(&circle1, 2.0f);
-                    body->CreateFixture(&circle2, 0.0f);
-                }
+            {
+                float32 x = RandomFloat(-0.1f, 0.1f);
+                b2BodyDef bd;
+                bd.type = b2BodyType::DYNAMIC_BODY;
+                bd.position.Set(x + 5.0f, 1.05f + 2.5f * i);
+                bd.angle = RandomFloat(-PI, PI);
+                b2Body* body = m_world->CreateBody(&bd);
+                body->CreateFixture(&circle1, 2.0f);
+                body->CreateFixture(&circle2, 0.0f);
+            }
         }
 
         {
@@ -66,16 +66,16 @@ public:
             polygon2.SetAsBox(0.25f, 0.5f, b2Vec2(0.0f, -0.5f), 0.5f * PI);
 
             for (int i = 0; i < 10; ++i)
-                {
-                    float32 x = RandomFloat(-0.1f, 0.1f);
-                    b2BodyDef bd;
-                    bd.type = b2Body::DYNAMIC_BODY;
-                    bd.position.Set(x - 5.0f, 1.05f + 2.5f * i);
-                    bd.angle = RandomFloat(-PI, PI);
-                    b2Body* body = m_world->CreateBody(&bd);
-                    body->CreateFixture(&polygon1, 2.0f);
-                    body->CreateFixture(&polygon2, 2.0f);
-                }
+            {
+                float32 x = RandomFloat(-0.1f, 0.1f);
+                b2BodyDef bd;
+                bd.type = b2BodyType::DYNAMIC_BODY;
+                bd.position.Set(x - 5.0f, 1.05f + 2.5f * i);
+                bd.angle = RandomFloat(-PI, PI);
+                b2Body* body = m_world->CreateBody(&bd);
+                body->CreateFixture(&polygon1, 2.0f);
+                body->CreateFixture(&polygon2, 2.0f);
+            }
         }
 
         {
@@ -102,16 +102,16 @@ public:
             triangle2.Set(vertices, 3);
 
             for (int32_t i = 0; i < 10; ++i)
-                {
-                    float32 x = RandomFloat(-0.1f, 0.1f);
-                    b2BodyDef bd;
-                    bd.type = b2Body::DYNAMIC_BODY;
-                    bd.position.Set(x, 2.05f + 2.5f * i);
-                    bd.angle = 0.0f;
-                    b2Body* body = m_world->CreateBody(&bd);
-                    body->CreateFixture(&triangle1, 2.0f);
-                    body->CreateFixture(&triangle2, 2.0f);
-                }
+            {
+                float32 x = RandomFloat(-0.1f, 0.1f);
+                b2BodyDef bd;
+                bd.type = b2BodyType::DYNAMIC_BODY;
+                bd.position.Set(x, 2.05f + 2.5f * i);
+                bd.angle = 0.0f;
+                b2Body* body = m_world->CreateBody(&bd);
+                body->CreateFixture(&triangle1, 2.0f);
+                body->CreateFixture(&triangle2, 2.0f);
+            }
         }
 
         {
@@ -125,7 +125,7 @@ public:
             right.SetAsBox(0.15f, 2.7f, b2Vec2(1.45f, 2.35f), -0.2f);
 
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(0.0f, 2.0f);
             b2Body* body = m_world->CreateBody(&bd);
             body->CreateFixture(&bottom, 4.0f);

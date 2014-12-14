@@ -49,19 +49,19 @@ public:
             const float32 y = 25.0f;
             b2Body* prevBody = ground;
             for (int32_t i = 0; i < 30; ++i)
-                {
-                    b2BodyDef bd;
-                    bd.type = b2Body::DYNAMIC_BODY;
-                    bd.position.Set(0.5f + i, y);
-                    b2Body* body = m_world->CreateBody(&bd);
-                    body->CreateFixture(&fd);
+            {
+                b2BodyDef bd;
+                bd.type = b2BodyType::DYNAMIC_BODY;
+                bd.position.Set(0.5f + i, y);
+                b2Body* body = m_world->CreateBody(&bd);
+                body->CreateFixture(&fd);
 
-                    b2Vec2 anchor(float32(i), y);
-                    jd.Initialize(prevBody, body, anchor);
-                    m_world->CreateJoint(&jd);
+                b2Vec2 anchor(float32(i), y);
+                jd.Initialize(prevBody, body, anchor);
+                m_world->CreateJoint(&jd);
 
-                    prevBody = body;
-                }
+                prevBody = body;
+            }
         }
     }
 

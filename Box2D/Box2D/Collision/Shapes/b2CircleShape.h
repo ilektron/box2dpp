@@ -67,10 +67,8 @@ public:
     b2Vec2 m_p;
 };
 
-inline b2CircleShape::b2CircleShape()
+inline b2CircleShape::b2CircleShape() : b2Shape(b2Shape::e_circle, 0.0f)
 {
-    m_type = e_circle;
-    m_radius = 0.0f;
     m_p.SetZero();
 }
 

@@ -40,25 +40,25 @@ public:
     ~b2GrowableStack()
     {
         if (m_stack != m_array)
-            {
-                b2Free(m_stack);
-                m_stack = NULL;
-            }
+        {
+            b2Free(m_stack);
+            m_stack = NULL;
+        }
     }
 
     void Push(const T& element)
     {
         if (m_count == m_capacity)
+        {
+            T* old = m_stack;
+            m_capacity *= 2;
+            m_stack = (T*)b2Alloc(m_capacity * sizeof(T));
+            memcpy(m_stack, old, m_count * sizeof(T));
+            if (old != m_array)
             {
-                T* old = m_stack;
-                m_capacity *= 2;
-                m_stack = (T*)b2Alloc(m_capacity * sizeof(T));
-                memcpy(m_stack, old, m_count * sizeof(T));
-                if (old != m_array)
-                    {
-                        b2Free(old);
-                    }
+                b2Free(old);
             }
+        }
 
         m_stack[m_count] = element;
         ++m_count;

@@ -34,7 +34,7 @@ public:
 
         {
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.allowSleep = false;
             bd.position.Set(0.0f, 10.0f);
             b2Body* body = m_world->CreateBody(&bd);
@@ -69,18 +69,18 @@ public:
         Test::Step(settings);
 
         if (m_count < TUMBLER_COUNT)
-            {
-                b2BodyDef bd;
-                bd.type = b2Body::DYNAMIC_BODY;
-                bd.position.Set(0.0f, 10.0f);
-                b2Body* body = m_world->CreateBody(&bd);
+        {
+            b2BodyDef bd;
+            bd.type = b2BodyType::DYNAMIC_BODY;
+            bd.position.Set(0.0f, 10.0f);
+            b2Body* body = m_world->CreateBody(&bd);
 
-                b2PolygonShape shape;
-                shape.SetAsBox(0.125f, 0.125f);
-                body->CreateFixture(&shape, 1.0f);
+            b2PolygonShape shape;
+            shape.SetAsBox(0.125f, 0.125f);
+            body->CreateFixture(&shape, 1.0f);
 
-                ++m_count;
-            }
+            ++m_count;
+        }
     }
 
     static Test* Create()

@@ -40,7 +40,7 @@ public:
             shape.SetAsBox(0.5f, 0.5f);
 
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
 
             bd.position.Set(-5.0f, 5.0f);
             m_bodies[0] = m_world->CreateBody(&bd);
@@ -150,31 +150,31 @@ public:
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_B:
-                    for (auto& elem : m_bodies)
-                        {
-                            if (elem)
-                                {
-                                    m_world->DestroyBody(elem);
-                                    elem = nullptr;
-                                    break;
-                                }
-                        }
-                    break;
+        {
+            case GLFW_KEY_B:
+                for (auto& elem : m_bodies)
+                {
+                    if (elem)
+                    {
+                        m_world->DestroyBody(elem);
+                        elem = nullptr;
+                        break;
+                    }
+                }
+                break;
 
-                case GLFW_KEY_J:
-                    for (auto& elem : m_joints)
-                        {
-                            if (elem)
-                                {
-                                    m_world->DestroyJoint(elem);
-                                    elem = nullptr;
-                                    break;
-                                }
-                        }
-                    break;
-            }
+            case GLFW_KEY_J:
+                for (auto& elem : m_joints)
+                {
+                    if (elem)
+                    {
+                        m_world->DestroyJoint(elem);
+                        elem = nullptr;
+                        break;
+                    }
+                }
+                break;
+        }
     }
 
     void Step(Settings* settings) override
@@ -189,13 +189,13 @@ public:
     void JointDestroyed(b2Joint* joint) override
     {
         for (auto& elem : m_joints)
+        {
+            if (elem == joint)
             {
-                if (elem == joint)
-                    {
-                        elem = nullptr;
-                        break;
-                    }
+                elem = nullptr;
+                break;
             }
+        }
     }
 
     static Test* Create()

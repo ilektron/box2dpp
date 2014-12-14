@@ -38,15 +38,15 @@ public:
         b2Body* body = fixture->GetBody();
         void* userData = body->GetUserData();
         if (userData)
+        {
+            int32_t index = *(int32_t*)userData;
+            if (index == 0)
             {
-                int32_t index = *(int32_t*)userData;
-                if (index == 0)
-                    {
-                        // By returning -1, we instruct the calling code to ignore this fixture and
-                        // continue the ray-cast to the next fixture.
-                        return -1.0f;
-                    }
+                // By returning -1, we instruct the calling code to ignore this fixture and
+                // continue the ray-cast to the next fixture.
+                return -1.0f;
             }
+        }
 
         m_hit = true;
         m_point = point;
@@ -79,15 +79,15 @@ public:
         b2Body* body = fixture->GetBody();
         void* userData = body->GetUserData();
         if (userData)
+        {
+            int32_t index = *(int32_t*)userData;
+            if (index == 0)
             {
-                int32_t index = *(int32_t*)userData;
-                if (index == 0)
-                    {
-                        // By returning -1, we instruct the calling code to ignore this fixture
-                        // and continue the ray-cast to the next fixture.
-                        return -1.0f;
-                    }
+                // By returning -1, we instruct the calling code to ignore this fixture
+                // and continue the ray-cast to the next fixture.
+                return -1.0f;
             }
+        }
 
         m_hit = true;
         m_point = point;
@@ -123,15 +123,15 @@ public:
         b2Body* body = fixture->GetBody();
         void* userData = body->GetUserData();
         if (userData)
+        {
+            int32_t index = *(int32_t*)userData;
+            if (index == 0)
             {
-                int32_t index = *(int32_t*)userData;
-                if (index == 0)
-                    {
-                        // By returning -1, we instruct the calling code to ignore this fixture
-                        // and continue the ray-cast to the next fixture.
-                        return -1.0f;
-                    }
+                // By returning -1, we instruct the calling code to ignore this fixture
+                // and continue the ray-cast to the next fixture.
+                return -1.0f;
             }
+        }
 
         b2Assert(m_count < RAY_CAST_MULTIPLE_CALLBACK_MAX_COUNT);
 
@@ -140,11 +140,11 @@ public:
         ++m_count;
 
         if (m_count == RAY_CAST_MULTIPLE_CALLBACK_MAX_COUNT)
-            {
-                // At this point the buffer is full.
-                // By returning 0, we instruct the calling code to terminate the ray-cast.
-                return 0.0f;
-            }
+        {
+            // At this point the buffer is full.
+            // By returning 0, we instruct the calling code to terminate the ray-cast.
+            return 0.0f;
+        }
 
         // By returning 1, we instruct the caller to continue without clipping the ray.
         return 1.0f;
@@ -236,10 +236,10 @@ public:
     void Create(int32_t index)
     {
         if (m_bodies[m_bodyIndex] != nullptr)
-            {
-                m_world->DestroyBody(m_bodies[m_bodyIndex]);
-                m_bodies[m_bodyIndex] = nullptr;
-            }
+        {
+            m_world->DestroyBody(m_bodies[m_bodyIndex]);
+            m_bodies[m_bodyIndex] = nullptr;
+        }
 
         b2BodyDef bd;
 
@@ -252,35 +252,35 @@ public:
         bd.userData = m_userData + m_bodyIndex;
 
         if (index == 4)
-            {
-                bd.angularDamping = 0.02f;
-            }
+        {
+            bd.angularDamping = 0.02f;
+        }
 
         m_bodies[m_bodyIndex] = m_world->CreateBody(&bd);
 
         if (index < 4)
-            {
-                b2FixtureDef fd;
-                fd.shape = m_polygons + index;
-                fd.friction = 0.3f;
-                m_bodies[m_bodyIndex]->CreateFixture(&fd);
-            }
+        {
+            b2FixtureDef fd;
+            fd.shape = m_polygons + index;
+            fd.friction = 0.3f;
+            m_bodies[m_bodyIndex]->CreateFixture(&fd);
+        }
         else if (index < 5)
-            {
-                b2FixtureDef fd;
-                fd.shape = &m_circle;
-                fd.friction = 0.3f;
+        {
+            b2FixtureDef fd;
+            fd.shape = &m_circle;
+            fd.friction = 0.3f;
 
-                m_bodies[m_bodyIndex]->CreateFixture(&fd);
-            }
+            m_bodies[m_bodyIndex]->CreateFixture(&fd);
+        }
         else
-            {
-                b2FixtureDef fd;
-                fd.shape = &m_edge;
-                fd.friction = 0.3f;
+        {
+            b2FixtureDef fd;
+            fd.shape = &m_edge;
+            fd.friction = 0.3f;
 
-                m_bodies[m_bodyIndex]->CreateFixture(&fd);
-            }
+            m_bodies[m_bodyIndex]->CreateFixture(&fd);
+        }
 
         m_bodyIndex = (m_bodyIndex + 1) % RAY_CAST_COUNT;
     }
@@ -288,47 +288,47 @@ public:
     void DestroyBody()
     {
         for (auto& elem : m_bodies)
+        {
+            if (elem != nullptr)
             {
-                if (elem != nullptr)
-                    {
-                        m_world->DestroyBody(elem);
-                        elem = nullptr;
-                        return;
-                    }
+                m_world->DestroyBody(elem);
+                elem = nullptr;
+                return;
             }
+        }
     }
 
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_1:
-                case GLFW_KEY_2:
-                case GLFW_KEY_3:
-                case GLFW_KEY_4:
-                case GLFW_KEY_5:
-                case GLFW_KEY_6:
-                    Create(key - GLFW_KEY_1);
-                    break;
+        {
+            case GLFW_KEY_1:
+            case GLFW_KEY_2:
+            case GLFW_KEY_3:
+            case GLFW_KEY_4:
+            case GLFW_KEY_5:
+            case GLFW_KEY_6:
+                Create(key - GLFW_KEY_1);
+                break;
 
-                case GLFW_KEY_D:
-                    DestroyBody();
-                    break;
+            case GLFW_KEY_D:
+                DestroyBody();
+                break;
 
-                case GLFW_KEY_M:
-                    if (m_mode == e_closest)
-                        {
-                            m_mode = e_any;
-                        }
-                    else if (m_mode == e_any)
-                        {
-                            m_mode = e_multiple;
-                        }
-                    else if (m_mode == e_multiple)
-                        {
-                            m_mode = e_closest;
-                        }
-            }
+            case GLFW_KEY_M:
+                if (m_mode == e_closest)
+                {
+                    m_mode = e_any;
+                }
+                else if (m_mode == e_any)
+                {
+                    m_mode = e_multiple;
+                }
+                else if (m_mode == e_multiple)
+                {
+                    m_mode = e_closest;
+                }
+        }
     }
 
     void Step(Settings* settings) override
@@ -339,23 +339,21 @@ public:
         g_debugDraw.DrawString(5, m_textLine, "Press 1-6 to drop stuff, m to change the mode");
         m_textLine += DRAW_STRING_NEW_LINE;
         switch (m_mode)
-            {
-                case e_closest:
-                    g_debugDraw.DrawString(
-                        5, m_textLine,
-                        "Ray-cast mode: closest - find closest fixture along the ray");
-                    break;
+        {
+            case e_closest:
+                g_debugDraw.DrawString(
+                    5, m_textLine, "Ray-cast mode: closest - find closest fixture along the ray");
+                break;
 
-                case e_any:
-                    g_debugDraw.DrawString(5, m_textLine,
-                                           "Ray-cast mode: any - check for obstruction");
-                    break;
+            case e_any:
+                g_debugDraw.DrawString(5, m_textLine, "Ray-cast mode: any - check for obstruction");
+                break;
 
-                case e_multiple:
-                    g_debugDraw.DrawString(5, m_textLine,
-                                           "Ray-cast mode: multiple - gather multiple fixtures");
-                    break;
-            }
+            case e_multiple:
+                g_debugDraw.DrawString(5, m_textLine,
+                                       "Ray-cast mode: multiple - gather multiple fixtures");
+                break;
+        }
 
         m_textLine += DRAW_STRING_NEW_LINE;
 
@@ -365,62 +363,60 @@ public:
         b2Vec2 point2 = point1 + d;
 
         if (m_mode == e_closest)
-            {
-                RayCastClosestCallback callback;
-                m_world->RayCast(&callback, point1, point2);
+        {
+            RayCastClosestCallback callback;
+            m_world->RayCast(&callback, point1, point2);
 
-                if (callback.m_hit)
-                    {
-                        g_debugDraw.DrawPoint(callback.m_point, 5.0f, b2Color(0.4f, 0.9f, 0.4f));
-                        g_debugDraw.DrawSegment(point1, callback.m_point,
-                                                b2Color(0.8f, 0.8f, 0.8f));
-                        b2Vec2 head = callback.m_point + 0.5f * callback.m_normal;
-                        g_debugDraw.DrawSegment(callback.m_point, head, b2Color(0.9f, 0.9f, 0.4f));
-                    }
-                else
-                    {
-                        g_debugDraw.DrawSegment(point1, point2, b2Color(0.8f, 0.8f, 0.8f));
-                    }
-            }
-        else if (m_mode == e_any)
+            if (callback.m_hit)
             {
-                RayCastAnyCallback callback;
-                m_world->RayCast(&callback, point1, point2);
-
-                if (callback.m_hit)
-                    {
-                        g_debugDraw.DrawPoint(callback.m_point, 5.0f, b2Color(0.4f, 0.9f, 0.4f));
-                        g_debugDraw.DrawSegment(point1, callback.m_point,
-                                                b2Color(0.8f, 0.8f, 0.8f));
-                        b2Vec2 head = callback.m_point + 0.5f * callback.m_normal;
-                        g_debugDraw.DrawSegment(callback.m_point, head, b2Color(0.9f, 0.9f, 0.4f));
-                    }
-                else
-                    {
-                        g_debugDraw.DrawSegment(point1, point2, b2Color(0.8f, 0.8f, 0.8f));
-                    }
+                g_debugDraw.DrawPoint(callback.m_point, 5.0f, b2Color(0.4f, 0.9f, 0.4f));
+                g_debugDraw.DrawSegment(point1, callback.m_point, b2Color(0.8f, 0.8f, 0.8f));
+                b2Vec2 head = callback.m_point + 0.5f * callback.m_normal;
+                g_debugDraw.DrawSegment(callback.m_point, head, b2Color(0.9f, 0.9f, 0.4f));
             }
-        else if (m_mode == e_multiple)
+            else
             {
-                RayCastMultipleCallback callback;
-                m_world->RayCast(&callback, point1, point2);
                 g_debugDraw.DrawSegment(point1, point2, b2Color(0.8f, 0.8f, 0.8f));
-
-                for (int32_t i = 0; i < callback.m_count; ++i)
-                    {
-                        b2Vec2 p = callback.m_points[i];
-                        b2Vec2 n = callback.m_normals[i];
-                        g_debugDraw.DrawPoint(p, 5.0f, b2Color(0.4f, 0.9f, 0.4f));
-                        g_debugDraw.DrawSegment(point1, p, b2Color(0.8f, 0.8f, 0.8f));
-                        b2Vec2 head = p + 0.5f * n;
-                        g_debugDraw.DrawSegment(p, head, b2Color(0.9f, 0.9f, 0.4f));
-                    }
             }
+        }
+        else if (m_mode == e_any)
+        {
+            RayCastAnyCallback callback;
+            m_world->RayCast(&callback, point1, point2);
+
+            if (callback.m_hit)
+            {
+                g_debugDraw.DrawPoint(callback.m_point, 5.0f, b2Color(0.4f, 0.9f, 0.4f));
+                g_debugDraw.DrawSegment(point1, callback.m_point, b2Color(0.8f, 0.8f, 0.8f));
+                b2Vec2 head = callback.m_point + 0.5f * callback.m_normal;
+                g_debugDraw.DrawSegment(callback.m_point, head, b2Color(0.9f, 0.9f, 0.4f));
+            }
+            else
+            {
+                g_debugDraw.DrawSegment(point1, point2, b2Color(0.8f, 0.8f, 0.8f));
+            }
+        }
+        else if (m_mode == e_multiple)
+        {
+            RayCastMultipleCallback callback;
+            m_world->RayCast(&callback, point1, point2);
+            g_debugDraw.DrawSegment(point1, point2, b2Color(0.8f, 0.8f, 0.8f));
+
+            for (int32_t i = 0; i < callback.m_count; ++i)
+            {
+                b2Vec2 p = callback.m_points[i];
+                b2Vec2 n = callback.m_normals[i];
+                g_debugDraw.DrawPoint(p, 5.0f, b2Color(0.4f, 0.9f, 0.4f));
+                g_debugDraw.DrawSegment(point1, p, b2Color(0.8f, 0.8f, 0.8f));
+                b2Vec2 head = p + 0.5f * n;
+                g_debugDraw.DrawSegment(p, head, b2Color(0.9f, 0.9f, 0.4f));
+            }
+        }
 
         if (advanceRay)
-            {
-                m_angle += 0.25f * PI / 180.0f;
-            }
+        {
+            m_angle += 0.25f * PI / 180.0f;
+        }
 
 #if 0
 		// This case was failing.

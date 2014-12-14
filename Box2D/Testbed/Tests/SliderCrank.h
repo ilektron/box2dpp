@@ -45,7 +45,7 @@ public:
                 shape.SetAsBox(0.5f, 2.0f);
 
                 b2BodyDef bd;
-                bd.type = b2Body::DYNAMIC_BODY;
+                bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.position.Set(0.0f, 7.0f);
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&shape, 2.0f);
@@ -66,7 +66,7 @@ public:
                 shape.SetAsBox(0.5f, 4.0f);
 
                 b2BodyDef bd;
-                bd.type = b2Body::DYNAMIC_BODY;
+                bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.position.Set(0.0f, 13.0f);
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&shape, 2.0f);
@@ -85,7 +85,7 @@ public:
                 shape.SetAsBox(1.5f, 1.5f);
 
                 b2BodyDef bd;
-                bd.type = b2Body::DYNAMIC_BODY;
+                bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.fixedRotation = true;
                 bd.position.Set(0.0f, 17.0f);
                 b2Body* body = m_world->CreateBody(&bd);
@@ -110,7 +110,7 @@ public:
                 shape.SetAsBox(1.5f, 1.5f);
 
                 b2BodyDef bd;
-                bd.type = b2Body::DYNAMIC_BODY;
+                bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.position.Set(0.0f, 23.0f);
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&shape, 2.0f);
@@ -121,17 +121,17 @@ public:
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_F:
-                    m_joint2->EnableMotor(!m_joint2->IsMotorEnabled());
-                    m_joint2->GetBodyB()->SetAwake(true);
-                    break;
+        {
+            case GLFW_KEY_F:
+                m_joint2->EnableMotor(!m_joint2->IsMotorEnabled());
+                m_joint2->GetBodyB()->SetAwake(true);
+                break;
 
-                case GLFW_KEY_M:
-                    m_joint1->EnableMotor(!m_joint1->IsMotorEnabled());
-                    m_joint1->GetBodyB()->SetAwake(true);
-                    break;
-            }
+            case GLFW_KEY_M:
+                m_joint1->EnableMotor(!m_joint1->IsMotorEnabled());
+                m_joint1->GetBodyB()->SetAwake(true);
+                break;
+        }
     }
 
     void Step(Settings* settings) override

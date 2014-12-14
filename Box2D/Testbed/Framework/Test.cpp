@@ -117,7 +117,7 @@ class QueryCallback : public b2QueryCallback
     bool ReportFixture(b2Fixture* fixture) override
     {
         b2Body* body = fixture->GetBody();
-        if (body->GetType() == b2Body::DYNAMIC_BODY)
+        if (body->GetType() == b2BodyType::DYNAMIC_BODY)
             {
                 bool inside = fixture->TestPoint(m_point);
                 if (inside)
@@ -242,7 +242,7 @@ void Test::LaunchBomb(const b2Vec2& position, const b2Vec2& velocity)
         }
 
     b2BodyDef bd;
-    bd.type = b2Body::DYNAMIC_BODY;
+    bd.type = b2BodyType::DYNAMIC_BODY;
     bd.position = position;
     bd.bullet = true;
     m_bomb = m_world->CreateBody(&bd);

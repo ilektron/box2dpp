@@ -49,20 +49,20 @@ public:
             float32 x = 20.0f, y1 = 0.0f, dx = 5.0f;
 
             for (auto y2 : hs)
-                {
-                    shape.Set(b2Vec2(x, y1), b2Vec2(x + dx, y2));
-                    ground->CreateFixture(&fd);
-                    y1 = y2;
-                    x += dx;
-                }
+            {
+                shape.Set(b2Vec2(x, y1), b2Vec2(x + dx, y2));
+                ground->CreateFixture(&fd);
+                y1 = y2;
+                x += dx;
+            }
 
             for (auto y2 : hs)
-                {
-                    shape.Set(b2Vec2(x, y1), b2Vec2(x + dx, y2));
-                    ground->CreateFixture(&fd);
-                    y1 = y2;
-                    x += dx;
-                }
+            {
+                shape.Set(b2Vec2(x, y1), b2Vec2(x + dx, y2));
+                ground->CreateFixture(&fd);
+                y1 = y2;
+                x += dx;
+            }
 
             shape.Set(b2Vec2(x, 0.0f), b2Vec2(x + 40.0f, 0.0f));
             ground->CreateFixture(&fd);
@@ -88,7 +88,7 @@ public:
         {
             b2BodyDef bd;
             bd.position.Set(140.0f, 1.0f);
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             b2Body* body = m_world->CreateBody(&bd);
 
             b2PolygonShape box;
@@ -120,19 +120,19 @@ public:
 
             b2Body* prevBody = ground;
             for (int32_t i = 0; i < N; ++i)
-                {
-                    b2BodyDef bd;
-                    bd.type = b2Body::DYNAMIC_BODY;
-                    bd.position.Set(161.0f + 2.0f * i, -0.125f);
-                    b2Body* body = m_world->CreateBody(&bd);
-                    body->CreateFixture(&fd);
+            {
+                b2BodyDef bd;
+                bd.type = b2BodyType::DYNAMIC_BODY;
+                bd.position.Set(161.0f + 2.0f * i, -0.125f);
+                b2Body* body = m_world->CreateBody(&bd);
+                body->CreateFixture(&fd);
 
-                    b2Vec2 anchor(160.0f + 2.0f * i, -0.125f);
-                    jd.Initialize(prevBody, body, anchor);
-                    m_world->CreateJoint(&jd);
+                b2Vec2 anchor(160.0f + 2.0f * i, -0.125f);
+                jd.Initialize(prevBody, body, anchor);
+                m_world->CreateJoint(&jd);
 
-                    prevBody = body;
-                }
+                prevBody = body;
+            }
 
             b2Vec2 anchor(160.0f + 2.0f * N, -0.125f);
             jd.Initialize(prevBody, ground, anchor);
@@ -146,7 +146,7 @@ public:
 
             b2Body* body = nullptr;
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
 
             bd.position.Set(230.0f, 0.5f);
             body = m_world->CreateBody(&bd);
@@ -185,7 +185,7 @@ public:
             circle.m_radius = 0.4f;
 
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(0.0f, 1.0f);
             m_car = m_world->CreateBody(&bd);
             m_car->CreateFixture(&chassis, 1.0f);
@@ -227,31 +227,31 @@ public:
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_A:
-                    m_spring1->SetMotorSpeed(m_speed);
-                    break;
+        {
+            case GLFW_KEY_A:
+                m_spring1->SetMotorSpeed(m_speed);
+                break;
 
-                case GLFW_KEY_S:
-                    m_spring1->SetMotorSpeed(0.0f);
-                    break;
+            case GLFW_KEY_S:
+                m_spring1->SetMotorSpeed(0.0f);
+                break;
 
-                case GLFW_KEY_D:
-                    m_spring1->SetMotorSpeed(-m_speed);
-                    break;
+            case GLFW_KEY_D:
+                m_spring1->SetMotorSpeed(-m_speed);
+                break;
 
-                case GLFW_KEY_Q:
-                    m_hz = b2Max(0.0f, m_hz - 1.0f);
-                    m_spring1->SetSpringFrequencyHz(m_hz);
-                    m_spring2->SetSpringFrequencyHz(m_hz);
-                    break;
+            case GLFW_KEY_Q:
+                m_hz = b2Max(0.0f, m_hz - 1.0f);
+                m_spring1->SetSpringFrequencyHz(m_hz);
+                m_spring2->SetSpringFrequencyHz(m_hz);
+                break;
 
-                case GLFW_KEY_E:
-                    m_hz += 1.0f;
-                    m_spring1->SetSpringFrequencyHz(m_hz);
-                    m_spring2->SetSpringFrequencyHz(m_hz);
-                    break;
-            }
+            case GLFW_KEY_E:
+                m_hz += 1.0f;
+                m_spring1->SetSpringFrequencyHz(m_hz);
+                m_spring2->SetSpringFrequencyHz(m_hz);
+                break;
+        }
     }
 
     void Step(Settings* settings) override

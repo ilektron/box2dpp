@@ -52,7 +52,7 @@ public:
             b2Vec2 p1(-2.0f, 0.0f), p2(2.0f, 0.0f);
 
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
 
             bd.position = p1;
             b2Body* leftFlipper = m_world->CreateBody(&bd);
@@ -96,7 +96,7 @@ public:
         {
             b2BodyDef bd;
             bd.position.Set(1.0f, 15.0f);
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.bullet = true;
 
             m_ball = m_world->CreateBody(&bd);
@@ -116,15 +116,15 @@ public:
     void Step(Settings* settings) override
     {
         if (m_button)
-            {
-                m_leftJoint->SetMotorSpeed(20.0f);
-                m_rightJoint->SetMotorSpeed(-20.0f);
-            }
+        {
+            m_leftJoint->SetMotorSpeed(20.0f);
+            m_rightJoint->SetMotorSpeed(-20.0f);
+        }
         else
-            {
-                m_leftJoint->SetMotorSpeed(-10.0f);
-                m_rightJoint->SetMotorSpeed(10.0f);
-            }
+        {
+            m_leftJoint->SetMotorSpeed(-10.0f);
+            m_rightJoint->SetMotorSpeed(10.0f);
+        }
 
         Test::Step(settings);
 
@@ -135,21 +135,21 @@ public:
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_A:
-                    m_button = true;
-                    break;
-            }
+        {
+            case GLFW_KEY_A:
+                m_button = true;
+                break;
+        }
     }
 
     void KeyboardUp(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_A:
-                    m_button = false;
-                    break;
-            }
+        {
+            case GLFW_KEY_A:
+                m_button = false;
+                break;
+        }
     }
 
     static Test* Create()

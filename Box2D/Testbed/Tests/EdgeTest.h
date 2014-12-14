@@ -74,7 +74,7 @@ public:
 
         {
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(-0.5f, 0.6f);
             bd.allowSleep = false;
             b2Body* body = m_world->CreateBody(&bd);
@@ -87,7 +87,7 @@ public:
 
         {
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(1.0f, 0.6f);
             bd.allowSleep = false;
             b2Body* body = m_world->CreateBody(&bd);

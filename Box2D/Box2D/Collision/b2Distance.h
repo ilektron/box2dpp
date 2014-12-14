@@ -111,14 +111,14 @@ inline int32_t b2DistanceProxy::GetSupport(const b2Vec2& d) const
     int32_t bestIndex = 0;
     float32 bestValue = b2Dot(m_vertices[0], d);
     for (int32_t i = 1; i < m_count; ++i)
+    {
+        float32 value = b2Dot(m_vertices[i], d);
+        if (value > bestValue)
         {
-            float32 value = b2Dot(m_vertices[i], d);
-            if (value > bestValue)
-                {
-                    bestIndex = i;
-                    bestValue = value;
-                }
+            bestIndex = i;
+            bestValue = value;
         }
+    }
 
     return bestIndex;
 }
@@ -128,14 +128,14 @@ inline const b2Vec2& b2DistanceProxy::GetSupportVertex(const b2Vec2& d) const
     int32_t bestIndex = 0;
     float32 bestValue = b2Dot(m_vertices[0], d);
     for (int32_t i = 1; i < m_count; ++i)
+    {
+        float32 value = b2Dot(m_vertices[i], d);
+        if (value > bestValue)
         {
-            float32 value = b2Dot(m_vertices[i], d);
-            if (value > bestValue)
-                {
-                    bestIndex = i;
-                    bestValue = value;
-                }
+            bestIndex = i;
+            bestValue = value;
         }
+    }
 
     return m_vertices[bestIndex];
 }

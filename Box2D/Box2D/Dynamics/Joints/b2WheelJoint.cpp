@@ -115,9 +115,9 @@ void b2WheelJoint::InitVelocityConstraints(const b2SolverData& data)
         m_mass = mA + mB + iA * m_sAy * m_sAy + iB * m_sBy * m_sBy;
 
         if (m_mass > 0.0f)
-            {
-                m_mass = 1.0f / m_mass;
-            }
+        {
+            m_mass = 1.0f / m_mass;
+        }
     }
 
     // Spring constraint
@@ -125,88 +125,88 @@ void b2WheelJoint::InitVelocityConstraints(const b2SolverData& data)
     m_bias = 0.0f;
     m_gamma = 0.0f;
     if (m_frequencyHz > 0.0f)
+    {
+        m_ax = b2Mul(qA, m_localXAxisA);
+        m_sAx = b2Cross(d + rA, m_ax);
+        m_sBx = b2Cross(rB, m_ax);
+
+        float32 invMass = mA + mB + iA * m_sAx * m_sAx + iB * m_sBx * m_sBx;
+
+        if (invMass > 0.0f)
         {
-            m_ax = b2Mul(qA, m_localXAxisA);
-            m_sAx = b2Cross(d + rA, m_ax);
-            m_sBx = b2Cross(rB, m_ax);
+            m_springMass = 1.0f / invMass;
 
-            float32 invMass = mA + mB + iA * m_sAx * m_sAx + iB * m_sBx * m_sBx;
+            float32 C = b2Dot(d, m_ax);
 
-            if (invMass > 0.0f)
-                {
-                    m_springMass = 1.0f / invMass;
+            // Frequency
+            float32 omega = 2.0f * PI * m_frequencyHz;
 
-                    float32 C = b2Dot(d, m_ax);
+            // Damping coefficient
+            float32 d = 2.0f * m_springMass * m_dampingRatio * omega;
 
-                    // Frequency
-                    float32 omega = 2.0f * PI * m_frequencyHz;
+            // Spring stiffness
+            float32 k = m_springMass * omega * omega;
 
-                    // Damping coefficient
-                    float32 d = 2.0f * m_springMass * m_dampingRatio * omega;
+            // magic formulas
+            float32 h = data.step.dt;
+            m_gamma = h * (d + h * k);
+            if (m_gamma > 0.0f)
+            {
+                m_gamma = 1.0f / m_gamma;
+            }
 
-                    // Spring stiffness
-                    float32 k = m_springMass * omega * omega;
+            m_bias = C * h * k * m_gamma;
 
-                    // magic formulas
-                    float32 h = data.step.dt;
-                    m_gamma = h * (d + h * k);
-                    if (m_gamma > 0.0f)
-                        {
-                            m_gamma = 1.0f / m_gamma;
-                        }
-
-                    m_bias = C * h * k * m_gamma;
-
-                    m_springMass = invMass + m_gamma;
-                    if (m_springMass > 0.0f)
-                        {
-                            m_springMass = 1.0f / m_springMass;
-                        }
-                }
+            m_springMass = invMass + m_gamma;
+            if (m_springMass > 0.0f)
+            {
+                m_springMass = 1.0f / m_springMass;
+            }
         }
+    }
     else
-        {
-            m_springImpulse = 0.0f;
-        }
+    {
+        m_springImpulse = 0.0f;
+    }
 
     // Rotational motor
     if (m_enableMotor)
+    {
+        m_motorMass = iA + iB;
+        if (m_motorMass > 0.0f)
         {
-            m_motorMass = iA + iB;
-            if (m_motorMass > 0.0f)
-                {
-                    m_motorMass = 1.0f / m_motorMass;
-                }
+            m_motorMass = 1.0f / m_motorMass;
         }
+    }
     else
-        {
-            m_motorMass = 0.0f;
-            m_motorImpulse = 0.0f;
-        }
+    {
+        m_motorMass = 0.0f;
+        m_motorImpulse = 0.0f;
+    }
 
     if (data.step.warmStarting)
-        {
-            // Account for variable time step.
-            m_impulse *= data.step.dtRatio;
-            m_springImpulse *= data.step.dtRatio;
-            m_motorImpulse *= data.step.dtRatio;
+    {
+        // Account for variable time step.
+        m_impulse *= data.step.dtRatio;
+        m_springImpulse *= data.step.dtRatio;
+        m_motorImpulse *= data.step.dtRatio;
 
-            b2Vec2 P = m_impulse * m_ay + m_springImpulse * m_ax;
-            float32 LA = m_impulse * m_sAy + m_springImpulse * m_sAx + m_motorImpulse;
-            float32 LB = m_impulse * m_sBy + m_springImpulse * m_sBx + m_motorImpulse;
+        b2Vec2 P = m_impulse * m_ay + m_springImpulse * m_ax;
+        float32 LA = m_impulse * m_sAy + m_springImpulse * m_sAx + m_motorImpulse;
+        float32 LB = m_impulse * m_sBy + m_springImpulse * m_sBx + m_motorImpulse;
 
-            vA -= m_invMassA * P;
-            wA -= m_invIA * LA;
+        vA -= m_invMassA * P;
+        wA -= m_invIA * LA;
 
-            vB += m_invMassB * P;
-            wB += m_invIB * LB;
-        }
+        vB += m_invMassB * P;
+        wB += m_invIB * LB;
+    }
     else
-        {
-            m_impulse = 0.0f;
-            m_springImpulse = 0.0f;
-            m_motorImpulse = 0.0f;
-        }
+    {
+        m_impulse = 0.0f;
+        m_springImpulse = 0.0f;
+        m_motorImpulse = 0.0f;
+    }
 
     data.velocities[m_indexA].v = vA;
     data.velocities[m_indexA].w = wA;
@@ -302,13 +302,13 @@ bool b2WheelJoint::SolvePositionConstraints(const b2SolverData& data)
 
     float32 impulse;
     if (k != 0.0f)
-        {
-            impulse = -C / k;
-        }
+    {
+        impulse = -C / k;
+    }
     else
-        {
-            impulse = 0.0f;
-        }
+    {
+        impulse = 0.0f;
+    }
 
     b2Vec2 P = impulse * ay;
     float32 LA = impulse * sAy;

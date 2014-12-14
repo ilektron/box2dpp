@@ -61,18 +61,18 @@ public:
         fd.friction = 0.1f;
 
         for (int32_t j = 0; j < CONFINED_COLUMN_COUNT; ++j)
+        {
+            for (int i = 0; i < CONFINED_ROW_COUNT; ++i)
             {
-                for (int i = 0; i < CONFINED_ROW_COUNT; ++i)
-                    {
-                        b2BodyDef bd;
-                        bd.type = b2Body::DYNAMIC_BODY;
-                        bd.position.Set(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
-                                        (2.0f * i + 1.0f) * radius);
-                        b2Body* body = m_world->CreateBody(&bd);
+                b2BodyDef bd;
+                bd.type = b2BodyType::DYNAMIC_BODY;
+                bd.position.Set(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
+                                (2.0f * i + 1.0f) * radius);
+                b2Body* body = m_world->CreateBody(&bd);
 
-                        body->CreateFixture(&fd);
-                    }
+                body->CreateFixture(&fd);
             }
+        }
 
         m_world->SetGravity(b2Vec2(0.0f, 0.0f));
     }
@@ -91,7 +91,7 @@ public:
 
         b2Vec2 p(RandomFloat(), 3.0f + RandomFloat());
         b2BodyDef bd;
-        bd.type = b2Body::DYNAMIC_BODY;
+        bd.type = b2BodyType::DYNAMIC_BODY;
         bd.position = p;
         // bd.allowSleep = false;
         b2Body* body = m_world->CreateBody(&bd);
@@ -102,33 +102,33 @@ public:
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_C:
-                    CreateCircle();
-                    break;
-            }
+        {
+            case GLFW_KEY_C:
+                CreateCircle();
+                break;
+        }
     }
 
     void Step(Settings* settings) override
     {
         bool sleeping = true;
         for (b2Body* b = m_world->GetBodyList(); b; b = b->GetNext())
+        {
+            if (b->GetType() != b2BodyType::DYNAMIC_BODY)
             {
-                if (b->GetType() != b2Body::DYNAMIC_BODY)
-                    {
-                        continue;
-                    }
-
-                if (b->IsAwake())
-                    {
-                        sleeping = false;
-                    }
+                continue;
             }
+
+            if (b->IsAwake())
+            {
+                sleeping = false;
+            }
+        }
 
         if (m_stepCount == 180)
-            {
-                m_stepCount += 0;
-            }
+        {
+            m_stepCount += 0;
+        }
 
         // if (sleeping)
         //{
@@ -138,18 +138,18 @@ public:
         Test::Step(settings);
 
         for (b2Body* b = m_world->GetBodyList(); b; b = b->GetNext())
+        {
+            if (b->GetType() != b2BodyType::DYNAMIC_BODY)
             {
-                if (b->GetType() != b2Body::DYNAMIC_BODY)
-                    {
-                        continue;
-                    }
-
-                b2Vec2 p = b->GetPosition();
-                if (p.x <= -10.0f || 10.0f <= p.x || p.y <= 0.0f || 20.0f <= p.y)
-                    {
-                        p.x += 0.0f;
-                    }
+                continue;
             }
+
+            b2Vec2 p = b->GetPosition();
+            if (p.x <= -10.0f || 10.0f <= p.x || p.y <= 0.0f || 20.0f <= p.y)
+            {
+                p.x += 0.0f;
+            }
+        }
 
         g_debugDraw.DrawString(5, m_textLine, "Press 'c' to create a circle.");
         m_textLine += DRAW_STRING_NEW_LINE;

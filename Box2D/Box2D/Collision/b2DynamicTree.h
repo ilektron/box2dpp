@@ -183,33 +183,33 @@ inline void b2DynamicTree::Query(T* callback, const b2AABB& aabb) const
     stack.push_back(m_root);
 
     while (stack.size() > 0)
+    {
+        int32_t nodeId = stack.back();
+        stack.pop_back();
+        if (nodeId == b2_nullNode)
         {
-            int32_t nodeId = stack.back();
-            stack.pop_back();
-            if (nodeId == b2_nullNode)
-                {
-                    continue;
-                }
-
-            const b2TreeNode* node = m_nodes + nodeId;
-
-            if (b2TestOverlap(node->aabb, aabb))
-                {
-                    if (node->IsLeaf())
-                        {
-                            bool proceed = callback->QueryCallback(nodeId);
-                            if (proceed == false)
-                                {
-                                    return;
-                                }
-                        }
-                    else
-                        {
-                            stack.push_back(node->child1);
-                            stack.push_back(node->child2);
-                        }
-                }
+            continue;
         }
+
+        const b2TreeNode* node = m_nodes + nodeId;
+
+        if (b2TestOverlap(node->aabb, aabb))
+        {
+            if (node->IsLeaf())
+            {
+                bool proceed = callback->QueryCallback(nodeId);
+                if (proceed == false)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                stack.push_back(node->child1);
+                stack.push_back(node->child2);
+            }
+        }
+    }
 }
 
 template <typename T>
@@ -242,61 +242,61 @@ inline void b2DynamicTree::RayCast(T* callback, const b2RayCastInput& input) con
     stack.push_back(m_root);
 
     while (stack.size() > 0)
+    {
+        int32_t nodeId = stack.back();
+        stack.pop_back();
+        if (nodeId == b2_nullNode)
         {
-            int32_t nodeId = stack.back();
-            stack.pop_back();
-            if (nodeId == b2_nullNode)
-                {
-                    continue;
-                }
-
-            const b2TreeNode* node = m_nodes + nodeId;
-
-            if (b2TestOverlap(node->aabb, segmentAABB) == false)
-                {
-                    continue;
-                }
-
-            // Separating axis for segment (Gino, p80).
-            // |dot(v, p1 - c)| > dot(|v|, h)
-            b2Vec2 c = node->aabb.GetCenter();
-            b2Vec2 h = node->aabb.GetExtents();
-            float32 separation = b2Abs(b2Dot(v, p1 - c)) - b2Dot(abs_v, h);
-            if (separation > 0.0f)
-                {
-                    continue;
-                }
-
-            if (node->IsLeaf())
-                {
-                    b2RayCastInput subInput;
-                    subInput.p1 = input.p1;
-                    subInput.p2 = input.p2;
-                    subInput.maxFraction = maxFraction;
-
-                    float32 value = callback->RayCastCallback(subInput, nodeId);
-
-                    if (value == 0.0f)
-                        {
-                            // The client has terminated the ray cast.
-                            return;
-                        }
-
-                    if (value > 0.0f)
-                        {
-                            // Update segment bounding box.
-                            maxFraction = value;
-                            b2Vec2 t = p1 + maxFraction * (p2 - p1);
-                            segmentAABB.lowerBound = b2Min(p1, t);
-                            segmentAABB.upperBound = b2Max(p1, t);
-                        }
-                }
-            else
-                {
-                    stack.push_back(node->child1);
-                    stack.push_back(node->child2);
-                }
+            continue;
         }
+
+        const b2TreeNode* node = m_nodes + nodeId;
+
+        if (b2TestOverlap(node->aabb, segmentAABB) == false)
+        {
+            continue;
+        }
+
+        // Separating axis for segment (Gino, p80).
+        // |dot(v, p1 - c)| > dot(|v|, h)
+        b2Vec2 c = node->aabb.GetCenter();
+        b2Vec2 h = node->aabb.GetExtents();
+        float32 separation = b2Abs(b2Dot(v, p1 - c)) - b2Dot(abs_v, h);
+        if (separation > 0.0f)
+        {
+            continue;
+        }
+
+        if (node->IsLeaf())
+        {
+            b2RayCastInput subInput;
+            subInput.p1 = input.p1;
+            subInput.p2 = input.p2;
+            subInput.maxFraction = maxFraction;
+
+            float32 value = callback->RayCastCallback(subInput, nodeId);
+
+            if (value == 0.0f)
+            {
+                // The client has terminated the ray cast.
+                return;
+            }
+
+            if (value > 0.0f)
+            {
+                // Update segment bounding box.
+                maxFraction = value;
+                b2Vec2 t = p1 + maxFraction * (p2 - p1);
+                segmentAABB.lowerBound = b2Min(p1, t);
+                segmentAABB.upperBound = b2Max(p1, t);
+            }
+        }
+        else
+        {
+            stack.push_back(node->child1);
+            stack.push_back(node->child2);
+        }
+    }
 }
 }
 

@@ -42,37 +42,37 @@ public:
         const b2Transform& xf = fixture->GetBody()->GetTransform();
 
         switch (fixture->GetType())
+        {
+            case b2Shape::e_circle:
             {
-                case b2Shape::e_circle:
-                    {
-                        b2CircleShape* circle = (b2CircleShape*)fixture->GetShape();
+                b2CircleShape* circle = (b2CircleShape*)fixture->GetShape();
 
-                        b2Vec2 center = b2Mul(xf, circle->m_p);
-                        float32 radius = circle->m_radius;
+                b2Vec2 center = b2Mul(xf, circle->m_p);
+                float32 radius = circle->GetRadius();
 
-                        g_debugDraw->DrawCircle(center, radius, color);
-                    }
-                    break;
-
-                case b2Shape::e_polygon:
-                    {
-                        b2PolygonShape* poly = (b2PolygonShape*)fixture->GetShape();
-                        int32_t vertexCount = poly->m_count;
-                        b2Assert(vertexCount <= MAX_POLYGON_VERTICES);
-                        b2Vec2 vertices[MAX_POLYGON_VERTICES];
-
-                        for (int32_t i = 0; i < vertexCount; ++i)
-                            {
-                                vertices[i] = b2Mul(xf, poly->m_vertices[i]);
-                            }
-
-                        g_debugDraw->DrawPolygon(vertices, vertexCount, color);
-                    }
-                    break;
-
-                default:
-                    break;
+                g_debugDraw->DrawCircle(center, radius, color);
             }
+            break;
+
+            case b2Shape::e_polygon:
+            {
+                b2PolygonShape* poly = (b2PolygonShape*)fixture->GetShape();
+                int32_t vertexCount = poly->m_count;
+                b2Assert(vertexCount <= MAX_POLYGON_VERTICES);
+                b2Vec2 vertices[MAX_POLYGON_VERTICES];
+
+                for (int32_t i = 0; i < vertexCount; ++i)
+                {
+                    vertices[i] = b2Mul(xf, poly->m_vertices[i]);
+                }
+
+                g_debugDraw->DrawPolygon(vertices, vertexCount, color);
+            }
+            break;
+
+            default:
+                break;
+        }
     }
 
     /// Called for each fixture found in the query AABB.
@@ -80,9 +80,9 @@ public:
     bool ReportFixture(b2Fixture* fixture) override
     {
         if (m_count == POLY_SHAPES_CALLBACK_MAX_COUNT)
-            {
-                return false;
-            }
+        {
+            return false;
+        }
 
         b2Body* body = fixture->GetBody();
         b2Shape* shape = fixture->GetShape();
@@ -90,10 +90,10 @@ public:
         bool overlap = b2TestOverlap(shape, 0, &m_circle, 0, body->GetTransform(), m_transform);
 
         if (overlap)
-            {
-                DrawFixture(fixture);
-                ++m_count;
-            }
+        {
+            DrawFixture(fixture);
+            ++m_count;
+        }
 
         return true;
     }
@@ -170,42 +170,42 @@ public:
     void Create(int32_t index)
     {
         if (m_bodies[m_bodyIndex] != nullptr)
-            {
-                m_world->DestroyBody(m_bodies[m_bodyIndex]);
-                m_bodies[m_bodyIndex] = nullptr;
-            }
+        {
+            m_world->DestroyBody(m_bodies[m_bodyIndex]);
+            m_bodies[m_bodyIndex] = nullptr;
+        }
 
         b2BodyDef bd;
-        bd.type = b2Body::DYNAMIC_BODY;
+        bd.type = b2BodyType::DYNAMIC_BODY;
 
         float32 x = RandomFloat(-2.0f, 2.0f);
         bd.position.Set(x, 10.0f);
         bd.angle = RandomFloat(-PI, PI);
 
         if (index == 4)
-            {
-                bd.angularDamping = 0.02f;
-            }
+        {
+            bd.angularDamping = 0.02f;
+        }
 
         m_bodies[m_bodyIndex] = m_world->CreateBody(&bd);
 
         if (index < 4)
-            {
-                b2FixtureDef fd;
-                fd.shape = m_polygons + index;
-                fd.density = 1.0f;
-                fd.friction = 0.3f;
-                m_bodies[m_bodyIndex]->CreateFixture(&fd);
-            }
+        {
+            b2FixtureDef fd;
+            fd.shape = m_polygons + index;
+            fd.density = 1.0f;
+            fd.friction = 0.3f;
+            m_bodies[m_bodyIndex]->CreateFixture(&fd);
+        }
         else
-            {
-                b2FixtureDef fd;
-                fd.shape = &m_circle;
-                fd.density = 1.0f;
-                fd.friction = 0.3f;
+        {
+            b2FixtureDef fd;
+            fd.shape = &m_circle;
+            fd.density = 1.0f;
+            fd.friction = 0.3f;
 
-                m_bodies[m_bodyIndex]->CreateFixture(&fd);
-            }
+            m_bodies[m_bodyIndex]->CreateFixture(&fd);
+        }
 
         m_bodyIndex = (m_bodyIndex + 1) % POLY_SHAPES_MAX_BODIES;
     }
@@ -213,43 +213,43 @@ public:
     void DestroyBody()
     {
         for (auto& elem : m_bodies)
+        {
+            if (elem != nullptr)
             {
-                if (elem != nullptr)
-                    {
-                        m_world->DestroyBody(elem);
-                        elem = nullptr;
-                        return;
-                    }
+                m_world->DestroyBody(elem);
+                elem = nullptr;
+                return;
             }
+        }
     }
 
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_1:
-                case GLFW_KEY_2:
-                case GLFW_KEY_3:
-                case GLFW_KEY_4:
-                case GLFW_KEY_5:
-                    Create(key - GLFW_KEY_1);
-                    break;
+        {
+            case GLFW_KEY_1:
+            case GLFW_KEY_2:
+            case GLFW_KEY_3:
+            case GLFW_KEY_4:
+            case GLFW_KEY_5:
+                Create(key - GLFW_KEY_1);
+                break;
 
-                case GLFW_KEY_A:
-                    for (int32_t i = 0; i < POLY_SHAPES_MAX_BODIES; i += 2)
-                        {
-                            if (m_bodies[i])
-                                {
-                                    bool active = m_bodies[i]->IsActive();
-                                    m_bodies[i]->SetActive(!active);
-                                }
-                        }
-                    break;
+            case GLFW_KEY_A:
+                for (int32_t i = 0; i < POLY_SHAPES_MAX_BODIES; i += 2)
+                {
+                    if (m_bodies[i])
+                    {
+                        bool active = m_bodies[i]->IsActive();
+                        m_bodies[i]->SetActive(!active);
+                    }
+                }
+                break;
 
-                case GLFW_KEY_D:
-                    DestroyBody();
-                    break;
-            }
+            case GLFW_KEY_D:
+                DestroyBody();
+                break;
+        }
     }
 
     void Step(Settings* settings) override

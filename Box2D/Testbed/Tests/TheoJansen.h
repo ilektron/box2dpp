@@ -43,40 +43,40 @@ public:
         b2PolygonShape poly1, poly2;
 
         if (s > 0.0f)
-            {
-                b2Vec2 vertices[3];
+        {
+            b2Vec2 vertices[3];
 
-                vertices[0] = p1;
-                vertices[1] = p2;
-                vertices[2] = p3;
-                poly1.Set(vertices, 3);
+            vertices[0] = p1;
+            vertices[1] = p2;
+            vertices[2] = p3;
+            poly1.Set(vertices, 3);
 
-                vertices[0] = b2Vec2_zero;
-                vertices[1] = p5 - p4;
-                vertices[2] = p6 - p4;
-                poly2.Set(vertices, 3);
-            }
+            vertices[0] = b2Vec2_zero;
+            vertices[1] = p5 - p4;
+            vertices[2] = p6 - p4;
+            poly2.Set(vertices, 3);
+        }
         else
-            {
-                b2Vec2 vertices[3];
+        {
+            b2Vec2 vertices[3];
 
-                vertices[0] = p1;
-                vertices[1] = p3;
-                vertices[2] = p2;
-                poly1.Set(vertices, 3);
+            vertices[0] = p1;
+            vertices[1] = p3;
+            vertices[2] = p2;
+            poly1.Set(vertices, 3);
 
-                vertices[0] = b2Vec2_zero;
-                vertices[1] = p6 - p4;
-                vertices[2] = p5 - p4;
-                poly2.Set(vertices, 3);
-            }
+            vertices[0] = b2Vec2_zero;
+            vertices[1] = p6 - p4;
+            vertices[2] = p5 - p4;
+            poly2.Set(vertices, 3);
+        }
 
         fd1.shape = &poly1;
         fd2.shape = &poly2;
 
         b2BodyDef bd1, bd2;
-        bd1.type = b2Body::DYNAMIC_BODY;
-        bd2.type = b2Body::DYNAMIC_BODY;
+        bd1.type = b2BodyType::DYNAMIC_BODY;
+        bd2.type = b2BodyType::DYNAMIC_BODY;
         bd1.position = m_offset;
         bd2.position = p4 + m_offset;
 
@@ -140,17 +140,17 @@ public:
 
         // Balls
         for (int32_t i = 0; i < 40; ++i)
-            {
-                b2CircleShape shape;
-                shape.m_radius = 0.25f;
+        {
+            b2CircleShape shape;
+            shape.m_radius = 0.25f;
 
-                b2BodyDef bd;
-                bd.type = b2Body::DYNAMIC_BODY;
-                bd.position.Set(-40.0f + 2.0f * i, 0.5f);
+            b2BodyDef bd;
+            bd.type = b2BodyType::DYNAMIC_BODY;
+            bd.position.Set(-40.0f + 2.0f * i, 0.5f);
 
-                b2Body* body = m_world->CreateBody(&bd);
-                body->CreateFixture(&shape, 1.0f);
-            }
+            b2Body* body = m_world->CreateBody(&bd);
+            body->CreateFixture(&shape, 1.0f);
+        }
 
         // Chassis
         {
@@ -162,7 +162,7 @@ public:
             sd.shape = &shape;
             sd.filter.groupIndex = -1;
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position = pivot + m_offset;
             m_chassis = m_world->CreateBody(&bd);
             m_chassis->CreateFixture(&sd);
@@ -177,7 +177,7 @@ public:
             sd.shape = &shape;
             sd.filter.groupIndex = -1;
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position = pivot + m_offset;
             m_wheel = m_world->CreateBody(&bd);
             m_wheel->CreateFixture(&sd);
@@ -221,23 +221,23 @@ public:
     void Keyboard(int key) override
     {
         switch (key)
-            {
-                case GLFW_KEY_A:
-                    m_motorJoint->SetMotorSpeed(-m_motorSpeed);
-                    break;
+        {
+            case GLFW_KEY_A:
+                m_motorJoint->SetMotorSpeed(-m_motorSpeed);
+                break;
 
-                case GLFW_KEY_S:
-                    m_motorJoint->SetMotorSpeed(0.0f);
-                    break;
+            case GLFW_KEY_S:
+                m_motorJoint->SetMotorSpeed(0.0f);
+                break;
 
-                case GLFW_KEY_D:
-                    m_motorJoint->SetMotorSpeed(m_motorSpeed);
-                    break;
+            case GLFW_KEY_D:
+                m_motorJoint->SetMotorSpeed(m_motorSpeed);
+                break;
 
-                case GLFW_KEY_M:
-                    m_motorJoint->EnableMotor(!m_motorJoint->IsMotorEnabled());
-                    break;
-            }
+            case GLFW_KEY_M:
+                m_motorJoint->EnableMotor(!m_motorJoint->IsMotorEnabled());
+                break;
+        }
     }
 
     static Test* Create()

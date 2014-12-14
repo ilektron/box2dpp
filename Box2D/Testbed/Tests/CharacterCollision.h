@@ -126,7 +126,7 @@ public:
         {
             b2BodyDef bd;
             bd.position.Set(-3.0f, 8.0f);
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.fixedRotation = true;
             bd.allowSleep = false;
 
@@ -145,7 +145,7 @@ public:
         {
             b2BodyDef bd;
             bd.position.Set(-5.0f, 5.0f);
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.fixedRotation = true;
             bd.allowSleep = false;
 
@@ -164,7 +164,7 @@ public:
         {
             b2BodyDef bd;
             bd.position.Set(-5.0f, 8.0f);
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.fixedRotation = true;
             bd.allowSleep = false;
 
@@ -174,10 +174,10 @@ public:
             float32 delta = PI / 3.0f;
             b2Vec2 vertices[6];
             for (auto& vertice : vertices)
-                {
-                    vertice.Set(0.5f * cosf(angle), 0.5f * sinf(angle));
-                    angle += delta;
-                }
+            {
+                vertice.Set(0.5f * cosf(angle), 0.5f * sinf(angle));
+                angle += delta;
+            }
 
             b2PolygonShape shape;
             shape.Set(vertices, 6);
@@ -192,7 +192,7 @@ public:
         {
             b2BodyDef bd;
             bd.position.Set(3.0f, 5.0f);
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.fixedRotation = true;
             bd.allowSleep = false;
 
@@ -211,7 +211,7 @@ public:
         {
             b2BodyDef bd;
             bd.position.Set(-7.0f, 6.0f);
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.allowSleep = false;
 
             m_character = m_world->CreateBody(&bd);

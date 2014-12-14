@@ -58,7 +58,7 @@ public:
         // Actor
         {
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(0.0f, 12.0f);
             b2Body* body = m_world->CreateBody(&bd);
 
@@ -81,28 +81,28 @@ public:
         b2Fixture* fixtureB = contact->GetFixtureB();
 
         if (fixtureA != m_platform && fixtureA != m_character)
-            {
-                return;
-            }
+        {
+            return;
+        }
 
         if (fixtureB != m_platform && fixtureB != m_character)
-            {
-                return;
-            }
+        {
+            return;
+        }
 
 #if 1
         b2Vec2 position = m_character->GetBody()->GetPosition();
 
         if (position.y < m_top + m_radius - 3.0f * LINEAR_SLOP)
-            {
-                contact->SetEnabled(false);
-            }
+        {
+            contact->SetEnabled(false);
+        }
 #else
         b2Vec2 v = m_character->GetBody()->GetLinearVelocity();
         if (v.y > 0.0f)
-            {
-                contact->SetEnabled(false);
-            }
+        {
+            contact->SetEnabled(false);
+        }
 #endif
     }
 

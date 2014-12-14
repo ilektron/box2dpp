@@ -46,16 +46,16 @@ public:
             float32 restitution[7] = {0.0f, 0.1f, 0.3f, 0.5f, 0.75f, 0.9f, 1.0f};
 
             for (int32_t i = 0; i < 7; ++i)
-                {
-                    b2BodyDef bd;
-                    bd.type = b2Body::DYNAMIC_BODY;
-                    bd.position.Set(-10.0f + 3.0f * i, 20.0f);
+            {
+                b2BodyDef bd;
+                bd.type = b2BodyType::DYNAMIC_BODY;
+                bd.position.Set(-10.0f + 3.0f * i, 20.0f);
 
-                    b2Body* body = m_world->CreateBody(&bd);
+                b2Body* body = m_world->CreateBody(&bd);
 
-                    fd.restitution = restitution[i];
-                    body->CreateFixture(&fd);
-                }
+                fd.restitution = restitution[i];
+                body->CreateFixture(&fd);
+            }
         }
     }
 

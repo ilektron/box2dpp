@@ -102,15 +102,15 @@ public:
             float friction[5] = {0.75f, 0.5f, 0.35f, 0.1f, 0.0f};
 
             for (int i = 0; i < 5; ++i)
-                {
-                    b2BodyDef bd;
-                    bd.type = b2Body::DYNAMIC_BODY;
-                    bd.position.Set(-15.0f + 4.0f * i, 28.0f);
-                    b2Body* body = m_world->CreateBody(&bd);
+            {
+                b2BodyDef bd;
+                bd.type = b2BodyType::DYNAMIC_BODY;
+                bd.position.Set(-15.0f + 4.0f * i, 28.0f);
+                b2Body* body = m_world->CreateBody(&bd);
 
-                    fd.friction = friction[i];
-                    body->CreateFixture(&fd);
-                }
+                fd.friction = friction[i];
+                body->CreateFixture(&fd);
+            }
         }
     }
 

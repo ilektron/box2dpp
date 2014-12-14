@@ -53,7 +53,7 @@ public:
             shape.SetAsBox(a, b);
 
             b2BodyDef bd;
-            bd.type = b2Body::DYNAMIC_BODY;
+            bd.type = b2BodyType::DYNAMIC_BODY;
 
             // bd.fixedRotation = true;
             bd.position.Set(-10.0f, y);

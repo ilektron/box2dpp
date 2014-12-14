@@ -37,28 +37,28 @@ static float32 b2FindMaxSeparation(int32_t* edgeIndex, const b2PolygonShape* pol
     int32_t bestIndex = 0;
     float32 maxSeparation = -MAX_FLOAT;
     for (int32_t i = 0; i < count1; ++i)
+    {
+        // Get poly1 normal in frame2.
+        b2Vec2 n = b2Mul(xf.q, n1s[i]);
+        b2Vec2 v1 = b2Mul(xf, v1s[i]);
+
+        // Find deepest point for normal i.
+        float32 si = MAX_FLOAT;
+        for (int32_t j = 0; j < count2; ++j)
         {
-            // Get poly1 normal in frame2.
-            b2Vec2 n = b2Mul(xf.q, n1s[i]);
-            b2Vec2 v1 = b2Mul(xf, v1s[i]);
-
-            // Find deepest point for normal i.
-            float32 si = MAX_FLOAT;
-            for (int32_t j = 0; j < count2; ++j)
-                {
-                    float32 sij = b2Dot(n, v2s[j] - v1);
-                    if (sij < si)
-                        {
-                            si = sij;
-                        }
-                }
-
-            if (si > maxSeparation)
-                {
-                    maxSeparation = si;
-                    bestIndex = i;
-                }
+            float32 sij = b2Dot(n, v2s[j] - v1);
+            if (sij < si)
+            {
+                si = sij;
+            }
         }
+
+        if (si > maxSeparation)
+        {
+            maxSeparation = si;
+            bestIndex = i;
+        }
+    }
 
     *edgeIndex = bestIndex;
     return maxSeparation;
@@ -83,14 +83,14 @@ static void b2FindIncidentEdge(b2ClipVertex c[2], const b2PolygonShape* poly1,
     int32_t index = 0;
     float32 minDot = MAX_FLOAT;
     for (int32_t i = 0; i < count2; ++i)
+    {
+        float32 dot = b2Dot(normal1, normals2[i]);
+        if (dot < minDot)
         {
-            float32 dot = b2Dot(normal1, normals2[i]);
-            if (dot < minDot)
-                {
-                    minDot = dot;
-                    index = i;
-                }
+            minDot = dot;
+            index = i;
         }
+    }
 
     // Build the clip vertices for the incident edge.
     int32_t i1 = index;
@@ -121,7 +121,7 @@ void box2d::b2CollidePolygons(b2Manifold* manifold, const b2PolygonShape* polyA,
                               const b2Transform& xfB)
 {
     manifold->pointCount = 0;
-    float32 totalRadius = polyA->m_radius + polyB->m_radius;
+    float32 totalRadius = polyA->GetRadius() + polyB->GetRadius();
 
     int32_t edgeA = 0;
     float32 separationA = b2FindMaxSeparation(&edgeA, polyA, xfA, polyB, xfB);
@@ -141,25 +141,25 @@ void box2d::b2CollidePolygons(b2Manifold* manifold, const b2PolygonShape* polyA,
     const float32 k_tol = 0.1f * LINEAR_SLOP;
 
     if (separationB > separationA + k_tol)
-        {
-            poly1 = polyB;
-            poly2 = polyA;
-            xf1 = xfB;
-            xf2 = xfA;
-            edge1 = edgeB;
-            manifold->type = b2Manifold::e_faceB;
-            flip = 1;
-        }
+    {
+        poly1 = polyB;
+        poly2 = polyA;
+        xf1 = xfB;
+        xf2 = xfA;
+        edge1 = edgeB;
+        manifold->type = b2Manifold::e_faceB;
+        flip = 1;
+    }
     else
-        {
-            poly1 = polyA;
-            poly2 = polyB;
-            xf1 = xfA;
-            xf2 = xfB;
-            edge1 = edgeA;
-            manifold->type = b2Manifold::e_faceA;
-            flip = 0;
-        }
+    {
+        poly1 = polyA;
+        poly2 = polyB;
+        xf1 = xfA;
+        xf2 = xfB;
+        edge1 = edgeA;
+        manifold->type = b2Manifold::e_faceA;
+        flip = 0;
+    }
 
     b2ClipVertex incidentEdge[2];
     b2FindIncidentEdge(incidentEdge, poly1, xf1, edge1, poly2, xf2);
@@ -207,9 +207,9 @@ void box2d::b2CollidePolygons(b2Manifold* manifold, const b2PolygonShape* polyA,
     np = b2ClipSegmentToLine(clipPoints2, clipPoints1, tangent, sideOffset2, iv2);
 
     if (np < 2)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     // Now clipPoints2 contains the clipped points.
     manifold->localNormal = localNormal;
@@ -217,26 +217,26 @@ void box2d::b2CollidePolygons(b2Manifold* manifold, const b2PolygonShape* polyA,
 
     int32_t pointCount = 0;
     for (auto& elem : clipPoints2)
-        {
-            float32 separation = b2Dot(normal, elem.v) - frontOffset;
+    {
+        float32 separation = b2Dot(normal, elem.v) - frontOffset;
 
-            if (separation <= totalRadius)
-                {
-                    b2ManifoldPoint* cp = manifold->points + pointCount;
-                    cp->localPoint = b2MulT(xf2, elem.v);
-                    cp->id = elem.id;
-                    if (flip)
-                        {
-                            // Swap features
-                            b2ContactFeature cf = cp->id.cf;
-                            cp->id.cf.indexA = cf.indexB;
-                            cp->id.cf.indexB = cf.indexA;
-                            cp->id.cf.typeA = cf.typeB;
-                            cp->id.cf.typeB = cf.typeA;
-                        }
-                    ++pointCount;
-                }
+        if (separation <= totalRadius)
+        {
+            b2ManifoldPoint* cp = manifold->points + pointCount;
+            cp->localPoint = b2MulT(xf2, elem.v);
+            cp->id = elem.id;
+            if (flip)
+            {
+                // Swap features
+                b2ContactFeature cf = cp->id.cf;
+                cp->id.cf.indexA = cf.indexB;
+                cp->id.cf.indexB = cf.indexA;
+                cp->id.cf.typeA = cf.typeB;
+                cp->id.cf.typeB = cf.typeA;
+            }
+            ++pointCount;
         }
+    }
 
     manifold->pointCount = pointCount;
 }
