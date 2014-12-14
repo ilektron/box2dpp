@@ -36,7 +36,7 @@ struct b2Chunk;
 /// See: http://www.codeproject.com/useritems/Small_Block_Allocator.asp
 class b2BlockAllocator
 {
-   public:
+public:
     b2BlockAllocator();
     ~b2BlockAllocator();
 
@@ -48,7 +48,7 @@ class b2BlockAllocator
 
     void Clear();
 
-   private:
+private:
     b2Chunk* m_chunks;
     int32_t m_chunkCount;
     int32_t m_chunkSpace;

@@ -37,7 +37,7 @@ struct b2Manifold;
 /// may nullify references to these joints and shapes.
 class b2DestructionListener
 {
-   public:
+public:
     virtual ~b2DestructionListener()
     {
     }
@@ -55,7 +55,7 @@ class b2DestructionListener
 /// this class if you want finer control over contact creation.
 class b2ContactFilter
 {
-   public:
+public:
     virtual ~b2ContactFilter()
     {
     }
@@ -86,7 +86,7 @@ struct b2ContactImpulse
 /// @warning You cannot create/destroy Box2D entities inside these callbacks.
 class b2ContactListener
 {
-   public:
+public:
     virtual ~b2ContactListener()
     {
     }
@@ -136,7 +136,7 @@ class b2ContactListener
 /// See b2World::Query
 class b2QueryCallback
 {
-   public:
+public:
     virtual ~b2QueryCallback()
     {
     }
@@ -150,7 +150,7 @@ class b2QueryCallback
 /// See b2World::RayCast
 class b2RayCastCallback
 {
-   public:
+public:
     virtual ~b2RayCastCallback()
     {
     }

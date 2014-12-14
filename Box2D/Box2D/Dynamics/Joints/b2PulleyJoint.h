@@ -31,7 +31,7 @@ struct b2PulleyJointDef : public b2JointDef
 {
     b2PulleyJointDef()
     {
-        type = e_pulleyJoint;
+        type = b2JointType::PULLEY_JOINT;
         groundAnchorA.Set(-1.0f, 1.0f);
         groundAnchorB.Set(1.0f, 1.0f);
         localAnchorA.Set(-1.0f, 0.0f);
@@ -79,7 +79,7 @@ struct b2PulleyJointDef : public b2JointDef
 /// zero length.
 class b2PulleyJoint : public b2Joint
 {
-   public:
+public:
     b2Vec2 GetAnchorA() const override;
     b2Vec2 GetAnchorB() const override;
 
@@ -113,7 +113,7 @@ class b2PulleyJoint : public b2Joint
     /// Implement b2Joint::ShiftOrigin
     void ShiftOrigin(const b2Vec2& newOrigin) override;
 
-   protected:
+protected:
     friend class b2Joint;
     b2PulleyJoint(const b2PulleyJointDef* data);
 

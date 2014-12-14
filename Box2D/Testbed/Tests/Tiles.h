@@ -21,14 +21,11 @@
 
 /// This stress tests the dynamic tree broad-phase. This also shows that tile
 /// based collision is _not_ smooth due to Box2D not knowing about adjacency.
+
+constexpr int TILES_COUNT = 20;
+
 class Tiles : public Test
 {
-   public:
-    enum
-    {
-        e_count = 20
-    };
-
     Tiles()
     {
         m_fixtureCount = 0;
@@ -88,14 +85,14 @@ class Tiles : public Test
             b2Vec2 deltaX(0.5625f, 1.25f);
             b2Vec2 deltaY(1.125f, 0.0f);
 
-            for (int32_t i = 0; i < e_count; ++i)
+            for (int32_t i = 0; i < TILES_COUNT; ++i)
                 {
                     y = x;
 
-                    for (int32_t j = i; j < e_count; ++j)
+                    for (int32_t j = i; j < TILES_COUNT; ++j)
                         {
                             b2BodyDef bd;
-                            bd.type = b2_dynamicBody;
+                            bd.type = b2Body::DYNAMIC_BODY;
                             bd.position = y;
 
                             // if (i == 0 && j == 0)

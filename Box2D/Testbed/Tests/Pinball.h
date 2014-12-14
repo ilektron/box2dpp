@@ -23,7 +23,7 @@
 /// This also uses a loop shape.
 class Pinball : public Test
 {
-   public:
+public:
     Pinball()
     {
         // Ground body
@@ -52,7 +52,7 @@ class Pinball : public Test
             b2Vec2 p1(-2.0f, 0.0f), p2(2.0f, 0.0f);
 
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2Body::DYNAMIC_BODY;
 
             bd.position = p1;
             b2Body* leftFlipper = m_world->CreateBody(&bd);
@@ -96,7 +96,7 @@ class Pinball : public Test
         {
             b2BodyDef bd;
             bd.position.Set(1.0f, 15.0f);
-            bd.type = b2_dynamicBody;
+            bd.type = b2Body::DYNAMIC_BODY;
             bd.bullet = true;
 
             m_ball = m_world->CreateBody(&bd);

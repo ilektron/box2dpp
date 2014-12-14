@@ -118,9 +118,11 @@ struct b2WorldManifold
     void Initialize(const b2Manifold* manifold, const b2Transform& xfA, float32 radiusA,
                     const b2Transform& xfB, float32 radiusB);
 
-    b2Vec2 normal;                             ///< world vector pointing from A to B
-    b2Vec2 points[MAX_MANIFOLD_POINTS];        ///< world contact point (point of intersection)
-    float32 separations[MAX_MANIFOLD_POINTS];  ///< a negative value indicates overlap, in meters
+    b2Vec2 normal;                       ///< world vector pointing from A to B
+    b2Vec2 points[MAX_MANIFOLD_POINTS];  ///< world contact point (point of
+    /// intersection)
+    float32 separations[MAX_MANIFOLD_POINTS];  ///< a negative value indicates
+                                               /// overlap, in meters
 };
 
 /// This is used for determining the state of contact points.
@@ -132,9 +134,11 @@ enum b2PointState
     b2_removeState    ///< point was removed in the update
 };
 
-/// Compute the point states given two manifolds. The states pertain to the transition from
+/// Compute the point states given two manifolds. The states pertain to the
+/// transition from
 /// manifold1
-/// to manifold2. So state1 is either persist or remove while state2 is either add or persist.
+/// to manifold2. So state1 is either persist or remove while state2 is either
+/// add or persist.
 void b2GetPointStates(b2PointState state1[MAX_MANIFOLD_POINTS],
                       b2PointState state2[MAX_MANIFOLD_POINTS], const b2Manifold* manifold1,
                       const b2Manifold* manifold2);
@@ -146,14 +150,16 @@ struct b2ClipVertex
     b2ContactID id;
 };
 
-/// Ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).
+/// Ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 -
+/// p1).
 struct b2RayCastInput
 {
     b2Vec2 p1, p2;
     float32 maxFraction;
 };
 
-/// Ray-cast output data. The ray hits at p1 + fraction * (p2 - p1), where p1 and p2
+/// Ray-cast output data. The ray hits at p1 + fraction * (p2 - p1), where p1
+/// and p2
 /// come from b2RayCastInput.
 struct b2RayCastOutput
 {

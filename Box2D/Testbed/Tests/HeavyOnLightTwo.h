@@ -21,7 +21,7 @@
 
 class HeavyOnLightTwo : public Test
 {
-   public:
+public:
     HeavyOnLightTwo()
     {
         {
@@ -34,7 +34,7 @@ class HeavyOnLightTwo : public Test
         }
 
         b2BodyDef bd;
-        bd.type = b2_dynamicBody;
+        bd.type = b2Body::DYNAMIC_BODY;
         bd.position.Set(0.0f, 2.5f);
         b2Body* body = m_world->CreateBody(&bd);
 
@@ -59,7 +59,7 @@ class HeavyOnLightTwo : public Test
         else
             {
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2Body::DYNAMIC_BODY;
                 bd.position.Set(0.0f, 9.0f);
                 m_heavy = m_world->CreateBody(&bd);
 

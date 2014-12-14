@@ -143,8 +143,8 @@ void b2ContactManager::Collide()
                     c->m_flags &= ~b2Contact::e_filterFlag;
                 }
 
-            bool activeA = bodyA->IsAwake() && bodyA->m_type != b2_staticBody;
-            bool activeB = bodyB->IsAwake() && bodyB->m_type != b2_staticBody;
+            bool activeA = bodyA->IsAwake() && bodyA->m_type != b2Body::STATIC_BODY;
+            bool activeB = bodyB->IsAwake() && bodyB->m_type != b2Body::STATIC_BODY;
 
             // At least one body must be awake and it must be dynamic or kinematic.
             if (activeA == false && activeB == false)

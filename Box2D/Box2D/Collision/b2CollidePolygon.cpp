@@ -21,7 +21,8 @@
 
 using namespace box2d;
 
-// Find the max separation between poly1 and poly2 using edge normals from poly1.
+// Find the max separation between poly1 and poly2 using edge normals from
+// poly1.
 static float32 b2FindMaxSeparation(int32_t* edgeIndex, const b2PolygonShape* poly1,
                                    const b2Transform& xf1, const b2PolygonShape* poly2,
                                    const b2Transform& xf2)

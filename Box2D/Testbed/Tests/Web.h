@@ -22,7 +22,7 @@
 // This tests distance joints, body destruction, and joint destruction.
 class Web : public Test
 {
-   public:
+public:
     Web()
     {
         b2Body* ground = nullptr;
@@ -40,7 +40,7 @@ class Web : public Test
             shape.SetAsBox(0.5f, 0.5f);
 
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2Body::DYNAMIC_BODY;
 
             bd.position.Set(-5.0f, 5.0f);
             m_bodies[0] = m_world->CreateBody(&bd);

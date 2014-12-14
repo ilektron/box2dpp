@@ -31,7 +31,7 @@ class b2BlockAllocator;
 // Delegate of b2World.
 class b2ContactManager
 {
-   public:
+public:
     b2ContactManager();
 
     // Broad-phase callback.

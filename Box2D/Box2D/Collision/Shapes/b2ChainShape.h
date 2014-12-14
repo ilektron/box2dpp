@@ -33,7 +33,7 @@ class b2EdgeShape;
 /// WARNING: The chain will not collide properly if there are self-intersections.
 class b2ChainShape : public b2Shape
 {
-   public:
+public:
     b2ChainShape();
 
     /// The destructor frees the vertices using b2Free.

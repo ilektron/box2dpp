@@ -84,7 +84,7 @@ struct b2ContactSolverDef
 
 class b2ContactSolver
 {
-   public:
+public:
     b2ContactSolver(b2ContactSolverDef* def);
     ~b2ContactSolver();
 

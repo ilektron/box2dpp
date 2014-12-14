@@ -77,7 +77,7 @@ struct b2ContactEdge
 /// that has no contact points.
 class b2Contact
 {
-   public:
+public:
     /// Get the contact manifold. Do not modify the manifold unless you understand the
     /// internals of Box2D.
     b2Manifold* GetManifold();
@@ -144,7 +144,7 @@ class b2Contact
     /// Evaluate this contact with your own manifold and transforms.
     virtual void Evaluate(b2Manifold* manifold, const b2Transform& xfA, const b2Transform& xfB) = 0;
 
-   protected:
+protected:
     friend class b2ContactManager;
     friend class b2World;
     friend class b2ContactSolver;

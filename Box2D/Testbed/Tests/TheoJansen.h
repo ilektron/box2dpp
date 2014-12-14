@@ -24,7 +24,7 @@
 
 class TheoJansen : public Test
 {
-   public:
+public:
     void CreateLeg(float32 s, const b2Vec2& wheelAnchor)
     {
         b2Vec2 p1(5.4f * s, -6.1f);
@@ -75,8 +75,8 @@ class TheoJansen : public Test
         fd2.shape = &poly2;
 
         b2BodyDef bd1, bd2;
-        bd1.type = b2_dynamicBody;
-        bd2.type = b2_dynamicBody;
+        bd1.type = b2Body::DYNAMIC_BODY;
+        bd2.type = b2Body::DYNAMIC_BODY;
         bd1.position = m_offset;
         bd2.position = p4 + m_offset;
 
@@ -145,7 +145,7 @@ class TheoJansen : public Test
                 shape.m_radius = 0.25f;
 
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2Body::DYNAMIC_BODY;
                 bd.position.Set(-40.0f + 2.0f * i, 0.5f);
 
                 b2Body* body = m_world->CreateBody(&bd);
@@ -162,7 +162,7 @@ class TheoJansen : public Test
             sd.shape = &shape;
             sd.filter.groupIndex = -1;
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2Body::DYNAMIC_BODY;
             bd.position = pivot + m_offset;
             m_chassis = m_world->CreateBody(&bd);
             m_chassis->CreateFixture(&sd);
@@ -177,7 +177,7 @@ class TheoJansen : public Test
             sd.shape = &shape;
             sd.filter.groupIndex = -1;
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2Body::DYNAMIC_BODY;
             bd.position = pivot + m_offset;
             m_wheel = m_world->CreateBody(&bd);
             m_wheel->CreateFixture(&sd);

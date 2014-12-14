@@ -25,7 +25,7 @@
 // deferred body destruction.
 class CollisionProcessing : public Test
 {
-   public:
+public:
     CollisionProcessing()
     {
         // Ground body
@@ -59,7 +59,7 @@ class CollisionProcessing : public Test
         triangleShapeDef.density = 1.0f;
 
         b2BodyDef triangleBodyDef;
-        triangleBodyDef.type = b2_dynamicBody;
+        triangleBodyDef.type = b2Body::DYNAMIC_BODY;
         triangleBodyDef.position.Set(RandomFloat(xLo, xHi), RandomFloat(yLo, yHi));
 
         b2Body* body1 = m_world->CreateBody(&triangleBodyDef);
@@ -84,7 +84,7 @@ class CollisionProcessing : public Test
         boxShapeDef.density = 1.0f;
 
         b2BodyDef boxBodyDef;
-        boxBodyDef.type = b2_dynamicBody;
+        boxBodyDef.type = b2Body::DYNAMIC_BODY;
         boxBodyDef.position.Set(RandomFloat(xLo, xHi), RandomFloat(yLo, yHi));
 
         b2Body* body3 = m_world->CreateBody(&boxBodyDef);
@@ -106,7 +106,7 @@ class CollisionProcessing : public Test
         circleShapeDef.density = 1.0f;
 
         b2BodyDef circleBodyDef;
-        circleBodyDef.type = b2_dynamicBody;
+        circleBodyDef.type = b2Body::DYNAMIC_BODY;
         circleBodyDef.position.Set(RandomFloat(xLo, xHi), RandomFloat(yLo, yHi));
 
         b2Body* body5 = m_world->CreateBody(&circleBodyDef);

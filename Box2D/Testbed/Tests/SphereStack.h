@@ -19,14 +19,11 @@
 #ifndef SPHERE_STACK_H
 #define SPHERE_STACK_H
 
+constexpr int SPHERE_STACK_COUNT = 10;
+
 class SphereStack : public Test
 {
-   public:
-    enum
-    {
-        e_count = 10
-    };
-
+public:
     SphereStack()
     {
         {
@@ -42,10 +39,10 @@ class SphereStack : public Test
             b2CircleShape shape;
             shape.m_radius = 1.0f;
 
-            for (int32_t i = 0; i < e_count; ++i)
+            for (int32_t i = 0; i < SPHERE_STACK_COUNT; ++i)
                 {
                     b2BodyDef bd;
-                    bd.type = b2_dynamicBody;
+                    bd.type = b2Body::DYNAMIC_BODY;
                     bd.position.Set(0.0, 4.0f + 3.0f * i);
 
                     m_bodies[i] = m_world->CreateBody(&bd);
@@ -61,12 +58,12 @@ class SphereStack : public Test
     {
         Test::Step(settings);
 
-        // for (int32_t i = 0; i < e_count; ++i)
+        // for (int32_t i = 0; i < SPHERE_STACK_COUNT; ++i)
         //{
         //	printf("%g ", m_bodies[i]->GetWorldCenter().y);
         //}
 
-        // for (int32_t i = 0; i < e_count; ++i)
+        // for (int32_t i = 0; i < SPHERE_STACK_COUNT; ++i)
         //{
         //	printf("%g ", m_bodies[i]->GetLinearVelocity().y);
         //}
@@ -79,7 +76,7 @@ class SphereStack : public Test
         return new SphereStack;
     }
 
-    b2Body* m_bodies[e_count];
+    b2Body* m_bodies[SPHERE_STACK_COUNT];
 };
 
 #endif

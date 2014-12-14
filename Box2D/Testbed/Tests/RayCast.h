@@ -26,7 +26,7 @@
 // This callback finds the closest hit. Polygon 0 is filtered.
 class RayCastClosestCallback : public b2RayCastCallback
 {
-   public:
+public:
     RayCastClosestCallback()
     {
         m_hit = false;
@@ -67,7 +67,7 @@ class RayCastClosestCallback : public b2RayCastCallback
 // just checking for obstruction, so the actual fixture and hit point are irrelevant.
 class RayCastAnyCallback : public b2RayCastCallback
 {
-   public:
+public:
     RayCastAnyCallback()
     {
         m_hit = false;
@@ -105,15 +105,13 @@ class RayCastAnyCallback : public b2RayCastCallback
 
 // This ray cast collects multiple hits along the ray. Polygon 0 is filtered.
 // The fixtures are not necessary reported in order, so we might not capture
-// the closest fixture.
+// the closest fixture.1
+
+constexpr int RAY_CAST_MULTIPLE_CALLBACK_MAX_COUNT = 3;
+
 class RayCastMultipleCallback : public b2RayCastCallback
 {
-   public:
-    enum
-    {
-        e_maxCount = 3
-    };
-
+public:
     RayCastMultipleCallback()
     {
         m_count = 0;
@@ -135,13 +133,13 @@ class RayCastMultipleCallback : public b2RayCastCallback
                     }
             }
 
-        b2Assert(m_count < e_maxCount);
+        b2Assert(m_count < RAY_CAST_MULTIPLE_CALLBACK_MAX_COUNT);
 
         m_points[m_count] = point;
         m_normals[m_count] = normal;
         ++m_count;
 
-        if (m_count == e_maxCount)
+        if (m_count == RAY_CAST_MULTIPLE_CALLBACK_MAX_COUNT)
             {
                 // At this point the buffer is full.
                 // By returning 0, we instruct the calling code to terminate the ray-cast.
@@ -152,19 +150,16 @@ class RayCastMultipleCallback : public b2RayCastCallback
         return 1.0f;
     }
 
-    b2Vec2 m_points[e_maxCount];
-    b2Vec2 m_normals[e_maxCount];
+    b2Vec2 m_points[RAY_CAST_MULTIPLE_CALLBACK_MAX_COUNT];
+    b2Vec2 m_normals[RAY_CAST_MULTIPLE_CALLBACK_MAX_COUNT];
     int32_t m_count;
 };
 
+constexpr int RAY_CAST_COUNT = 256;
+
 class RayCast : public Test
 {
-   public:
-    enum
-    {
-        e_maxBodies = 256
-    };
-
+public:
     enum Mode
     {
         e_closest,
@@ -287,7 +282,7 @@ class RayCast : public Test
                 m_bodies[m_bodyIndex]->CreateFixture(&fd);
             }
 
-        m_bodyIndex = (m_bodyIndex + 1) % e_maxBodies;
+        m_bodyIndex = (m_bodyIndex + 1) % RAY_CAST_COUNT;
     }
 
     void DestroyBody()
@@ -474,8 +469,8 @@ class RayCast : public Test
     }
 
     int32_t m_bodyIndex;
-    b2Body* m_bodies[e_maxBodies];
-    int32_t m_userData[e_maxBodies];
+    b2Body* m_bodies[RAY_CAST_COUNT];
+    int32_t m_userData[RAY_CAST_COUNT];
     b2PolygonShape m_polygons[4];
     b2CircleShape m_circle;
     b2EdgeShape m_edge;

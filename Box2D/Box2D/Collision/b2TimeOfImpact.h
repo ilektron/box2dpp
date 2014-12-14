@@ -50,11 +50,15 @@ struct b2TOIOutput
     float32 t;
 };
 
-/// Compute the upper bound on time before two shapes penetrate. Time is represented as
-/// a fraction between [0,tMax]. This uses a swept separating axis and may miss some intermediate,
-/// non-tunneling collision. If you change the time interval, you should call this function
+/// Compute the upper bound on time before two shapes penetrate. Time is
+/// represented as
+/// a fraction between [0,tMax]. This uses a swept separating axis and may miss
+/// some intermediate,
+/// non-tunneling collision. If you change the time interval, you should call
+/// this function
 /// again.
-/// Note: use b2Distance to compute the contact point and normal at the time of impact.
+/// Note: use b2Distance to compute the contact point and normal at the time of
+/// impact.
 void b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input);
 }
 

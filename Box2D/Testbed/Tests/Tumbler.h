@@ -19,14 +19,11 @@
 #ifndef TUMBLER_H
 #define TUMBLER_H
 
+constexpr int TUMBLER_COUNT = 800;
+
 class Tumbler : public Test
 {
-   public:
-    enum
-    {
-        e_count = 800
-    };
-
+public:
     Tumbler()
     {
         b2Body* ground = nullptr;
@@ -37,7 +34,7 @@ class Tumbler : public Test
 
         {
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2Body::DYNAMIC_BODY;
             bd.allowSleep = false;
             bd.position.Set(0.0f, 10.0f);
             b2Body* body = m_world->CreateBody(&bd);
@@ -71,10 +68,10 @@ class Tumbler : public Test
     {
         Test::Step(settings);
 
-        if (m_count < e_count)
+        if (m_count < TUMBLER_COUNT)
             {
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2Body::DYNAMIC_BODY;
                 bd.position.Set(0.0f, 10.0f);
                 b2Body* body = m_world->CreateBody(&bd);
 

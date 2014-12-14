@@ -42,7 +42,7 @@ class b2Joint;
 /// management facilities.
 class b2World
 {
-   public:
+public:
     /// Construct a world object.
     /// @param gravity the world gravity vector.
     b2World(const b2Vec2& gravity);
@@ -231,7 +231,7 @@ class b2World
     /// @warning this should be called outside of a time step.
     void Dump();
 
-   private:
+private:
     // m_flags
     enum
     {

@@ -21,7 +21,7 @@
 
 class DistanceTest : public Test
 {
-   public:
+public:
     DistanceTest()
     {
         {

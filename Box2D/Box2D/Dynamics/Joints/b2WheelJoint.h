@@ -33,7 +33,7 @@ struct b2WheelJointDef : public b2JointDef
 {
     b2WheelJointDef()
     {
-        type = e_wheelJoint;
+        type = b2JointType::WHEEL_JOINT;
         localAnchorA.SetZero();
         localAnchorB.SetZero();
         localAxisA.Set(1.0f, 0.0f);
@@ -79,7 +79,7 @@ struct b2WheelJointDef : public b2JointDef
 /// This joint is designed for vehicle suspensions.
 class b2WheelJoint : public b2Joint
 {
-   public:
+public:
     b2Vec2 GetAnchorA() const override;
     b2Vec2 GetAnchorB() const override;
 
@@ -140,7 +140,7 @@ class b2WheelJoint : public b2Joint
     /// Dump to b2Log
     void Dump() override;
 
-   protected:
+protected:
     friend class b2Joint;
     b2WheelJoint(const b2WheelJointDef* def);
 

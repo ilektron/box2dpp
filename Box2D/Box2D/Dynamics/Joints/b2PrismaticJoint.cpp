@@ -119,7 +119,7 @@ b2PrismaticJoint::b2PrismaticJoint(const b2PrismaticJointDef* def) : b2Joint(def
     m_motorSpeed = def->motorSpeed;
     m_enableLimit = def->enableLimit;
     m_enableMotor = def->enableMotor;
-    m_limitState = e_inactiveLimit;
+    m_limitState = b2LimitState::INACTIVE_LIMIT;
 
     m_axis.SetZero();
     m_perp.SetZero();
@@ -202,33 +202,33 @@ void b2PrismaticJoint::InitVelocityConstraints(const b2SolverData& data)
             float32 jointTranslation = b2Dot(m_axis, d);
             if (b2Abs(m_upperTranslation - m_lowerTranslation) < 2.0f * LINEAR_SLOP)
                 {
-                    m_limitState = e_equalLimits;
+                    m_limitState = b2LimitState::EQUAL_LIMITS;
                 }
             else if (jointTranslation <= m_lowerTranslation)
                 {
-                    if (m_limitState != e_atLowerLimit)
+                    if (m_limitState != b2LimitState::AT_LOWER_LIMIT)
                         {
-                            m_limitState = e_atLowerLimit;
+                            m_limitState = b2LimitState::AT_LOWER_LIMIT;
                             m_impulse.z = 0.0f;
                         }
                 }
             else if (jointTranslation >= m_upperTranslation)
                 {
-                    if (m_limitState != e_atUpperLimit)
+                    if (m_limitState != b2LimitState::AT_UPPER_LIMIT)
                         {
-                            m_limitState = e_atUpperLimit;
+                            m_limitState = b2LimitState::AT_UPPER_LIMIT;
                             m_impulse.z = 0.0f;
                         }
                 }
             else
                 {
-                    m_limitState = e_inactiveLimit;
+                    m_limitState = b2LimitState::INACTIVE_LIMIT;
                     m_impulse.z = 0.0f;
                 }
         }
     else
         {
-            m_limitState = e_inactiveLimit;
+            m_limitState = b2LimitState::INACTIVE_LIMIT;
             m_impulse.z = 0.0f;
         }
 
@@ -276,7 +276,7 @@ void b2PrismaticJoint::SolveVelocityConstraints(const b2SolverData& data)
     float32 iA = m_invIA, iB = m_invIB;
 
     // Solve linear motor constraint.
-    if (m_enableMotor && m_limitState != e_equalLimits)
+    if (m_enableMotor && m_limitState != b2LimitState::EQUAL_LIMITS)
         {
             float32 Cdot = b2Dot(m_axis, vB - vA) + m_a2 * wB - m_a1 * wA;
             float32 impulse = m_motorMass * (m_motorSpeed - Cdot);
@@ -300,7 +300,7 @@ void b2PrismaticJoint::SolveVelocityConstraints(const b2SolverData& data)
     Cdot1.x = b2Dot(m_perp, vB - vA) + m_s2 * wB - m_s1 * wA;
     Cdot1.y = wB - wA;
 
-    if (m_enableLimit && m_limitState != e_inactiveLimit)
+    if (m_enableLimit && m_limitState != b2LimitState::INACTIVE_LIMIT)
         {
             // Solve prismatic and limit constraint in block form.
             float32 Cdot2;
@@ -311,11 +311,11 @@ void b2PrismaticJoint::SolveVelocityConstraints(const b2SolverData& data)
             b2Vec3 df = m_K.Solve33(-Cdot);
             m_impulse += df;
 
-            if (m_limitState == e_atLowerLimit)
+            if (m_limitState == b2LimitState::AT_LOWER_LIMIT)
                 {
                     m_impulse.z = b2Max(m_impulse.z, 0.0f);
                 }
-            else if (m_limitState == e_atUpperLimit)
+            else if (m_limitState == b2LimitState::AT_UPPER_LIMIT)
                 {
                     m_impulse.z = b2Min(m_impulse.z, 0.0f);
                 }

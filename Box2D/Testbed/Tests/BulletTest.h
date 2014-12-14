@@ -21,7 +21,7 @@
 
 class BulletTest : public Test
 {
-   public:
+public:
     BulletTest()
     {
         {
@@ -41,7 +41,7 @@ class BulletTest : public Test
 
         {
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2Body::DYNAMIC_BODY;
             bd.position.Set(0.0f, 4.0f);
 
             b2PolygonShape box;

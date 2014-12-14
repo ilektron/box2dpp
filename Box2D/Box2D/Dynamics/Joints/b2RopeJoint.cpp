@@ -39,7 +39,7 @@ b2RopeJoint::b2RopeJoint(const b2RopeJointDef* def) : b2Joint(def)
 
     m_mass = 0.0f;
     m_impulse = 0.0f;
-    m_state = e_inactiveLimit;
+    m_state = b2LimitState::INACTIVE_LIMIT;
     m_length = 0.0f;
 }
 
@@ -75,11 +75,11 @@ void b2RopeJoint::InitVelocityConstraints(const b2SolverData& data)
     float32 C = m_length - m_maxLength;
     if (C > 0.0f)
         {
-            m_state = e_atUpperLimit;
+            m_state = b2LimitState::AT_UPPER_LIMIT;
         }
     else
         {
-            m_state = e_inactiveLimit;
+            m_state = b2LimitState::INACTIVE_LIMIT;
         }
 
     if (m_length > LINEAR_SLOP)

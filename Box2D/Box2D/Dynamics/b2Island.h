@@ -35,7 +35,7 @@ struct b2Profile;
 /// This is an internal class.
 class b2Island
 {
-   public:
+public:
     b2Island(int32_t bodyCapacity, int32_t contactCapacity, int32_t jointCapacity,
              b2StackAllocator* allocator, b2ContactListener* listener);
     ~b2Island();

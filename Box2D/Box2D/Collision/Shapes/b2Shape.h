@@ -43,7 +43,7 @@ struct b2MassData
 /// is created. Shapes may encapsulate a one or more child shapes.
 class b2Shape
 {
-   public:
+public:
     enum Type
     {
         e_circle = 0,

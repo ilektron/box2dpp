@@ -29,7 +29,7 @@ namespace box2d
 /// In most cases you should not need many vertices for a convex polygon.
 class b2PolygonShape : public b2Shape
 {
-   public:
+public:
     b2PolygonShape();
 
     /// Implement b2Shape.

@@ -19,15 +19,12 @@
 #ifndef CONFINED_H
 #define CONFINED_H
 
+constexpr int CONFINED_COLUMN_COUNT = 0;
+constexpr int CONFINED_ROW_COUNT = 0;
+
 class Confined : public Test
 {
-   public:
-    enum
-    {
-        e_columnCount = 0,
-        e_rowCount = 0
-    };
-
+public:
     Confined()
     {
         {
@@ -63,12 +60,12 @@ class Confined : public Test
         fd.density = 1.0f;
         fd.friction = 0.1f;
 
-        for (int32_t j = 0; j < e_columnCount; ++j)
+        for (int32_t j = 0; j < CONFINED_COLUMN_COUNT; ++j)
             {
-                for (int i = 0; i < e_rowCount; ++i)
+                for (int i = 0; i < CONFINED_ROW_COUNT; ++i)
                     {
                         b2BodyDef bd;
-                        bd.type = b2_dynamicBody;
+                        bd.type = b2Body::DYNAMIC_BODY;
                         bd.position.Set(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
                                         (2.0f * i + 1.0f) * radius);
                         b2Body* body = m_world->CreateBody(&bd);
@@ -94,7 +91,7 @@ class Confined : public Test
 
         b2Vec2 p(RandomFloat(), 3.0f + RandomFloat());
         b2BodyDef bd;
-        bd.type = b2_dynamicBody;
+        bd.type = b2Body::DYNAMIC_BODY;
         bd.position = p;
         // bd.allowSleep = false;
         b2Body* body = m_world->CreateBody(&bd);
@@ -117,7 +114,7 @@ class Confined : public Test
         bool sleeping = true;
         for (b2Body* b = m_world->GetBodyList(); b; b = b->GetNext())
             {
-                if (b->GetType() != b2_dynamicBody)
+                if (b->GetType() != b2Body::DYNAMIC_BODY)
                     {
                         continue;
                     }
@@ -142,7 +139,7 @@ class Confined : public Test
 
         for (b2Body* b = m_world->GetBodyList(); b; b = b->GetNext())
             {
-                if (b->GetType() != b2_dynamicBody)
+                if (b->GetType() != b2Body::DYNAMIC_BODY)
                     {
                         continue;
                     }

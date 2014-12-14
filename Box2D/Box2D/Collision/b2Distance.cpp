@@ -542,7 +542,8 @@ void box2d::b2Distance(b2DistanceOutput* output, b2SimplexCache* cache,
             ++iter;
             ++b2_gjkIters;
 
-            // Check for duplicate support points. This is the main termination criteria.
+            // Check for duplicate support points. This is the main termination
+            // criteria.
             bool duplicate = false;
             for (int32_t i = 0; i < saveCount; ++i)
                 {

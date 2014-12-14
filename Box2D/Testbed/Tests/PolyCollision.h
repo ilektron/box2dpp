@@ -21,7 +21,7 @@
 
 class PolyCollision : public Test
 {
-   public:
+public:
     PolyCollision()
     {
         {

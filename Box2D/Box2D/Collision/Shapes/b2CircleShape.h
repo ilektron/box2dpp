@@ -26,7 +26,7 @@ namespace box2d
 /// A circle shape.
 class b2CircleShape : public b2Shape
 {
-   public:
+public:
     b2CircleShape();
 
     /// Implement b2Shape.

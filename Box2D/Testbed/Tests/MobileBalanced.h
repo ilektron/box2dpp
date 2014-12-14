@@ -19,14 +19,11 @@
 #ifndef MOBILE_BALANCED_H
 #define MOBILE_BALANCED_H
 
+constexpr int MOBILE_BALANCED_DEPTH = 4;
+
 class MobileBalanced : public Test
 {
-   public:
-    enum
-    {
-        e_depth = 4
-    };
-
+public:
     MobileBalanced()
     {
         b2Body* ground;
@@ -60,7 +57,7 @@ class MobileBalanced : public Test
         b2Vec2 p = parent->GetPosition() + localAnchor - h;
 
         b2BodyDef bodyDef;
-        bodyDef.type = b2_dynamicBody;
+        bodyDef.type = b2Body::DYNAMIC_BODY;
         bodyDef.position = p;
         b2Body* body = m_world->CreateBody(&bodyDef);
 
@@ -68,7 +65,7 @@ class MobileBalanced : public Test
         shape.SetAsBox(0.25f * a, a);
         body->CreateFixture(&shape, density);
 
-        if (depth == e_depth)
+        if (depth == MOBILE_BALANCED_DEPTH)
             {
                 return body;
             }

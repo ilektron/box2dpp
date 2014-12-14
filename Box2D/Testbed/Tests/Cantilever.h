@@ -23,14 +23,12 @@
 // You will have to use a high number of iterations to make them stiff.
 // So why not go ahead and use soft weld joints? They behave like a revolute
 // joint with a rotational spring.
+
+constexpr int CANTILEVER_COUNT = 8;
+
 class Cantilever : public Test
 {
-   public:
-    enum
-    {
-        e_count = 8
-    };
-
+public:
     Cantilever()
     {
         b2Body* ground = nullptr;
@@ -54,10 +52,10 @@ class Cantilever : public Test
             b2WeldJointDef jd;
 
             b2Body* prevBody = ground;
-            for (int32_t i = 0; i < e_count; ++i)
+            for (int32_t i = 0; i < CANTILEVER_COUNT; ++i)
                 {
                     b2BodyDef bd;
-                    bd.type = b2_dynamicBody;
+                    bd.type = b2Body::DYNAMIC_BODY;
                     bd.position.Set(-14.5f + 1.0f * i, 5.0f);
                     b2Body* body = m_world->CreateBody(&bd);
                     body->CreateFixture(&fd);
@@ -86,7 +84,7 @@ class Cantilever : public Test
             for (int32_t i = 0; i < 3; ++i)
                 {
                     b2BodyDef bd;
-                    bd.type = b2_dynamicBody;
+                    bd.type = b2Body::DYNAMIC_BODY;
                     bd.position.Set(-14.0f + 2.0f * i, 15.0f);
                     b2Body* body = m_world->CreateBody(&bd);
                     body->CreateFixture(&fd);
@@ -110,10 +108,10 @@ class Cantilever : public Test
             b2WeldJointDef jd;
 
             b2Body* prevBody = ground;
-            for (int32_t i = 0; i < e_count; ++i)
+            for (int32_t i = 0; i < CANTILEVER_COUNT; ++i)
                 {
                     b2BodyDef bd;
-                    bd.type = b2_dynamicBody;
+                    bd.type = b2Body::DYNAMIC_BODY;
                     bd.position.Set(-4.5f + 1.0f * i, 5.0f);
                     b2Body* body = m_world->CreateBody(&bd);
                     body->CreateFixture(&fd);
@@ -142,10 +140,10 @@ class Cantilever : public Test
             jd.dampingRatio = 0.7f;
 
             b2Body* prevBody = ground;
-            for (int32_t i = 0; i < e_count; ++i)
+            for (int32_t i = 0; i < CANTILEVER_COUNT; ++i)
                 {
                     b2BodyDef bd;
-                    bd.type = b2_dynamicBody;
+                    bd.type = b2Body::DYNAMIC_BODY;
                     bd.position.Set(5.5f + 1.0f * i, 10.0f);
                     b2Body* body = m_world->CreateBody(&bd);
                     body->CreateFixture(&fd);
@@ -176,7 +174,7 @@ class Cantilever : public Test
                 fd.density = 1.0f;
 
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2Body::DYNAMIC_BODY;
                 bd.position.Set(-8.0f + 8.0f * i, 12.0f);
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&fd);
@@ -192,7 +190,7 @@ class Cantilever : public Test
                 fd.density = 1.0f;
 
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2Body::DYNAMIC_BODY;
                 bd.position.Set(-6.0f + 6.0f * i, 10.0f);
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&fd);

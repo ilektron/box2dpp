@@ -21,17 +21,12 @@
 
 extern bool g_blockSolve;
 
+constexpr int VERTICAL_STACK_COLUMN_COUNT = 1;
+constexpr int VERTICAL_STACK_ROW_COUNT = 1;
+
 class VerticalStack : public Test
 {
-   public:
-    enum
-    {
-        e_columnCount = 1,
-        e_rowCount = 15
-        // e_columnCount = 1,
-        // e_rowCount = 1
-    };
-
+public:
     VerticalStack()
     {
         {
@@ -48,7 +43,7 @@ class VerticalStack : public Test
 
         float32 xs[5] = {0.0f, -10.0f, -5.0f, 5.0f, 10.0f};
 
-        for (int32_t j = 0; j < e_columnCount; ++j)
+        for (int32_t j = 0; j < VERTICAL_STACK_COLUMN_COUNT; ++j)
             {
                 b2PolygonShape shape;
                 shape.SetAsBox(0.5f, 0.5f);
@@ -58,13 +53,13 @@ class VerticalStack : public Test
                 fd.density = 1.0f;
                 fd.friction = 0.3f;
 
-                for (int i = 0; i < e_rowCount; ++i)
+                for (int i = 0; i < VERTICAL_STACK_ROW_COUNT; ++i)
                     {
                         b2BodyDef bd;
-                        bd.type = b2_dynamicBody;
+                        bd.type = b2Body::DYNAMIC_BODY;
 
-                        int32_t n = j * e_rowCount + i;
-                        b2Assert(n < e_rowCount * e_columnCount);
+                        int32_t n = j * VERTICAL_STACK_ROW_COUNT + i;
+                        b2Assert(n < VERTICAL_STACK_ROW_COUNT * VERTICAL_STACK_COLUMN_COUNT);
                         m_indices[n] = n;
                         bd.userData = m_indices + n;
 
@@ -104,7 +99,7 @@ class VerticalStack : public Test
                         fd.restitution = 0.05f;
 
                         b2BodyDef bd;
-                        bd.type = b2_dynamicBody;
+                        bd.type = b2Body::DYNAMIC_BODY;
                         bd.bullet = true;
                         bd.position.Set(-31.0f, 5.0f);
 
@@ -145,7 +140,7 @@ class VerticalStack : public Test
         //		fd.restitution = 0.05f;
 
         //		b2BodyDef bd;
-        //		bd.type = b2_dynamicBody;
+        //		bd.type = b2Body::DYNAMIC_BODY;
         //		bd.bullet = true;
         //		bd.position.Set(-31.0f, 5.0f);
 
@@ -163,8 +158,8 @@ class VerticalStack : public Test
     }
 
     b2Body* m_bullet;
-    b2Body* m_bodies[e_rowCount * e_columnCount];
-    int32_t m_indices[e_rowCount * e_columnCount];
+    b2Body* m_bodies[VERTICAL_STACK_COLUMN_COUNT * VERTICAL_STACK_ROW_COUNT];
+    int32_t m_indices[VERTICAL_STACK_COLUMN_COUNT * VERTICAL_STACK_ROW_COUNT];
 };
 
 #endif

@@ -22,7 +22,7 @@
 // This is a fun demo that shows off the wheel joint
 class Car : public Test
 {
-   public:
+public:
     Car()
     {
         m_hz = 4.0f;
@@ -88,7 +88,7 @@ class Car : public Test
         {
             b2BodyDef bd;
             bd.position.Set(140.0f, 1.0f);
-            bd.type = b2_dynamicBody;
+            bd.type = b2Body::DYNAMIC_BODY;
             b2Body* body = m_world->CreateBody(&bd);
 
             b2PolygonShape box;
@@ -122,7 +122,7 @@ class Car : public Test
             for (int32_t i = 0; i < N; ++i)
                 {
                     b2BodyDef bd;
-                    bd.type = b2_dynamicBody;
+                    bd.type = b2Body::DYNAMIC_BODY;
                     bd.position.Set(161.0f + 2.0f * i, -0.125f);
                     b2Body* body = m_world->CreateBody(&bd);
                     body->CreateFixture(&fd);
@@ -146,7 +146,7 @@ class Car : public Test
 
             b2Body* body = nullptr;
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2Body::DYNAMIC_BODY;
 
             bd.position.Set(230.0f, 0.5f);
             body = m_world->CreateBody(&bd);
@@ -185,7 +185,7 @@ class Car : public Test
             circle.m_radius = 0.4f;
 
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2Body::DYNAMIC_BODY;
             bd.position.Set(0.0f, 1.0f);
             m_car = m_world->CreateBody(&bd);
             m_car->CreateFixture(&chassis, 1.0f);

@@ -28,7 +28,7 @@ namespace box2d
 /// correct contact normals.
 class b2EdgeShape : public b2Shape
 {
-   public:
+public:
     b2EdgeShape();
 
     /// Set this as an isolated edge.

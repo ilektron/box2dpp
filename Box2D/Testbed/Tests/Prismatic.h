@@ -22,7 +22,7 @@
 // The motor in this test gets smoother with higher velocity iterations.
 class Prismatic : public Test
 {
-   public:
+public:
     Prismatic()
     {
         b2Body* ground = nullptr;
@@ -40,7 +40,7 @@ class Prismatic : public Test
             shape.SetAsBox(2.0f, 0.5f);
 
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2Body::DYNAMIC_BODY;
             bd.position.Set(-10.0f, 10.0f);
             bd.angle = 0.5f * PI;
             bd.allowSleep = false;

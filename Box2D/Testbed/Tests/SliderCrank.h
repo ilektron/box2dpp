@@ -23,7 +23,7 @@
 
 class SliderCrank : public Test
 {
-   public:
+public:
     SliderCrank()
     {
         b2Body* ground = nullptr;
@@ -45,7 +45,7 @@ class SliderCrank : public Test
                 shape.SetAsBox(0.5f, 2.0f);
 
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2Body::DYNAMIC_BODY;
                 bd.position.Set(0.0f, 7.0f);
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&shape, 2.0f);
@@ -66,7 +66,7 @@ class SliderCrank : public Test
                 shape.SetAsBox(0.5f, 4.0f);
 
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2Body::DYNAMIC_BODY;
                 bd.position.Set(0.0f, 13.0f);
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&shape, 2.0f);
@@ -85,7 +85,7 @@ class SliderCrank : public Test
                 shape.SetAsBox(1.5f, 1.5f);
 
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2Body::DYNAMIC_BODY;
                 bd.fixedRotation = true;
                 bd.position.Set(0.0f, 17.0f);
                 b2Body* body = m_world->CreateBody(&bd);
@@ -110,7 +110,7 @@ class SliderCrank : public Test
                 shape.SetAsBox(1.5f, 1.5f);
 
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2Body::DYNAMIC_BODY;
                 bd.position.Set(0.0f, 23.0f);
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&shape, 2.0f);

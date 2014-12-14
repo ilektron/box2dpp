@@ -27,7 +27,7 @@ namespace box2d
 /// not work on every platform.
 class b2Timer
 {
-   public:
+public:
     /// Constructor
     b2Timer();
 
@@ -37,7 +37,7 @@ class b2Timer
     /// Get the time since construction or the last reset.
     float32 GetMilliseconds() const;
 
-   private:
+private:
 #if defined(_WIN32)
     float64 m_start;
     static float64 s_invFrequency;

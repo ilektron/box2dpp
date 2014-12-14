@@ -427,7 +427,7 @@ void b2World::Solve(const b2TimeStep& step)
                 }
 
             // The seed can be dynamic or kinematic.
-            if (seed->GetType() == b2_staticBody)
+            if (seed->GetType() == b2Body::STATIC_BODY)
                 {
                     continue;
                 }
@@ -451,7 +451,7 @@ void b2World::Solve(const b2TimeStep& step)
 
                     // To keep islands as small as possible, we don't
                     // propagate islands across static bodies.
-                    if (b->GetType() == b2_staticBody)
+                    if (b->GetType() == b2Body::STATIC_BODY)
                         {
                             continue;
                         }
@@ -538,7 +538,7 @@ void b2World::Solve(const b2TimeStep& step)
                 {
                     // Allow static bodies to participate in other islands.
                     b2Body* b = island.m_bodies[i];
-                    if (b->GetType() == b2_staticBody)
+                    if (b->GetType() == b2Body::STATIC_BODY)
                         {
                             b->m_flags &= ~b2Body::e_islandFlag;
                         }
@@ -558,7 +558,7 @@ void b2World::Solve(const b2TimeStep& step)
                         continue;
                     }
 
-                if (b->GetType() == b2_staticBody)
+                if (b->GetType() == b2Body::STATIC_BODY)
                     {
                         continue;
                     }
@@ -639,10 +639,11 @@ void b2World::SolveTOI(const b2TimeStep& step)
 
                             b2BodyType typeA = bA->m_type;
                             b2BodyType typeB = bB->m_type;
-                            b2Assert(typeA == b2_dynamicBody || typeB == b2_dynamicBody);
+                            b2Assert(typeA == b2Body::DYNAMIC_BODY ||
+                                     typeB == b2Body::DYNAMIC_BODY);
 
-                            bool activeA = bA->IsAwake() && typeA != b2_staticBody;
-                            bool activeB = bB->IsAwake() && typeB != b2_staticBody;
+                            bool activeA = bA->IsAwake() && typeA != b2Body::STATIC_BODY;
+                            bool activeB = bB->IsAwake() && typeB != b2Body::STATIC_BODY;
 
                             // Is at least one body active (awake and dynamic or kinematic)?
                             if (activeA == false && activeB == false)
@@ -650,8 +651,8 @@ void b2World::SolveTOI(const b2TimeStep& step)
                                     continue;
                                 }
 
-                            bool collideA = bA->IsBullet() || typeA != b2_dynamicBody;
-                            bool collideB = bB->IsBullet() || typeB != b2_dynamicBody;
+                            bool collideA = bA->IsBullet() || typeA != b2Body::DYNAMIC_BODY;
+                            bool collideB = bB->IsBullet() || typeB != b2Body::DYNAMIC_BODY;
 
                             // Are these two non-bullet dynamic bodies?
                             if (collideA == false && collideB == false)
@@ -766,7 +767,7 @@ void b2World::SolveTOI(const b2TimeStep& step)
             b2Body* bodies[2] = {bA, bB};
             for (auto body : bodies)
                 {
-                    if (body->m_type == b2_dynamicBody)
+                    if (body->m_type == b2Body::DYNAMIC_BODY)
                         {
                             for (b2ContactEdge* ce = body->m_contactList; ce; ce = ce->next)
                                 {
@@ -790,7 +791,7 @@ void b2World::SolveTOI(const b2TimeStep& step)
 
                                     // Only add static, kinematic, or bullet bodies.
                                     b2Body* other = ce->other;
-                                    if (other->m_type == b2_dynamicBody &&
+                                    if (other->m_type == b2Body::DYNAMIC_BODY &&
                                         body->IsBullet() == false && other->IsBullet() == false)
                                         {
                                             continue;
@@ -843,7 +844,7 @@ void b2World::SolveTOI(const b2TimeStep& step)
                                     // Add the other body to the island.
                                     other->m_flags |= b2Body::e_islandFlag;
 
-                                    if (other->m_type != b2_staticBody)
+                                    if (other->m_type != b2Body::STATIC_BODY)
                                         {
                                             other->SetAwake(true);
                                         }
@@ -868,7 +869,7 @@ void b2World::SolveTOI(const b2TimeStep& step)
                     b2Body* body = island.m_bodies[i];
                     body->m_flags &= ~b2Body::e_islandFlag;
 
-                    if (body->m_type != b2_dynamicBody)
+                    if (body->m_type != b2Body::DYNAMIC_BODY)
                         {
                             continue;
                         }
@@ -1107,11 +1108,11 @@ void b2World::DrawJoint(b2Joint* joint)
 
     switch (joint->GetType())
         {
-            case e_distanceJoint:
+            case b2JointType::DISTANCE_JOINT:
                 g_debugDraw->DrawSegment(p1, p2, color);
                 break;
 
-            case e_pulleyJoint:
+            case b2JointType::PULLEY_JOINT:
                 {
                     b2PulleyJoint* pulley = (b2PulleyJoint*)joint;
                     b2Vec2 s1 = pulley->GetGroundAnchorA();
@@ -1122,7 +1123,7 @@ void b2World::DrawJoint(b2Joint* joint)
                 }
                 break;
 
-            case e_mouseJoint:
+            case b2JointType::MOUSE_JOINT:
                 // don't draw this
                 break;
 
@@ -1153,11 +1154,11 @@ void b2World::DrawDebugData()
                                 {
                                     DrawShape(f, xf, b2Color(0.5f, 0.5f, 0.3f));
                                 }
-                            else if (b->GetType() == b2_staticBody)
+                            else if (b->GetType() == b2Body::STATIC_BODY)
                                 {
                                     DrawShape(f, xf, b2Color(0.5f, 0.9f, 0.5f));
                                 }
-                            else if (b->GetType() == b2_kinematicBody)
+                            else if (b->GetType() == b2Body::KINEMATIC_BODY)
                                 {
                                     DrawShape(f, xf, b2Color(0.5f, 0.5f, 0.9f));
                                 }
@@ -1310,7 +1311,7 @@ void b2World::Dump()
     // First pass on joints, skip gear joints.
     for (b2Joint* j = m_jointList; j; j = j->m_next)
         {
-            if (j->m_type == e_gearJoint)
+            if (j->m_type == b2JointType::GEAR_JOINT)
                 {
                     continue;
                 }
@@ -1323,7 +1324,7 @@ void b2World::Dump()
     // Second pass on joints, only gear joints.
     for (b2Joint* j = m_jointList; j; j = j->m_next)
         {
-            if (j->m_type != e_gearJoint)
+            if (j->m_type != b2JointType::GEAR_JOINT)
                 {
                     continue;
                 }

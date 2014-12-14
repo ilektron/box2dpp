@@ -22,7 +22,7 @@
 // This is used to test sensor shapes.
 class SensorTest : public Test
 {
-   public:
+public:
     enum
     {
         e_count = 7
@@ -68,7 +68,7 @@ class SensorTest : public Test
             for (int32_t i = 0; i < e_count; ++i)
                 {
                     b2BodyDef bd;
-                    bd.type = b2_dynamicBody;
+                    bd.type = b2Body::DYNAMIC_BODY;
                     bd.position.Set(-10.0f + 3.0f * i, 20.0f);
                     bd.userData = m_touching + i;
 

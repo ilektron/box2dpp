@@ -39,7 +39,7 @@ const uint16_t k_circleMask = 0xFFFF;
 
 class CollisionFiltering : public Test
 {
-   public:
+public:
     CollisionFiltering()
     {
         // Ground body
@@ -73,7 +73,7 @@ class CollisionFiltering : public Test
         triangleShapeDef.filter.maskBits = k_triangleMask;
 
         b2BodyDef triangleBodyDef;
-        triangleBodyDef.type = b2_dynamicBody;
+        triangleBodyDef.type = b2Body::DYNAMIC_BODY;
         triangleBodyDef.position.Set(-5.0f, 2.0f);
 
         b2Body* body1 = m_world->CreateBody(&triangleBodyDef);
@@ -93,7 +93,7 @@ class CollisionFiltering : public Test
 
         {
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2Body::DYNAMIC_BODY;
             bd.position.Set(-5.0f, 10.0f);
             b2Body* body = m_world->CreateBody(&bd);
 
@@ -126,7 +126,7 @@ class CollisionFiltering : public Test
         boxShapeDef.filter.maskBits = k_boxMask;
 
         b2BodyDef boxBodyDef;
-        boxBodyDef.type = b2_dynamicBody;
+        boxBodyDef.type = b2Body::DYNAMIC_BODY;
         boxBodyDef.position.Set(0.0f, 2.0f);
 
         b2Body* body3 = m_world->CreateBody(&boxBodyDef);
@@ -153,7 +153,7 @@ class CollisionFiltering : public Test
         circleShapeDef.filter.maskBits = k_circleMask;
 
         b2BodyDef circleBodyDef;
-        circleBodyDef.type = b2_dynamicBody;
+        circleBodyDef.type = b2Body::DYNAMIC_BODY;
         circleBodyDef.position.Set(5.0f, 2.0f);
 
         b2Body* body5 = m_world->CreateBody(&circleBodyDef);

@@ -21,7 +21,7 @@
 
 class OneSidedPlatform : public Test
 {
-   public:
+public:
     enum State
     {
         e_unknown,
@@ -58,7 +58,7 @@ class OneSidedPlatform : public Test
         // Actor
         {
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2Body::DYNAMIC_BODY;
             bd.position.Set(0.0f, 12.0f);
             b2Body* body = m_world->CreateBody(&bd);
 

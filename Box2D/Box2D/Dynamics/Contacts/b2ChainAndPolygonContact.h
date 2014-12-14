@@ -27,7 +27,7 @@ class b2BlockAllocator;
 
 class b2ChainAndPolygonContact : public b2Contact
 {
-   public:
+public:
     static b2Contact* Create(b2Fixture* fixtureA, int32_t indexA, b2Fixture* fixtureB,
                              int32_t indexB, b2BlockAllocator* allocator);
     static void Destroy(b2Contact* contact, b2BlockAllocator* allocator);

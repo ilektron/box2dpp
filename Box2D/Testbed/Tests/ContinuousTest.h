@@ -21,7 +21,7 @@
 
 class ContinuousTest : public Test
 {
-   public:
+public:
     ContinuousTest()
     {
         {
@@ -42,7 +42,7 @@ class ContinuousTest : public Test
 #if 1
         {
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2Body::DYNAMIC_BODY;
             bd.position.Set(0.0f, 20.0f);
             // bd.angle = 0.1f;
 
@@ -60,7 +60,7 @@ class ContinuousTest : public Test
 #else
         {
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2Body::DYNAMIC_BODY;
             bd.position.Set(0.0f, 2.0f);
             b2Body* body = m_world->CreateBody(&bd);
 

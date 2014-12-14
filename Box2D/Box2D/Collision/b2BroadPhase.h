@@ -32,12 +32,15 @@ struct b2Pair
     int32_t proxyIdB;
 };
 
-/// The broad-phase is used for computing pairs and performing volume queries and ray casts.
-/// This broad-phase does not persist pairs. Instead, this reports potentially new pairs.
-/// It is up to the client to consume the new pairs and to track subsequent overlap.
+/// The broad-phase is used for computing pairs and performing volume queries
+/// and ray casts.
+/// This broad-phase does not persist pairs. Instead, this reports potentially
+/// new pairs.
+/// It is up to the client to consume the new pairs and to track subsequent
+/// overlap.
 class b2BroadPhase
 {
-   public:
+public:
     enum
     {
         e_nullProxy = -1
@@ -57,7 +60,8 @@ class b2BroadPhase
     /// call UpdatePairs to finalized the proxy pairs (for your time step).
     void MoveProxy(int32_t proxyId, const b2AABB& aabb, const b2Vec2& displacement);
 
-    /// Call to trigger a re-processing of it's pairs on the next call to UpdatePairs.
+    /// Call to trigger a re-processing of it's pairs on the next call to
+    /// UpdatePairs.
     void TouchProxy(int32_t proxyId);
 
     /// Get the fat AABB for a proxy.
@@ -83,12 +87,16 @@ class b2BroadPhase
 
     /// Ray-cast against the proxies in the tree. This relies on the callback
     /// to perform a exact ray-cast in the case were the proxy contains a shape.
-    /// The callback also performs the any collision filtering. This has performance
-    /// roughly equal to k * log(n), where k is the number of collisions and n is the
+    /// The callback also performs the any collision filtering. This has
+    /// performance
+    /// roughly equal to k * log(n), where k is the number of collisions and n is
+    /// the
     /// number of proxies in the tree.
-    /// @param input the ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 -
+    /// @param input the ray-cast input data. The ray extends from p1 to p1 +
+    /// maxFraction * (p2 -
     /// p1).
-    /// @param callback a callback class that is called for each proxy that is hit by the ray.
+    /// @param callback a callback class that is called for each proxy that is hit
+    /// by the ray.
     template <typename T>
     void RayCast(T* callback, const b2RayCastInput& input) const;
 
@@ -106,7 +114,7 @@ class b2BroadPhase
     /// @param newOrigin the new origin with respect to the old origin
     void ShiftOrigin(const b2Vec2& newOrigin);
 
-   private:
+private:
     friend class b2DynamicTree;
 
     void BufferMove(int32_t proxyId);
