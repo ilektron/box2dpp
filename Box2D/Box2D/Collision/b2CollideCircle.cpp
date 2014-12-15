@@ -63,7 +63,7 @@ void box2d::b2CollidePolygonAndCircle(b2Manifold* manifold, const b2PolygonShape
     int32_t normalIndex = 0;
     float32 separation = -MAX_FLOAT;
     float32 radius = polygonA->GetRadius() + circleB->GetRadius();
-    int32_t vertexCount = polygonA->m_count;
+    int32_t vertexCount = polygonA->GetVertexCount();
     const b2Vec2* vertices = polygonA->m_vertices;
     const b2Vec2* normals = polygonA->m_normals;
 

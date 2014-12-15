@@ -73,9 +73,9 @@ int32_t b2PolygonShape::GetChildCount() const
     return 1;
 }
 
-static b2Vec2 ComputeCentroid(const b2Vec2* vs, int32_t count)
+static b2Vec2 ComputeCentroid(const std::vector<b2Vec2>& vs)
 {
-    b2Assert(count >= 3);
+    b2Assert(vs.size() >= 3);
 
     b2Vec2 c;
     c.Set(0.0f, 0.0f);
@@ -95,12 +95,12 @@ static b2Vec2 ComputeCentroid(const b2Vec2* vs, int32_t count)
 
     const float32 inv3 = 1.0f / 3.0f;
 
-    for (int32_t i = 0; i < count; ++i)
+    for (int32_t i = 0; i < vs.size(); ++i)
     {
         // Triangle vertices.
         b2Vec2 p1 = pRef;
         b2Vec2 p2 = vs[i];
-        b2Vec2 p3 = i + 1 < count ? vs[i + 1] : vs[0];
+        b2Vec2 p3 = i + 1 < vs.size() ? vs[i + 1] : vs[0];
 
         b2Vec2 e1 = p2 - p1;
         b2Vec2 e2 = p3 - p1;

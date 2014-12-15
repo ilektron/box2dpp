@@ -21,6 +21,8 @@
 
 #include <Box2D/Collision/Shapes/b2Shape.h>
 
+#include <vector>
+
 namespace box2d
 {
 /// A convex polygon. It is assumed that the interior of the polygon is to
@@ -83,9 +85,10 @@ public:
     /// @returns true if valid
     bool Validate() const;
 
+private:
     b2Vec2 m_centroid;
-    b2Vec2 m_vertices[MAX_POLYGON_VERTICES];
-    b2Vec2 m_normals[MAX_POLYGON_VERTICES];
+    std::vector<b2Vec2> m_vertices;
+    std::vector<b2Vec2> m_normals;
     int32_t m_count;
 };
 

@@ -27,8 +27,8 @@ static float32 b2FindMaxSeparation(int32_t* edgeIndex, const b2PolygonShape* pol
                                    const b2Transform& xf1, const b2PolygonShape* poly2,
                                    const b2Transform& xf2)
 {
-    int32_t count1 = poly1->m_count;
-    int32_t count2 = poly2->m_count;
+    int32_t count1 = poly1->GetVertexCount();
+    int32_t count2 = poly2->GetVertexCount();
     const b2Vec2* n1s = poly1->m_normals;
     const b2Vec2* v1s = poly1->m_vertices;
     const b2Vec2* v2s = poly2->m_vertices;
@@ -39,7 +39,7 @@ static float32 b2FindMaxSeparation(int32_t* edgeIndex, const b2PolygonShape* pol
     for (int32_t i = 0; i < count1; ++i)
     {
         // Get poly1 normal in frame2.
-        b2Vec2 n = b2Mul(xf.q, n1s[i]);
+        b2Vec2 n = b2Mul(xf.q, poly1->GetNormal(i));
         b2Vec2 v1 = b2Mul(xf, v1s[i]);
 
         // Find deepest point for normal i.
@@ -70,11 +70,11 @@ static void b2FindIncidentEdge(b2ClipVertex c[2], const b2PolygonShape* poly1,
 {
     const b2Vec2* normals1 = poly1->m_normals;
 
-    int32_t count2 = poly2->m_count;
+    int32_t count2 = poly2->GetVertexCount();
     const b2Vec2* vertices2 = poly2->m_vertices;
     const b2Vec2* normals2 = poly2->m_normals;
 
-    b2Assert(0 <= edge1 && edge1 < poly1->m_count);
+    b2Assert(0 <= edge1 && edge1 < poly1->GetVertexCount());
 
     // Get the normal of the reference edge in poly2's frame.
     b2Vec2 normal1 = b2MulT(xf2.q, b2Mul(xf1.q, normals1[edge1]));
@@ -164,7 +164,7 @@ void box2d::b2CollidePolygons(b2Manifold* manifold, const b2PolygonShape* polyA,
     b2ClipVertex incidentEdge[2];
     b2FindIncidentEdge(incidentEdge, poly1, xf1, edge1, poly2, xf2);
 
-    int32_t count1 = poly1->m_count;
+    int32_t count1 = poly1->GetVertexCount();
     const b2Vec2* vertices1 = poly1->m_vertices;
 
     int32_t iv1 = edge1;
