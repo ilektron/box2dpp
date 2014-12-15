@@ -111,8 +111,7 @@ int32_t b2ChainShape::GetChildCount() const
 void b2ChainShape::GetChildEdge(b2EdgeShape* edge, int32_t index) const
 {
     b2Assert(0 <= index && index < m_count - 1);
-    edge->m_type = b2Shape::e_edge;
-    edge->m_radius = m_radius;
+    edge->SetRadius(GetRadius());
 
     edge->m_vertex1 = m_vertices[index + 0];
     edge->m_vertex2 = m_vertices[index + 1];

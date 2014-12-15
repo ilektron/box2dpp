@@ -125,7 +125,7 @@ void b2EdgeShape::ComputeAABB(b2AABB* aabb, const b2Transform& xf, int32_t child
     b2Vec2 lower = b2Min(v1, v2);
     b2Vec2 upper = b2Max(v1, v2);
 
-    b2Vec2 r(m_radius, m_radius);
+    b2Vec2 r(GetRadius(), GetRadius());
     aabb->lowerBound = lower - r;
     aabb->upperBound = upper + r;
 }

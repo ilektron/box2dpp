@@ -43,7 +43,7 @@ struct b2MassData
 /// is created. Shapes may encapsulate a one or more child shapes.
 class b2Shape
 {
-   public:
+public:
     enum Type
     {
         e_circle = 0,
@@ -53,9 +53,15 @@ class b2Shape
         e_typeCount = 4
     };
 
-    virtual ~b2Shape()
-    {
-    }
+private:
+    Type m_type;
+    float32 m_radius;
+
+public:
+    b2Shape() = default;
+    b2Shape(Type type, float32 radius);
+
+    virtual ~b2Shape() = default;
 
     /// Clone the concrete shape using the provided allocator.
     virtual b2Shape* Clone(b2BlockAllocator* allocator) const = 0;
@@ -92,13 +98,28 @@ class b2Shape
     /// @param density the density in kilograms per meter squared.
     virtual void ComputeMass(b2MassData* massData, float32 density) const = 0;
 
-    Type m_type;
-    float32 m_radius;
+    // Get/Setters for m_radius
+    float32 GetRadius() const;
+    void SetRadius(float32 radius);
 };
+
+inline b2Shape::b2Shape(b2Shape::Type type, float32 radius) : m_type(type)
+{
+}
 
 inline b2Shape::Type b2Shape::GetType() const
 {
     return m_type;
+}
+
+inline float32 b2Shape::GetRadius() const
+{
+    return m_radius;
+}
+
+inline void b2Shape::SetRadius(float32 radius)
+{
+    m_radius = radius;
 }
 }
 

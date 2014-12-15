@@ -19,14 +19,11 @@
 #ifndef CONVEX_HULL_H
 #define CONVEX_HULL_H
 
+constexpr int CONVEX_HULL_COUNT = MAX_POLYGON_VERTICES;
+
 class ConvexHull : public Test
 {
-   public:
-    enum
-    {
-        e_count = MAX_POLYGON_VERTICES
-    };
-
+public:
     ConvexHull()
     {
         Generate();
@@ -50,7 +47,7 @@ class ConvexHull : public Test
             elem = v;
         }
 
-        m_count = e_count;
+        m_count = CONVEX_HULL_COUNT;
     }
 
     static Test* Create()

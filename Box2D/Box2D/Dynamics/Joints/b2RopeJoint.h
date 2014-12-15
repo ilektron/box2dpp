@@ -31,7 +31,7 @@ struct b2RopeJointDef : public b2JointDef
 {
     b2RopeJointDef()
     {
-        type = e_ropeJoint;
+        type = b2JointType::ROPE_JOINT;
         localAnchorA.Set(-1.0f, 0.0f);
         localAnchorB.Set(1.0f, 0.0f);
         maxLength = 0.0f;
@@ -59,7 +59,7 @@ struct b2RopeJointDef : public b2JointDef
 /// control length.
 class b2RopeJoint : public b2Joint
 {
-   public:
+public:
     b2Vec2 GetAnchorA() const override;
     b2Vec2 GetAnchorB() const override;
 
@@ -90,7 +90,7 @@ class b2RopeJoint : public b2Joint
     /// Dump joint to dmLog
     void Dump() override;
 
-   protected:
+protected:
     friend class b2Joint;
     b2RopeJoint(const b2RopeJointDef* data);
 

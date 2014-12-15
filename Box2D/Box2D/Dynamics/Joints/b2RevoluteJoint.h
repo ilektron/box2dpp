@@ -38,7 +38,7 @@ struct b2RevoluteJointDef : public b2JointDef
 {
     b2RevoluteJointDef()
     {
-        type = e_revoluteJoint;
+        type = b2JointType::REVOLUTE_JOINT;
         localAnchorA.Set(0.0f, 0.0f);
         localAnchorB.Set(0.0f, 0.0f);
         referenceAngle = 0.0f;
@@ -91,7 +91,7 @@ struct b2RevoluteJointDef : public b2JointDef
 /// is provided so that infinite forces are not generated.
 class b2RevoluteJoint : public b2Joint
 {
-   public:
+public:
     b2Vec2 GetAnchorA() const override;
     b2Vec2 GetAnchorB() const override;
 
@@ -168,7 +168,7 @@ class b2RevoluteJoint : public b2Joint
     /// Dump to b2Log.
     void Dump() override;
 
-   protected:
+protected:
     friend class b2Joint;
     friend class b2GearJoint;
 

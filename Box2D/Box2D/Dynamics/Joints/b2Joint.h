@@ -28,28 +28,28 @@ class b2Joint;
 struct b2SolverData;
 class b2BlockAllocator;
 
-enum b2JointType
+enum class b2JointType
 {
-    e_unknownJoint,
-    e_revoluteJoint,
-    e_prismaticJoint,
-    e_distanceJoint,
-    e_pulleyJoint,
-    e_mouseJoint,
-    e_gearJoint,
-    e_wheelJoint,
-    e_weldJoint,
-    e_frictionJoint,
-    e_ropeJoint,
-    e_motorJoint
+    UNKNOWN_JOINT,
+    REVOLUTE_JOINT,
+    PRISMATIC_JOINT,
+    DISTANCE_JOINT,
+    PULLEY_JOINT,
+    MOUSE_JOINT,
+    GEAR_JOINT,
+    WHEEL_JOINT,
+    WELD_JOINT,
+    FRICTION_JOINT,
+    ROPE_JOINT,
+    MOTOR_JOINT
 };
 
-enum b2LimitState
+enum class b2LimitState
 {
-    e_inactiveLimit,
-    e_atLowerLimit,
-    e_atUpperLimit,
-    e_equalLimits
+    INACTIVE_LIMIT,
+    AT_LOWER_LIMIT,
+    AT_UPPER_LIMIT,
+    EQUAL_LIMITS
 };
 
 struct b2Jacobian
@@ -77,7 +77,7 @@ struct b2JointDef
 {
     b2JointDef()
     {
-        type = e_unknownJoint;
+        type = b2JointType::UNKNOWN_JOINT;
         userData = nullptr;
         bodyA = nullptr;
         bodyB = nullptr;
@@ -104,7 +104,7 @@ struct b2JointDef
 /// various fashions. Some joints also feature limits and motors.
 class b2Joint
 {
-   public:
+public:
     /// Get the type of the concrete joint.
     b2JointType GetType() const;
 
@@ -156,7 +156,7 @@ class b2Joint
         B2_NOT_USED(newOrigin);
     }
 
-   protected:
+protected:
     friend class b2World;
     friend class b2Body;
     friend class b2Island;

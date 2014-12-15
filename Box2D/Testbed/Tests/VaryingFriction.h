@@ -21,7 +21,7 @@
 
 class VaryingFriction : public Test
 {
-   public:
+public:
     VaryingFriction()
     {
         {
@@ -104,7 +104,7 @@ class VaryingFriction : public Test
             for (int i = 0; i < 5; ++i)
             {
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.position.Set(-15.0f + 4.0f * i, 28.0f);
                 b2Body* body = m_world->CreateBody(&bd);
 

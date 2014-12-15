@@ -28,7 +28,7 @@ struct b2FrictionJointDef : public b2JointDef
 {
     b2FrictionJointDef()
     {
-        type = e_frictionJoint;
+        type = b2JointType::FRICTION_JOINT;
         localAnchorA.SetZero();
         localAnchorB.SetZero();
         maxForce = 0.0f;
@@ -56,7 +56,7 @@ struct b2FrictionJointDef : public b2JointDef
 /// It provides 2D translational friction and angular friction.
 class b2FrictionJoint : public b2Joint
 {
-   public:
+public:
     b2Vec2 GetAnchorA() const override;
     b2Vec2 GetAnchorB() const override;
 
@@ -90,7 +90,7 @@ class b2FrictionJoint : public b2Joint
     /// Dump joint to dmLog
     void Dump() override;
 
-   protected:
+protected:
     friend class b2Joint;
 
     b2FrictionJoint(const b2FrictionJointDef* def);

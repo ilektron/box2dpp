@@ -58,7 +58,7 @@ int main(int argc, char** argv)
 
     // Define the dynamic body. We set its position and call the body factory.
     b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;
+    bodyDef.type = b2BodyType::DYNAMIC_BODY;
     bodyDef.position.Set(0.0f, 4.0f);
     b2Body* body = world.CreateBody(&bodyDef);
 

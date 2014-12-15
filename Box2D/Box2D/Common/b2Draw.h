@@ -46,7 +46,7 @@ struct b2Color
 /// entities in your game.
 class b2Draw
 {
-   public:
+public:
     b2Draw();
 
     virtual ~b2Draw()
@@ -95,7 +95,7 @@ class b2Draw
     /// @param xf a transform.
     virtual void DrawTransform(const b2Transform& xf) = 0;
 
-   protected:
+protected:
     uint32_t m_drawFlags;
 };
 }

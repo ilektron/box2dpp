@@ -22,7 +22,7 @@
 // This test holds worlds dumped using b2World::Dump.
 class DumpShell : public Test
 {
-   public:
+public:
     DumpShell()
     {
         // Source code dump of Box2D scene: issue304-minimal-case.rube

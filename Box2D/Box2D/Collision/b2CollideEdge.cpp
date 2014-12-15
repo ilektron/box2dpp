@@ -41,7 +41,7 @@ void box2d::b2CollideEdgeAndCircle(b2Manifold* manifold, const b2EdgeShape* edge
     float32 u = b2Dot(e, B - Q);
     float32 v = b2Dot(e, Q - A);
 
-    float32 radius = edgeA->m_radius + circleB->m_radius;
+    float32 radius = edgeA->GetRadius() + circleB->GetRadius();
 
     b2ContactFeature cf;
     cf.indexB = 0;
@@ -191,7 +191,8 @@ struct b2ReferenceFace
     float32 sideOffset2;
 };
 
-// This class collides and edge and a polygon, taking into account edge adjacency.
+// This class collides and edge and a polygon, taking into account edge
+// adjacency.
 struct b2EPCollider
 {
     void Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const b2Transform& xfA,
@@ -480,7 +481,8 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
     {
         manifold->type = b2Manifold::e_faceA;
 
-        // Search for the polygon normal that is most anti-parallel to the edge normal.
+        // Search for the polygon normal that is most anti-parallel to the edge
+        // normal.
         int32_t bestIndex = 0;
         float32 bestValue = b2Dot(m_normal, m_polygonB.normals[0]);
         for (int32_t i = 1; i < m_polygonB.count; ++i)

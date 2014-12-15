@@ -21,7 +21,7 @@
 
 class Chain : public Test
 {
-   public:
+public:
     Chain()
     {
         b2Body* ground = nullptr;
@@ -51,7 +51,7 @@ class Chain : public Test
             for (int32_t i = 0; i < 30; ++i)
             {
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.position.Set(0.5f + i, y);
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&fd);

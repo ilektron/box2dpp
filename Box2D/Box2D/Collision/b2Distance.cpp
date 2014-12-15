@@ -36,7 +36,7 @@ void b2DistanceProxy::Set(const b2Shape* shape, int32_t index)
             const b2CircleShape* circle = static_cast<const b2CircleShape*>(shape);
             m_vertices = &circle->m_p;
             m_count = 1;
-            m_radius = circle->m_radius;
+            m_radius = circle->GetRadius();
         }
         break;
 
@@ -45,7 +45,7 @@ void b2DistanceProxy::Set(const b2Shape* shape, int32_t index)
             const b2PolygonShape* polygon = static_cast<const b2PolygonShape*>(shape);
             m_vertices = polygon->m_vertices;
             m_count = polygon->m_count;
-            m_radius = polygon->m_radius;
+            m_radius = polygon->GetRadius();
         }
         break;
 
@@ -66,7 +66,7 @@ void b2DistanceProxy::Set(const b2Shape* shape, int32_t index)
 
             m_vertices = &m_buffer[0];
             m_count = 2;
-            m_radius = chain->m_radius;
+            m_radius = chain->GetRadius();
         }
         break;
 
@@ -75,7 +75,7 @@ void b2DistanceProxy::Set(const b2Shape* shape, int32_t index)
             const b2EdgeShape* edge = static_cast<const b2EdgeShape*>(shape);
             m_vertices = &edge->m_vertex1;
             m_count = 2;
-            m_radius = edge->m_radius;
+            m_radius = edge->GetRadius();
         }
         break;
 
@@ -541,7 +541,8 @@ void box2d::b2Distance(b2DistanceOutput* output, b2SimplexCache* cache,
         ++iter;
         ++b2_gjkIters;
 
-        // Check for duplicate support points. This is the main termination criteria.
+        // Check for duplicate support points. This is the main termination
+        // criteria.
         bool duplicate = false;
         for (int32_t i = 0; i < saveCount; ++i)
         {

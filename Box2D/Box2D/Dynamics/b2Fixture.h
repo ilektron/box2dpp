@@ -108,7 +108,7 @@ struct b2FixtureProxy
 /// @warning you cannot reuse fixtures.
 class b2Fixture
 {
-   public:
+public:
     /// Get the type of the child shape. You can use this to down cast to the concrete shape.
     /// @return the shape type.
     b2Shape::Type GetType() const;
@@ -198,7 +198,7 @@ class b2Fixture
     /// Dump this fixture to the log file.
     void Dump(int32_t bodyIndex);
 
-   protected:
+protected:
     friend class b2Body;
     friend class b2World;
     friend class b2Contact;

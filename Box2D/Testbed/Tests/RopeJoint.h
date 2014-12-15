@@ -29,7 +29,7 @@
 /// so that the payload does not collide with the chain.
 class RopeJoint : public Test
 {
-   public:
+public:
     RopeJoint()
     {
         b2Body* ground = nullptr;
@@ -64,7 +64,7 @@ class RopeJoint : public Test
             for (int32_t i = 0; i < N; ++i)
             {
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.position.Set(0.5f + 1.0f * i, y);
                 if (i == N - 1)
                 {

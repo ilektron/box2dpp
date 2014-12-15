@@ -21,7 +21,7 @@
 
 class Dominos : public Test
 {
-   public:
+public:
     Dominos()
     {
         b2Body* b1;
@@ -56,7 +56,7 @@ class Dominos : public Test
             for (int i = 0; i < 10; ++i)
             {
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.position.Set(-6.0f + 1.0f * i, 11.25f);
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&fd);
@@ -90,7 +90,7 @@ class Dominos : public Test
             shape.SetAsBox(6.0f, 0.125f);
 
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(-0.9f, 1.0f);
             bd.angle = -0.15f;
 
@@ -112,7 +112,7 @@ class Dominos : public Test
             shape.SetAsBox(0.25f, 0.25f);
 
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(-10.0f, 15.0f);
             b4 = m_world->CreateBody(&bd);
             b4->CreateFixture(&shape, 10.0f);
@@ -125,7 +125,7 @@ class Dominos : public Test
         b2Body* b5;
         {
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(6.5f, 3.0f);
             b5 = m_world->CreateBody(&bd);
 
@@ -156,7 +156,7 @@ class Dominos : public Test
             shape.SetAsBox(1.0f, 0.1f);
 
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(6.5f, 4.1f);
             b6 = m_world->CreateBody(&bd);
             b6->CreateFixture(&shape, 30.0f);
@@ -172,7 +172,7 @@ class Dominos : public Test
             shape.SetAsBox(0.1f, 1.0f);
 
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(7.4f, 1.0f);
 
             b7 = m_world->CreateBody(&bd);
@@ -198,7 +198,7 @@ class Dominos : public Test
             for (int32_t i = 0; i < 4; ++i)
             {
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.position.Set(5.9f + 2.0f * radius * i, 2.4f);
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&shape, 10.0f);

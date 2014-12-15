@@ -21,7 +21,7 @@
 
 class Pulleys : public Test
 {
-   public:
+public:
     Pulleys()
     {
         float32 y = 16.0f;
@@ -53,7 +53,7 @@ class Pulleys : public Test
             shape.SetAsBox(a, b);
 
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
 
             // bd.fixedRotation = true;
             bd.position.Set(-10.0f, y);

@@ -30,7 +30,7 @@ struct b2WeldJointDef : public b2JointDef
 {
     b2WeldJointDef()
     {
-        type = e_weldJoint;
+        type = b2JointType::WELD_JOINT;
         localAnchorA.Set(0.0f, 0.0f);
         localAnchorB.Set(0.0f, 0.0f);
         referenceAngle = 0.0f;
@@ -63,7 +63,7 @@ struct b2WeldJointDef : public b2JointDef
 /// distort somewhat because the island constraint solver is approximate.
 class b2WeldJoint : public b2Joint
 {
-   public:
+public:
     b2Vec2 GetAnchorA() const override;
     b2Vec2 GetAnchorB() const override;
 
@@ -111,7 +111,7 @@ class b2WeldJoint : public b2Joint
     /// Dump to b2Log
     void Dump() override;
 
-   protected:
+protected:
     friend class b2Joint;
 
     b2WeldJoint(const b2WeldJointDef* def);

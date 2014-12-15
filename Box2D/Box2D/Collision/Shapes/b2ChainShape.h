@@ -33,7 +33,7 @@ class b2EdgeShape;
 /// WARNING: The chain will not collide properly if there are self-intersections.
 class b2ChainShape : public b2Shape
 {
-   public:
+public:
     b2ChainShape();
 
     /// The destructor frees the vertices using b2Free.
@@ -94,10 +94,8 @@ class b2ChainShape : public b2Shape
     bool m_hasPrevVertex, m_hasNextVertex;
 };
 
-inline b2ChainShape::b2ChainShape()
+inline b2ChainShape::b2ChainShape() : b2Shape(b2Shape::e_chain, POLYGON_RADIUS)
 {
-    m_type = e_chain;
-    m_radius = POLYGON_RADIUS;
     m_vertices = nullptr;
     m_count = 0;
     m_hasPrevVertex = false;

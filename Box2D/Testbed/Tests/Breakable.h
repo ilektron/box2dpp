@@ -19,15 +19,12 @@
 #ifndef BREAKABLE_TEST_H
 #define BREAKABLE_TEST_H
 
+constexpr int BREAKABLE_COUNT = 7;
+
 // This is used to test sensor shapes.
 class Breakable : public Test
 {
-   public:
-    enum
-    {
-        e_count = 7
-    };
-
+public:
     Breakable()
     {
         // Ground body
@@ -43,7 +40,7 @@ class Breakable : public Test
         // Breakable dynamic body
         {
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(0.0f, 40.0f);
             bd.angle = 0.25f * PI;
             m_body1 = m_world->CreateBody(&bd);
@@ -93,7 +90,7 @@ class Breakable : public Test
         m_piece2 = nullptr;
 
         b2BodyDef bd;
-        bd.type = b2_dynamicBody;
+        bd.type = b2BodyType::DYNAMIC_BODY;
         bd.position = body1->GetPosition();
         bd.angle = body1->GetAngle();
 

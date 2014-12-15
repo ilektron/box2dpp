@@ -28,7 +28,7 @@ struct b2MotorJointDef : public b2JointDef
 {
     b2MotorJointDef()
     {
-        type = e_motorJoint;
+        type = b2JointType::MOTOR_JOINT;
         linearOffset.SetZero();
         angularOffset = 0.0f;
         maxForce = 1.0f;
@@ -60,7 +60,7 @@ struct b2MotorJointDef : public b2JointDef
 /// of a dynamic body with respect to the ground.
 class b2MotorJoint : public b2Joint
 {
-   public:
+public:
     b2Vec2 GetAnchorA() const override;
     b2Vec2 GetAnchorB() const override;
 
@@ -96,7 +96,7 @@ class b2MotorJoint : public b2Joint
     /// Dump to b2Log
     void Dump() override;
 
-   protected:
+protected:
     friend class b2Joint;
 
     b2MotorJoint(const b2MotorJointDef* def);

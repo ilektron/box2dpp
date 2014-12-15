@@ -38,11 +38,11 @@ struct b2ContactEdge;
 /// static: zero mass, zero velocity, may be manually moved
 /// kinematic: zero mass, non-zero velocity set by user, moved by solver
 /// dynamic: positive mass, non-zero velocity determined by forces, moved by solver
-enum b2BodyType
+enum class b2BodyType
 {
-    b2_staticBody = 0,
-    b2_kinematicBody,
-    b2_dynamicBody
+    STATIC_BODY = 0,
+    KINEMATIC_BODY,
+    DYNAMIC_BODY
 
     // TODO_ERIN
     // b2_bulletBody,
@@ -66,7 +66,7 @@ struct b2BodyDef
         awake = true;
         fixedRotation = false;
         bullet = false;
-        type = b2_staticBody;
+        type = b2BodyType::STATIC_BODY;
         active = true;
         gravityScale = 1.0f;
     }
@@ -127,7 +127,7 @@ struct b2BodyDef
 /// A rigid body. These are created via b2World::CreateBody.
 class b2Body
 {
-   public:
+public:
     /// Creates a fixture and attach it to this body. Use this function if you need
     /// to set some fixture parameters, like friction. Otherwise you can create the
     /// fixture directly from a shape.
@@ -385,7 +385,7 @@ class b2Body
     /// Dump this body to a log file
     void Dump();
 
-   private:
+private:
     friend class b2World;
     friend class b2Island;
     friend class b2ContactManager;
@@ -499,7 +499,7 @@ inline const b2Vec2& b2Body::GetLocalCenter() const
 
 inline void b2Body::SetLinearVelocity(const b2Vec2& v)
 {
-    if (m_type == b2_staticBody)
+    if (m_type == b2BodyType::STATIC_BODY)
     {
         return;
     }
@@ -519,7 +519,7 @@ inline const b2Vec2& b2Body::GetLinearVelocity() const
 
 inline void b2Body::SetAngularVelocity(float32 w)
 {
-    if (m_type == b2_staticBody)
+    if (m_type == b2BodyType::STATIC_BODY)
     {
         return;
     }
@@ -737,7 +737,7 @@ inline void* b2Body::GetUserData() const
 
 inline void b2Body::ApplyForce(const b2Vec2& force, const b2Vec2& point, bool wake)
 {
-    if (m_type != b2_dynamicBody)
+    if (m_type != b2BodyType::DYNAMIC_BODY)
     {
         return;
     }
@@ -757,7 +757,7 @@ inline void b2Body::ApplyForce(const b2Vec2& force, const b2Vec2& point, bool wa
 
 inline void b2Body::ApplyForceToCenter(const b2Vec2& force, bool wake)
 {
-    if (m_type != b2_dynamicBody)
+    if (m_type != b2BodyType::DYNAMIC_BODY)
     {
         return;
     }
@@ -776,7 +776,7 @@ inline void b2Body::ApplyForceToCenter(const b2Vec2& force, bool wake)
 
 inline void b2Body::ApplyTorque(float32 torque, bool wake)
 {
-    if (m_type != b2_dynamicBody)
+    if (m_type != b2BodyType::DYNAMIC_BODY)
     {
         return;
     }
@@ -795,7 +795,7 @@ inline void b2Body::ApplyTorque(float32 torque, bool wake)
 
 inline void b2Body::ApplyLinearImpulse(const b2Vec2& impulse, const b2Vec2& point, bool wake)
 {
-    if (m_type != b2_dynamicBody)
+    if (m_type != b2BodyType::DYNAMIC_BODY)
     {
         return;
     }
@@ -815,7 +815,7 @@ inline void b2Body::ApplyLinearImpulse(const b2Vec2& impulse, const b2Vec2& poin
 
 inline void b2Body::ApplyAngularImpulse(float32 impulse, bool wake)
 {
-    if (m_type != b2_dynamicBody)
+    if (m_type != b2BodyType::DYNAMIC_BODY)
     {
         return;
     }

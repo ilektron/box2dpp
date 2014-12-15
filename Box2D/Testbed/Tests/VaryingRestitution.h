@@ -23,7 +23,7 @@
 // due to position correction.
 class VaryingRestitution : public Test
 {
-   public:
+public:
     VaryingRestitution()
     {
         {
@@ -48,7 +48,7 @@ class VaryingRestitution : public Test
             for (int32_t i = 0; i < 7; ++i)
             {
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.position.Set(-10.0f + 3.0f * i, 20.0f);
 
                 b2Body* body = m_world->CreateBody(&bd);

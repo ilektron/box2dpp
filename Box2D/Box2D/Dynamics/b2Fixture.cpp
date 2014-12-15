@@ -79,7 +79,7 @@ void b2Fixture::Destroy(b2BlockAllocator* allocator)
     m_proxies = nullptr;
 
     // Free the child shape.
-    switch (m_shape->m_type)
+    switch (m_shape->GetType())
     {
         case b2Shape::e_circle:
         {
@@ -240,13 +240,13 @@ void b2Fixture::Dump(int32_t bodyIndex)
     b2Log("    fd.filter.maskBits = uint16_t(%d);\n", m_filter.maskBits);
     b2Log("    fd.filter.groupIndex = int16_t(%d);\n", m_filter.groupIndex);
 
-    switch (m_shape->m_type)
+    switch (m_shape->GetType())
     {
         case b2Shape::e_circle:
         {
             b2CircleShape* s = (b2CircleShape*)m_shape;
             b2Log("    b2CircleShape shape;\n");
-            b2Log("    shape.m_radius = %.15lef;\n", s->m_radius);
+            b2Log("    shape.m_radius = %.15lef;\n", s->GetRadius());
             b2Log("    shape.m_p.Set(%.15lef, %.15lef);\n", s->m_p.x, s->m_p.y);
         }
         break;
@@ -255,7 +255,7 @@ void b2Fixture::Dump(int32_t bodyIndex)
         {
             b2EdgeShape* s = (b2EdgeShape*)m_shape;
             b2Log("    b2EdgeShape shape;\n");
-            b2Log("    shape.m_radius = %.15lef;\n", s->m_radius);
+            b2Log("    shape.m_radius = %.15lef;\n", s->GetRadius());
             b2Log("    shape.m_vertex0.Set(%.15lef, %.15lef);\n", s->m_vertex0.x, s->m_vertex0.y);
             b2Log("    shape.m_vertex1.Set(%.15lef, %.15lef);\n", s->m_vertex1.x, s->m_vertex1.y);
             b2Log("    shape.m_vertex2.Set(%.15lef, %.15lef);\n", s->m_vertex2.x, s->m_vertex2.y);

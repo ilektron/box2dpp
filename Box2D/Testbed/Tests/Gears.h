@@ -21,7 +21,7 @@
 
 class Gears : public Test
 {
-   public:
+public:
     Gears()
     {
         b2Body* ground = nullptr;
@@ -45,19 +45,19 @@ class Gears : public Test
             circle2.m_radius = 2.0f;
 
             b2BodyDef bd1;
-            bd1.type = b2_staticBody;
+            bd1.type = b2BodyType::STATIC_BODY;
             bd1.position.Set(10.0f, 9.0f);
             b2Body* body1 = m_world->CreateBody(&bd1);
             body1->CreateFixture(&circle1, 5.0f);
 
             b2BodyDef bd2;
-            bd2.type = b2_dynamicBody;
+            bd2.type = b2BodyType::DYNAMIC_BODY;
             bd2.position.Set(10.0f, 8.0f);
             b2Body* body2 = m_world->CreateBody(&bd2);
             body2->CreateFixture(&box, 5.0f);
 
             b2BodyDef bd3;
-            bd3.type = b2_dynamicBody;
+            bd3.type = b2BodyType::DYNAMIC_BODY;
             bd3.position.Set(10.0f, 6.0f);
             b2Body* body3 = m_world->CreateBody(&bd3);
             body3->CreateFixture(&circle2, 5.0f);
@@ -90,7 +90,7 @@ class Gears : public Test
             box.SetAsBox(0.5f, 5.0f);
 
             b2BodyDef bd1;
-            bd1.type = b2_dynamicBody;
+            bd1.type = b2BodyType::DYNAMIC_BODY;
             bd1.position.Set(-3.0f, 12.0f);
             b2Body* body1 = m_world->CreateBody(&bd1);
             body1->CreateFixture(&circle1, 5.0f);
@@ -104,7 +104,7 @@ class Gears : public Test
             m_joint1 = (b2RevoluteJoint*)m_world->CreateJoint(&jd1);
 
             b2BodyDef bd2;
-            bd2.type = b2_dynamicBody;
+            bd2.type = b2BodyType::DYNAMIC_BODY;
             bd2.position.Set(0.0f, 12.0f);
             b2Body* body2 = m_world->CreateBody(&bd2);
             body2->CreateFixture(&circle2, 5.0f);
@@ -114,7 +114,7 @@ class Gears : public Test
             m_joint2 = (b2RevoluteJoint*)m_world->CreateJoint(&jd2);
 
             b2BodyDef bd3;
-            bd3.type = b2_dynamicBody;
+            bd3.type = b2BodyType::DYNAMIC_BODY;
             bd3.position.Set(2.5f, 12.0f);
             b2Body* body3 = m_world->CreateBody(&bd3);
             body3->CreateFixture(&box, 5.0f);

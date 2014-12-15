@@ -38,7 +38,7 @@ struct b2StackEntry
 // if you try to interleave multiple allocate/free pairs.
 class b2StackAllocator
 {
-   public:
+public:
     b2StackAllocator();
     ~b2StackAllocator();
 
@@ -47,7 +47,7 @@ class b2StackAllocator
 
     int32_t GetMaxAllocation() const;
 
-   private:
+private:
     char m_data[b2_stackSize];
     int32_t m_index;
 

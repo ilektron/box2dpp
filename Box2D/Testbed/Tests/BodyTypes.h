@@ -21,7 +21,7 @@
 
 class BodyTypes : public Test
 {
-   public:
+public:
     BodyTypes()
     {
         b2Body* ground = nullptr;
@@ -41,7 +41,7 @@ class BodyTypes : public Test
         // Define attachment
         {
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(0.0f, 3.0f);
             m_attachment = m_world->CreateBody(&bd);
 
@@ -53,7 +53,7 @@ class BodyTypes : public Test
         // Define platform
         {
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(-4.0f, 5.0f);
             m_platform = m_world->CreateBody(&bd);
 
@@ -89,7 +89,7 @@ class BodyTypes : public Test
         // Create a payload
         {
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(0.0f, 8.0f);
             b2Body* body = m_world->CreateBody(&bd);
 
@@ -110,15 +110,15 @@ class BodyTypes : public Test
         switch (key)
         {
             case GLFW_KEY_D:
-                m_platform->SetType(b2_dynamicBody);
+                m_platform->SetType(b2BodyType::DYNAMIC_BODY);
                 break;
 
             case GLFW_KEY_S:
-                m_platform->SetType(b2_staticBody);
+                m_platform->SetType(b2BodyType::STATIC_BODY);
                 break;
 
             case GLFW_KEY_K:
-                m_platform->SetType(b2_kinematicBody);
+                m_platform->SetType(b2BodyType::KINEMATIC_BODY);
                 m_platform->SetLinearVelocity(b2Vec2(-m_speed, 0.0f));
                 m_platform->SetAngularVelocity(0.0f);
                 break;
@@ -128,7 +128,7 @@ class BodyTypes : public Test
     void Step(Settings* settings) override
     {
         // Drive the kinematic body.
-        if (m_platform->GetType() == b2_kinematicBody)
+        if (m_platform->GetType() == b2BodyType::KINEMATIC_BODY)
         {
             b2Vec2 p = m_platform->GetTransform().p;
             b2Vec2 v = m_platform->GetLinearVelocity();

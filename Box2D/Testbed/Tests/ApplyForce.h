@@ -21,7 +21,7 @@
 
 class ApplyForce : public Test
 {
-   public:
+public:
     ApplyForce()
     {
         m_world->SetGravity(b2Vec2(0.0f, 0.0f));
@@ -91,7 +91,7 @@ class ApplyForce : public Test
             sd2.density = 2.0f;
 
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.angularDamping = 2.0f;
             bd.linearDamping = 0.5f;
 
@@ -115,7 +115,7 @@ class ApplyForce : public Test
             for (int i = 0; i < 10; ++i)
             {
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2BodyType::DYNAMIC_BODY;
 
                 bd.position.Set(0.0f, 5.0f + 1.54f * i);
                 b2Body* body = m_world->CreateBody(&bd);

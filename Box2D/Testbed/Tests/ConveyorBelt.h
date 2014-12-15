@@ -21,7 +21,7 @@
 
 class ConveyorBelt : public Test
 {
-   public:
+public:
     ConveyorBelt()
     {
         // Ground
@@ -53,7 +53,7 @@ class ConveyorBelt : public Test
         for (int32_t i = 0; i < 5; ++i)
         {
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(-10.0f + 2.0f * i, 7.0f);
             b2Body* body = m_world->CreateBody(&bd);
 

@@ -22,7 +22,7 @@
 ///
 class Rope : public Test
 {
-   public:
+public:
     Rope()
     {
         const int32_t N = 40;

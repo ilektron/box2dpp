@@ -19,14 +19,11 @@
 #ifndef DYNAMIC_TREE_TEST_H
 #define DYNAMIC_TREE_TEST_H
 
+constexpr int DYNAMIC_TREE_TEST_ACTOR_COUNT = 128;
+
 class DynamicTreeTest : public Test
 {
-   public:
-    enum
-    {
-        e_actorCount = 128
-    };
-
+public:
     DynamicTreeTest()
     {
         m_worldExtent = 15.0f;
@@ -34,7 +31,7 @@ class DynamicTreeTest : public Test
 
         srand(888);
 
-        for (int32_t i = 0; i < e_actorCount; ++i)
+        for (int32_t i = 0; i < DYNAMIC_TREE_TEST_ACTOR_COUNT; ++i)
         {
             Actor* actor = m_actors + i;
             GetRandomAABB(&actor->aabb);
@@ -74,7 +71,7 @@ class DynamicTreeTest : public Test
 
         if (m_automated == true)
         {
-            int32_t actionCount = b2Max(1, e_actorCount >> 2);
+            int32_t actionCount = b2Max(1, DYNAMIC_TREE_TEST_ACTOR_COUNT >> 2);
 
             for (int32_t i = 0; i < actionCount; ++i)
             {
@@ -85,7 +82,7 @@ class DynamicTreeTest : public Test
         Query();
         RayCast();
 
-        for (int32_t i = 0; i < e_actorCount; ++i)
+        for (int32_t i = 0; i < DYNAMIC_TREE_TEST_ACTOR_COUNT; ++i)
         {
             Actor* actor = m_actors + i;
             if (actor->proxyId == NULL_NODE)
@@ -182,7 +179,7 @@ class DynamicTreeTest : public Test
         return input.maxFraction;
     }
 
-   private:
+private:
     struct Actor
     {
         b2AABB aabb;
@@ -225,9 +222,9 @@ class DynamicTreeTest : public Test
 
     void CreateProxy()
     {
-        for (int32_t i = 0; i < e_actorCount; ++i)
+        for (int32_t i = 0; i < DYNAMIC_TREE_TEST_ACTOR_COUNT; ++i)
         {
-            int32_t j = rand() % e_actorCount;
+            int32_t j = rand() % DYNAMIC_TREE_TEST_ACTOR_COUNT;
             Actor* actor = m_actors + j;
             if (actor->proxyId == NULL_NODE)
             {
@@ -240,9 +237,9 @@ class DynamicTreeTest : public Test
 
     void DestroyProxy()
     {
-        for (int32_t i = 0; i < e_actorCount; ++i)
+        for (int32_t i = 0; i < DYNAMIC_TREE_TEST_ACTOR_COUNT; ++i)
         {
-            int32_t j = rand() % e_actorCount;
+            int32_t j = rand() % DYNAMIC_TREE_TEST_ACTOR_COUNT;
             Actor* actor = m_actors + j;
             if (actor->proxyId != NULL_NODE)
             {
@@ -255,9 +252,9 @@ class DynamicTreeTest : public Test
 
     void MoveProxy()
     {
-        for (int32_t i = 0; i < e_actorCount; ++i)
+        for (int32_t i = 0; i < DYNAMIC_TREE_TEST_ACTOR_COUNT; ++i)
         {
-            int32_t j = rand() % e_actorCount;
+            int32_t j = rand() % DYNAMIC_TREE_TEST_ACTOR_COUNT;
             Actor* actor = m_actors + j;
             if (actor->proxyId == NULL_NODE)
             {
@@ -320,7 +317,7 @@ class DynamicTreeTest : public Test
         // Brute force ray cast.
         Actor* bruteActor = nullptr;
         b2RayCastOutput bruteOutput;
-        for (int32_t i = 0; i < e_actorCount; ++i)
+        for (int32_t i = 0; i < DYNAMIC_TREE_TEST_ACTOR_COUNT; ++i)
         {
             if (m_actors[i].proxyId == NULL_NODE)
             {
@@ -351,7 +348,7 @@ class DynamicTreeTest : public Test
     b2RayCastInput m_rayCastInput;
     b2RayCastOutput m_rayCastOutput;
     Actor* m_rayActor;
-    Actor m_actors[e_actorCount];
+    Actor m_actors[DYNAMIC_TREE_TEST_ACTOR_COUNT];
     int32_t m_stepCount;
     bool m_automated;
 };

@@ -58,13 +58,15 @@ struct b2TreeNode
 /// A dynamic tree arranges data in a binary tree to accelerate
 /// queries such as volume queries and ray casts. Leafs are proxies
 /// with an AABB. In the tree we expand the proxy AABB by b2_fatAABBFactor
-/// so that the proxy AABB is bigger than the client object. This allows the client
+/// so that the proxy AABB is bigger than the client object. This allows the
+/// client
 /// object to move by small amounts without triggering a tree update.
 ///
-/// Nodes are pooled and relocatable, so we use node indices rather than pointers.
+/// Nodes are pooled and relocatable, so we use node indices rather than
+/// pointers.
 class b2DynamicTree
 {
-   public:
+public:
     /// Constructing the tree initializes the node pool.
     b2DynamicTree();
 
@@ -77,7 +79,8 @@ class b2DynamicTree
     /// Destroy a proxy. This asserts if the id is invalid.
     void DestroyProxy(int32_t proxyId);
 
-    /// Move a proxy with a swepted AABB. If the proxy has moved outside of its fattened AABB,
+    /// Move a proxy with a swepted AABB. If the proxy has moved outside of its
+    /// fattened AABB,
     /// then the proxy is removed from the tree and re-inserted. Otherwise
     /// the function returns immediately.
     /// @return true if the proxy was re-inserted.
@@ -97,12 +100,16 @@ class b2DynamicTree
 
     /// Ray-cast against the proxies in the tree. This relies on the callback
     /// to perform a exact ray-cast in the case were the proxy contains a shape.
-    /// The callback also performs the any collision filtering. This has performance
-    /// roughly equal to k * log(n), where k is the number of collisions and n is the
+    /// The callback also performs the any collision filtering. This has
+    /// performance
+    /// roughly equal to k * log(n), where k is the number of collisions and n is
+    /// the
     /// number of proxies in the tree.
-    /// @param input the ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 -
+    /// @param input the ray-cast input data. The ray extends from p1 to p1 +
+    /// maxFraction * (p2 -
     /// p1).
-    /// @param callback a callback class that is called for each proxy that is hit by the ray.
+    /// @param callback a callback class that is called for each proxy that is hit
+    /// by the ray.
     template <typename T>
     void RayCast(T* callback, const b2RayCastInput& input) const;
 
@@ -113,7 +120,8 @@ class b2DynamicTree
     /// called often.
     int32_t GetHeight() const;
 
-    /// Get the maximum balance of an node in the tree. The balance is the difference
+    /// Get the maximum balance of an node in the tree. The balance is the
+    /// difference
     /// in height of the two children of a node.
     int32_t GetMaxBalance() const;
 
@@ -128,7 +136,7 @@ class b2DynamicTree
     /// @param newOrigin the new origin with respect to the old origin
     void ShiftOrigin(const b2Vec2& newOrigin);
 
-   private:
+private:
     int32_t AllocateNode();
     void FreeNode(int32_t node);
 

@@ -24,7 +24,7 @@
 /// the body can be blocked by collision with other bodies.
 class MotorJoint : public Test
 {
-   public:
+public:
     MotorJoint()
     {
         b2Body* ground = nullptr;
@@ -44,7 +44,7 @@ class MotorJoint : public Test
         // Define motorized body
         {
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(0.0f, 8.0f);
             b2Body* body = m_world->CreateBody(&bd);
 

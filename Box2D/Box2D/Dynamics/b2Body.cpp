@@ -87,7 +87,7 @@ b2Body::b2Body(const b2BodyDef* bd, b2World* world)
 
     m_type = bd->type;
 
-    if (m_type == b2_dynamicBody)
+    if (m_type == b2BodyType::DYNAMIC_BODY)
     {
         m_mass = 1.0f;
         m_invMass = 1.0f;
@@ -129,7 +129,7 @@ void b2Body::SetType(b2BodyType type)
 
     ResetMassData();
 
-    if (m_type == b2_staticBody)
+    if (m_type == b2BodyType::STATIC_BODY)
     {
         m_linearVelocity.SetZero();
         m_angularVelocity = 0.0f;
@@ -290,7 +290,7 @@ void b2Body::ResetMassData()
     m_sweep.localCenter.SetZero();
 
     // Static and kinematic bodies have zero mass.
-    if (m_type == b2_staticBody || m_type == b2_kinematicBody)
+    if (m_type == b2BodyType::STATIC_BODY || m_type == b2BodyType::KINEMATIC_BODY)
     {
         m_sweep.c0 = m_xf.p;
         m_sweep.c = m_xf.p;
@@ -298,7 +298,7 @@ void b2Body::ResetMassData()
         return;
     }
 
-    b2Assert(m_type == b2_dynamicBody);
+    b2Assert(m_type == b2BodyType::DYNAMIC_BODY);
 
     // Accumulate mass over all fixtures.
     b2Vec2 localCenter = b2Vec2_zero;
@@ -359,7 +359,7 @@ void b2Body::SetMassData(const b2MassData* massData)
         return;
     }
 
-    if (m_type != b2_dynamicBody)
+    if (m_type != b2BodyType::DYNAMIC_BODY)
     {
         return;
     }
@@ -395,7 +395,7 @@ void b2Body::SetMassData(const b2MassData* massData)
 bool b2Body::ShouldCollide(const b2Body* other) const
 {
     // At least one body should be dynamic.
-    if (m_type != b2_dynamicBody && other->m_type != b2_dynamicBody)
+    if (m_type != b2BodyType::DYNAMIC_BODY && other->m_type != b2BodyType::DYNAMIC_BODY)
     {
         return false;
     }

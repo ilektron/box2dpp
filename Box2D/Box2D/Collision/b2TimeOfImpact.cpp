@@ -353,7 +353,8 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 #endif
 
         // Compute the TOI on the separating axis. We do this by successively
-        // resolving the deepest point. This loop is bounded by the number of vertices.
+        // resolving the deepest point. This loop is bounded by the number of
+        // vertices.
         bool done = false;
         float32 t2 = tMax;
         int32_t pushBackIter = 0;

@@ -28,7 +28,7 @@ namespace box2d
 /// correct contact normals.
 class b2EdgeShape : public b2Shape
 {
-   public:
+public:
     b2EdgeShape();
 
     /// Set this as an isolated edge.
@@ -61,10 +61,8 @@ class b2EdgeShape : public b2Shape
     bool m_hasVertex0, m_hasVertex3;
 };
 
-inline b2EdgeShape::b2EdgeShape()
+inline b2EdgeShape::b2EdgeShape() : b2Shape(b2Shape::e_edge, POLYGON_RADIUS)
 {
-    m_type = e_edge;
-    m_radius = POLYGON_RADIUS;
     m_vertex0.x = 0.0f;
     m_vertex0.y = 0.0f;
     m_vertex3.x = 0.0f;

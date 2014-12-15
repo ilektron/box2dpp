@@ -29,7 +29,7 @@ namespace box2d
 template <typename T, int32_t N>
 class b2GrowableStack
 {
-   public:
+public:
     b2GrowableStack()
     {
         m_stack = m_array;
@@ -76,7 +76,7 @@ class b2GrowableStack
         return m_count;
     }
 
-   private:
+private:
     T* m_stack;
     T m_array[N];
     int32_t m_count;

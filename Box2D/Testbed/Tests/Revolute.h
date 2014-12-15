@@ -21,7 +21,7 @@
 
 class Revolute : public Test
 {
-   public:
+public:
     Revolute()
     {
         b2Body* ground = nullptr;
@@ -44,7 +44,7 @@ class Revolute : public Test
             shape.m_radius = 0.5f;
 
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
 
             b2RevoluteJointDef rjd;
 
@@ -73,7 +73,7 @@ class Revolute : public Test
             circle_shape.m_radius = 3.0f;
 
             b2BodyDef circle_bd;
-            circle_bd.type = b2_dynamicBody;
+            circle_bd.type = b2BodyType::DYNAMIC_BODY;
             circle_bd.position.Set(5.0f, 30.0f);
 
             b2FixtureDef fd;
@@ -89,7 +89,7 @@ class Revolute : public Test
 
             b2BodyDef polygon_bd;
             polygon_bd.position.Set(20.0f, 10.0f);
-            polygon_bd.type = b2_dynamicBody;
+            polygon_bd.type = b2BodyType::DYNAMIC_BODY;
             polygon_bd.bullet = true;
             b2Body* polygon_body = m_world->CreateBody(&polygon_bd);
             polygon_body->CreateFixture(&polygon_shape, 2.0f);
@@ -105,7 +105,7 @@ class Revolute : public Test
         // Tests mass computation of a small object far from the origin
         {
             b2BodyDef bodyDef;
-            bodyDef.type = b2_dynamicBody;
+            bodyDef.type = b2BodyType::DYNAMIC_BODY;
             b2Body* body = m_world->CreateBody(&bodyDef);
 
             b2PolygonShape polyShape;

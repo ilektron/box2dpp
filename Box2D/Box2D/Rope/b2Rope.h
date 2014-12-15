@@ -64,7 +64,7 @@ struct b2RopeDef
 ///
 class b2Rope
 {
-   public:
+public:
     b2Rope();
     ~b2Rope();
 
@@ -92,7 +92,7 @@ class b2Rope
     ///
     void SetAngle(float32 angle);
 
-   private:
+private:
     void SolveC2();
     void SolveC3();
 

@@ -21,7 +21,8 @@
 
 using namespace box2d;
 
-// Find the max separation between poly1 and poly2 using edge normals from poly1.
+// Find the max separation between poly1 and poly2 using edge normals from
+// poly1.
 static float32 b2FindMaxSeparation(int32_t* edgeIndex, const b2PolygonShape* poly1,
                                    const b2Transform& xf1, const b2PolygonShape* poly2,
                                    const b2Transform& xf2)
@@ -120,7 +121,7 @@ void box2d::b2CollidePolygons(b2Manifold* manifold, const b2PolygonShape* polyA,
                               const b2Transform& xfB)
 {
     manifold->pointCount = 0;
-    float32 totalRadius = polyA->m_radius + polyB->m_radius;
+    float32 totalRadius = polyA->GetRadius() + polyB->GetRadius();
 
     int32_t edgeA = 0;
     float32 separationA = b2FindMaxSeparation(&edgeA, polyA, xfA, polyB, xfB);

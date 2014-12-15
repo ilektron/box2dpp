@@ -25,14 +25,12 @@
 /// This callback is called by b2World::QueryAABB. We find all the fixtures
 /// that overlap an AABB. Of those, we use b2TestOverlap to determine which fixtures
 /// overlap a circle. Up to 4 overlapped fixtures will be highlighted with a yellow border.
+
+constexpr int POLY_SHAPES_CALLBACK_MAX_COUNT = 4;
+
 class PolyShapesCallback : public b2QueryCallback
 {
-   public:
-    enum
-    {
-        e_maxCount = 4
-    };
-
+public:
     PolyShapesCallback()
     {
         m_count = 0;
@@ -50,7 +48,7 @@ class PolyShapesCallback : public b2QueryCallback
                 b2CircleShape* circle = (b2CircleShape*)fixture->GetShape();
 
                 b2Vec2 center = b2Mul(xf, circle->m_p);
-                float32 radius = circle->m_radius;
+                float32 radius = circle->GetRadius();
 
                 g_debugDraw->DrawCircle(center, radius, color);
             }
@@ -81,7 +79,7 @@ class PolyShapesCallback : public b2QueryCallback
     /// @return false to terminate the query.
     bool ReportFixture(b2Fixture* fixture) override
     {
-        if (m_count == e_maxCount)
+        if (m_count == POLY_SHAPES_CALLBACK_MAX_COUNT)
         {
             return false;
         }
@@ -106,14 +104,11 @@ class PolyShapesCallback : public b2QueryCallback
     int32_t m_count;
 };
 
+constexpr int POLY_SHAPES_MAX_BODIES = 256;
+
 class PolyShapes : public Test
 {
-   public:
-    enum
-    {
-        e_maxBodies = 256
-    };
-
+public:
     PolyShapes()
     {
         // Ground body
@@ -181,7 +176,7 @@ class PolyShapes : public Test
         }
 
         b2BodyDef bd;
-        bd.type = b2_dynamicBody;
+        bd.type = b2BodyType::DYNAMIC_BODY;
 
         float32 x = RandomFloat(-2.0f, 2.0f);
         bd.position.Set(x, 10.0f);
@@ -212,7 +207,7 @@ class PolyShapes : public Test
             m_bodies[m_bodyIndex]->CreateFixture(&fd);
         }
 
-        m_bodyIndex = (m_bodyIndex + 1) % e_maxBodies;
+        m_bodyIndex = (m_bodyIndex + 1) % POLY_SHAPES_MAX_BODIES;
     }
 
     void DestroyBody()
@@ -241,7 +236,7 @@ class PolyShapes : public Test
                 break;
 
             case GLFW_KEY_A:
-                for (int32_t i = 0; i < e_maxBodies; i += 2)
+                for (int32_t i = 0; i < POLY_SHAPES_MAX_BODIES; i += 2)
                 {
                     if (m_bodies[i])
                     {
@@ -289,7 +284,7 @@ class PolyShapes : public Test
     }
 
     int32_t m_bodyIndex;
-    b2Body* m_bodies[e_maxBodies];
+    b2Body* m_bodies[POLY_SHAPES_MAX_BODIES];
     b2PolygonShape m_polygons[4];
     b2CircleShape m_circle;
 };

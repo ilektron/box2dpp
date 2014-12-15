@@ -21,7 +21,7 @@
 
 class ShapeEditing : public Test
 {
-   public:
+public:
     ShapeEditing()
     {
         {
@@ -34,7 +34,7 @@ class ShapeEditing : public Test
         }
 
         b2BodyDef bd;
-        bd.type = b2_dynamicBody;
+        bd.type = b2BodyType::DYNAMIC_BODY;
         bd.position.Set(0.0f, 10.0f);
         m_body = m_world->CreateBody(&bd);
 

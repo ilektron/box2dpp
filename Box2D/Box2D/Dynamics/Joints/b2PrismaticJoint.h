@@ -33,7 +33,7 @@ struct b2PrismaticJointDef : public b2JointDef
 {
     b2PrismaticJointDef()
     {
-        type = e_prismaticJoint;
+        type = b2JointType::PRISMATIC_JOINT;
         localAnchorA.SetZero();
         localAnchorB.SetZero();
         localAxisA.Set(1.0f, 0.0f);
@@ -87,7 +87,7 @@ struct b2PrismaticJointDef : public b2JointDef
 /// drive the motion or to model joint friction.
 class b2PrismaticJoint : public b2Joint
 {
-   public:
+public:
     b2Vec2 GetAnchorA() const override;
     b2Vec2 GetAnchorB() const override;
 
@@ -164,7 +164,7 @@ class b2PrismaticJoint : public b2Joint
     /// Dump to b2Log
     void Dump() override;
 
-   protected:
+protected:
     friend class b2Joint;
     friend class b2GearJoint;
     b2PrismaticJoint(const b2PrismaticJointDef* def);

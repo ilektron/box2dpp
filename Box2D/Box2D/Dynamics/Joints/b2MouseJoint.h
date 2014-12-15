@@ -29,7 +29,7 @@ struct b2MouseJointDef : public b2JointDef
 {
     b2MouseJointDef()
     {
-        type = e_mouseJoint;
+        type = b2JointType::MOUSE_JOINT;
         target.Set(0.0f, 0.0f);
         maxForce = 0.0f;
         frequencyHz = 5.0f;
@@ -61,7 +61,7 @@ struct b2MouseJointDef : public b2JointDef
 /// use the mouse joint, look at the testbed.
 class b2MouseJoint : public b2Joint
 {
-   public:
+public:
     /// Implements b2Joint.
     b2Vec2 GetAnchorA() const override;
 
@@ -99,7 +99,7 @@ class b2MouseJoint : public b2Joint
     /// Implement b2Joint::ShiftOrigin
     void ShiftOrigin(const b2Vec2& newOrigin) override;
 
-   protected:
+protected:
     friend class b2Joint;
 
     b2MouseJoint(const b2MouseJointDef* def);

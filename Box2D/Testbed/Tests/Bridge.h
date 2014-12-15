@@ -19,14 +19,11 @@
 #ifndef BRIDGE_H
 #define BRIDGE_H
 
+constexpr int BRIDGE_COUNT = 30;
+
 class Bridge : public Test
 {
-   public:
-    enum
-    {
-        e_count = 30
-    };
-
+public:
     Bridge()
     {
         b2Body* ground = nullptr;
@@ -51,10 +48,10 @@ class Bridge : public Test
             b2RevoluteJointDef jd;
 
             b2Body* prevBody = ground;
-            for (int32_t i = 0; i < e_count; ++i)
+            for (int32_t i = 0; i < BRIDGE_COUNT; ++i)
             {
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.position.Set(-14.5f + 1.0f * i, 5.0f);
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&fd);
@@ -63,14 +60,14 @@ class Bridge : public Test
                 jd.Initialize(prevBody, body, anchor);
                 m_world->CreateJoint(&jd);
 
-                if (i == (e_count >> 1))
+                if (i == (BRIDGE_COUNT >> 1))
                 {
                     m_middle = body;
                 }
                 prevBody = body;
             }
 
-            b2Vec2 anchor(-15.0f + 1.0f * e_count, 5.0f);
+            b2Vec2 anchor(-15.0f + 1.0f * BRIDGE_COUNT, 5.0f);
             jd.Initialize(prevBody, ground, anchor);
             m_world->CreateJoint(&jd);
         }
@@ -90,7 +87,7 @@ class Bridge : public Test
             fd.density = 1.0f;
 
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(-8.0f + 8.0f * i, 12.0f);
             b2Body* body = m_world->CreateBody(&bd);
             body->CreateFixture(&fd);
@@ -106,7 +103,7 @@ class Bridge : public Test
             fd.density = 1.0f;
 
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(-6.0f + 6.0f * i, 10.0f);
             b2Body* body = m_world->CreateBody(&bd);
             body->CreateFixture(&fd);

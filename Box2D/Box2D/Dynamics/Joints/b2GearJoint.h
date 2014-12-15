@@ -29,7 +29,7 @@ struct b2GearJointDef : public b2JointDef
 {
     b2GearJointDef()
     {
-        type = e_gearJoint;
+        type = b2JointType::GEAR_JOINT;
         joint1 = nullptr;
         joint2 = nullptr;
         ratio = 1.0f;
@@ -57,7 +57,7 @@ struct b2GearJointDef : public b2JointDef
 /// is destroyed.
 class b2GearJoint : public b2Joint
 {
-   public:
+public:
     b2Vec2 GetAnchorA() const override;
     b2Vec2 GetAnchorB() const override;
 
@@ -83,7 +83,7 @@ class b2GearJoint : public b2Joint
     /// Dump joint to dmLog
     void Dump() override;
 
-   protected:
+protected:
     friend class b2Joint;
     b2GearJoint(const b2GearJointDef* data);
 

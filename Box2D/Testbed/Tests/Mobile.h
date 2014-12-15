@@ -19,14 +19,11 @@
 #ifndef MOBILE_H
 #define MOBILE_H
 
+constexpr int MOBILE_DEPTH = 4;
+
 class Mobile : public Test
 {
-   public:
-    enum
-    {
-        e_depth = 4
-    };
-
+public:
     Mobile()
     {
         b2Body* ground;
@@ -60,7 +57,7 @@ class Mobile : public Test
         b2Vec2 p = parent->GetPosition() + localAnchor - h;
 
         b2BodyDef bodyDef;
-        bodyDef.type = b2_dynamicBody;
+        bodyDef.type = b2BodyType::DYNAMIC_BODY;
         bodyDef.position = p;
         b2Body* body = m_world->CreateBody(&bodyDef);
 
@@ -68,7 +65,7 @@ class Mobile : public Test
         shape.SetAsBox(0.25f * a, a);
         body->CreateFixture(&shape, density);
 
-        if (depth == e_depth)
+        if (depth == MOBILE_DEPTH)
         {
             return body;
         }

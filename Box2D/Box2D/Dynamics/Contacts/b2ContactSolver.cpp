@@ -52,8 +52,8 @@ b2ContactSolver::b2ContactSolver(b2ContactSolverDef* def)
         b2Fixture* fixtureB = contact->m_fixtureB;
         b2Shape* shapeA = fixtureA->GetShape();
         b2Shape* shapeB = fixtureB->GetShape();
-        float32 radiusA = shapeA->m_radius;
-        float32 radiusB = shapeB->m_radius;
+        float32 radiusA = shapeA->GetRadius();
+        float32 radiusB = shapeB->GetRadius();
         b2Body* bodyA = fixtureA->GetBody();
         b2Body* bodyB = fixtureB->GetBody();
         b2Manifold* manifold = contact->GetManifold();

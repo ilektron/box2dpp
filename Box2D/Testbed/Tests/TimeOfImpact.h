@@ -21,7 +21,7 @@
 
 class TimeOfImpact : public Test
 {
-   public:
+public:
     TimeOfImpact()
     {
         m_shapeA.SetAsBox(25.0f, 5.0f);

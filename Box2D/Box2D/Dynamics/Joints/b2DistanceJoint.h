@@ -33,7 +33,7 @@ struct b2DistanceJointDef : public b2JointDef
 {
     b2DistanceJointDef()
     {
-        type = e_distanceJoint;
+        type = b2JointType::DISTANCE_JOINT;
         localAnchorA.Set(0.0f, 0.0f);
         localAnchorB.Set(0.0f, 0.0f);
         length = 1.0f;
@@ -67,7 +67,7 @@ struct b2DistanceJointDef : public b2JointDef
 /// this as a massless, rigid rod.
 class b2DistanceJoint : public b2Joint
 {
-   public:
+public:
     b2Vec2 GetAnchorA() const override;
     b2Vec2 GetAnchorB() const override;
 
@@ -107,7 +107,7 @@ class b2DistanceJoint : public b2Joint
     /// Dump joint to dmLog
     void Dump() override;
 
-   protected:
+protected:
     friend class b2Joint;
     b2DistanceJoint(const b2DistanceJointDef* data);
 

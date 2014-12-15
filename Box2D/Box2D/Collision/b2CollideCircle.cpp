@@ -33,7 +33,7 @@ void box2d::b2CollideCircles(b2Manifold* manifold, const b2CircleShape* circleA,
 
     b2Vec2 d = pB - pA;
     float32 distSqr = b2Dot(d, d);
-    float32 rA = circleA->m_radius, rB = circleB->m_radius;
+    float32 rA = circleA->GetRadius(), rB = circleB->GetRadius();
     float32 radius = rA + rB;
     if (distSqr > radius * radius)
     {
@@ -62,7 +62,7 @@ void box2d::b2CollidePolygonAndCircle(b2Manifold* manifold, const b2PolygonShape
     // Find the min separating edge.
     int32_t normalIndex = 0;
     float32 separation = -MAX_FLOAT;
-    float32 radius = polygonA->m_radius + circleB->m_radius;
+    float32 radius = polygonA->GetRadius() + circleB->GetRadius();
     int32_t vertexCount = polygonA->m_count;
     const b2Vec2* vertices = polygonA->m_vertices;
     const b2Vec2* normals = polygonA->m_normals;

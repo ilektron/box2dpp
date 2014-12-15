@@ -51,8 +51,8 @@ b2GearJoint::b2GearJoint(const b2GearJointDef* def) : b2Joint(def)
     m_typeA = m_joint1->GetType();
     m_typeB = m_joint2->GetType();
 
-    b2Assert(m_typeA == e_revoluteJoint || m_typeA == e_prismaticJoint);
-    b2Assert(m_typeB == e_revoluteJoint || m_typeB == e_prismaticJoint);
+    b2Assert(m_typeA == b2JointType::REVOLUTE_JOINT || m_typeA == b2JointType::PRISMATIC_JOINT);
+    b2Assert(m_typeB == b2JointType::REVOLUTE_JOINT || m_typeB == b2JointType::PRISMATIC_JOINT);
 
     float32 coordinateA, coordinateB;
 
@@ -67,7 +67,7 @@ b2GearJoint::b2GearJoint(const b2GearJointDef* def) : b2Joint(def)
     b2Transform xfC = m_bodyC->m_xf;
     float32 aC = m_bodyC->m_sweep.a;
 
-    if (m_typeA == e_revoluteJoint)
+    if (m_typeA == b2JointType::REVOLUTE_JOINT)
     {
         b2RevoluteJoint* revolute = (b2RevoluteJoint*)def->joint1;
         m_localAnchorC = revolute->m_localAnchorA;
@@ -99,7 +99,7 @@ b2GearJoint::b2GearJoint(const b2GearJointDef* def) : b2Joint(def)
     b2Transform xfD = m_bodyD->m_xf;
     float32 aD = m_bodyD->m_sweep.a;
 
-    if (m_typeB == e_revoluteJoint)
+    if (m_typeB == b2JointType::REVOLUTE_JOINT)
     {
         b2RevoluteJoint* revolute = (b2RevoluteJoint*)def->joint2;
         m_localAnchorD = revolute->m_localAnchorA;
@@ -168,7 +168,7 @@ void b2GearJoint::InitVelocityConstraints(const b2SolverData& data)
 
     m_mass = 0.0f;
 
-    if (m_typeA == e_revoluteJoint)
+    if (m_typeA == b2JointType::REVOLUTE_JOINT)
     {
         m_JvAC.SetZero();
         m_JwA = 1.0f;
@@ -186,7 +186,7 @@ void b2GearJoint::InitVelocityConstraints(const b2SolverData& data)
         m_mass += m_mC + m_mA + m_iC * m_JwC * m_JwC + m_iA * m_JwA * m_JwA;
     }
 
-    if (m_typeB == e_revoluteJoint)
+    if (m_typeB == b2JointType::REVOLUTE_JOINT)
     {
         m_JvBD.SetZero();
         m_JwB = m_ratio;
@@ -290,7 +290,7 @@ bool b2GearJoint::SolvePositionConstraints(const b2SolverData& data)
     float32 JwA, JwB, JwC, JwD;
     float32 mass = 0.0f;
 
-    if (m_typeA == e_revoluteJoint)
+    if (m_typeA == b2JointType::REVOLUTE_JOINT)
     {
         JvAC.SetZero();
         JwA = 1.0f;
@@ -314,7 +314,7 @@ bool b2GearJoint::SolvePositionConstraints(const b2SolverData& data)
         coordinateA = b2Dot(pA - pC, m_localAxisC);
     }
 
-    if (m_typeB == e_revoluteJoint)
+    if (m_typeB == b2JointType::REVOLUTE_JOINT)
     {
         JvBD.SetZero();
         JwB = m_ratio;

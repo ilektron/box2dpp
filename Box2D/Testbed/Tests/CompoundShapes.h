@@ -22,7 +22,7 @@
 // TODO_ERIN test joints on compounds.
 class CompoundShapes : public Test
 {
-   public:
+public:
     CompoundShapes()
     {
         {
@@ -49,7 +49,7 @@ class CompoundShapes : public Test
             {
                 float32 x = RandomFloat(-0.1f, 0.1f);
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.position.Set(x + 5.0f, 1.05f + 2.5f * i);
                 bd.angle = RandomFloat(-PI, PI);
                 b2Body* body = m_world->CreateBody(&bd);
@@ -69,7 +69,7 @@ class CompoundShapes : public Test
             {
                 float32 x = RandomFloat(-0.1f, 0.1f);
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.position.Set(x - 5.0f, 1.05f + 2.5f * i);
                 bd.angle = RandomFloat(-PI, PI);
                 b2Body* body = m_world->CreateBody(&bd);
@@ -105,7 +105,7 @@ class CompoundShapes : public Test
             {
                 float32 x = RandomFloat(-0.1f, 0.1f);
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.position.Set(x, 2.05f + 2.5f * i);
                 bd.angle = 0.0f;
                 b2Body* body = m_world->CreateBody(&bd);
@@ -125,7 +125,7 @@ class CompoundShapes : public Test
             right.SetAsBox(0.15f, 2.7f, b2Vec2(1.45f, 2.35f), -0.2f);
 
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(0.0f, 2.0f);
             b2Body* body = m_world->CreateBody(&bd);
             body->CreateFixture(&bottom, 4.0f);

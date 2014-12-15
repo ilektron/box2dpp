@@ -21,7 +21,7 @@
 
 class AddPair : public Test
 {
-   public:
+public:
     AddPair()
     {
         m_world->SetGravity(b2Vec2(0.0f, 0.0f));
@@ -38,7 +38,7 @@ class AddPair : public Test
             for (int32_t i = 0; i < 400; ++i)
             {
                 b2BodyDef bd;
-                bd.type = b2_dynamicBody;
+                bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.position = b2Vec2(RandomFloat(minX, maxX), RandomFloat(minY, maxY));
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&shape, 0.01f);
@@ -49,7 +49,7 @@ class AddPair : public Test
             b2PolygonShape shape;
             shape.SetAsBox(1.5f, 1.5f);
             b2BodyDef bd;
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(-40.0f, 5.0f);
             bd.bullet = true;
             b2Body* body = m_world->CreateBody(&bd);

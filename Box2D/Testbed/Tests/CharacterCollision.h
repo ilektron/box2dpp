@@ -24,7 +24,7 @@
 /// Instead this is used to test smooth collision on edge chains.
 class CharacterCollision : public Test
 {
-   public:
+public:
     CharacterCollision()
     {
         // Ground body
@@ -126,7 +126,7 @@ class CharacterCollision : public Test
         {
             b2BodyDef bd;
             bd.position.Set(-3.0f, 8.0f);
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.fixedRotation = true;
             bd.allowSleep = false;
 
@@ -145,7 +145,7 @@ class CharacterCollision : public Test
         {
             b2BodyDef bd;
             bd.position.Set(-5.0f, 5.0f);
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.fixedRotation = true;
             bd.allowSleep = false;
 
@@ -164,7 +164,7 @@ class CharacterCollision : public Test
         {
             b2BodyDef bd;
             bd.position.Set(-5.0f, 8.0f);
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.fixedRotation = true;
             bd.allowSleep = false;
 
@@ -192,7 +192,7 @@ class CharacterCollision : public Test
         {
             b2BodyDef bd;
             bd.position.Set(3.0f, 5.0f);
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.fixedRotation = true;
             bd.allowSleep = false;
 
@@ -211,7 +211,7 @@ class CharacterCollision : public Test
         {
             b2BodyDef bd;
             bd.position.Set(-7.0f, 6.0f);
-            bd.type = b2_dynamicBody;
+            bd.type = b2BodyType::DYNAMIC_BODY;
             bd.allowSleep = false;
 
             m_character = m_world->CreateBody(&bd);

@@ -21,7 +21,7 @@
 
 class EdgeShapesCallback : public b2RayCastCallback
 {
-   public:
+public:
     EdgeShapesCallback()
     {
         m_fixture = nullptr;
@@ -42,14 +42,11 @@ class EdgeShapesCallback : public b2RayCastCallback
     b2Vec2 m_normal;
 };
 
+constexpr int EDGE_SHAPES_MAX_BODIES = 256;
+
 class EdgeShapes : public Test
 {
-   public:
-    enum
-    {
-        e_maxBodies = 256
-    };
-
+public:
     EdgeShapes()
     {
         // Ground body
@@ -135,7 +132,7 @@ class EdgeShapes : public Test
         float32 y = RandomFloat(10.0f, 20.0f);
         bd.position.Set(x, y);
         bd.angle = RandomFloat(-PI, PI);
-        bd.type = b2_dynamicBody;
+        bd.type = b2BodyType::DYNAMIC_BODY;
 
         if (index == 4)
         {
@@ -161,7 +158,7 @@ class EdgeShapes : public Test
             m_bodies[m_bodyIndex]->CreateFixture(&fd);
         }
 
-        m_bodyIndex = (m_bodyIndex + 1) % e_maxBodies;
+        m_bodyIndex = (m_bodyIndex + 1) % EDGE_SHAPES_MAX_BODIES;
     }
 
     void DestroyBody()
@@ -238,7 +235,7 @@ class EdgeShapes : public Test
     }
 
     int32_t m_bodyIndex;
-    b2Body* m_bodies[e_maxBodies];
+    b2Body* m_bodies[EDGE_SHAPES_MAX_BODIES];
     b2PolygonShape m_polygons[4];
     b2CircleShape m_circle;
 
