@@ -20,6 +20,7 @@
 #define B2_WORLD_CALLBACKS_H
 
 #include <Box2D/Common/b2Settings.h>
+#include <array>
 
 namespace box2d
 {

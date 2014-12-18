@@ -73,8 +73,8 @@ b2ContactSolver::b2ContactSolver(b2ContactSolverDef* def)
         vc->invIB = bodyB->m_invI;
         vc->contactIndex = i;
         vc->pointCount = pointCount;
-        vc->K = {{0.0f, 0.0f}};
-        vc->normalMass = {{0.0f, 0.0f}};
+        vc->K.SetZero();
+        vc->normalMass.SetZero();
 
         b2ContactPositionConstraint* pc = m_positionConstraints + i;
         pc->indexA = bodyA->m_islandIndex;
@@ -223,8 +223,8 @@ void b2ContactSolver::InitializeVelocityConstraints()
             if (k11 * k11 < k_maxConditionNumber * (k11 * k22 - k12 * k12))
             {
                 // K is safe to invert.
-                vc->K.ex.Set(k11, k12);
-                vc->K.ey.Set(k12, k22);
+                vc->K.ex = {{k11, k12}};
+                vc->K.ey = {{k12, k22}};
                 vc->normalMass = vc->K.GetInverse();
             }
             else
@@ -403,7 +403,7 @@ void b2ContactSolver::SolveVelocityConstraints()
             b2VelocityConstraintPoint* cp1 = vc->points + 0;
             b2VelocityConstraintPoint* cp2 = vc->points + 1;
 
-            b2Vec2 a(cp1->normalImpulse, cp2->normalImpulse);
+            b2Vec2 a{{cp1->normalImpulse, cp2->normalImpulse}};
             b2Assert(a[b2VecX] >= 0.0f && a[b2VecY] >= 0.0f);
 
             // Relative velocity at contact
@@ -477,18 +477,18 @@ void b2ContactSolver::SolveVelocityConstraints()
                 // vn2 = a21 * x1 + a22 * 0 + b2'
                 //
                 x[b2VecX] = -cp1->normalMass * b[b2VecX];
-                x.y = 0.0f;
+                x[b2VecY] = 0.0f;
                 vn1 = 0.0f;
-                vn2 = vc->K.ex.y * x[b2VecX] + b.y;
+                vn2 = vc->K.ex[b2VecY] * x[b2VecX] + b[b2VecY];
 
-                if (x.x >= 0.0f && vn2 >= 0.0f)
+                if (x[b2VecX] >= 0.0f && vn2 >= 0.0f)
                 {
                     // Get the incremental impulse
                     b2Vec2 d = x - a;
 
                     // Apply incremental impulse
                     b2Vec2 P1 = d[b2VecX] * normal;
-                    b2Vec2 P2 = d.y * normal;
+                    b2Vec2 P2 = d[b2VecY] * normal;
                     vA -= mA * (P1 + P2);
                     wA -= iA * (b2Cross(cp1->rA, P1) + b2Cross(cp2->rA, P2));
 
@@ -497,7 +497,7 @@ void b2ContactSolver::SolveVelocityConstraints()
 
                     // Accumulate
                     cp1->normalImpulse = x[b2VecX];
-                    cp2->normalImpulse = x.y;
+                    cp2->normalImpulse = x[b2VecY];
 
 #if B2_DEBUG_SOLVER == 1
                     // Postconditions

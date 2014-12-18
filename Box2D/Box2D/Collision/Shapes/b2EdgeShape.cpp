@@ -66,7 +66,7 @@ bool b2EdgeShape::RayCast(b2RayCastOutput* output, const b2RayCastInput& input,
     b2Vec2 v1 = m_vertex1;
     b2Vec2 v2 = m_vertex2;
     b2Vec2 e = v2 - v1;
-    b2Vec2 normal(e.y, -e[b2VecX]);
+    b2Vec2 normal{{e[b2VecY], -e[b2VecX]}};
     Normalize(normal);
 
     // q = p1 + t * d
@@ -125,7 +125,7 @@ void b2EdgeShape::ComputeAABB(b2AABB* aabb, const b2Transform& xf, int32_t child
     b2Vec2 lower = b2Min(v1, v2);
     b2Vec2 upper = b2Max(v1, v2);
 
-    b2Vec2 r(GetRadius(), GetRadius());
+    b2Vec2 r{{GetRadius(), GetRadius()}};
     aabb->lowerBound = lower - r;
     aabb->upperBound = upper + r;
 }

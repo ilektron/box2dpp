@@ -172,7 +172,7 @@ void box2d::b2CollidePolygons(b2Manifold* manifold, const b2PolygonShape* polyA,
     b2Vec2 v12 = vertices1[iv2];
 
     b2Vec2 localTangent = v12 - v11;
-    localTangent.Normalize();
+    Normalize(localTangent);
 
     b2Vec2 localNormal = b2Cross(localTangent, 1.0f);
     b2Vec2 planePoint = 0.5f * (v11 + v12);

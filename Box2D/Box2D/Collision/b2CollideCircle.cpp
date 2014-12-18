@@ -114,7 +114,7 @@ void box2d::b2CollidePolygonAndCircle(b2Manifold* manifold, const b2PolygonShape
         manifold->pointCount = 1;
         manifold->type = b2Manifold::e_faceA;
         manifold->localNormal = cLocal - v1;
-        manifold->localNormal.Normalize();
+        Normalize(manifold->localNormal);
         manifold->localPoint = v1;
         manifold->points[0].localPoint = circleB->m_p;
         manifold->points[0].id.key = 0;
@@ -129,7 +129,7 @@ void box2d::b2CollidePolygonAndCircle(b2Manifold* manifold, const b2PolygonShape
         manifold->pointCount = 1;
         manifold->type = b2Manifold::e_faceA;
         manifold->localNormal = cLocal - v2;
-        manifold->localNormal.Normalize();
+        Normalize(manifold->localNormal);
         manifold->localPoint = v2;
         manifold->points[0].localPoint = circleB->m_p;
         manifold->points[0].id.key = 0;

@@ -39,7 +39,7 @@ void b2WorldManifold::Initialize(const b2Manifold* manifold, const b2Transform& 
             if (b2DistanceSquared(pointA, pointB) > EPSILON * EPSILON)
             {
                 normal = pointB - pointA;
-                normal.Normalize();
+                Normalize(normal);
             }
 
             b2Vec2 cA = pointA + radiusA * normal;

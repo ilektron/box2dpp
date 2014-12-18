@@ -502,7 +502,7 @@ void box2d::b2Distance(b2DistanceOutput* output, b2SimplexCache* cache,
 
         // Compute closest point.
         b2Vec2 p = simplex.GetClosestPoint();
-        distanceSqr2 = p.LengthSquared();
+        distanceSqr2 = LengthSquared(p);
 
         // Ensure progress
         if (distanceSqr2 >= distanceSqr1)
@@ -515,7 +515,7 @@ void box2d::b2Distance(b2DistanceOutput* output, b2SimplexCache* cache,
         b2Vec2 d = simplex.GetSearchDirection();
 
         // Ensure the search direction is numerically fit.
-        if (d.LengthSquared() < EPSILON * EPSILON)
+        if (LengthSquared(d) < EPSILON * EPSILON)
         {
             // The origin is probably contained by a line segment
             // or triangle. Thus the shapes are overlapped.
@@ -582,7 +582,7 @@ void box2d::b2Distance(b2DistanceOutput* output, b2SimplexCache* cache,
             // Move the witness points to the outer surface.
             output->distance -= rA + rB;
             b2Vec2 normal = output->pointB - output->pointA;
-            normal.Normalize();
+            Normalize(normal);
             output->pointA += rA * normal;
             output->pointB -= rB * normal;
         }

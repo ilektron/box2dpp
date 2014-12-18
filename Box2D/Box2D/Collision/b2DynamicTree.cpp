@@ -109,7 +109,7 @@ int32_t b2DynamicTree::CreateProxy(const b2AABB& aabb, void* userData)
     int32_t proxyId = AllocateNode();
 
     // Fatten the aabb.
-    b2Vec2 r(AABB_EXTENSION, AABB_EXTENSION);
+    b2Vec2 r{{AABB_EXTENSION, AABB_EXTENSION}};
     m_nodes[proxyId].aabb.lowerBound = aabb.lowerBound - r;
     m_nodes[proxyId].aabb.upperBound = aabb.upperBound + r;
     m_nodes[proxyId].userData = userData;
@@ -144,7 +144,7 @@ bool b2DynamicTree::MoveProxy(int32_t proxyId, const b2AABB& aabb, const b2Vec2&
 
     // Extend AABB.
     b2AABB b = aabb;
-    b2Vec2 r(AABB_EXTENSION, AABB_EXTENSION);
+    b2Vec2 r{{AABB_EXTENSION, AABB_EXTENSION}};
     b.lowerBound = b.lowerBound - r;
     b.upperBound = b.upperBound + r;
 
@@ -160,13 +160,13 @@ bool b2DynamicTree::MoveProxy(int32_t proxyId, const b2AABB& aabb, const b2Vec2&
         b.upperBound[b2VecX] += d[b2VecX];
     }
 
-    if (d.y < 0.0f)
+    if (d[b2VecY] < 0.0f)
     {
-        b.lowerBound.y += d.y;
+        b.lowerBound[b2VecY] += d[b2VecY];
     }
     else
     {
-        b.upperBound.y += d.y;
+        b.upperBound[b2VecY] += d[b2VecY];
     }
 
     m_nodes[proxyId].aabb = b;

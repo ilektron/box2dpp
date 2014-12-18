@@ -284,7 +284,7 @@ void b2Island::Solve(b2Profile* profile, const b2TimeStep& step, const b2Vec2& g
         b2Vec2 translation = h * v;
         if (b2Dot(translation, translation) > MAX_TRANSLATION_SQUARED)
         {
-            float32 ratio = MAX_TRANSLATION / translation.Length();
+            float32 ratio = MAX_TRANSLATION / Length(translation);
             v *= ratio;
         }
 
@@ -482,7 +482,7 @@ void b2Island::SolveTOI(const b2TimeStep& subStep, int32_t toiIndexA, int32_t to
         b2Vec2 translation = h * v;
         if (b2Dot(translation, translation) > MAX_TRANSLATION_SQUARED)
         {
-            float32 ratio = MAX_TRANSLATION / translation.Length();
+            float32 ratio = MAX_TRANSLATION / Length(translation);
             v *= ratio;
         }
 

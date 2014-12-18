@@ -113,6 +113,28 @@ inline b2Vec2 operator-(const b2Vec2& vec1, const b2Vec2& vec2)
     return ret;
 }
 
+inline b2Vec2 operator-(const b2Vec2& vec1, float32 f)
+{
+    b2Vec2 ret;
+    for (unsigned int i = 0; i < vec1.size(); ++i)
+    {
+        ret[i] = vec1[i] - f;
+    }
+    
+    return ret;
+}
+
+inline b2Vec2 operator+(const b2Vec2& vec1, float32 f)
+{
+    b2Vec2 ret;
+    for (unsigned int i = 0; i < vec1.size(); ++i)
+    {
+        ret[i] = vec1[i] + f;
+    }
+    
+    return ret;
+}
+
 inline b2Vec2& operator+=(b2Vec2& vec1, const b2Vec2& vec2)
 {
     for (unsigned int i = 0; i < vec1.size(); ++i)

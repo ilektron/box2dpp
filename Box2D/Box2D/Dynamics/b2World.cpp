@@ -1038,7 +1038,7 @@ void b2World::DrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color
 
             b2Vec2 center = b2Mul(xf, circle->m_p);
             float32 radius = circle->GetRadius();
-            b2Vec2 axis = b2Mul(xf.q, b2Vec2(1.0f, 0.0f));
+            b2Vec2 axis = b2Mul(xf.q, b2Vec2{{1.0f, 0.0f}});
 
             g_debugDraw->DrawSolidCircle(center, radius, axis, color);
         }
@@ -1212,10 +1212,10 @@ void b2World::DrawDebugData()
                     b2FixtureProxy* proxy = f->m_proxies + i;
                     b2AABB aabb = bp->GetFatAABB(proxy->proxyId);
                     b2Vec2 vs[4];
-                    vs[0].Set(aabb.lowerBound.x, aabb.lowerBound.y);
-                    vs[1].Set(aabb.upperBound.x, aabb.lowerBound.y);
-                    vs[2].Set(aabb.upperBound.x, aabb.upperBound.y);
-                    vs[3].Set(aabb.lowerBound.x, aabb.upperBound.y);
+                    vs[0] = {{aabb.lowerBound[b2VecX], aabb.lowerBound[b2VecY]}};
+                    vs[1] = {{aabb.upperBound[b2VecX], aabb.lowerBound[b2VecY]}};
+                    vs[2] = {{aabb.upperBound[b2VecX], aabb.upperBound[b2VecY]}};
+                    vs[3] = {{aabb.lowerBound[b2VecX], aabb.upperBound[b2VecY]}};
 
                     g_debugDraw->DrawPolygon(vs, 4, color);
                 }
@@ -1284,7 +1284,7 @@ void b2World::Dump()
         return;
     }
 
-    b2Log("b2Vec2 g(%.15lef, %.15lef);\n", m_gravity.x, m_gravity.y);
+    b2Log("b2Vec2 g(%.15lef, %.15lef);\n", m_gravity[b2VecX], m_gravity[b2VecY]);
     b2Log("m_world->SetGravity(g);\n");
 
     b2Log("b2Body** bodies = (b2Body**)b2Alloc(%d * sizeof(b2Body*));\n", m_bodyCount);

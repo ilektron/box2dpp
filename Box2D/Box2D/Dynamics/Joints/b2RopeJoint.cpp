@@ -70,7 +70,7 @@ void b2RopeJoint::InitVelocityConstraints(const b2SolverData& data)
     m_rB = b2Mul(qB, m_localAnchorB - m_localCenterB);
     m_u = cB + m_rB - cA - m_rA;
 
-    m_length = m_u.Length();
+    m_length = Length(m_u);
 
     float32 C = m_length - m_maxLength;
     if (C > 0.0f)
@@ -172,7 +172,7 @@ bool b2RopeJoint::SolvePositionConstraints(const b2SolverData& data)
     b2Vec2 rB = b2Mul(qB, m_localAnchorB - m_localCenterB);
     b2Vec2 u = cB + rB - cA - rA;
 
-    float32 length = u.Normalize();
+    float32 length = Normalize(u);
     float32 C = length - m_maxLength;
 
     C = b2Clamp(C, 0.0f, MAX_LINEAR_CORRECTION);
@@ -234,8 +234,8 @@ void b2RopeJoint::Dump()
     b2Log("  jd.bodyA = bodies[%d];\n", indexA);
     b2Log("  jd.bodyB = bodies[%d];\n", indexB);
     b2Log("  jd.collideConnected = bool(%d);\n", m_collideConnected);
-    b2Log("  jd.localAnchorA.Set(%.15lef, %.15lef);\n", m_localAnchorA.x, m_localAnchorA.y);
-    b2Log("  jd.localAnchorB.Set(%.15lef, %.15lef);\n", m_localAnchorB.x, m_localAnchorB.y);
+    b2Log("  jd.localAnchorA.Set(%.15lef, %.15lef);\n", m_localAnchorA[b2VecX], m_localAnchorA[b2VecY]);
+    b2Log("  jd.localAnchorB.Set(%.15lef, %.15lef);\n", m_localAnchorB[b2VecX], m_localAnchorB[b2VecY]);
     b2Log("  jd.maxLength = %.15lef;\n", m_maxLength);
     b2Log("  joints[%d] = m_world->CreateJoint(&jd);\n", m_index);
 }

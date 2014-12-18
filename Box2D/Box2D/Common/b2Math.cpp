@@ -20,7 +20,7 @@
 
 using namespace box2d;
 
-const b2Vec2 box2d::b2Vec2_zero(0.0f, 0.0f);
+const b2Vec2 box2d::b2Vec2_zero{{0.0f, 0.0f}};
 
 /// Solve A * x = b, where b is a column vector. This is more efficient
 /// than computing the inverse in one-shot cases.
@@ -49,8 +49,8 @@ b2Vec2 b2Mat33::Solve22(const b2Vec2& b) const
         det = 1.0f / det;
     }
     b2Vec2 x;
-    x.x = det * (a22 * b.x - a12 * b.y);
-    x.y = det * (a11 * b.y - a21 * b.x);
+    x[b2VecX] = det * (a22 * b[b2VecX] - a12 * b[b2VecY]);
+    x[b2VecY] = det * (a11 * b[b2VecY] - a21 * b[b2VecX]);
     return x;
 }
 

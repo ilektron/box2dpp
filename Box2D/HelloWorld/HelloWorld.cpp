@@ -33,14 +33,14 @@ int main(int argc, char** argv)
     B2_NOT_USED(argv);
 
     // Define the gravity vector.
-    b2Vec2 gravity(0.0f, -10.0f);
+    b2Vec2 gravity{{0.0f, -10.0f}};
 
     // Construct a world object, which will hold and simulate the rigid bodies.
     b2World world(gravity);
 
     // Define the ground body.
     b2BodyDef groundBodyDef;
-    groundBodyDef.position.Set(0.0f, -10.0f);
+    groundBodyDef.position = {{0.0f, -10.0f}};
 
     // Call the body factory which allocates memory for the ground body
     // from a pool and creates the ground box shape (also from a pool).
@@ -59,7 +59,7 @@ int main(int argc, char** argv)
     // Define the dynamic body. We set its position and call the body factory.
     b2BodyDef bodyDef;
     bodyDef.type = b2BodyType::DYNAMIC_BODY;
-    bodyDef.position.Set(0.0f, 4.0f);
+    bodyDef.position = {{0.0f, 4.0f}};
     b2Body* body = world.CreateBody(&bodyDef);
 
     // Define another box shape for our dynamic body.
@@ -97,7 +97,7 @@ int main(int argc, char** argv)
         b2Vec2 position = body->GetPosition();
         float32 angle = body->GetAngle();
 
-        printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
+        printf("%4.2f %4.2f %4.2f\n", position[b2VecX], position[b2VecY], angle);
     }
 
     // When the world destructor is called, all bodies and joints are freed. This can

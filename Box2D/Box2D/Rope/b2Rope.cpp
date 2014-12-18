@@ -148,7 +148,7 @@ void b2Rope::SolveC2()
         b2Vec2 p2 = m_ps[i + 1];
 
         b2Vec2 d = p2 - p1;
-        float32 L = d.Normalize();
+        float32 L = Normalize(d);
 
         float32 im1 = m_ims[i];
         float32 im2 = m_ims[i + 1];
@@ -195,8 +195,8 @@ void b2Rope::SolveC3()
         b2Vec2 d1 = p2 - p1;
         b2Vec2 d2 = p3 - p2;
 
-        float32 L1sqr = d1.LengthSquared();
-        float32 L2sqr = d2.LengthSquared();
+        float32 L1sqr = LengthSquared(d1);
+        float32 L2sqr = LengthSquared(d2);
 
         if (L1sqr * L2sqr == 0.0f)
         {
@@ -208,8 +208,8 @@ void b2Rope::SolveC3()
 
         float32 angle = b2Atan2(a, b);
 
-        b2Vec2 Jd1 = (-1.0f / L1sqr) * d1.Skew();
-        b2Vec2 Jd2 = (1.0f / L2sqr) * d2.Skew();
+        b2Vec2 Jd1 = (-1.0f / L1sqr) * Skew(d1);
+        b2Vec2 Jd2 = (1.0f / L2sqr) * Skew(d2);
 
         b2Vec2 J1 = -Jd1;
         b2Vec2 J2 = Jd1 - Jd2;

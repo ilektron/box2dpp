@@ -31,27 +31,21 @@ b2Shape* b2PolygonShape::Clone(b2BlockAllocator* allocator) const
 
 void b2PolygonShape::SetAsBox(float32 hx, float32 hy)
 {
-    m_vertices.emplace_back(-hx, -hy);
-    m_vertices.emplace_back(hx, -hy);
-    m_vertices.emplace_back(hx, hy);
-    m_vertices.emplace_back(-hx, hy);
-    m_normals.emplace_back(0.0f, -1.0f);
-    m_normals.emplace_back(1.0f, 0.0f);
-    m_normals.emplace_back(0.0f, 1.0f);
-    m_normals.emplace_back(-1.0f, 0.0f);
+    m_vertices = {{{-hx, -hy}},
+                  {{hx, -hy}},
+                  {{hx, hy}},
+                  {{-hx, hy}}};
+    m_normals = {{{0.0f, -1.0f}},
+                 {{1.0f, 0.0f}},
+                 {{0.0f, 1.0f}},
+                 {{-1.0f, 0.0f}}};
+                 
     m_centroid = {{0.0f, 0.0f}};
 }
 
 void b2PolygonShape::SetAsBox(float32 hx, float32 hy, const b2Vec2& center, float32 angle)
 {
-    m_vertices.emplace_back(-hx, -hy);
-    m_vertices.emplace_back(hx, -hy);
-    m_vertices.emplace_back(hx, hy);
-    m_vertices.emplace_back(-hx, hy);
-    m_normals.emplace_back(0.0f, -1.0f);
-    m_normals.emplace_back(1.0f, 0.0f);
-    m_normals.emplace_back(0.0f, 1.0f);
-    m_normals.emplace_back(-1.0f, 0.0f);
+    SetAsBox(hx, hy);
     m_centroid = center;
 
     b2Transform xf;
@@ -75,13 +69,12 @@ static b2Vec2 ComputeCentroid(const std::vector<b2Vec2>& vs)
 {
     b2Assert(vs.size() >= 3);
 
-    b2Vec2 c;
-    c = {{0.0f, 0.0f}};
+    b2Vec2 c{{0.0f, 0.0f}};
     float32 area = 0.0f;
 
     // pRef is the reference point for forming triangles.
     // It's location doesn't change the result (except for rounding error).
-    b2Vec2 pRef(0.0f, 0.0f);
+    b2Vec2 pRef{{0.0f, 0.0f}};
 #if 0
 	// This code would put the reference point inside the polygon.
 	for (int32_t i = 0; i < count; ++i)
@@ -171,7 +164,7 @@ void b2PolygonShape::Set(const b2Vec2* vertices, int32_t count)
     for (int32_t i = 1; i < n; ++i)
     {
         float32 x = ps[i][b2VecX];
-        if (x > x0 || (x == x0 && ps[i].y < ps[i0].y))
+        if (x > x0 || (x == x0 && ps[i][b2VecY] < ps[i0][b2VecY]))
         {
             i0 = i;
             x0 = x;
@@ -204,7 +197,7 @@ void b2PolygonShape::Set(const b2Vec2* vertices, int32_t count)
             }
 
             // Collinearity check
-            if (c == 0.0f && v.LengthSquared() > r.LengthSquared())
+            if (c == 0.0f && LengthSquared(v) > LengthSquared(r))
             {
                 ie = j;
             }
@@ -242,9 +235,9 @@ void b2PolygonShape::Set(const b2Vec2* vertices, int32_t count)
         int32_t i1 = i;
         int32_t i2 = i + 1 < m ? i + 1 : 0;
         b2Vec2 edge = m_vertices[i2] - m_vertices[i1];
-        b2Assert(edge.LengthSquared() > EPSILON * EPSILON);
+        b2Assert(LengthSquared(edge) > EPSILON * EPSILON);
         m_normals.push_back(b2Cross(edge, 1.0f));
-        m_normals[i].Normalize();
+        Normalize(m_normals[i]);
     }
 
     // Compute the polygon centroid.
@@ -353,7 +346,7 @@ void b2PolygonShape::ComputeAABB(b2AABB* aabb, const b2Transform& xf, int32_t ch
         upper = b2Max(upper, v);
     }
 
-    b2Vec2 r(GetRadius(), GetRadius());
+    b2Vec2 r{{GetRadius(), GetRadius()}};
     aabb->lowerBound = lower - r;
     aabb->upperBound = upper + r;
 }
@@ -365,7 +358,7 @@ void b2PolygonShape::ComputeMass(b2MassData* massData, float32 density) const
     // Then:
     // mass = rho * int(dA)
     // centroid.x = (1/mass) * rho * int(x * dA)
-    // centroid.y = (1/mass) * rho * int(y * dA)
+    // centroid[b2VecY] = (1/mass) * rho * int(y * dA)
     // I = rho * int((x*x + y*y) * dA)
     //
     // We can compute these integrals by summing all the integrals
@@ -393,7 +386,7 @@ void b2PolygonShape::ComputeMass(b2MassData* massData, float32 density) const
 
     // s is the reference point for forming triangles.
     // It's location doesn't change the result (except for rounding error).
-    b2Vec2 s(0.0f, 0.0f);
+    b2Vec2 s{{0.0f, 0.0f}};
 
     // This code would put the reference point inside the polygon.
     for (int32_t i = 0; i < m_vertices.size(); ++i)
@@ -418,8 +411,8 @@ void b2PolygonShape::ComputeMass(b2MassData* massData, float32 density) const
         // Area weighted centroid
         center += triangleArea * k_inv3 * (e1 + e2);
 
-        float32 ex1 = e1[b2VecX], ey1 = e1.y;
-        float32 ex2 = e2[b2VecX], ey2 = e2.y;
+        float32 ex1 = e1[b2VecX], ey1 = e1[b2VecY];
+        float32 ex2 = e2[b2VecX], ey2 = e2[b2VecY];
 
         float32 intx2 = ex1 * ex1 + ex2 * ex1 + ex2 * ex2;
         float32 inty2 = ey1 * ey1 + ey2 * ey1 + ey2 * ey2;

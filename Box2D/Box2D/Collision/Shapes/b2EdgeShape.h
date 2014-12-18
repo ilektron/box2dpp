@@ -64,9 +64,9 @@ public:
 inline b2EdgeShape::b2EdgeShape() : b2Shape(b2Shape::e_edge, POLYGON_RADIUS)
 {
     m_vertex0[b2VecX] = 0.0f;
-    m_vertex0.y = 0.0f;
+    m_vertex0[b2VecY] = 0.0f;
     m_vertex3[b2VecX] = 0.0f;
-    m_vertex3.y = 0.0f;
+    m_vertex3[b2VecY] = 0.0f;
     m_hasVertex0 = false;
     m_hasVertex3 = false;
 }

@@ -136,7 +136,7 @@ void box2d::b2CollideEdgeAndCircle(b2Manifold* manifold, const b2EdgeShape* edge
         return;
     }
 
-    b2Vec2 n(-e.y, e[b2VecX]);
+    b2Vec2 n{{-e[b2VecY], e[b2VecX]}};
     if (b2Dot(n, Q - A) < 0.0f)
     {
 //         n.Set(-n.x, -n.y);
@@ -249,7 +249,7 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
 
     b2Vec2 edge1 = m_v2 - m_v1;
     Normalize(edge1);
-    m_normal1 = {{edge1.y, -edge1.x}};
+    m_normal1 = {{edge1[b2VecY], -edge1[b2VecX]}};
     float32 offset1 = b2Dot(m_normal1, m_centroidB - m_v1);
     float32 offset0 = 0.0f, offset2 = 0.0f;
     bool convex1 = false, convex2 = false;
@@ -650,7 +650,7 @@ b2EPAxis b2EPCollider::ComputePolygonSeparation()
     axis.index = -1;
     axis.separation = -FLT_MAX;
 
-    b2Vec2 perp(-m_normal[b2VecY], m_normal[b2VecX]);
+    b2Vec2 perp{{-m_normal[b2VecY], m_normal[b2VecX]}};
 
     for (int32_t i = 0; i < m_polygonB.count; ++i)
     {
