@@ -58,9 +58,9 @@ public:
 
         // Small triangle
         b2Vec2 vertices[3];
-        vertices[0].Set(-1.0f, 0.0f);
-        vertices[1].Set(1.0f, 0.0f);
-        vertices[2].Set(0.0f, 2.0f);
+        vertices[0] = {{-1.0f, 0.0f}};
+        vertices[1] = {{1.0f, 0.0f}};
+        vertices[2] = {{0.0f, 2.0f}};
         b2PolygonShape polygon;
         polygon.Set(vertices, 3);
 
@@ -106,7 +106,7 @@ public:
             jd.bodyB = body;
             jd.enableLimit = true;
             jd.localAnchorA.Set(0.0f, 4.0f);
-            jd.localAnchorB.SetZero();
+            jd.localAnchorB = {{0.0f, 0.0f}};
             jd.localAxisA.Set(0.0f, 1.0f);
             jd.lowerTranslation = -1.0f;
             jd.upperTranslation = 1.0f;
@@ -127,7 +127,7 @@ public:
 
         b2BodyDef boxBodyDef;
         boxBodyDef.type = b2BodyType::DYNAMIC_BODY;
-        boxBodyDef.position.Set(0.0f, 2.0f);
+        boxBodyDef.position = {{0.0f, 2.0f}};
 
         b2Body* body3 = m_world->CreateBody(&boxBodyDef);
         body3->CreateFixture(&boxShapeDef);

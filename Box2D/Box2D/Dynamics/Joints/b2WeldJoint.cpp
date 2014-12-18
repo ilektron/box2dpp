@@ -53,7 +53,7 @@ b2WeldJoint::b2WeldJoint(const b2WeldJointDef* def) : b2Joint(def)
     m_frequencyHz = def->frequencyHz;
     m_dampingRatio = def->dampingRatio;
 
-    m_impulse.SetZero();
+    m_impulse = {{0.0f, 0.0f}};
 }
 
 void b2WeldJoint::InitVelocityConstraints(const b2SolverData& data)
@@ -158,7 +158,7 @@ void b2WeldJoint::InitVelocityConstraints(const b2SolverData& data)
     }
     else
     {
-        m_impulse.SetZero();
+        m_impulse = {{0.0f, 0.0f}};
     }
 
     data.velocities[m_indexA].v = vA;

@@ -29,8 +29,8 @@ struct b2FrictionJointDef : public b2JointDef
     b2FrictionJointDef()
     {
         type = b2JointType::FRICTION_JOINT;
-        localAnchorA.SetZero();
-        localAnchorB.SetZero();
+        localAnchorA = {{0.0f, 0.0f}};
+        localAnchorB = {{0.0f, 0.0f}};
         maxForce = 0.0f;
         maxTorque = 0.0f;
     }

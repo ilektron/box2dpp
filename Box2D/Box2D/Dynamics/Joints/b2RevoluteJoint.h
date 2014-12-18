@@ -39,8 +39,8 @@ struct b2RevoluteJointDef : public b2JointDef
     b2RevoluteJointDef()
     {
         type = b2JointType::REVOLUTE_JOINT;
-        localAnchorA.Set(0.0f, 0.0f);
-        localAnchorB.Set(0.0f, 0.0f);
+        localAnchorA = {{0.0f, 0.0f}};
+        localAnchorB = {{0.0f, 0.0f}};
         referenceAngle = 0.0f;
         lowerAngle = 0.0f;
         upperAngle = 0.0f;

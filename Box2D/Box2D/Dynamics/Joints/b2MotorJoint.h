@@ -29,7 +29,7 @@ struct b2MotorJointDef : public b2JointDef
     b2MotorJointDef()
     {
         type = b2JointType::MOTOR_JOINT;
-        linearOffset.SetZero();
+        linearOffset = {{0.0f, 0.0f}};
         angularOffset = 0.0f;
         maxForce = 1.0f;
         maxTorque = 1.0f;

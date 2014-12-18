@@ -45,7 +45,7 @@ void b2DistanceJointDef::Initialize(b2Body* b1, b2Body* b2, const b2Vec2& anchor
     localAnchorA = bodyA->GetLocalPoint(anchor1);
     localAnchorB = bodyB->GetLocalPoint(anchor2);
     b2Vec2 d = anchor2 - anchor1;
-    length = d.Length();
+    length = Length(d);
 }
 
 b2DistanceJoint::b2DistanceJoint(const b2DistanceJointDef* def) : b2Joint(def)
@@ -88,14 +88,14 @@ void b2DistanceJoint::InitVelocityConstraints(const b2SolverData& data)
     m_u = cB + m_rB - cA - m_rA;
 
     // Handle singularity.
-    float32 length = m_u.Length();
+    float32 length = Length(m_u);
     if (length > LINEAR_SLOP)
     {
         m_u *= 1.0f / length;
     }
     else
     {
-        m_u.Set(0.0f, 0.0f);
+        m_u = {{0.0f, 0.0f}};
     }
 
     float32 crAu = b2Cross(m_rA, m_u);
@@ -201,7 +201,7 @@ bool b2DistanceJoint::SolvePositionConstraints(const b2SolverData& data)
     b2Vec2 rB = b2Mul(qB, m_localAnchorB - m_localCenterB);
     b2Vec2 u = cB + rB - cA - rA;
 
-    float32 length = u.Normalize();
+    float32 length = Normalize(u);
     float32 C = length - m_length;
     C = b2Clamp(C, -MAX_LINEAR_CORRECTION, MAX_LINEAR_CORRECTION);
 
@@ -252,8 +252,8 @@ void b2DistanceJoint::Dump()
     b2Log("  jd.bodyA = bodies[%d];\n", indexA);
     b2Log("  jd.bodyB = bodies[%d];\n", indexB);
     b2Log("  jd.collideConnected = bool(%d);\n", m_collideConnected);
-    b2Log("  jd.localAnchorA.Set(%.15lef, %.15lef);\n", m_localAnchorA.x, m_localAnchorA.y);
-    b2Log("  jd.localAnchorB.Set(%.15lef, %.15lef);\n", m_localAnchorB.x, m_localAnchorB.y);
+    b2Log("  jd.localAnchorA.Set(%.15lef, %.15lef);\n", m_localAnchorA[b2VecX], m_localAnchorA[b2VecY]);
+    b2Log("  jd.localAnchorB.Set(%.15lef, %.15lef);\n", m_localAnchorB[b2VecX], m_localAnchorB[b2VecY]);
     b2Log("  jd.length = %.15lef;\n", m_length);
     b2Log("  jd.frequencyHz = %.15lef;\n", m_frequencyHz);
     b2Log("  jd.dampingRatio = %.15lef;\n", m_dampingRatio);

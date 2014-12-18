@@ -53,7 +53,7 @@ public:
             jd.bodyA = ground;
             jd.bodyB = body;
             jd.localAnchorA.Set(0.0f, 10.0f);
-            jd.localAnchorB.Set(0.0f, 0.0f);
+            jd.localAnchorB = {{0.0f, 0.0f}};
             jd.referenceAngle = 0.0f;
             jd.motorSpeed = 0.05f * PI;
             jd.maxMotorTorque = 1e8f;

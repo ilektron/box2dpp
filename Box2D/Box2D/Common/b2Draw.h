@@ -21,6 +21,8 @@
 
 #include <Box2D/Common/b2Math.h>
 
+#include <vector>
+
 namespace box2d
 {
 /// Color for debug drawing. Each value has the range [0,1].
@@ -78,7 +80,7 @@ public:
     virtual void DrawPolygon(const b2Vec2* vertices, int32_t vertexCount, const b2Color& color) = 0;
 
     /// Draw a solid closed polygon provided in CCW order.
-    virtual void DrawSolidPolygon(const b2Vec2* vertices, int32_t vertexCount,
+    virtual void DrawSolidPolygon(const std::vector<b2Vec2>& vertices,
                                   const b2Color& color) = 0;
 
     /// Draw a circle.

@@ -42,7 +42,7 @@ void box2d::b2CollideCircles(b2Manifold* manifold, const b2CircleShape* circleA,
 
     manifold->type = b2Manifold::e_circles;
     manifold->localPoint = circleA->m_p;
-    manifold->localNormal.SetZero();
+    manifold->localNormal = {{0.0f, 0.0f}};
     manifold->pointCount = 1;
 
     manifold->points[0].localPoint = circleB->m_p;
@@ -63,11 +63,10 @@ void box2d::b2CollidePolygonAndCircle(b2Manifold* manifold, const b2PolygonShape
     int32_t normalIndex = 0;
     float32 separation = -MAX_FLOAT;
     float32 radius = polygonA->GetRadius() + circleB->GetRadius();
-    int32_t vertexCount = polygonA->GetVertexCount();
-    const b2Vec2* vertices = polygonA->m_vertices;
-    const b2Vec2* normals = polygonA->m_normals;
+    auto vertices = polygonA->GetVertices();
+    auto normals = polygonA->GetNormals();
 
-    for (int32_t i = 0; i < vertexCount; ++i)
+    for (int32_t i = 0; i < vertices.size(); ++i)
     {
         float32 s = b2Dot(normals[i], cLocal - vertices[i]);
 
@@ -86,7 +85,7 @@ void box2d::b2CollidePolygonAndCircle(b2Manifold* manifold, const b2PolygonShape
 
     // Vertices that subtend the incident face.
     int32_t vertIndex1 = normalIndex;
-    int32_t vertIndex2 = vertIndex1 + 1 < vertexCount ? vertIndex1 + 1 : 0;
+    int32_t vertIndex2 = vertIndex1 + 1 < vertices.size() ? vertIndex1 + 1 : 0;
     b2Vec2 v1 = vertices[vertIndex1];
     b2Vec2 v2 = vertices[vertIndex2];
 

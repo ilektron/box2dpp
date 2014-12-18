@@ -966,7 +966,7 @@ void b2World::ClearForces()
 {
     for (b2Body* body = m_bodyList; body; body = body->GetNext())
     {
-        body->m_force.SetZero();
+        body->m_force = {{0.0f, 0.0f}};
         body->m_torque = 0.0f;
     }
 }
@@ -1073,16 +1073,14 @@ void b2World::DrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color
         case b2Shape::e_polygon:
         {
             b2PolygonShape* poly = (b2PolygonShape*)fixture->GetShape();
-            int32_t vertexCount = poly->m_count;
-            b2Assert(vertexCount <= MAX_POLYGON_VERTICES);
-            b2Vec2 vertices[MAX_POLYGON_VERTICES];
+            std::vector<b2Vec2> vertices = poly->GetVertices();
 
-            for (int32_t i = 0; i < vertexCount; ++i)
+            for (int32_t i = 0; i < vertices.size(); ++i)
             {
-                vertices[i] = b2Mul(xf, poly->m_vertices[i]);
+                vertices[i] = b2Mul(xf, vertices[i]);
             }
 
-            g_debugDraw->DrawSolidPolygon(vertices, vertexCount, color);
+            g_debugDraw->DrawSolidPolygon(vertices, color);
         }
         break;
 

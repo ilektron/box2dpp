@@ -43,7 +43,7 @@ public:
         b2RevoluteJointDef jointDef;
         jointDef.bodyA = ground;
         jointDef.bodyB = root;
-        jointDef.localAnchorA.SetZero();
+        jointDef.localAnchorA = {{0.0f, 0.0f}};
         jointDef.localAnchorB = h;
         m_world->CreateJoint(&jointDef);
     }

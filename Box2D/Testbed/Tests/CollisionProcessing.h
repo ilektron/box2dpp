@@ -47,9 +47,9 @@ public:
 
         // Small triangle
         b2Vec2 vertices[3];
-        vertices[0].Set(-1.0f, 0.0f);
-        vertices[1].Set(1.0f, 0.0f);
-        vertices[2].Set(0.0f, 2.0f);
+        vertices[0] = {{-1.0f, 0.0f}};
+        vertices[1] = {{1.0f, 0.0f}};
+        vertices[2] = {{0.0f, 2.0f}};
 
         b2PolygonShape polygon;
         polygon.Set(vertices, 3);

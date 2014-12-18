@@ -31,7 +31,7 @@ class b2Shape;
 /// It encapsulates any shape.
 struct b2DistanceProxy
 {
-    b2DistanceProxy() : m_buffer(2), m_vertices(nullptr), m_count(0), m_radius(0.0f)
+    b2DistanceProxy() : m_radius(0.0f)
     {
     }
 
@@ -51,9 +51,7 @@ struct b2DistanceProxy
     /// Get a vertex by index. Used by b2Distance.
     const b2Vec2& GetVertex(int32_t index) const;
 
-    std::vector<b2Vec2> m_buffer;
-    const b2Vec2* m_vertices;
-    int32_t m_count;
+    std::vector<b2Vec2> m_vertices;
     float32 m_radius;
 };
 
@@ -98,12 +96,11 @@ void b2Distance(b2DistanceOutput* output, b2SimplexCache* cache, const b2Distanc
 
 inline int32_t b2DistanceProxy::GetVertexCount() const
 {
-    return m_count;
+    return m_vertices.size();
 }
 
 inline const b2Vec2& b2DistanceProxy::GetVertex(int32_t index) const
 {
-    b2Assert(0 <= index && index < m_count);
     return m_vertices[index];
 }
 
@@ -111,7 +108,7 @@ inline int32_t b2DistanceProxy::GetSupport(const b2Vec2& d) const
 {
     int32_t bestIndex = 0;
     float32 bestValue = b2Dot(m_vertices[0], d);
-    for (int32_t i = 1; i < m_count; ++i)
+    for (int32_t i = 1; i < m_vertices.size(); ++i)
     {
         float32 value = b2Dot(m_vertices[i], d);
         if (value > bestValue)
@@ -128,7 +125,7 @@ inline const b2Vec2& b2DistanceProxy::GetSupportVertex(const b2Vec2& d) const
 {
     int32_t bestIndex = 0;
     float32 bestValue = b2Dot(m_vertices[0], d);
-    for (int32_t i = 1; i < m_count; ++i)
+    for (int32_t i = 1; i < m_vertices.size(); ++i)
     {
         float32 value = b2Dot(m_vertices[i], d);
         if (value > bestValue)

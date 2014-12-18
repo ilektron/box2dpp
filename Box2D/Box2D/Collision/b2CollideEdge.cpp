@@ -21,6 +21,8 @@
 #include <Box2D/Collision/Shapes/b2EdgeShape.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
+#include <array>
+
 using namespace box2d;
 
 // Compute contact points for edge versus circle.
@@ -77,7 +79,7 @@ void box2d::b2CollideEdgeAndCircle(b2Manifold* manifold, const b2EdgeShape* edge
         cf.typeA = b2ContactFeature::e_vertex;
         manifold->pointCount = 1;
         manifold->type = b2Manifold::e_circles;
-        manifold->localNormal.SetZero();
+        manifold->localNormal = {{0.0f, 0.0f}};
         manifold->localPoint = P;
         manifold->points[0].id.key = 0;
         manifold->points[0].id.cf = cf;
@@ -115,7 +117,7 @@ void box2d::b2CollideEdgeAndCircle(b2Manifold* manifold, const b2EdgeShape* edge
         cf.typeA = b2ContactFeature::e_vertex;
         manifold->pointCount = 1;
         manifold->type = b2Manifold::e_circles;
-        manifold->localNormal.SetZero();
+        manifold->localNormal = {{0.0f, 0.0f}};
         manifold->localPoint = P;
         manifold->points[0].id.key = 0;
         manifold->points[0].id.cf = cf;
@@ -134,12 +136,13 @@ void box2d::b2CollideEdgeAndCircle(b2Manifold* manifold, const b2EdgeShape* edge
         return;
     }
 
-    b2Vec2 n(-e.y, e.x);
+    b2Vec2 n(-e.y, e[b2VecX]);
     if (b2Dot(n, Q - A) < 0.0f)
     {
-        n.Set(-n.x, -n.y);
+//         n.Set(-n.x, -n.y);
+        n = -n;
     }
-    n.Normalize();
+    Normalize(n);
 
     cf.indexA = 0;
     cf.typeA = b2ContactFeature::e_face;
@@ -234,7 +237,7 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
 {
     m_xf = b2MulT(xfA, xfB);
 
-    m_centroidB = b2Mul(m_xf, polygonB->m_centroid);
+    m_centroidB = b2Mul(m_xf, polygonB->GetCentroid());
 
     m_v0 = edgeA->m_vertex0;
     m_v1 = edgeA->m_vertex1;
@@ -245,8 +248,8 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
     bool hasVertex3 = edgeA->m_hasVertex3;
 
     b2Vec2 edge1 = m_v2 - m_v1;
-    edge1.Normalize();
-    m_normal1.Set(edge1.y, -edge1.x);
+    Normalize(edge1);
+    m_normal1 = {{edge1.y, -edge1.x}};
     float32 offset1 = b2Dot(m_normal1, m_centroidB - m_v1);
     float32 offset0 = 0.0f, offset2 = 0.0f;
     bool convex1 = false, convex2 = false;
@@ -255,8 +258,8 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
     if (hasVertex0)
     {
         b2Vec2 edge0 = m_v1 - m_v0;
-        edge0.Normalize();
-        m_normal0.Set(edge0.y, -edge0.x);
+        Normalize(edge0);
+        m_normal0 = {{edge0[b2VecY], -edge0[b2VecX]}};
         convex1 = b2Cross(edge0, edge1) >= 0.0f;
         offset0 = b2Dot(m_normal0, m_centroidB - m_v0);
     }
@@ -265,8 +268,8 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
     if (hasVertex3)
     {
         b2Vec2 edge2 = m_v3 - m_v2;
-        edge2.Normalize();
-        m_normal2.Set(edge2.y, -edge2.x);
+        Normalize(edge2);
+        m_normal2 = {{edge2[b2VecY], -edge2[b2VecX]}};
         convex2 = b2Cross(edge1, edge2) > 0.0f;
         offset2 = b2Dot(m_normal2, m_centroidB - m_v2);
     }
@@ -427,11 +430,12 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
     }
 
     // Get polygonB in frameA
-    m_polygonB.count = polygonB->GetVertexCount();
-    for (int32_t i = 0; i < polygonB->GetVertexCount(); ++i)
+    auto vBs = polygonB->GetVertices();
+    m_polygonB.count = vBs.size();
+    for (int32_t i = 0; i < vBs.size(); ++i)
     {
-        m_polygonB.vertices[i] = b2Mul(m_xf, polygonB->m_vertices[i]);
-        m_polygonB.normals[i] = b2Mul(m_xf.q, polygonB->m_normals[i]);
+        m_polygonB.vertices[i] = b2Mul(m_xf, vBs[i]);
+        m_polygonB.normals[i] = b2Mul(m_xf.q, vBs[i]);
     }
 
     m_radius = 2.0f * POLYGON_RADIUS;
@@ -475,7 +479,7 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
         primaryAxis = edgeAxis;
     }
 
-    b2ClipVertex ie[2];
+    std::array<b2ClipVertex, 2> ie;
     b2ReferenceFace rf;
     if (primaryAxis.type == b2EPAxis::e_edgeA)
     {
@@ -550,14 +554,14 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
         rf.normal = m_polygonB.normals[rf.i1];
     }
 
-    rf.sideNormal1.Set(rf.normal.y, -rf.normal.x);
+    rf.sideNormal1 = {{rf.normal[b2VecY], -rf.normal[b2VecX]}};
     rf.sideNormal2 = -rf.sideNormal1;
     rf.sideOffset1 = b2Dot(rf.sideNormal1, rf.v1);
     rf.sideOffset2 = b2Dot(rf.sideNormal2, rf.v2);
 
     // Clip incident edge against extruded edge1 side edges.
-    b2ClipVertex clipPoints1[2];
-    b2ClipVertex clipPoints2[2];
+    std::array<b2ClipVertex, 2> clipPoints1;
+    std::array<b2ClipVertex, 2> clipPoints2;
     int32_t np;
 
     // Clip to box side 1
@@ -584,8 +588,8 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
     }
     else
     {
-        manifold->localNormal = polygonB->m_normals[rf.i1];
-        manifold->localPoint = polygonB->m_vertices[rf.i1];
+        manifold->localNormal = polygonB->GetNormals()[rf.i1];
+        manifold->localPoint = polygonB->GetNormals()[rf.i1];
     }
 
     int32_t pointCount = 0;
@@ -646,7 +650,7 @@ b2EPAxis b2EPCollider::ComputePolygonSeparation()
     axis.index = -1;
     axis.separation = -FLT_MAX;
 
-    b2Vec2 perp(-m_normal.y, m_normal.x);
+    b2Vec2 perp(-m_normal[b2VecY], m_normal[b2VecX]);
 
     for (int32_t i = 0; i < m_polygonB.count; ++i)
     {

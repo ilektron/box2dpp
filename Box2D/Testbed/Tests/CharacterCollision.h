@@ -107,12 +107,12 @@ public:
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2Vec2 vs[10];
-            vs[0].Set(0.0f, 0.0f);
+            vs[0] = {{0.0f, 0.0f}};
             vs[1].Set(6.0f, 0.0f);
             vs[2].Set(6.0f, 2.0f);
             vs[3].Set(4.0f, 1.0f);
             vs[4].Set(2.0f, 2.0f);
-            vs[5].Set(0.0f, 2.0f);
+            vs[5] = {{0.0f, 2.0f}};
             vs[6].Set(-2.0f, 2.0f);
             vs[7].Set(-4.0f, 3.0f);
             vs[8].Set(-6.0f, 2.0f);

@@ -27,7 +27,7 @@ public:
     {
         {
             b2BodyDef bd;
-            bd.position.Set(0.0f, 0.0f);
+            bd.position = {{0.0f, 0.0f}};
             b2Body* body = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
@@ -126,7 +126,7 @@ public:
 
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(0.0f, 2.0f);
+            bd.position = {{0.0f, 2.0f}};
             b2Body* body = m_world->CreateBody(&bd);
             body->CreateFixture(&bottom, 4.0f);
             body->CreateFixture(&left, 4.0f);

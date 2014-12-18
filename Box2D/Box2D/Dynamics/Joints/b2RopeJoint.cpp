@@ -88,7 +88,7 @@ void b2RopeJoint::InitVelocityConstraints(const b2SolverData& data)
     }
     else
     {
-        m_u.SetZero();
+        m_u = {{0.0f, 0.0f}};
         m_mass = 0.0f;
         m_impulse = 0.0f;
         return;

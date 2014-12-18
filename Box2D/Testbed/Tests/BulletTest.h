@@ -26,7 +26,7 @@ public:
     {
         {
             b2BodyDef bd;
-            bd.position.Set(0.0f, 0.0f);
+            bd.position = {{0.0f, 0.0f}};
             b2Body* body = m_world->CreateBody(&bd);
 
             b2EdgeShape edge;

@@ -88,8 +88,8 @@ void b2CircleShape::ComputeAABB(b2AABB* aabb, const b2Transform& transform,
     B2_NOT_USED(childIndex);
 
     b2Vec2 p = transform.p + b2Mul(transform.q, m_p);
-    aabb->lowerBound.Set(p.x - GetRadius(), p.y - GetRadius());
-    aabb->upperBound.Set(p.x + GetRadius(), p.y + GetRadius());
+    aabb->lowerBound = p - GetRadius(); //.Set(p.x - GetRadius(), p.y - GetRadius());
+    aabb->upperBound = p + GetRadius(); //.Set(p.x + GetRadius(), p.y + GetRadius());
 }
 
 void b2CircleShape::ComputeMass(b2MassData* massData, float32 density) const

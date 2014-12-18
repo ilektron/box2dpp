@@ -33,7 +33,7 @@ struct b2RopeDef
         vertices = nullptr;
         count = 0;
         masses = nullptr;
-        gravity.SetZero();
+        gravity = {{0.0f, 0.0f}};
         damping = 0.1f;
         k2 = 0.9f;
         k3 = 0.1f;

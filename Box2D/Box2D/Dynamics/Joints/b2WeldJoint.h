@@ -31,8 +31,8 @@ struct b2WeldJointDef : public b2JointDef
     b2WeldJointDef()
     {
         type = b2JointType::WELD_JOINT;
-        localAnchorA.Set(0.0f, 0.0f);
-        localAnchorB.Set(0.0f, 0.0f);
+        localAnchorA = {{0.0f, 0.0f}};
+        localAnchorB = {{0.0f, 0.0f}};
         referenceAngle = 0.0f;
         frequencyHz = 0.0f;
         dampingRatio = 0.0f;

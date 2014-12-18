@@ -32,10 +32,10 @@ struct b2PulleyJointDef : public b2JointDef
     b2PulleyJointDef()
     {
         type = b2JointType::PULLEY_JOINT;
-        groundAnchorA.Set(-1.0f, 1.0f);
-        groundAnchorB.Set(1.0f, 1.0f);
-        localAnchorA.Set(-1.0f, 0.0f);
-        localAnchorB.Set(1.0f, 0.0f);
+        groundAnchorA = {{-1.0f, 1.0f}};
+        groundAnchorB = {{1.0f, 1.0f}};
+        localAnchorA = {{-1.0f, 0.0f}};
+        localAnchorB = {{1.0f, 0.0f}};
         lengthA = 0.0f;
         lengthB = 0.0f;
         ratio = 1.0f;

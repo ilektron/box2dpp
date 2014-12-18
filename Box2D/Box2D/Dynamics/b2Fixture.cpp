@@ -270,10 +270,12 @@ void b2Fixture::Dump(int32_t bodyIndex)
             b2PolygonShape* s = (b2PolygonShape*)m_shape;
             b2Log("    b2PolygonShape shape;\n");
             b2Log("    b2Vec2 vs[%d];\n", MAX_POLYGON_VERTICES);
-            for (int32_t i = 0; i < s->GetVertexCount(); ++i)
+            int i = 0;
+            for (auto& vert : s->GetVertices())
             {
-                b2Log("    vs[%d].Set(%.15lef, %.15lef);\n", i, s->m_vertices[i].x,
-                      s->m_vertices[i].y);
+                b2Log("    vs[%d].Set(%.15lef, %.15lef);\n", i, vert.x,
+                      vert.y);
+                i++;
             }
             b2Log("    shape.Set(vs, %d);\n", s->GetVertexCount());
         }

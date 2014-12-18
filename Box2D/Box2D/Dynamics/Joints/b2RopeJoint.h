@@ -32,8 +32,8 @@ struct b2RopeJointDef : public b2JointDef
     b2RopeJointDef()
     {
         type = b2JointType::ROPE_JOINT;
-        localAnchorA.Set(-1.0f, 0.0f);
-        localAnchorB.Set(1.0f, 0.0f);
+        localAnchorA = {{-1.0f, 0.0f}};
+        localAnchorB = {{1.0f, 0.0f}};
         maxLength = 0.0f;
     }
 

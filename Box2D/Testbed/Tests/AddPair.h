@@ -27,7 +27,7 @@ public:
         m_world->SetGravity(b2Vec2(0.0f, 0.0f));
         {
             b2CircleShape shape;
-            shape.m_p.SetZero();
+            shape.m_p = {{0.0f, 0.0f}};
             shape.m_radius = 0.1f;
 
             float minX = -6.0f;

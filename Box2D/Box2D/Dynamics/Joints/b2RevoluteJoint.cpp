@@ -50,7 +50,7 @@ b2RevoluteJoint::b2RevoluteJoint(const b2RevoluteJointDef* def) : b2Joint(def)
     m_localAnchorB = def->localAnchorB;
     m_referenceAngle = def->referenceAngle;
 
-    m_impulse.SetZero();
+    m_impulse.Set(0.0f, 0.0f, 0.0f);
     m_motorImpulse = 0.0f;
 
     m_lowerAngle = def->lowerAngle;
@@ -171,7 +171,7 @@ void b2RevoluteJoint::InitVelocityConstraints(const b2SolverData& data)
     }
     else
     {
-        m_impulse.SetZero();
+        m_impulse = {{0.0f, 0.0f}};
         m_motorImpulse = 0.0f;
     }
 

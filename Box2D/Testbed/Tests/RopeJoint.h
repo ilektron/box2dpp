@@ -86,7 +86,7 @@ public:
                 prevBody = body;
             }
 
-            m_ropeDef.localAnchorB.SetZero();
+            m_ropeDef.localAnchorB = {{0.0f, 0.0f}};
 
             float32 extraLength = 0.01f;
             m_ropeDef.maxLength = N - 1.0f + extraLength;

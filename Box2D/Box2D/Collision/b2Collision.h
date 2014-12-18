@@ -22,6 +22,8 @@
 #include <Box2D/Common/b2Math.h>
 #include <limits.h>
 
+#include <array>
+
 namespace box2d
 {
 /// @file
@@ -188,9 +190,8 @@ struct b2AABB
     /// Get the perimeter length
     float32 GetPerimeter() const
     {
-        float32 wx = upperBound.x - lowerBound.x;
-        float32 wy = upperBound.y - lowerBound.y;
-        return 2.0f * (wx + wy);
+        auto diff = upperBound - lowerBound;
+        return 2.0f * (diff[b2VecX] + diff[b2VecY]);
     }
 
     /// Combine an AABB into this one.
@@ -210,11 +211,9 @@ struct b2AABB
     /// Does this aabb contain the provided AABB.
     bool Contains(const b2AABB& aabb) const
     {
-        bool result = true;
-        result = result && lowerBound.x <= aabb.lowerBound.x;
-        result = result && lowerBound.y <= aabb.lowerBound.y;
-        result = result && aabb.upperBound.x <= upperBound.x;
-        result = result && aabb.upperBound.y <= upperBound.y;
+        bool result = lowerBound <= aabb.lowerBound
+            && aabb.upperBound <= upperBound;
+            
         return result;
     }
 
@@ -247,7 +246,7 @@ void b2CollideEdgeAndPolygon(b2Manifold* manifold, const b2EdgeShape* edgeA, con
                              const b2PolygonShape* circleB, const b2Transform& xfB);
 
 /// Clipping for contact manifolds.
-int32_t b2ClipSegmentToLine(b2ClipVertex vOut[2], const b2ClipVertex vIn[2], const b2Vec2& normal,
+int32_t b2ClipSegmentToLine(std::array<b2ClipVertex, 2>& vOut, const std::array<b2ClipVertex, 2>& vIn, const b2Vec2& normal,
                             float32 offset, int32_t vertexIndexA);
 
 /// Determine if two generic shapes overlap.
@@ -259,8 +258,10 @@ bool b2TestOverlap(const b2Shape* shapeA, int32_t indexA, const b2Shape* shapeB,
 inline bool b2AABB::IsValid() const
 {
     b2Vec2 d = upperBound - lowerBound;
-    bool valid = d.x >= 0.0f && d.y >= 0.0f;
-    valid = valid && lowerBound.IsValid() && upperBound.IsValid();
+//     bool valid = d.x >= 0.0f && d.y >= 0.0f;
+    bool valid = d >= 0.0f
+        && box2d::IsValid(lowerBound)
+        && box2d::IsValid(upperBound);
     return valid;
 }
 
@@ -270,10 +271,10 @@ inline bool b2TestOverlap(const b2AABB& a, const b2AABB& b)
     d1 = b.lowerBound - a.upperBound;
     d2 = a.lowerBound - b.upperBound;
 
-    if (d1.x > 0.0f || d1.y > 0.0f)
+    if (d1[b2VecX] > 0.0f || d1[b2VecY] > 0.0f)
         return false;
 
-    if (d2.x > 0.0f || d2.y > 0.0f)
+    if (d2[b2VecX] > 0.0f || d2[b2VecY] > 0.0f)
         return false;
 
     return true;

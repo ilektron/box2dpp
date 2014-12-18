@@ -23,7 +23,8 @@
 
 namespace box2d
 {
-struct b2Vec2;
+
+typedef std::array<float, 2> b2Vec2;
 struct b2Transform;
 class b2Fixture;
 class b2Body;

@@ -75,34 +75,52 @@ public:
     /// Get the vertex count.
     int32_t GetVertexCount() const
     {
-        return m_count;
+        return m_vertices.size();
     }
 
     /// Get a vertex by index.
     const b2Vec2& GetVertex(int32_t index) const;
+    const b2Vec2& GetCentroid() const;
 
     /// Validate convexity. This is a very time consuming operation.
     /// @returns true if valid
     bool Validate() const;
+    
+    const std::vector<b2Vec2>& GetVertices() const;
+    const std::vector<b2Vec2>& GetNormals() const;
+    
 
 private:
     b2Vec2 m_centroid;
     std::vector<b2Vec2> m_vertices;
     std::vector<b2Vec2> m_normals;
-    int32_t m_count;
 };
 
 inline b2PolygonShape::b2PolygonShape() : b2Shape(e_polygon, POLYGON_RADIUS)
 {
-    m_count = 0;
-    m_centroid.SetZero();
+    m_centroid = {{0.0f, 0.0f}};
 }
 
 inline const b2Vec2& b2PolygonShape::GetVertex(int32_t index) const
 {
-    b2Assert(0 <= index && index < m_count);
     return m_vertices[index];
 }
+
+inline const b2Vec2& b2PolygonShape::GetCentroid() const
+{
+    return m_centroid;
+}
+
+inline const std::vector<b2Vec2>& b2PolygonShape::GetVertices() const
+{
+    return m_vertices;
+}
+
+inline const std::vector<b2Vec2>& b2PolygonShape::GetNormals() const
+{
+    return m_normals;
+}
+
 }
 
 #endif

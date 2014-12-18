@@ -19,6 +19,8 @@
 #include <Box2D/Collision/b2Collision.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
+#include <array>
+
 using namespace box2d;
 
 // Find the max separation between poly1 and poly2 using edge normals from
@@ -27,24 +29,22 @@ static float32 b2FindMaxSeparation(int32_t* edgeIndex, const b2PolygonShape* pol
                                    const b2Transform& xf1, const b2PolygonShape* poly2,
                                    const b2Transform& xf2)
 {
-    int32_t count1 = poly1->GetVertexCount();
-    int32_t count2 = poly2->GetVertexCount();
-    const b2Vec2* n1s = poly1->m_normals;
-    const b2Vec2* v1s = poly1->m_vertices;
-    const b2Vec2* v2s = poly2->m_vertices;
-    b2Transform xf = b2MulT(xf2, xf1);
+    auto n1s = poly1->GetNormals();
+    auto v1s = poly1->GetVertices();
+    auto v2s = poly2->GetVertices();
+    auto xf = b2MulT(xf2, xf1);
 
     int32_t bestIndex = 0;
     float32 maxSeparation = -MAX_FLOAT;
-    for (int32_t i = 0; i < count1; ++i)
+    for (int32_t i = 0; i < v1s.size(); ++i)
     {
         // Get poly1 normal in frame2.
-        b2Vec2 n = b2Mul(xf.q, poly1->GetNormal(i));
+        b2Vec2 n = b2Mul(xf.q, n1s[i]);
         b2Vec2 v1 = b2Mul(xf, v1s[i]);
 
         // Find deepest point for normal i.
         float32 si = MAX_FLOAT;
-        for (int32_t j = 0; j < count2; ++j)
+        for (int32_t j = 0; j < v2s.size(); ++j)
         {
             float32 sij = b2Dot(n, v2s[j] - v1);
             if (sij < si)
@@ -64,15 +64,14 @@ static float32 b2FindMaxSeparation(int32_t* edgeIndex, const b2PolygonShape* pol
     return maxSeparation;
 }
 
-static void b2FindIncidentEdge(b2ClipVertex c[2], const b2PolygonShape* poly1,
+static void b2FindIncidentEdge(std::array<b2ClipVertex, 2>& c, const b2PolygonShape* poly1,
                                const b2Transform& xf1, int32_t edge1, const b2PolygonShape* poly2,
                                const b2Transform& xf2)
 {
-    const b2Vec2* normals1 = poly1->m_normals;
+    auto normals1 = poly1->GetNormals();
 
-    int32_t count2 = poly2->GetVertexCount();
-    const b2Vec2* vertices2 = poly2->m_vertices;
-    const b2Vec2* normals2 = poly2->m_normals;
+    auto vertices2 = poly2->GetVertices();
+    auto normals2 = poly2->GetNormals();
 
     b2Assert(0 <= edge1 && edge1 < poly1->GetVertexCount());
 
@@ -82,7 +81,7 @@ static void b2FindIncidentEdge(b2ClipVertex c[2], const b2PolygonShape* poly1,
     // Find the incident edge on poly2.
     int32_t index = 0;
     float32 minDot = MAX_FLOAT;
-    for (int32_t i = 0; i < count2; ++i)
+    for (int32_t i = 0; i < normals2.size(); ++i)
     {
         float32 dot = b2Dot(normal1, normals2[i]);
         if (dot < minDot)
@@ -94,7 +93,7 @@ static void b2FindIncidentEdge(b2ClipVertex c[2], const b2PolygonShape* poly1,
 
     // Build the clip vertices for the incident edge.
     int32_t i1 = index;
-    int32_t i2 = i1 + 1 < count2 ? i1 + 1 : 0;
+    int32_t i2 = i1 + 1 < normals2.size() ? i1 + 1 : 0;
 
     c[0].v = b2Mul(xf2, vertices2[i1]);
     c[0].id.cf.indexA = (uint8_t)edge1;
@@ -161,14 +160,13 @@ void box2d::b2CollidePolygons(b2Manifold* manifold, const b2PolygonShape* polyA,
         flip = 0;
     }
 
-    b2ClipVertex incidentEdge[2];
+    std::array<b2ClipVertex, 2> incidentEdge;
     b2FindIncidentEdge(incidentEdge, poly1, xf1, edge1, poly2, xf2);
 
-    int32_t count1 = poly1->GetVertexCount();
-    const b2Vec2* vertices1 = poly1->m_vertices;
+    auto vertices1 = poly1->GetVertices();
 
     int32_t iv1 = edge1;
-    int32_t iv2 = edge1 + 1 < count1 ? edge1 + 1 : 0;
+    int32_t iv2 = edge1 + 1 < vertices1.size() ? edge1 + 1 : 0;
 
     b2Vec2 v11 = vertices1[iv1];
     b2Vec2 v12 = vertices1[iv2];
@@ -193,15 +191,16 @@ void box2d::b2CollidePolygons(b2Manifold* manifold, const b2PolygonShape* polyA,
     float32 sideOffset2 = b2Dot(tangent, v12) + totalRadius;
 
     // Clip incident edge against extruded edge1 side edges.
-    b2ClipVertex clipPoints1[2];
-    b2ClipVertex clipPoints2[2];
-    int np;
-
+    std::array<b2ClipVertex, 2> clipPoints1;
+    std::array<b2ClipVertex, 2> clipPoints2;
+    
     // Clip to box side 1
-    np = b2ClipSegmentToLine(clipPoints1, incidentEdge, -tangent, sideOffset1, iv1);
+    auto np = b2ClipSegmentToLine(clipPoints1, incidentEdge, -tangent, sideOffset1, iv1);
 
     if (np < 2)
+    {
         return;
+    }
 
     // Clip to negative box side 1
     np = b2ClipSegmentToLine(clipPoints2, clipPoints1, tangent, sideOffset2, iv2);

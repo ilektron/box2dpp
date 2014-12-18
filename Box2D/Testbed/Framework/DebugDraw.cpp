@@ -731,7 +731,7 @@ void DebugDraw::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Ve
         v1 = v2;
     }
 
-    r1.Set(1.0f, 0.0f);
+    r1 = {{1.0f, 0.0f}};
     v1 = center + radius * r1;
     for (int32_t i = 0; i < k_segments; ++i)
     {

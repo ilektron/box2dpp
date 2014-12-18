@@ -31,14 +31,14 @@ namespace box2d
 /// @warning Do not use a zero or short length.
 struct b2DistanceJointDef : public b2JointDef
 {
-    b2DistanceJointDef()
+    b2DistanceJointDef() :
+        localAnchorA{{0.0f, 0.0f}},
+        localAnchorB{{0.0f, 0.0f}},
+        length{1},
+        frequencyHz{0.0f},
+        dampingRatio{0.0f}
     {
         type = b2JointType::DISTANCE_JOINT;
-        localAnchorA.Set(0.0f, 0.0f);
-        localAnchorB.Set(0.0f, 0.0f);
-        length = 1.0f;
-        frequencyHz = 0.0f;
-        dampingRatio = 0.0f;
     }
 
     /// Initialize the bodies, anchors, and length using the world

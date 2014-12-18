@@ -74,8 +74,8 @@ void b2ChainShape::CreateChain(const b2Vec2* vertices, int32_t count)
     m_hasPrevVertex = false;
     m_hasNextVertex = false;
 
-    m_prevVertex.SetZero();
-    m_nextVertex.SetZero();
+    m_prevVertex = {{0.0f, 0.0f}};
+    m_nextVertex = {{0.0f, 0.0f}};
 }
 
 void b2ChainShape::SetPrevVertex(const b2Vec2& prevVertex)
@@ -189,6 +189,6 @@ void b2ChainShape::ComputeMass(b2MassData* massData, float32 density) const
     B2_NOT_USED(density);
 
     massData->mass = 0.0f;
-    massData->center.SetZero();
+    massData->center = {{0.0f, 0.0f}};
     massData->I = 0.0f;
 }

@@ -72,7 +72,7 @@ public:
 
             b2RevoluteJointDef jd;
             jd.bodyA = ground;
-            jd.localAnchorB.SetZero();
+            jd.localAnchorB = {{0.0f, 0.0f}};
             jd.enableMotor = true;
             jd.maxMotorTorque = 1000.0f;
             jd.enableLimit = true;

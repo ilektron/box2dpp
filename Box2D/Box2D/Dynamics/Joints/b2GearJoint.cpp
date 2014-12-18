@@ -73,7 +73,7 @@ b2GearJoint::b2GearJoint(const b2GearJointDef* def) : b2Joint(def)
         m_localAnchorC = revolute->m_localAnchorA;
         m_localAnchorA = revolute->m_localAnchorB;
         m_referenceAngleA = revolute->m_referenceAngle;
-        m_localAxisC.SetZero();
+        m_localAxisC = {{0.0f, 0.0f}};
 
         coordinateA = aA - aC - m_referenceAngleA;
     }
@@ -105,7 +105,7 @@ b2GearJoint::b2GearJoint(const b2GearJointDef* def) : b2Joint(def)
         m_localAnchorD = revolute->m_localAnchorA;
         m_localAnchorB = revolute->m_localAnchorB;
         m_referenceAngleB = revolute->m_referenceAngle;
-        m_localAxisD.SetZero();
+        m_localAxisD = {{0.0f, 0.0f}};
 
         coordinateB = aB - aD - m_referenceAngleB;
     }
@@ -170,7 +170,7 @@ void b2GearJoint::InitVelocityConstraints(const b2SolverData& data)
 
     if (m_typeA == b2JointType::REVOLUTE_JOINT)
     {
-        m_JvAC.SetZero();
+        m_JvAC = {{0.0f, 0.0f}};
         m_JwA = 1.0f;
         m_JwC = 1.0f;
         m_mass += m_iA + m_iC;
@@ -188,7 +188,7 @@ void b2GearJoint::InitVelocityConstraints(const b2SolverData& data)
 
     if (m_typeB == b2JointType::REVOLUTE_JOINT)
     {
-        m_JvBD.SetZero();
+        m_JvBD = {{0.0f, 0.0f}};
         m_JwB = m_ratio;
         m_JwD = m_ratio;
         m_mass += m_ratio * m_ratio * (m_iB + m_iD);
@@ -292,7 +292,7 @@ bool b2GearJoint::SolvePositionConstraints(const b2SolverData& data)
 
     if (m_typeA == b2JointType::REVOLUTE_JOINT)
     {
-        JvAC.SetZero();
+        JvAC = {{0.0f, 0.0f}};
         JwA = 1.0f;
         JwC = 1.0f;
         mass += m_iA + m_iC;
@@ -316,7 +316,7 @@ bool b2GearJoint::SolvePositionConstraints(const b2SolverData& data)
 
     if (m_typeB == b2JointType::REVOLUTE_JOINT)
     {
-        JvBD.SetZero();
+        JvBD = {{0.0f, 0.0f}};
         JwB = m_ratio;
         JwD = m_ratio;
         mass += m_ratio * m_ratio * (m_iB + m_iD);

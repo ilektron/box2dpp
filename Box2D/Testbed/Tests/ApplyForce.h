@@ -130,8 +130,8 @@ public:
                 float32 radius = b2Sqrt(2.0f * I / mass);
 
                 b2FrictionJointDef jd;
-                jd.localAnchorA.SetZero();
-                jd.localAnchorB.SetZero();
+                jd.localAnchorA = {{0.0f, 0.0f}};
+                jd.localAnchorB = {{0.0f, 0.0f}};
                 jd.bodyA = ground;
                 jd.bodyB = body;
                 jd.collideConnected = true;

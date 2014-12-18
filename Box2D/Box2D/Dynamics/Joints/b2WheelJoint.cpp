@@ -71,8 +71,8 @@ b2WheelJoint::b2WheelJoint(const b2WheelJointDef* def) : b2Joint(def)
     m_bias = 0.0f;
     m_gamma = 0.0f;
 
-    m_ax.SetZero();
-    m_ay.SetZero();
+    m_ax = {{0.0f, 0.0f}};
+    m_ay = {{0.0f, 0.0f}};
 }
 
 void b2WheelJoint::InitVelocityConstraints(const b2SolverData& data)

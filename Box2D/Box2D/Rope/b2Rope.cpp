@@ -30,7 +30,7 @@ b2Rope::b2Rope()
     m_ims = nullptr;
     m_Ls = nullptr;
     m_as = nullptr;
-    m_gravity.SetZero();
+    m_gravity = {{0.0f, 0.0f}};
     m_k2 = 1.0f;
     m_k3 = 0.1f;
 }
@@ -58,7 +58,7 @@ void b2Rope::Initialize(const b2RopeDef* def)
     {
         m_ps[i] = def->vertices[i];
         m_p0s[i] = def->vertices[i];
-        m_vs[i].SetZero();
+        m_vs[i] = {{0.0f, 0.0f}};
 
         float32 m = def->masses[i];
         if (m > 0.0f)

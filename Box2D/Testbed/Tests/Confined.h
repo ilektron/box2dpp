@@ -52,7 +52,7 @@ public:
 
         float32 radius = 0.5f;
         b2CircleShape shape;
-        shape.m_p.SetZero();
+        shape.m_p = {{0.0f, 0.0f}};
         shape.m_radius = radius;
 
         b2FixtureDef fd;
@@ -81,7 +81,7 @@ public:
     {
         float32 radius = 2.0f;
         b2CircleShape shape;
-        shape.m_p.SetZero();
+        shape.m_p = {{0.0f, 0.0f}};
         shape.m_radius = radius;
 
         b2FixtureDef fd;

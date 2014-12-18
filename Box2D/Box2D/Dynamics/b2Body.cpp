@@ -61,7 +61,7 @@ b2Body::b2Body(const b2BodyDef* bd, b2World* world)
     m_xf.p = bd->position;
     m_xf.q.Set(bd->angle);
 
-    m_sweep.localCenter.SetZero();
+    m_sweep.localCenter = {{0.0f, 0.0f}};
     m_sweep.c0 = m_xf.p;
     m_sweep.c = m_xf.p;
     m_sweep.a0 = bd->angle;
@@ -80,7 +80,7 @@ b2Body::b2Body(const b2BodyDef* bd, b2World* world)
     m_angularDamping = bd->angularDamping;
     m_gravityScale = bd->gravityScale;
 
-    m_force.SetZero();
+    m_force = {{0.0f, 0.0f}};
     m_torque = 0.0f;
 
     m_sleepTime = 0.0f;
@@ -131,7 +131,7 @@ void b2Body::SetType(b2BodyType type)
 
     if (m_type == b2BodyType::STATIC_BODY)
     {
-        m_linearVelocity.SetZero();
+        m_linearVelocity = {{0.0f, 0.0f}};
         m_angularVelocity = 0.0f;
         m_sweep.a0 = m_sweep.a;
         m_sweep.c0 = m_sweep.c;
@@ -140,7 +140,7 @@ void b2Body::SetType(b2BodyType type)
 
     SetAwake(true);
 
-    m_force.SetZero();
+    m_force = {{0.0f, 0.0f}};
     m_torque = 0.0f;
 
     // Delete the attached contacts.
@@ -287,7 +287,7 @@ void b2Body::ResetMassData()
     m_invMass = 0.0f;
     m_I = 0.0f;
     m_invI = 0.0f;
-    m_sweep.localCenter.SetZero();
+    m_sweep.localCenter = {{0.0f, 0.0f}};
 
     // Static and kinematic bodies have zero mass.
     if (m_type == b2BodyType::STATIC_BODY || m_type == b2BodyType::KINEMATIC_BODY)

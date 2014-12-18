@@ -33,7 +33,7 @@ void b2WorldManifold::Initialize(const b2Manifold* manifold, const b2Transform& 
     {
         case b2Manifold::e_circles:
         {
-            normal.Set(1.0f, 0.0f);
+            normal = {{1.0f, 0.0f}};
             b2Vec2 pointA = b2Mul(xfA, manifold->localPoint);
             b2Vec2 pointB = b2Mul(xfB, manifold->points[0].localPoint);
             if (b2DistanceSquared(pointA, pointB) > EPSILON * EPSILON)
@@ -171,7 +171,7 @@ bool b2AABB::RayCast(b2RayCastOutput* output, const b2RayCastInput& input) const
             // Push the min up
             if (t1 > tmin)
             {
-                normal.SetZero();
+                normal = {{0.0f, 0.0f}};
                 normal[i] = s;
                 tmin = t1;
             }
@@ -200,7 +200,7 @@ bool b2AABB::RayCast(b2RayCastOutput* output, const b2RayCastInput& input) const
 }
 
 // Sutherland-Hodgman clipping.
-int32_t box2d::b2ClipSegmentToLine(b2ClipVertex vOut[2], const b2ClipVertex vIn[2],
+int32_t box2d::b2ClipSegmentToLine(std::array<b2ClipVertex, 2>& vOut, const std::array<b2ClipVertex, 2>& vIn,
                                    const b2Vec2& normal, float32 offset, int32_t vertexIndexA)
 {
     // Start with no output points

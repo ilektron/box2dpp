@@ -34,9 +34,9 @@ struct b2PrismaticJointDef : public b2JointDef
     b2PrismaticJointDef()
     {
         type = b2JointType::PRISMATIC_JOINT;
-        localAnchorA.SetZero();
-        localAnchorB.SetZero();
-        localAxisA.Set(1.0f, 0.0f);
+        localAnchorA = {{0.0f, 0.0f}};
+        localAnchorB = {{0.0f, 0.0f}};
+        localAxisA = {{1.0f, 0.0f}};
         referenceAngle = 0.0f;
         enableLimit = false;
         lowerTranslation = 0.0f;

@@ -56,9 +56,9 @@ struct b2BodyDef
     b2BodyDef()
     {
         userData = nullptr;
-        position.Set(0.0f, 0.0f);
+        position = {{0.0f, 0.0f}};
         angle = 0.0f;
-        linearVelocity.Set(0.0f, 0.0f);
+        linearVelocity = {{0.0f, 0.0f}};
         angularVelocity = 0.0f;
         linearDamping = 0.0f;
         angularDamping = 0.0f;
@@ -645,9 +645,9 @@ inline void b2Body::SetAwake(bool flag)
     {
         m_flags &= ~e_awakeFlag;
         m_sleepTime = 0.0f;
-        m_linearVelocity.SetZero();
+        m_linearVelocity = {{0.0f, 0.0f}};
         m_angularVelocity = 0.0f;
-        m_force.SetZero();
+        m_force = {{0.0f, 0.0f}};
         m_torque = 0.0f;
     }
 }

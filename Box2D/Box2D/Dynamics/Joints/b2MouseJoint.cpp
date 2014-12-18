@@ -32,7 +32,7 @@ using namespace box2d;
 
 b2MouseJoint::b2MouseJoint(const b2MouseJointDef* def) : b2Joint(def)
 {
-    b2Assert(def->target.IsValid());
+    b2Assert(IsValid(def->target));
     b2Assert(b2IsValid(def->maxForce) && def->maxForce >= 0.0f);
     b2Assert(b2IsValid(def->frequencyHz) && def->frequencyHz >= 0.0f);
     b2Assert(b2IsValid(def->dampingRatio) && def->dampingRatio >= 0.0f);
@@ -41,7 +41,7 @@ b2MouseJoint::b2MouseJoint(const b2MouseJointDef* def) : b2Joint(def)
     m_localAnchorB = b2MulT(m_bodyB->GetTransform(), m_targetA);
 
     m_maxForce = def->maxForce;
-    m_impulse.SetZero();
+    m_impulse = {{0.0f, 0.0f}};
 
     m_frequencyHz = def->frequencyHz;
     m_dampingRatio = def->dampingRatio;
@@ -135,15 +135,15 @@ void b2MouseJoint::InitVelocityConstraints(const b2SolverData& data)
     m_rB = b2Mul(qB, m_localAnchorB - m_localCenterB);
 
     // K    = [(1/m1 + 1/m2) * eye(2) - skew(r1) * invI1 * skew(r1) - skew(r2) * invI2 * skew(r2)]
-    //      = [1/m1+1/m2     0    ] + invI1 * [r1.y*r1.y -r1.x*r1.y] + invI2 * [r1.y*r1.y
-    //      -r1.x*r1.y]
-    //        [    0     1/m1+1/m2]           [-r1.x*r1.y r1.x*r1.x]           [-r1.x*r1.y
-    //        r1.x*r1.x]
+    //      = [1/m1+1/m2     0    ] + invI1 * [r1[b2VecY]*r1[b2VecY] -r1[b2VecX]*r1[b2VecY]] + invI2 * [r1[b2VecY]*r1[b2VecY]
+    //      -r1[b2VecX]*r1[b2VecY]]
+    //        [    0     1/m1+1/m2]           [-r1[b2VecX]*r1[b2VecY] r1[b2VecX]*r1[b2VecX]]           [-r1[b2VecX]*r1[b2VecY]
+    //        r1[b2VecX]*r1[b2VecX]]
     b2Mat22 K;
-    K.ex.x = m_invMassB + m_invIB * m_rB.y * m_rB.y + m_gamma;
-    K.ex.y = -m_invIB * m_rB.x * m_rB.y;
-    K.ey.x = K.ex.y;
-    K.ey.y = m_invMassB + m_invIB * m_rB.x * m_rB.x + m_gamma;
+    K.ex[b2VecX] = m_invMassB + m_invIB * m_rB[b2VecY] * m_rB[b2VecY] + m_gamma;
+    K.ex[b2VecY] = -m_invIB * m_rB[b2VecX] * m_rB[b2VecY];
+    K.ey[b2VecX] = K.ex[b2VecY];
+    K.ey[b2VecY] = m_invMassB + m_invIB * m_rB[b2VecX] * m_rB[b2VecX] + m_gamma;
 
     m_mass = K.GetInverse();
 
@@ -161,7 +161,7 @@ void b2MouseJoint::InitVelocityConstraints(const b2SolverData& data)
     }
     else
     {
-        m_impulse.SetZero();
+        m_impulse = {{0.0f, 0.0f}};
     }
 
     data.velocities[m_indexB].v = vB;
@@ -180,9 +180,9 @@ void b2MouseJoint::SolveVelocityConstraints(const b2SolverData& data)
     b2Vec2 oldImpulse = m_impulse;
     m_impulse += impulse;
     float32 maxImpulse = data.step.dt * m_maxForce;
-    if (m_impulse.LengthSquared() > maxImpulse * maxImpulse)
+    if (LengthSquared(m_impulse) > maxImpulse * maxImpulse)
     {
-        m_impulse *= maxImpulse / m_impulse.Length();
+        m_impulse *= maxImpulse / Length(m_impulse);
     }
     impulse = m_impulse - oldImpulse;
 

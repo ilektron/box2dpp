@@ -69,7 +69,7 @@ public:
 
 inline b2CircleShape::b2CircleShape() : b2Shape(b2Shape::e_circle, 0.0f)
 {
-    m_p.SetZero();
+    m_p = {{0.0f, 0.0f}};
 }
 
 inline int32_t b2CircleShape::GetSupport(const b2Vec2& d) const

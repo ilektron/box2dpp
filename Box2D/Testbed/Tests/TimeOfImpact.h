@@ -42,14 +42,14 @@ public:
         sweepA.a0 = 2.95f;
         sweepA.c = sweepA.c0;
         sweepA.a = sweepA.a0;
-        sweepA.localCenter.SetZero();
+        sweepA.localCenter = {{0.0f, 0.0f}};
 
         b2Sweep sweepB;
         sweepB.c0.Set(53.474274f, -50.252514f);
         sweepB.a0 = 513.36676f;  // - 162.0f * PI;
         sweepB.c.Set(54.595478f, -51.083473f);
         sweepB.a = 513.62781f;  //  - 162.0f * PI;
-        sweepB.localCenter.SetZero();
+        sweepB.localCenter = {{0.0f, 0.0f}};
 
         // sweepB.a0 -= 300.0f * PI;
         // sweepB.a -= 300.0f * PI;

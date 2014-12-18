@@ -34,9 +34,9 @@ struct b2WheelJointDef : public b2JointDef
     b2WheelJointDef()
     {
         type = b2JointType::WHEEL_JOINT;
-        localAnchorA.SetZero();
-        localAnchorB.SetZero();
-        localAxisA.Set(1.0f, 0.0f);
+        localAnchorA = {{0.0f, 0.0f}};
+        localAnchorB = {{0.0f, 0.0f}};
+        localAxisA = {{1.0f, 0.0f}};
         enableMotor = false;
         maxMotorTorque = 0.0f;
         motorSpeed = 0.0f;
