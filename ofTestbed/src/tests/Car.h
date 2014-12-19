@@ -97,8 +97,8 @@ public:
 
             b2RevoluteJointDef jd;
             jd.Initialize(ground, body, body->GetPosition());
-            jd.lowerAngle = -8.0f * PI / 180.0f;
-            jd.upperAngle = 8.0f * PI / 180.0f;
+            jd.lowerAngle = -8.0f * B2_PI / 180.0f;
+            jd.upperAngle = 8.0f * B2_PI / 180.0f;
             jd.enableLimit = true;
             m_world->CreateJoint(&jd);
 

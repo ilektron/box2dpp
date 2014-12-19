@@ -57,12 +57,12 @@ public:
         switch (key)
         {
             case 'q':
-                m_angle = b2Max(-PI, m_angle - 0.05f * PI);
+                m_angle = b2Max(-B2_PI, m_angle - 0.05f * B2_PI);
                 m_rope.SetAngle(m_angle);
                 break;
 
             case 'e':
-                m_angle = b2Min(PI, m_angle + 0.05f * PI);
+                m_angle = b2Min(B2_PI, m_angle + 0.05f * B2_PI);
                 m_rope.SetAngle(m_angle);
                 break;
         }
@@ -85,7 +85,7 @@ public:
 
         m_debugDraw.DrawString(5, m_textLine, "Press (q,e) to adjust target angle");
         m_textLine += DRAW_STRING_NEW_LINE;
-        m_debugDraw.DrawString(5, m_textLine, "Target angle = %g degrees", m_angle * 180.0f / PI);
+        m_debugDraw.DrawString(5, m_textLine, "Target angle = %g degrees", m_angle * 180.0f / B2_PI);
         m_textLine += DRAW_STRING_NEW_LINE;
     }
 

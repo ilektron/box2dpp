@@ -110,7 +110,7 @@ void b2DistanceJoint::InitVelocityConstraints(const b2SolverData& data)
         float32 C = length - m_length;
 
         // Frequency
-        float32 omega = 2.0f * PI * m_frequencyHz;
+        float32 omega = 2.0f * B2_PI * m_frequencyHz;
 
         // Damping coefficient
         float32 d = 2.0f * m_mass * m_dampingRatio * omega;

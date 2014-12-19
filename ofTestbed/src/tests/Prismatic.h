@@ -42,7 +42,7 @@ public:
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
             bd.position.Set(-10.0f, 10.0f);
-            bd.angle = 0.5f * PI;
+            bd.angle = 0.5f * B2_PI;
             bd.allowSleep = false;
             b2Body* body = m_world->CreateBody(&bd);
             body->CreateFixture(&shape, 5.0f);

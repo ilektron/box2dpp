@@ -38,7 +38,7 @@ typedef double float64;
 
 constexpr float MAX_FLOAT = FLT_MAX;
 constexpr float EPSILON = FLT_EPSILON;
-constexpr float PI = M_PI;
+constexpr float B2_PI = M_PI;
 
 /// @file
 /// Global tuning constants based on meters-kilograms-seconds (MKS) units.
@@ -70,7 +70,7 @@ constexpr float LINEAR_SLOP = 0.005f;
 
 /// A small angle used as a collision and constraint tolerance. Usually it is
 /// chosen to be numerically significant, but visually insignificant.
-constexpr float ANGULAR_SLOP = (2.0f / 180.0f * PI);
+constexpr float ANGULAR_SLOP = (2.0f / 180.0f * B2_PI);
 
 /// The radius of the polygon/edge shape skin. This should not be modified. Making
 /// this smaller means polygons will have an insufficient buffer for continuous collision.
@@ -95,7 +95,7 @@ constexpr float MAX_LINEAR_CORRECTION = 0.2f;
 
 /// The maximum angular position correction used when solving constraints. This helps to
 /// prevent overshoot.
-constexpr float MAX_ANGULAR_CORRECTION = (8.0f / 180.0f * PI);
+constexpr float MAX_ANGULAR_CORRECTION = (8.0f / 180.0f * B2_PI);
 
 /// The maximum linear velocity of a body. This limit is very large and is used
 /// to prevent numerical problems. You shouldn't need to adjust this.
@@ -104,7 +104,7 @@ constexpr float MAX_TRANSLATION_SQUARED = (MAX_TRANSLATION * MAX_TRANSLATION);
 
 /// The maximum angular velocity of a body. This limit is very large and is used
 /// to prevent numerical problems. You shouldn't need to adjust this.
-constexpr float MAX_ROTATION = (0.5f * PI);
+constexpr float MAX_ROTATION = (0.5f * B2_PI);
 constexpr float MAX_ROTATION_SQUARED = (MAX_ROTATION * MAX_ROTATION);
 
 /// This scale factor controls how fast overlap is resolved. Ideally this would be 1 so
@@ -122,7 +122,7 @@ constexpr float TIME_TO_SLEEP = 0.5f;
 constexpr float LINEAR_SLEEP_TOLERANCE = 0.01f;
 
 /// A body cannot sleep if its angular velocity is above this tolerance.
-constexpr float ANGULAR_SLEEP_TOLERANCE = (2.0f / 180.0f * PI);
+constexpr float ANGULAR_SLEEP_TOLERANCE = (2.0f / 180.0f * B2_PI);
 
 // Memory Allocation
 

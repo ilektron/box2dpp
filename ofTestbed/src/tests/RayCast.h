@@ -246,7 +246,7 @@ public:
         float32 x = RandomFloat(-10.0f, 10.0f);
         float32 y = RandomFloat(0.0f, 20.0f);
         bd.position.Set(x, y);
-        bd.angle = RandomFloat(-PI, PI);
+        bd.angle = RandomFloat(-B2_PI, B2_PI);
 
         m_userData[m_bodyIndex] = index;
         bd.userData = m_userData + m_bodyIndex;
@@ -415,7 +415,7 @@ public:
 
         if (advanceRay)
         {
-            m_angle += 0.25f * PI / 180.0f;
+            m_angle += 0.25f * B2_PI / 180.0f;
         }
 
 #if 0

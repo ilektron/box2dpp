@@ -31,8 +31,8 @@
 
 #include "RenderGL3.h"
 
-// Some math headers don't have PI defined.
-static const float PI = 3.14159265f;
+// Some math headers don't have B2_PI defined.
+static const float B2_PI = 3.14159265f;
 
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "stb_truetype.h"
@@ -475,7 +475,7 @@ bool RenderGLInit(const char* fontpath)
 {
     for (int i = 0; i < CIRCLE_VERTS; ++i)
     {
-        float a = (float)i / (float)CIRCLE_VERTS * PI * 2;
+        float a = (float)i / (float)CIRCLE_VERTS * B2_PI * 2;
         g_circleVerts[i * 2 + 0] = cosf(a);
         g_circleVerts[i * 2 + 1] = sinf(a);
     }

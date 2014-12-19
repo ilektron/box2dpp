@@ -99,11 +99,11 @@ public:
                 break;
 
             case GLFW_KEY_Q:
-                m_angleB += 0.1f * PI;
+                m_angleB += 0.1f * B2_PI;
                 break;
 
             case GLFW_KEY_E:
-                m_angleB -= 0.1f * PI;
+                m_angleB -= 0.1f * B2_PI;
                 break;
         }
 

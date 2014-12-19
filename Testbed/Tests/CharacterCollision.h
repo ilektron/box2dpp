@@ -56,7 +56,7 @@ public:
         // Chain shape
         {
             b2BodyDef bd;
-            bd.angle = 0.25f * PI;
+            bd.angle = 0.25f * B2_PI;
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2Vec2 vs[4];
@@ -171,7 +171,7 @@ public:
             b2Body* body = m_world->CreateBody(&bd);
 
             float32 angle = 0.0f;
-            float32 delta = PI / 3.0f;
+            float32 delta = B2_PI / 3.0f;
             b2Vec2 vertices[6];
             for (auto& vertice : vertices)
             {

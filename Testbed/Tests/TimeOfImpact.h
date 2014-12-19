@@ -46,13 +46,13 @@ public:
 
         b2Sweep sweepB;
         sweepB.c0.Set(53.474274f, -50.252514f);
-        sweepB.a0 = 513.36676f;  // - 162.0f * PI;
+        sweepB.a0 = 513.36676f;  // - 162.0f * B2_PI;
         sweepB.c.Set(54.595478f, -51.083473f);
-        sweepB.a = 513.62781f;  //  - 162.0f * PI;
+        sweepB.a = 513.62781f;  //  - 162.0f * B2_PI;
         sweepB.localCenter = {{0.0f, 0.0f}};
 
-        // sweepB.a0 -= 300.0f * PI;
-        // sweepB.a -= 300.0f * PI;
+        // sweepB.a0 -= 300.0f * B2_PI;
+        // sweepB.a -= 300.0f * B2_PI;
 
         b2TOIInput input;
         input.proxyA.Set(&m_shapeA, 0);

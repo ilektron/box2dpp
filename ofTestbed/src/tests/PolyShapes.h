@@ -180,7 +180,7 @@ public:
 
         float32 x = RandomFloat(-2.0f, 2.0f);
         bd.position.Set(x, 10.0f);
-        bd.angle = RandomFloat(-PI, PI);
+        bd.angle = RandomFloat(-B2_PI, B2_PI);
 
         if (index == 4)
         {

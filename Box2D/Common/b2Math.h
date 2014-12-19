@@ -1003,7 +1003,7 @@ inline void b2Sweep::Advance(float32 alpha)
 /// Normalize an angle in radians to be between -pi and pi
 inline void b2Sweep::Normalize()
 {
-    float32 twoPi = 2.0f * PI;
+    float32 twoPi = 2.0f * B2_PI;
     float32 d = twoPi * floorf(a0 / twoPi);
     a0 -= d;
     a -= d;
