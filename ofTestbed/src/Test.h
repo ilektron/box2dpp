@@ -19,15 +19,8 @@
 #ifndef TEST_H
 #define TEST_H
 
-#include <Box2D/Box2D.h>
-#include "DebugDraw.h"
-
-#if defined(__APPLE__)
-#include <OpenGL/gl3.h>
-#else
-#include <glew/glew.h>
-#endif
-#include <glfw/glfw3.h>
+#include <box2d11/Box2D/Box2D.h>
+#include "ofxDebugDraw.h"
 
 #include <stdlib.h>
 
