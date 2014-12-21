@@ -41,7 +41,7 @@ public:
             fd.density = 0.0f;
             fd.friction = 0.6f;
 
-            shape.Set(b2Vec2(-20.0f, 0.0f), b2Vec2(20.0f, 0.0f));
+            shape.Set({{20.0f, 0.0f}}, {{20.0f, 0.0f}});
             ground->CreateFixture(&fd);
 
             float32 hs[10] = {0.25f, 1.0f, 4.0f, 0.0f, 0.0f, -1.0f, -2.0f, -2.0f, -1.25f, 0.0f};
@@ -50,7 +50,7 @@ public:
 
             for (auto y2 : hs)
             {
-                shape.Set(b2Vec2(x, y1), b2Vec2(x + dx, y2));
+                shape.Set({{x, y1}}, {{x + dx, y2}});
                 ground->CreateFixture(&fd);
                 y1 = y2;
                 x += dx;
@@ -58,36 +58,36 @@ public:
 
             for (auto y2 : hs)
             {
-                shape.Set(b2Vec2(x, y1), b2Vec2(x + dx, y2));
+                shape.Set({{x, y1}}, {{x + dx, y2}});
                 ground->CreateFixture(&fd);
                 y1 = y2;
                 x += dx;
             }
 
-            shape.Set(b2Vec2(x, 0.0f), b2Vec2(x + 40.0f, 0.0f));
+            shape.Set({{x, 0.0f}}, {{x + 40.0f, 0.0f}});
             ground->CreateFixture(&fd);
 
             x += 80.0f;
-            shape.Set(b2Vec2(x, 0.0f), b2Vec2(x + 40.0f, 0.0f));
+            shape.Set({{x, 0.0f}}, {{x + 40.0f, 0.0f}});
             ground->CreateFixture(&fd);
 
             x += 40.0f;
-            shape.Set(b2Vec2(x, 0.0f), b2Vec2(x + 10.0f, 5.0f));
+            shape.Set({{x, 0.0f}}, {{x + 10.0f, 5.0f}});
             ground->CreateFixture(&fd);
 
             x += 20.0f;
-            shape.Set(b2Vec2(x, 0.0f), b2Vec2(x + 40.0f, 0.0f));
+            shape.Set({{x, 0.0f}}, {{x + 40.0f, 0.0f}});
             ground->CreateFixture(&fd);
 
             x += 40.0f;
-            shape.Set(b2Vec2(x, 0.0f), b2Vec2(x, 20.0f));
+            shape.Set({{x, 0.0f}}, {{x, 20.0f}});
             ground->CreateFixture(&fd);
         }
 
         // Teeter
         {
             b2BodyDef bd;
-            bd.position.Set(140.0f, 1.0f);
+            bd.position = {{140.0f, 1.0f}};
             bd.type = b2BodyType::DYNAMIC_BODY;
             b2Body* body = m_world->CreateBody(&bd);
 
@@ -123,18 +123,18 @@ public:
             {
                 b2BodyDef bd;
                 bd.type = b2BodyType::DYNAMIC_BODY;
-                bd.position.Set(161.0f + 2.0f * i, -0.125f);
+                bd.position = {{161.0f + 2.0f * i, -0.125f}};
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&fd);
 
-                b2Vec2 anchor(160.0f + 2.0f * i, -0.125f);
+                b2Vec2 anchor{{160.0f + 2.0f * i, -0.125f}};
                 jd.Initialize(prevBody, body, anchor);
                 m_world->CreateJoint(&jd);
 
                 prevBody = body;
             }
 
-            b2Vec2 anchor(160.0f + 2.0f * N, -0.125f);
+            b2Vec2 anchor{{160.0f + 2.0f * N, -0.125f}};
             jd.Initialize(prevBody, ground, anchor);
             m_world->CreateJoint(&jd);
         }
@@ -148,23 +148,23 @@ public:
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
 
-            bd.position.Set(230.0f, 0.5f);
+            bd.position = {{230.0f, 0.5f}};
             body = m_world->CreateBody(&bd);
             body->CreateFixture(&box, 0.5f);
 
-            bd.position.Set(230.0f, 1.5f);
+            bd.position = {{230.0f, 1.5f}};
             body = m_world->CreateBody(&bd);
             body->CreateFixture(&box, 0.5f);
 
-            bd.position.Set(230.0f, 2.5f);
+            bd.position = {{230.0f, 2.5f}};
             body = m_world->CreateBody(&bd);
             body->CreateFixture(&box, 0.5f);
 
-            bd.position.Set(230.0f, 3.5f);
+            bd.position = {{230.0f, 3.5f}};
             body = m_world->CreateBody(&bd);
             body->CreateFixture(&box, 0.5f);
 
-            bd.position.Set(230.0f, 4.5f);
+            bd.position = {{230.0f, 4.5f}};
             body = m_world->CreateBody(&bd);
             body->CreateFixture(&box, 0.5f);
         }
@@ -173,20 +173,20 @@ public:
         {
             b2PolygonShape chassis;
             b2Vec2 vertices[8];
-            vertices[0].Set(-1.5f, -0.5f);
-            vertices[1].Set(1.5f, -0.5f);
-            vertices[2].Set(1.5f, 0.0f);
-            vertices[3].Set(0.0f, 0.9f);
-            vertices[4].Set(-1.15f, 0.9f);
-            vertices[5].Set(-1.5f, 0.2f);
+            vertices[0] = {{-1.5f, -0.5f}};
+            vertices[1] = {{1.5f, -0.5f}};
+            vertices[2] = {{1.5f, 0.0f}};
+            vertices[3] = {{0.0f, 0.9f}};
+            vertices[4] = {{-1.15f, 0.9f}};
+            vertices[5] = {{-1.5f, 0.2f}};
             chassis.Set(vertices, 6);
 
             b2CircleShape circle;
-            circle.m_radius = 0.4f;
+            circle.SetRadius( 0.4f);
 
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(0.0f, 1.0f);
+            bd.position = {{0.0f, 1.0f}};
             m_car = m_world->CreateBody(&bd);
             m_car->CreateFixture(&chassis, 1.0f);
 
@@ -195,16 +195,16 @@ public:
             fd.density = 1.0f;
             fd.friction = 0.9f;
 
-            bd.position.Set(-1.0f, 0.35f);
+            bd.position = {{-1.0f, 0.35f}};
             m_wheel1 = m_world->CreateBody(&bd);
             m_wheel1->CreateFixture(&fd);
 
-            bd.position.Set(1.0f, 0.4f);
+            bd.position = {{1.0f, 0.4f}};
             m_wheel2 = m_world->CreateBody(&bd);
             m_wheel2->CreateFixture(&fd);
 
             b2WheelJointDef jd;
-            b2Vec2 axis(0.0f, 1.0f);
+            b2Vec2 axis{{0.0f, 1.0f}};
 
             jd.Initialize(m_car, m_wheel1, m_wheel1->GetPosition(), axis);
             jd.motorSpeed = 0.0f;
@@ -228,25 +228,25 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_A:
+            case 'a':
                 m_spring1->SetMotorSpeed(m_speed);
                 break;
 
-            case GLFW_KEY_S:
+            case 's':
                 m_spring1->SetMotorSpeed(0.0f);
                 break;
 
-            case GLFW_KEY_D:
+            case 'd':
                 m_spring1->SetMotorSpeed(-m_speed);
                 break;
 
-            case GLFW_KEY_Q:
+            case 'q':
                 m_hz = b2Max(0.0f, m_hz - 1.0f);
                 m_spring1->SetSpringFrequencyHz(m_hz);
                 m_spring2->SetSpringFrequencyHz(m_hz);
                 break;
 
-            case GLFW_KEY_E:
+            case 'e':
                 m_hz += 1.0f;
                 m_spring1->SetSpringFrequencyHz(m_hz);
                 m_spring2->SetSpringFrequencyHz(m_hz);
@@ -256,14 +256,14 @@ public:
 
     void Step(Settings* settings) override
     {
-        g_debugDraw.DrawString(5, m_textLine,
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}},
                                "Keys: left = a, brake = s, right = d, hz down = q, hz up = e");
         m_textLine += DRAW_STRING_NEW_LINE;
-        g_debugDraw.DrawString(5, m_textLine, "frequency = %g hz, damping ratio = %g", m_hz,
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "frequency = %g hz, damping ratio = %g", m_hz,
                                m_zeta);
         m_textLine += DRAW_STRING_NEW_LINE;
 
-        g_camera.m_center.x = m_car->GetPosition().x;
+        g_debugDraw.SetCenter({{m_car->GetPosition()[b2VecX], g_debugDraw.GetCenter()[b2VecY]}});
         Test::Step(settings);
     }
 

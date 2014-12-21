@@ -30,35 +30,35 @@ public:
             ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(50.0f, 0.0f), b2Vec2(-50.0f, 0.0f));
+            shape.Set({{50.0f, 0.0f}}, {{-50.0f, 0.0f}});
             ground->CreateFixture(&shape, 0.0f);
         }
 
         {
             b2CircleShape circle1;
-            circle1.m_radius = 1.0f;
+            circle1.SetRadius( 1.0f);
 
             b2PolygonShape box;
             box.SetAsBox(0.5f, 5.0f);
 
             b2CircleShape circle2;
-            circle2.m_radius = 2.0f;
+            circle2.SetRadius( 2.0f);
 
             b2BodyDef bd1;
             bd1.type = b2BodyType::STATIC_BODY;
-            bd1.position.Set(10.0f, 9.0f);
+            bd1.position = {{10.0f, 9.0f}};
             b2Body* body1 = m_world->CreateBody(&bd1);
             body1->CreateFixture(&circle1, 5.0f);
 
             b2BodyDef bd2;
             bd2.type = b2BodyType::DYNAMIC_BODY;
-            bd2.position.Set(10.0f, 8.0f);
+            bd2.position = {{10.0f, 8.0f}};
             b2Body* body2 = m_world->CreateBody(&bd2);
             body2->CreateFixture(&box, 5.0f);
 
             b2BodyDef bd3;
             bd3.type = b2BodyType::DYNAMIC_BODY;
-            bd3.position.Set(10.0f, 6.0f);
+            bd3.position = {{10.0f, 6.0f}};
             b2Body* body3 = m_world->CreateBody(&bd3);
             body3->CreateFixture(&circle2, 5.0f);
 
@@ -75,23 +75,23 @@ public:
             jd4.bodyB = body3;
             jd4.joint1 = joint1;
             jd4.joint2 = joint2;
-            jd4.ratio = circle2.m_radius / circle1.m_radius;
+            jd4.ratio = circle2.GetRadius() / circle1.GetRadius();
             m_world->CreateJoint(&jd4);
         }
 
         {
             b2CircleShape circle1;
-            circle1.m_radius = 1.0f;
+            circle1.SetRadius( 1.0f);
 
             b2CircleShape circle2;
-            circle2.m_radius = 2.0f;
+            circle2.SetRadius( 2.0f);
 
             b2PolygonShape box;
             box.SetAsBox(0.5f, 5.0f);
 
             b2BodyDef bd1;
             bd1.type = b2BodyType::DYNAMIC_BODY;
-            bd1.position.Set(-3.0f, 12.0f);
+            bd1.position = {{3.0f, 12.0f}};
             b2Body* body1 = m_world->CreateBody(&bd1);
             body1->CreateFixture(&circle1, 5.0f);
 
@@ -105,7 +105,7 @@ public:
 
             b2BodyDef bd2;
             bd2.type = b2BodyType::DYNAMIC_BODY;
-            bd2.position.Set(0.0f, 12.0f);
+            bd2.position = {{0.0f, 12.0f}};
             b2Body* body2 = m_world->CreateBody(&bd2);
             body2->CreateFixture(&circle2, 5.0f);
 
@@ -115,12 +115,12 @@ public:
 
             b2BodyDef bd3;
             bd3.type = b2BodyType::DYNAMIC_BODY;
-            bd3.position.Set(2.5f, 12.0f);
+            bd3.position = {{2.5f, 12.0f}};
             b2Body* body3 = m_world->CreateBody(&bd3);
             body3->CreateFixture(&box, 5.0f);
 
             b2PrismaticJointDef jd3;
-            jd3.Initialize(ground, body3, bd3.position, b2Vec2(0.0f, 1.0f));
+            jd3.Initialize(ground, body3, bd3.position, {{0.0f, 1.0f}});
             jd3.lowerTranslation = -5.0f;
             jd3.upperTranslation = 5.0f;
             jd3.enableLimit = true;
@@ -132,7 +132,7 @@ public:
             jd4.bodyB = body2;
             jd4.joint1 = m_joint1;
             jd4.joint2 = m_joint2;
-            jd4.ratio = circle2.m_radius / circle1.m_radius;
+            jd4.ratio = circle2.GetRadius() / circle1.GetRadius();
             m_joint4 = (b2GearJoint*)m_world->CreateJoint(&jd4);
 
             b2GearJointDef jd5;
@@ -140,7 +140,7 @@ public:
             jd5.bodyB = body3;
             jd5.joint1 = m_joint2;
             jd5.joint2 = m_joint3;
-            jd5.ratio = -1.0f / circle2.m_radius;
+            jd5.ratio = -1.0f / circle2.GetRadius();
             m_joint5 = (b2GearJoint*)m_world->CreateJoint(&jd5);
         }
     }
@@ -153,13 +153,13 @@ public:
 
         ratio = m_joint4->GetRatio();
         value = m_joint1->GetJointAngle() + ratio * m_joint2->GetJointAngle();
-        g_debugDraw.DrawString(5, m_textLine, "theta1 + %4.2f * theta2 = %4.2f", (float)ratio,
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "theta1 + %4.2f * theta2 = %4.2f", (float)ratio,
                                (float)value);
         m_textLine += DRAW_STRING_NEW_LINE;
 
         ratio = m_joint5->GetRatio();
         value = m_joint2->GetJointAngle() + ratio * m_joint3->GetJointTranslation();
-        g_debugDraw.DrawString(5, m_textLine, "theta2 + %4.2f * delta = %4.2f", (float)ratio,
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "theta2 + %4.2f * delta = %4.2f", (float)ratio,
                                (float)value);
         m_textLine += DRAW_STRING_NEW_LINE;
     }

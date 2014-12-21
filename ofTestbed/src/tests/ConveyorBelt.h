@@ -30,14 +30,14 @@ public:
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-20.0f, 0.0f), b2Vec2(20.0f, 0.0f));
+            shape.Set({{-20.0f, 0.0f}}, {{20.0f, 0.0f}});
             ground->CreateFixture(&shape, 0.0f);
         }
 
         // Platform
         {
             b2BodyDef bd;
-            bd.position.Set(-5.0f, 5.0f);
+            bd.position = {{5.0f, 5.0f}};
             b2Body* body = m_world->CreateBody(&bd);
 
             b2PolygonShape shape;
@@ -54,7 +54,7 @@ public:
         {
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(-10.0f + 2.0f * i, 7.0f);
+            bd.position = {{-10.0f + 2.0f * i, 7.0f}};
             b2Body* body = m_world->CreateBody(&bd);
 
             b2PolygonShape shape;

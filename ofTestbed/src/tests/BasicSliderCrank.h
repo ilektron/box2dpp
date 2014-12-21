@@ -28,7 +28,7 @@ public:
         b2Body* ground = nullptr;
         {
             b2BodyDef bd;
-            bd.position.Set(0.0f, 17.0f);
+            bd.position = {{0.0f, 17.0f}};
             ground = m_world->CreateBody(&bd);
         }
 
@@ -42,12 +42,12 @@ public:
 
                 b2BodyDef bd;
                 bd.type = b2BodyType::DYNAMIC_BODY;
-                bd.position.Set(-8.0f, 20.0f);
+                bd.position = {{8.0f, 20.0f}};
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&shape, 2.0f);
 
                 b2RevoluteJointDef rjd;
-                rjd.Initialize(prevBody, body, b2Vec2(-12.0f, 20.0f));
+                rjd.Initialize(prevBody, body, {{12.0f, 20.0f}});
                 m_world->CreateJoint(&rjd);
 
                 prevBody = body;
@@ -60,12 +60,12 @@ public:
 
                 b2BodyDef bd;
                 bd.type = b2BodyType::DYNAMIC_BODY;
-                bd.position.Set(4.0f, 20.0f);
+                bd.position = {{4.0f, 20.0f}};
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&shape, 2.0f);
 
                 b2RevoluteJointDef rjd;
-                rjd.Initialize(prevBody, body, b2Vec2(-4.0f, 20.0f));
+                rjd.Initialize(prevBody, body, {{4.0f, 20.0f}});
                 m_world->CreateJoint(&rjd);
 
                 prevBody = body;
@@ -79,16 +79,16 @@ public:
                 b2BodyDef bd;
                 bd.type = b2BodyType::DYNAMIC_BODY;
                 bd.fixedRotation = true;
-                bd.position.Set(12.0f, 20.0f);
+                bd.position = {{12.0f, 20.0f}};
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&shape, 2.0f);
 
                 b2RevoluteJointDef rjd;
-                rjd.Initialize(prevBody, body, b2Vec2(12.0f, 20.0f));
+                rjd.Initialize(prevBody, body, {{12.0f, 20.0f}});
                 m_world->CreateJoint(&rjd);
 
                 b2PrismaticJointDef pjd;
-                pjd.Initialize(ground, body, b2Vec2(12.0f, 17.0f), b2Vec2(1.0f, 0.0f));
+                pjd.Initialize(ground, body, {{12.0f, 17.0f}}, {{1.0f, 0.0f}});
                 m_world->CreateJoint(&pjd);
             }
         }

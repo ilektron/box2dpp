@@ -27,12 +27,12 @@ class TheoJansen : public Test
 public:
     void CreateLeg(float32 s, const b2Vec2& wheelAnchor)
     {
-        b2Vec2 p1(5.4f * s, -6.1f);
-        b2Vec2 p2(7.2f * s, -1.2f);
-        b2Vec2 p3(4.3f * s, -1.9f);
-        b2Vec2 p4(3.1f * s, 0.8f);
-        b2Vec2 p5(6.0f * s, 1.5f);
-        b2Vec2 p6(2.5f * s, 3.7f);
+        b2Vec2 p1{{5.4f * s, -6.1f}};
+        b2Vec2 p2{{7.2f * s, -1.2f}};
+        b2Vec2 p3{{4.3f * s, -1.9f}};
+        b2Vec2 p4{{3.1f * s, 0.8f}};
+        b2Vec2 p5{{6.0f * s, 1.5f}};
+        b2Vec2 p6{{2.5f * s, 3.7f}};
 
         b2FixtureDef fd1, fd2;
         fd1.filter.groupIndex = -1;
@@ -117,10 +117,10 @@ public:
 
     TheoJansen()
     {
-        m_offset.Set(0.0f, 8.0f);
+        m_offset = {{0.0f, 8.0f}};
         m_motorSpeed = 2.0f;
         m_motorOn = true;
-        b2Vec2 pivot(0.0f, 0.8f);
+        b2Vec2 pivot{{0.0f, 0.8f}};
 
         // Ground
         {
@@ -128,13 +128,13 @@ public:
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-50.0f, 0.0f), b2Vec2(50.0f, 0.0f));
+            shape.Set({{-50.0f, 0.0f}}, {{50.0f, 0.0f}});
             ground->CreateFixture(&shape, 0.0f);
 
-            shape.Set(b2Vec2(-50.0f, 0.0f), b2Vec2(-50.0f, 10.0f));
+            shape.Set({{-50.0f, 0.0f}}, {{-50.0f, 10.0f}});
             ground->CreateFixture(&shape, 0.0f);
 
-            shape.Set(b2Vec2(50.0f, 0.0f), b2Vec2(50.0f, 10.0f));
+            shape.Set({{50.0f, 0.0f}}, {{50.0f, 10.0f}});
             ground->CreateFixture(&shape, 0.0f);
         }
 
@@ -142,11 +142,11 @@ public:
         for (int32_t i = 0; i < 40; ++i)
         {
             b2CircleShape shape;
-            shape.m_radius = 0.25f;
+            shape.SetRadius( 0.25f);
 
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(-40.0f + 2.0f * i, 0.5f);
+            bd.position = {{-40.0f + 2.0f * i, 0.5f}};
 
             b2Body* body = m_world->CreateBody(&bd);
             body->CreateFixture(&shape, 1.0f);
@@ -170,7 +170,7 @@ public:
 
         {
             b2CircleShape shape;
-            shape.m_radius = 1.6f;
+            shape.SetRadius( 1.6f);
 
             b2FixtureDef sd;
             sd.density = 1.0f;
@@ -195,7 +195,7 @@ public:
 
         b2Vec2 wheelAnchor;
 
-        wheelAnchor = pivot + b2Vec2(0.0f, -0.8f);
+        wheelAnchor = pivot + b2Vec2{{0.0f, -0.8f}};
 
         CreateLeg(-1.0f, wheelAnchor);
         CreateLeg(1.0f, wheelAnchor);
@@ -211,7 +211,7 @@ public:
 
     void Step(Settings* settings) override
     {
-        g_debugDraw.DrawString(5, m_textLine,
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}},
                                "Keys: left = a, brake = s, right = d, toggle motor = m");
         m_textLine += DRAW_STRING_NEW_LINE;
 
@@ -222,19 +222,19 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_A:
+            case 'a':
                 m_motorJoint->SetMotorSpeed(-m_motorSpeed);
                 break;
 
-            case GLFW_KEY_S:
+            case 's':
                 m_motorJoint->SetMotorSpeed(0.0f);
                 break;
 
-            case GLFW_KEY_D:
+            case 'd':
                 m_motorJoint->SetMotorSpeed(m_motorSpeed);
                 break;
 
-            case GLFW_KEY_M:
+            case 'm':
                 m_motorJoint->EnableMotor(!m_motorJoint->IsMotorEnabled());
                 break;
         }

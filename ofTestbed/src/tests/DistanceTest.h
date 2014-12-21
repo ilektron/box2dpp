@@ -26,12 +26,12 @@ public:
     {
         {
             m_transformA.SetIdentity();
-            m_transformA.p.Set(0.0f, -0.2f);
+            m_transformA.p = {{0.0f, -0.2f}};
             m_polygonA.SetAsBox(10.0f, 0.2f);
         }
 
         {
-            m_positionB.Set(12.017401f, 0.13678508f);
+            m_positionB = {{12.017401f, 0.13678508f}};
             m_angleB = -0.0109265f;
             m_transformB.Set(m_positionB, m_angleB);
 
@@ -59,26 +59,28 @@ public:
         b2DistanceOutput output;
         b2Distance(&output, &cache, &input);
 
-        g_debugDraw.DrawString(5, m_textLine, "distance = %g", output.distance);
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "distance = %g", output.distance);
         m_textLine += DRAW_STRING_NEW_LINE;
 
-        g_debugDraw.DrawString(5, m_textLine, "iterations = %d", output.iterations);
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "iterations = %d", output.iterations);
         m_textLine += DRAW_STRING_NEW_LINE;
 
         {
             b2Color color(0.9f, 0.9f, 0.9f);
-            b2Vec2 v[MAX_POLYGON_VERTICES];
-            for (int32_t i = 0; i < m_polygonA.m_count; ++i)
+            std::vector<b2Vec2> v;
+            for (const auto& vec : m_polygonA.GetVertices())
             {
-                v[i] = b2Mul(m_transformA, m_polygonA.m_vertices[i]);
+                v.push_back(b2Mul(m_transformA, vec));
             }
-            g_debugDraw.DrawPolygon(v, m_polygonA.m_count, color);
+            g_debugDraw.DrawPolygon(v, color);
 
-            for (int32_t i = 0; i < m_polygonB.m_count; ++i)
+	    v.clear();
+	    
+            for (const auto& vec : m_polygonB.GetVertices())
             {
-                v[i] = b2Mul(m_transformB, m_polygonB.m_vertices[i]);
+                v.push_back(b2Mul(m_transformB, vec));
             }
-            g_debugDraw.DrawPolygon(v, m_polygonB.m_count, color);
+            g_debugDraw.DrawPolygon(v, color);
         }
 
         b2Vec2 x1 = output.pointA;
@@ -95,27 +97,27 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_A:
-                m_positionB.x -= 0.1f;
+            case 'a':
+                m_positionB[b2VecX] -= 0.1f;
                 break;
 
-            case GLFW_KEY_D:
-                m_positionB.x += 0.1f;
+            case 'd':
+                m_positionB[b2VecX] += 0.1f;
                 break;
 
-            case GLFW_KEY_S:
-                m_positionB.y -= 0.1f;
+            case 's':
+                m_positionB[b2VecY] -= 0.1f;
                 break;
 
-            case GLFW_KEY_W:
-                m_positionB.y += 0.1f;
+            case 'w':
+                m_positionB[b2VecY] += 0.1f;
                 break;
 
-            case GLFW_KEY_Q:
+            case 'q':
                 m_angleB += 0.1f * B2_PI;
                 break;
 
-            case GLFW_KEY_E:
+            case 'e':
                 m_angleB -= 0.1f * B2_PI;
                 break;
         }

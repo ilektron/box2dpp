@@ -32,7 +32,7 @@ public:
             ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+            shape.Set({{40.0f, 0.0f}}, {{40.0f, 0.0f}});
             ground->CreateFixture(&shape, 0.0f);
         }
 
@@ -52,11 +52,11 @@ public:
             {
                 b2BodyDef bd;
                 bd.type = b2BodyType::DYNAMIC_BODY;
-                bd.position.Set(-14.5f + 1.0f * i, 5.0f);
+                bd.position = {{-14.5f + 1.0f * i, 5.0f}};
                 b2Body* body = m_world->CreateBody(&bd);
                 body->CreateFixture(&fd);
 
-                b2Vec2 anchor(-15.0f + 1.0f * i, 5.0f);
+                b2Vec2 anchor{{-15.0f + 1.0f * i, 5.0f}};
                 jd.Initialize(prevBody, body, anchor);
                 m_world->CreateJoint(&jd);
 
@@ -67,7 +67,7 @@ public:
                 prevBody = body;
             }
 
-            b2Vec2 anchor(-15.0f + 1.0f * BRIDGE_COUNT, 5.0f);
+            b2Vec2 anchor{{-15.0f + 1.0f * BRIDGE_COUNT, 5.0f}};
             jd.Initialize(prevBody, ground, anchor);
             m_world->CreateJoint(&jd);
         }
@@ -75,9 +75,9 @@ public:
         for (int32_t i = 0; i < 2; ++i)
         {
             b2Vec2 vertices[3];
-            vertices[0].Set(-0.5f, 0.0f);
-            vertices[1].Set(0.5f, 0.0f);
-            vertices[2].Set(0.0f, 1.5f);
+            vertices[0] = {{-0.5f, 0.0f}};
+            vertices[1] = {{0.5f, 0.0f}};
+            vertices[2] = {{0.0f, 1.5f}};
 
             b2PolygonShape shape;
             shape.Set(vertices, 3);
@@ -88,7 +88,7 @@ public:
 
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(-8.0f + 8.0f * i, 12.0f);
+            bd.position = {{-8.0f + 8.0f * i, 12.0f}};
             b2Body* body = m_world->CreateBody(&bd);
             body->CreateFixture(&fd);
         }
@@ -96,7 +96,7 @@ public:
         for (int32_t i = 0; i < 3; ++i)
         {
             b2CircleShape shape;
-            shape.m_radius = 0.5f;
+            shape.SetRadius(0.5f);
 
             b2FixtureDef fd;
             fd.shape = &shape;
@@ -104,7 +104,7 @@ public:
 
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(-6.0f + 6.0f * i, 10.0f);
+            bd.position = {{-6.0f + 6.0f * i, 10.0f}};
             b2Body* body = m_world->CreateBody(&bd);
             body->CreateFixture(&fd);
         }

@@ -19,19 +19,24 @@
 #ifndef APPLY_FORCE_H
 #define APPLY_FORCE_H
 
+#include <box2d11/Box2D/Box2D.h>
+#include "../Test.h"
+
+using namespace box2d;
+
 class ApplyForce : public Test
 {
 public:
     ApplyForce()
     {
-        m_world->SetGravity(b2Vec2(0.0f, 0.0f));
+        m_world->SetGravity({{0.0f, 0.0f}});
 
         const float32 k_restitution = 0.4f;
 
         b2Body* ground;
         {
             b2BodyDef bd;
-            bd.position.Set(0.0f, 20.0f);
+            bd.position = {{0.0f, 20.0f}};
             ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
@@ -42,19 +47,19 @@ public:
             sd.restitution = k_restitution;
 
             // Left vertical
-            shape.Set(b2Vec2(-20.0f, -20.0f), b2Vec2(-20.0f, 20.0f));
+            shape.Set({{-20.0f, -20.0f}}, {{-20.0f, 20.0f}});
             ground->CreateFixture(&sd);
 
             // Right vertical
-            shape.Set(b2Vec2(20.0f, -20.0f), b2Vec2(20.0f, 20.0f));
+            shape.Set({{20.0f, -20.0f}}, {{20.0f, 20.0f}});
             ground->CreateFixture(&sd);
 
             // Top horizontal
-            shape.Set(b2Vec2(-20.0f, 20.0f), b2Vec2(20.0f, 20.0f));
+            shape.Set({{-20.0f, 20.0f}}, {{20.0f, 20.0f}});
             ground->CreateFixture(&sd);
 
             // Bottom horizontal
-            shape.Set(b2Vec2(-20.0f, -20.0f), b2Vec2(20.0f, -20.0f));
+            shape.Set({{-20.0f, -20.0f}}, {{20.0f, -20.0f}});
             ground->CreateFixture(&sd);
         }
 
@@ -64,9 +69,9 @@ public:
             xf1.p = xf1.q.GetXAxis();
 
             b2Vec2 vertices[3];
-            vertices[0] = b2Mul(xf1, b2Vec2(-1.0f, 0.0f));
-            vertices[1] = b2Mul(xf1, b2Vec2(1.0f, 0.0f));
-            vertices[2] = b2Mul(xf1, b2Vec2(0.0f, 0.5f));
+            vertices[0] = b2Mul(xf1, {{-1.0f, 0.0f}});
+            vertices[1] = b2Mul(xf1, {{1.0f, 0.0f}});
+            vertices[2] = b2Mul(xf1, {{0.0f, 0.5f}});
 
             b2PolygonShape poly1;
             poly1.Set(vertices, 3);
@@ -79,9 +84,9 @@ public:
             xf2.q.Set(-0.3524f * B2_PI);
             xf2.p = -xf2.q.GetXAxis();
 
-            vertices[0] = b2Mul(xf2, b2Vec2(-1.0f, 0.0f));
-            vertices[1] = b2Mul(xf2, b2Vec2(1.0f, 0.0f));
-            vertices[2] = b2Mul(xf2, b2Vec2(0.0f, 0.5f));
+            vertices[0] = b2Mul(xf2, {{-1.0f, 0.0f}});
+            vertices[1] = b2Mul(xf2, {{1.0f, 0.0f}});
+            vertices[2] = b2Mul(xf2, {{0.0f, 0.5f}});
 
             b2PolygonShape poly2;
             poly2.Set(vertices, 3);
@@ -95,7 +100,7 @@ public:
             bd.angularDamping = 2.0f;
             bd.linearDamping = 0.5f;
 
-            bd.position.Set(0.0f, 2.0);
+            bd.position = {{0.0f, 2.0}};
             bd.angle = B2_PI;
             bd.allowSleep = false;
             m_body = m_world->CreateBody(&bd);
@@ -117,7 +122,7 @@ public:
                 b2BodyDef bd;
                 bd.type = b2BodyType::DYNAMIC_BODY;
 
-                bd.position.Set(0.0f, 5.0f + 1.54f * i);
+                bd.position = {{0.0f, 5.0f + 1.54f * i}};
                 b2Body* body = m_world->CreateBody(&bd);
 
                 body->CreateFixture(&fd);
@@ -147,21 +152,21 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_W:
+            case 'w':
             {
-                b2Vec2 f = m_body->GetWorldVector(b2Vec2(0.0f, -200.0f));
-                b2Vec2 p = m_body->GetWorldPoint(b2Vec2(0.0f, 2.0f));
+                b2Vec2 f = m_body->GetWorldVector({{0.0f, -200.0f}});
+                b2Vec2 p = m_body->GetWorldPoint({{0.0f, 2.0f}});
                 m_body->ApplyForce(f, p, true);
             }
             break;
 
-            case GLFW_KEY_A:
+            case 'a':
             {
                 m_body->ApplyTorque(50.0f, true);
             }
             break;
 
-            case GLFW_KEY_D:
+            case 'd':
             {
                 m_body->ApplyTorque(-50.0f, true);
             }

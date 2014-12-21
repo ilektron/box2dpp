@@ -45,7 +45,7 @@ public:
         // Ground body
         {
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+            shape.Set({{-40.0f, 0.0f}}, {{40.0f, 0.0f}});
 
             b2FixtureDef sd;
             sd.shape = &shape;
@@ -74,7 +74,7 @@ public:
 
         b2BodyDef triangleBodyDef;
         triangleBodyDef.type = b2BodyType::DYNAMIC_BODY;
-        triangleBodyDef.position.Set(-5.0f, 2.0f);
+        triangleBodyDef.position = {{5.0f, 2.0f}};
 
         b2Body* body1 = m_world->CreateBody(&triangleBodyDef);
         body1->CreateFixture(&triangleShapeDef);
@@ -85,7 +85,7 @@ public:
         vertices[2] *= 2.0f;
         polygon.Set(vertices, 3);
         triangleShapeDef.filter.groupIndex = k_largeGroup;
-        triangleBodyDef.position.Set(-5.0f, 6.0f);
+        triangleBodyDef.position = {{5.0f, 6.0f}};
         triangleBodyDef.fixedRotation = true;  // look at me!
 
         b2Body* body2 = m_world->CreateBody(&triangleBodyDef);
@@ -94,7 +94,7 @@ public:
         {
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(-5.0f, 10.0f);
+            bd.position = {{5.0f, 10.0f}};
             b2Body* body = m_world->CreateBody(&bd);
 
             b2PolygonShape p;
@@ -105,9 +105,9 @@ public:
             jd.bodyA = body2;
             jd.bodyB = body;
             jd.enableLimit = true;
-            jd.localAnchorA.Set(0.0f, 4.0f);
+            jd.localAnchorA = {{0.0f, 4.0f}};
             jd.localAnchorB = {{0.0f, 0.0f}};
-            jd.localAxisA.Set(0.0f, 1.0f);
+            jd.localAxisA = {{0.0f, 1.0f}};
             jd.lowerTranslation = -1.0f;
             jd.upperTranslation = 1.0f;
 
@@ -135,14 +135,14 @@ public:
         // Large box (recycle definitions)
         polygon.SetAsBox(2.0f, 1.0f);
         boxShapeDef.filter.groupIndex = k_largeGroup;
-        boxBodyDef.position.Set(0.0f, 6.0f);
+        boxBodyDef.position = {{0.0f, 6.0f}};
 
         b2Body* body4 = m_world->CreateBody(&boxBodyDef);
         body4->CreateFixture(&boxShapeDef);
 
         // Small circle
         b2CircleShape circle;
-        circle.m_radius = 1.0f;
+        circle.SetRadius( 1.0f);
 
         b2FixtureDef circleShapeDef;
         circleShapeDef.shape = &circle;
@@ -154,15 +154,15 @@ public:
 
         b2BodyDef circleBodyDef;
         circleBodyDef.type = b2BodyType::DYNAMIC_BODY;
-        circleBodyDef.position.Set(5.0f, 2.0f);
+        circleBodyDef.position = {{5.0f, 2.0f}};
 
         b2Body* body5 = m_world->CreateBody(&circleBodyDef);
         body5->CreateFixture(&circleShapeDef);
 
         // Large circle
-        circle.m_radius *= 2.0f;
+        circle.SetRadius( 2.0f);
         circleShapeDef.filter.groupIndex = k_largeGroup;
-        circleBodyDef.position.Set(5.0f, 6.0f);
+        circleBodyDef.position = {{5.0f, 6.0f}};
 
         b2Body* body6 = m_world->CreateBody(&circleBodyDef);
         body6->CreateFixture(&circleShapeDef);

@@ -41,13 +41,13 @@ public:
         m_stepCount = 0;
 
         float32 h = m_worldExtent;
-        m_queryAABB.lowerBound.Set(-3.0f, -4.0f + h);
-        m_queryAABB.upperBound.Set(5.0f, 6.0f + h);
+        m_queryAABB.lowerBound = {{-3.0f, -4.0f + h}};
+        m_queryAABB.upperBound = {{5.0f, 6.0f + h}};
 
-        m_rayCastInput.p1.Set(-5.0, 5.0f + h);
-        m_rayCastInput.p2.Set(7.0f, -4.0f + h);
-        // m_rayCastInput.p1.Set(0.0f, 2.0f + h);
-        // m_rayCastInput.p2.Set(0.0f, -2.0f + h);
+        m_rayCastInput.p1 = {{-5.0, 5.0f + h}};
+        m_rayCastInput.p2 = {{7.0f, -4.0f + h}};
+        // m_rayCastInput.p1 = {{0.0f, 2.0f + h}};
+        // m_rayCastInput.p2 = {{0.0f, -2.0f + h}};
         m_rayCastInput.maxFraction = 1.0f;
 
         m_automated = false;
@@ -102,11 +102,11 @@ public:
                 c.Set(0.6f, 0.6f, 0.9f);
             }
 
-            g_debugDraw.DrawAABB(&actor->aabb, c);
+            g_debugDraw.DrawAABB(actor->aabb, c);
         }
 
         b2Color c(0.7f, 0.7f, 0.7f);
-        g_debugDraw.DrawAABB(&m_queryAABB, c);
+        g_debugDraw.DrawAABB(m_queryAABB, c);
 
         g_debugDraw.DrawSegment(m_rayCastInput.p1, m_rayCastInput.p2, c);
 
@@ -125,7 +125,7 @@ public:
 
         {
             int32_t height = m_tree.GetHeight();
-            g_debugDraw.DrawString(5, m_textLine, "dynamic tree height = %d", height);
+            g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "dynamic tree height = %d", height);
             m_textLine += DRAW_STRING_NEW_LINE;
         }
 
@@ -136,19 +136,19 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_A:
+            case 'a':
                 m_automated = !m_automated;
                 break;
 
-            case GLFW_KEY_C:
+            case 'c':
                 CreateProxy();
                 break;
 
-            case GLFW_KEY_D:
+            case 'd':
                 DestroyProxy();
                 break;
 
-            case GLFW_KEY_M:
+            case 'm':
                 MoveProxy();
                 break;
         }
@@ -191,19 +191,19 @@ private:
     void GetRandomAABB(b2AABB* aabb)
     {
         b2Vec2 w;
-        w.Set(2.0f * m_proxyExtent, 2.0f * m_proxyExtent);
+        w = {{2.0f * m_proxyExtent, 2.0f * m_proxyExtent}};
         // aabb->lowerBound.x = -m_proxyExtent;
         // aabb->lowerBound.y = -m_proxyExtent + m_worldExtent;
-        aabb->lowerBound.x = RandomFloat(-m_worldExtent, m_worldExtent);
-        aabb->lowerBound.y = RandomFloat(0.0f, 2.0f * m_worldExtent);
+        aabb->lowerBound[b2VecX] = RandomFloat(-m_worldExtent, m_worldExtent);
+        aabb->lowerBound[b2VecY] = RandomFloat(0.0f, 2.0f * m_worldExtent);
         aabb->upperBound = aabb->lowerBound + w;
     }
 
     void MoveAABB(b2AABB* aabb)
     {
         b2Vec2 d;
-        d.x = RandomFloat(-0.5f, 0.5f);
-        d.y = RandomFloat(-0.5f, 0.5f);
+        d[b2VecX] = RandomFloat(-0.5f, 0.5f);
+        d[b2VecY] = RandomFloat(-0.5f, 0.5f);
         // d.x = 2.0f;
         // d.y = 0.0f;
         aabb->lowerBound += d;
@@ -211,9 +211,9 @@ private:
 
         b2Vec2 c0 = 0.5f * (aabb->lowerBound + aabb->upperBound);
         b2Vec2 min;
-        min.Set(-m_worldExtent, 0.0f);
+        min = {{-m_worldExtent, 0.0f}};
         b2Vec2 max;
-        max.Set(m_worldExtent, 2.0f * m_worldExtent);
+        max = {{m_worldExtent, 2.0f * m_worldExtent}};
         b2Vec2 c = b2Clamp(c0, min, max);
 
         aabb->lowerBound += c - c0;

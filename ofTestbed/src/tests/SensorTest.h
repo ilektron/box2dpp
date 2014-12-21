@@ -36,22 +36,22 @@ public:
 
             {
                 b2EdgeShape shape;
-                shape.Set(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+                shape.Set({{-40.0f, 0.0f}}, {{40.0f, 0.0f}});
                 ground->CreateFixture(&shape, 0.0f);
             }
 
 #if 0
 			{
 				b2FixtureDef sd;
-				sd.SetAsBox(10.0f, 2.0f, b2Vec2(0.0f, 20.0f), 0.0f);
+				sd.SetAsBox(10.0f, 2.0f, {{0.0f, 20.0f}}, 0.0f);
 				sd.isSensor = true;
 				m_sensor = ground->CreateFixture(&sd);
 			}
 #else
             {
                 b2CircleShape shape;
-                shape.m_radius = 5.0f;
-                shape.m_p.Set(0.0f, 10.0f);
+                shape.SetRadius( 5.0f);
+                shape.m_p = {{0.0f, 10.0f}};
 
                 b2FixtureDef fd;
                 fd.shape = &shape;
@@ -63,13 +63,13 @@ public:
 
         {
             b2CircleShape shape;
-            shape.m_radius = 1.0f;
+            shape.SetRadius( 1.0f);
 
             for (int32_t i = 0; i < e_count; ++i)
             {
                 b2BodyDef bd;
                 bd.type = b2BodyType::DYNAMIC_BODY;
-                bd.position.Set(-10.0f + 3.0f * i, 20.0f);
+                bd.position = {{-10.0f + 3.0f * i, 20.0f}};
                 bd.userData = m_touching + i;
 
                 m_touching[i] = false;
@@ -156,12 +156,12 @@ public:
             b2Vec2 position = body->GetPosition();
 
             b2Vec2 d = center - position;
-            if (d.LengthSquared() < FLT_EPSILON * FLT_EPSILON)
+            if (LengthSquared(d) < FLT_EPSILON * FLT_EPSILON)
             {
                 continue;
             }
 
-            d.Normalize();
+            Normalize(d);
             b2Vec2 F = 100.0f * d;
             body->ApplyForce(F, position, false);
         }

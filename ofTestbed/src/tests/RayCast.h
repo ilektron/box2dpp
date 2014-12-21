@@ -175,23 +175,23 @@ public:
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+            shape.Set({{-40.0f, 0.0f}}, {{40.0f, 0.0f}});
             ground->CreateFixture(&shape, 0.0f);
         }
 
         {
             b2Vec2 vertices[3];
-            vertices[0].Set(-0.5f, 0.0f);
-            vertices[1].Set(0.5f, 0.0f);
-            vertices[2].Set(0.0f, 1.5f);
+            vertices[0] = {{-0.5f, 0.0f}};
+            vertices[1] = {{0.5f, 0.0f}};
+            vertices[2] = {{0.0f, 1.5f}};
             m_polygons[0].Set(vertices, 3);
         }
 
         {
             b2Vec2 vertices[3];
-            vertices[0].Set(-0.1f, 0.0f);
-            vertices[1].Set(0.1f, 0.0f);
-            vertices[2].Set(0.0f, 1.5f);
+            vertices[0] = {{-0.1f, 0.0f}};
+            vertices[1] = {{0.1f, 0.0f}};
+            vertices[2] = {{0.0f, 1.5f}};
             m_polygons[1].Set(vertices, 3);
         }
 
@@ -201,14 +201,14 @@ public:
             float32 s = b2Sqrt(2.0f) * b;
 
             b2Vec2 vertices[8];
-            vertices[0].Set(0.5f * s, 0.0f);
-            vertices[1].Set(0.5f * w, b);
-            vertices[2].Set(0.5f * w, b + s);
-            vertices[3].Set(0.5f * s, w);
-            vertices[4].Set(-0.5f * s, w);
-            vertices[5].Set(-0.5f * w, b + s);
-            vertices[6].Set(-0.5f * w, b);
-            vertices[7].Set(-0.5f * s, 0.0f);
+            vertices[0] = {{0.5f * s, 0.0f}};
+            vertices[1] = {{0.5f * w, b}};
+            vertices[2] = {{0.5f * w, b + s}};
+            vertices[3] = {{0.5f * s, w}};
+            vertices[4] = {{-0.5f * s, w}};
+            vertices[5] = {{-0.5f * w, b + s}};
+            vertices[6] = {{-0.5f * w, b}};
+            vertices[7] = {{-0.5f * s, 0.0f}};
 
             m_polygons[2].Set(vertices, 8);
         }
@@ -218,11 +218,11 @@ public:
         }
 
         {
-            m_circle.m_radius = 0.5f;
+            m_circle.SetRadius( 0.5f);
         }
 
         {
-            m_edge.Set(b2Vec2(-1.0f, 0.0f), b2Vec2(1.0f, 0.0f));
+            m_edge.Set({{-1.0f, 0.0f}}, {{1.0f, 0.0f}});
         }
 
         m_bodyIndex = 0;
@@ -245,7 +245,7 @@ public:
 
         float32 x = RandomFloat(-10.0f, 10.0f);
         float32 y = RandomFloat(0.0f, 20.0f);
-        bd.position.Set(x, y);
+        bd.position = {{x, y}};
         bd.angle = RandomFloat(-B2_PI, B2_PI);
 
         m_userData[m_bodyIndex] = index;
@@ -302,20 +302,20 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_1:
-            case GLFW_KEY_2:
-            case GLFW_KEY_3:
-            case GLFW_KEY_4:
-            case GLFW_KEY_5:
-            case GLFW_KEY_6:
-                Create(key - GLFW_KEY_1);
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+                Create(key - '1');
                 break;
 
-            case GLFW_KEY_D:
+            case 'd':
                 DestroyBody();
                 break;
 
-            case GLFW_KEY_M:
+            case 'm':
                 if (m_mode == e_closest)
                 {
                     m_mode = e_any;
@@ -336,21 +336,21 @@ public:
         bool advanceRay = settings->pause == 0 || settings->singleStep;
 
         Test::Step(settings);
-        g_debugDraw.DrawString(5, m_textLine, "Press 1-6 to drop stuff, m to change the mode");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Press 1-6 to drop stuff, m to change the mode");
         m_textLine += DRAW_STRING_NEW_LINE;
         switch (m_mode)
         {
             case e_closest:
                 g_debugDraw.DrawString(
-                    5, m_textLine, "Ray-cast mode: closest - find closest fixture along the ray");
+                    {{5.0f, static_cast<float>(m_textLine)}}, "Ray-cast mode: closest - find closest fixture along the ray");
                 break;
 
             case e_any:
-                g_debugDraw.DrawString(5, m_textLine, "Ray-cast mode: any - check for obstruction");
+                g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Ray-cast mode: any - check for obstruction");
                 break;
 
             case e_multiple:
-                g_debugDraw.DrawString(5, m_textLine,
+                g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}},
                                        "Ray-cast mode: multiple - gather multiple fixtures");
                 break;
         }
@@ -358,8 +358,8 @@ public:
         m_textLine += DRAW_STRING_NEW_LINE;
 
         float32 L = 11.0f;
-        b2Vec2 point1(0.0f, 10.0f);
-        b2Vec2 d(L * cosf(m_angle), L * sinf(m_angle));
+        b2Vec2 point1{{0.0f, 10.0f}};
+        b2Vec2 d{{L * cosf(m_angle), L * sinf(m_angle)}};
         b2Vec2 point2 = point1 + d;
 
         if (m_mode == e_closest)
@@ -422,24 +422,24 @@ public:
 		// This case was failing.
 		{
 			b2Vec2 vertices[4];
-			//vertices[0].Set(-22.875f, -3.0f);
-			//vertices[1].Set(22.875f, -3.0f);
-			//vertices[2].Set(22.875f, 3.0f);
-			//vertices[3].Set(-22.875f, 3.0f);
+			//vertices[0] = {{-22.875f, -3.0f}};
+			//vertices[1] = {{22.875f, -3.0f}};
+			//vertices[2] = {{22.875f, 3.0f}};
+			//vertices[3] = {{-22.875f, 3.0f}};
 
 			b2PolygonShape shape;
 			//shape.Set(vertices, 4);
 			shape.SetAsBox(22.875f, 3.0f);
 
 			b2RayCastInput input;
-			input.p1.Set(10.2725f,1.71372f);
-			input.p2.Set(10.2353f,2.21807f);
+			input.p1 = {{10.2725f,1.71372f}};
+			input.p2 = {{10.2353f,2.21807f}};
 			//input.maxFraction = 0.567623f;
 			input.maxFraction = 0.56762173f;
 
 			b2Transform xf;
 			xf.SetIdentity();
-			xf.position.Set(23.0f, 5.0f);
+			xf.position = {{23.0f, 5.0f}};
 
 			b2RayCastOutput output;
 			bool hit;

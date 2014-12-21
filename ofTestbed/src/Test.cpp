@@ -36,7 +36,7 @@ void DestructionListener::SayGoodbye(b2Joint* joint)
 Test::Test()
 {
     b2Vec2 gravity;
-    gravity.Set(0.0f, -10.0f);
+    gravity = {{0.0f, -10.0f}};
     m_world = new b2World(gravity);
     m_bomb = nullptr;
     m_textLine = 30;
@@ -99,15 +99,15 @@ void Test::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
     }
 }
 
-void Test::DrawTitle(const char* string)
+void Test::DrawTitle(std::string title)
 {
-    g_debugDraw.DrawString(5, DRAW_STRING_NEW_LINE, string);
+    g_debugDraw.DrawString({{5.0f, DRAW_STRING_NEW_LINE}}, title);
     m_textLine = 3 * DRAW_STRING_NEW_LINE;
 }
 
 class QueryCallback : public b2QueryCallback
 {
-   public:
+public:
     QueryCallback(const b2Vec2& point)
     {
         m_point = point;
@@ -149,7 +149,7 @@ void Test::MouseDown(const b2Vec2& p)
     // Make a small box.
     b2AABB aabb;
     b2Vec2 d;
-    d.Set(0.001f, 0.001f);
+    d = {{0.001f, 0.001f}};
     aabb.lowerBound = p - d;
     aabb.upperBound = p + d;
 
@@ -228,7 +228,7 @@ void Test::MouseMove(const b2Vec2& p)
 
 void Test::LaunchBomb()
 {
-    b2Vec2 p(RandomFloat(-15.0f, 15.0f), 30.0f);
+    b2Vec2 p{{RandomFloat(-15.0f, 15.0f), 30.0f}};
     b2Vec2 v = -5.0f * p;
     LaunchBomb(p, v);
 }
@@ -249,15 +249,15 @@ void Test::LaunchBomb(const b2Vec2& position, const b2Vec2& velocity)
     m_bomb->SetLinearVelocity(velocity);
 
     b2CircleShape circle;
-    circle.m_radius = 0.3f;
+    circle.SetRadius(0.3f);
 
     b2FixtureDef fd;
     fd.shape = &circle;
     fd.density = 20.0f;
     fd.restitution = 0.0f;
 
-    b2Vec2 minV = position - b2Vec2(0.3f, 0.3f);
-    b2Vec2 maxV = position + b2Vec2(0.3f, 0.3f);
+    b2Vec2 minV = position - b2Vec2{{0.3f, 0.3f}};
+    b2Vec2 maxV = position + b2Vec2{{0.3f, 0.3f}};
 
     b2AABB aabb;
     aabb.lowerBound = minV;
@@ -281,7 +281,7 @@ void Test::Step(Settings* settings)
             timeStep = 0.0f;
         }
 
-        g_debugDraw.DrawString(5, m_textLine, "****PAUSED****");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "****PAUSED****");
         m_textLine += DRAW_STRING_NEW_LINE;
     }
 
@@ -302,7 +302,7 @@ void Test::Step(Settings* settings)
     m_world->Step(timeStep, settings->velocityIterations, settings->positionIterations);
 
     m_world->DrawDebugData();
-    g_debugDraw.Flush();
+//     g_debugDraw.Flush();
 
     if (timeStep > 0.0f)
     {
@@ -314,7 +314,7 @@ void Test::Step(Settings* settings)
         int32_t bodyCount = m_world->GetBodyCount();
         int32_t contactCount = m_world->GetContactCount();
         int32_t jointCount = m_world->GetJointCount();
-        g_debugDraw.DrawString(5, m_textLine, "bodies/contacts/joints = %d/%d/%d", bodyCount,
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "bodies/contacts/joints = %d/%d/%d", bodyCount,
                                contactCount, jointCount);
         m_textLine += DRAW_STRING_NEW_LINE;
 
@@ -322,7 +322,7 @@ void Test::Step(Settings* settings)
         int32_t height = m_world->GetTreeHeight();
         int32_t balance = m_world->GetTreeBalance();
         float32 quality = m_world->GetTreeQuality();
-        g_debugDraw.DrawString(5, m_textLine, "proxies/height/balance/quality = %d/%d/%d/%g",
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "proxies/height/balance/quality = %d/%d/%d/%g",
                                proxyCount, height, balance, quality);
         m_textLine += DRAW_STRING_NEW_LINE;
     }
@@ -368,30 +368,30 @@ void Test::Step(Settings* settings)
             aveProfile.broadphase = scale * m_totalProfile.broadphase;
         }
 
-        g_debugDraw.DrawString(5, m_textLine, "step [ave] (max) = %5.2f [%6.2f] (%6.2f)", p.step,
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "step [ave] (max) = %5.2f [%6.2f] (%6.2f)", p.step,
                                aveProfile.step, m_maxProfile.step);
         m_textLine += DRAW_STRING_NEW_LINE;
-        g_debugDraw.DrawString(5, m_textLine, "collide [ave] (max) = %5.2f [%6.2f] (%6.2f)",
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "collide [ave] (max) = %5.2f [%6.2f] (%6.2f)",
                                p.collide, aveProfile.collide, m_maxProfile.collide);
         m_textLine += DRAW_STRING_NEW_LINE;
-        g_debugDraw.DrawString(5, m_textLine, "solve [ave] (max) = %5.2f [%6.2f] (%6.2f)", p.solve,
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "solve [ave] (max) = %5.2f [%6.2f] (%6.2f)", p.solve,
                                aveProfile.solve, m_maxProfile.solve);
         m_textLine += DRAW_STRING_NEW_LINE;
-        g_debugDraw.DrawString(5, m_textLine, "solve init [ave] (max) = %5.2f [%6.2f] (%6.2f)",
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "solve init [ave] (max) = %5.2f [%6.2f] (%6.2f)",
                                p.solveInit, aveProfile.solveInit, m_maxProfile.solveInit);
         m_textLine += DRAW_STRING_NEW_LINE;
-        g_debugDraw.DrawString(5, m_textLine, "solve velocity [ave] (max) = %5.2f [%6.2f] (%6.2f)",
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "solve velocity [ave] (max) = %5.2f [%6.2f] (%6.2f)",
                                p.solveVelocity, aveProfile.solveVelocity,
                                m_maxProfile.solveVelocity);
         m_textLine += DRAW_STRING_NEW_LINE;
-        g_debugDraw.DrawString(5, m_textLine, "solve position [ave] (max) = %5.2f [%6.2f] (%6.2f)",
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "solve position [ave] (max) = %5.2f [%6.2f] (%6.2f)",
                                p.solvePosition, aveProfile.solvePosition,
                                m_maxProfile.solvePosition);
         m_textLine += DRAW_STRING_NEW_LINE;
-        g_debugDraw.DrawString(5, m_textLine, "solveTOI [ave] (max) = %5.2f [%6.2f] (%6.2f)",
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "solveTOI [ave] (max) = %5.2f [%6.2f] (%6.2f)",
                                p.solveTOI, aveProfile.solveTOI, m_maxProfile.solveTOI);
         m_textLine += DRAW_STRING_NEW_LINE;
-        g_debugDraw.DrawString(5, m_textLine, "broad-phase [ave] (max) = %5.2f [%6.2f] (%6.2f)",
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "broad-phase [ave] (max) = %5.2f [%6.2f] (%6.2f)",
                                p.broadphase, aveProfile.broadphase, m_maxProfile.broadphase);
         m_textLine += DRAW_STRING_NEW_LINE;
     }

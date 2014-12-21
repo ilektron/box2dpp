@@ -36,7 +36,7 @@ void DestructionListener::SayGoodbye(b2Joint* joint)
 Test::Test()
 {
     b2Vec2 gravity;
-    gravity.Set(0.0f, -10.0f);
+    gravity = {{0.0f, -10.0f}};
     m_world = new b2World(gravity);
     m_bomb = nullptr;
     m_textLine = 30;
@@ -153,7 +153,7 @@ void Test::MouseDown(const b2Vec2& p)
     // Make a small box.
     b2AABB aabb;
     b2Vec2 d;
-    d.Set(0.001f, 0.001f);
+    d = {{0.001f, 0.001f}};
     aabb.lowerBound = p - d;
     aabb.upperBound = p + d;
 
@@ -232,7 +232,7 @@ void Test::MouseMove(const b2Vec2& p)
 
 void Test::LaunchBomb()
 {
-    b2Vec2 p(RandomFloat(-15.0f, 15.0f), 30.0f);
+    b2Vec2 p{{RandomFloat(-15.0f, 15.0f}}, 30.0f);
     b2Vec2 v = -5.0f * p;
     LaunchBomb(p, v);
 }
@@ -260,8 +260,8 @@ void Test::LaunchBomb(const b2Vec2& position, const b2Vec2& velocity)
     fd.density = 20.0f;
     fd.restitution = 0.0f;
 
-    b2Vec2 minV = position - b2Vec2(0.3f, 0.3f);
-    b2Vec2 maxV = position + b2Vec2(0.3f, 0.3f);
+    b2Vec2 minV = position - {{0.3f, 0.3f}};
+    b2Vec2 maxV = position + {{0.3f, 0.3f}};
 
     b2AABB aabb;
     aabb.lowerBound = minV;

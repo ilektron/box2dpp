@@ -33,7 +33,7 @@ public:
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+            shape.Set({{40.0f, 0.0f}}, {{40.0f, 0.0f}});
             ground->CreateFixture(&shape, 0.0f);
         }
 
@@ -41,14 +41,14 @@ public:
         {
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(0.0f, 40.0f);
+            bd.position = {{0.0f, 40.0f}};
             bd.angle = 0.25f * B2_PI;
             m_body1 = m_world->CreateBody(&bd);
 
-            m_shape1.SetAsBox(0.5f, 0.5f, b2Vec2(-0.5f, 0.0f), 0.0f);
+            m_shape1.SetAsBox(0.5f, 0.5f, {{0.5f, 0.0f}}, 0.0f);
             m_piece1 = m_body1->CreateFixture(&m_shape1, 1.0f);
 
-            m_shape2.SetAsBox(0.5f, 0.5f, b2Vec2(0.5f, 0.0f), 0.0f);
+            m_shape2.SetAsBox(0.5f, 0.5f, {{0.5f, 0.0f}}, 0.0f);
             m_piece2 = m_body1->CreateFixture(&m_shape2, 1.0f);
         }
 

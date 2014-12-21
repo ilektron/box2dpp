@@ -33,7 +33,7 @@ public:
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-20.0f, 0.0f), b2Vec2(20.0f, 0.0f));
+            shape.Set({{-20.0f, 0.0f}}, {{20.0f, 0.0f}});
             ground->CreateFixture(&shape, 0.0f);
         }
 
@@ -45,11 +45,11 @@ public:
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-8.0f, 1.0f), b2Vec2(-6.0f, 1.0f));
+            shape.Set({{-8.0f, 1.0f}}, {{-6.0f, 1.0f}});
             ground->CreateFixture(&shape, 0.0f);
-            shape.Set(b2Vec2(-6.0f, 1.0f), b2Vec2(-4.0f, 1.0f));
+            shape.Set({{-6.0f, 1.0f}}, {{-4.0f, 1.0f}});
             ground->CreateFixture(&shape, 0.0f);
-            shape.Set(b2Vec2(-4.0f, 1.0f), b2Vec2(-2.0f, 1.0f));
+            shape.Set({{-4.0f, 1.0f}}, {{-2.0f, 1.0f}});
             ground->CreateFixture(&shape, 0.0f);
         }
 
@@ -60,10 +60,10 @@ public:
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2Vec2 vs[4];
-            vs[0].Set(5.0f, 7.0f);
-            vs[1].Set(6.0f, 8.0f);
-            vs[2].Set(7.0f, 8.0f);
-            vs[3].Set(8.0f, 7.0f);
+            vs[0] = {{5.0f, 7.0f}};
+            vs[1] = {{6.0f, 8.0f}};
+            vs[2] = {{7.0f, 8.0f}};
+            vs[3] = {{8.0f, 7.0f}};
             b2ChainShape shape;
             shape.CreateChain(vs, 4);
             ground->CreateFixture(&shape, 0.0f);
@@ -77,11 +77,11 @@ public:
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2PolygonShape shape;
-            shape.SetAsBox(1.0f, 1.0f, b2Vec2(4.0f, 3.0f), 0.0f);
+            shape.SetAsBox(1.0f, 1.0f, {{4.0f, 3.0f}}, 0.0f);
             ground->CreateFixture(&shape, 0.0f);
-            shape.SetAsBox(1.0f, 1.0f, b2Vec2(6.0f, 3.0f), 0.0f);
+            shape.SetAsBox(1.0f, 1.0f, {{6.0f, 3.0f}}, 0.0f);
             ground->CreateFixture(&shape, 0.0f);
-            shape.SetAsBox(1.0f, 1.0f, b2Vec2(8.0f, 3.0f), 0.0f);
+            shape.SetAsBox(1.0f, 1.0f, {{8.0f, 3.0f}}, 0.0f);
             ground->CreateFixture(&shape, 0.0f);
         }
 
@@ -91,10 +91,10 @@ public:
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2Vec2 vs[4];
-            vs[0].Set(-1.0f, 3.0f);
-            vs[1].Set(1.0f, 3.0f);
-            vs[2].Set(1.0f, 5.0f);
-            vs[3].Set(-1.0f, 5.0f);
+            vs[0] = {{-1.0f, 3.0f}};
+            vs[1] = {{1.0f, 3.0f}};
+            vs[2] = {{1.0f, 5.0f}};
+            vs[3] = {{-1.0f, 5.0f}};
             b2ChainShape shape;
             shape.CreateLoop(vs, 4);
             ground->CreateFixture(&shape, 0.0f);
@@ -103,20 +103,20 @@ public:
         // Edge loop. Collision should be smooth.
         {
             b2BodyDef bd;
-            bd.position.Set(-10.0f, 4.0f);
+            bd.position = {{10.0f, 4.0f}};
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2Vec2 vs[10];
             vs[0] = {{0.0f, 0.0f}};
-            vs[1].Set(6.0f, 0.0f);
-            vs[2].Set(6.0f, 2.0f);
-            vs[3].Set(4.0f, 1.0f);
-            vs[4].Set(2.0f, 2.0f);
+            vs[1] = {{6.0f, 0.0f}};
+            vs[2] = {{6.0f, 2.0f}};
+            vs[3] = {{4.0f, 1.0f}};
+            vs[4] = {{2.0f, 2.0f}};
             vs[5] = {{0.0f, 2.0f}};
-            vs[6].Set(-2.0f, 2.0f);
-            vs[7].Set(-4.0f, 3.0f);
-            vs[8].Set(-6.0f, 2.0f);
-            vs[9].Set(-6.0f, 0.0f);
+            vs[6] = {{-2.0f, 2.0f}};
+            vs[7] = {{-4.0f, 3.0f}};
+            vs[8] = {{-6.0f, 2.0f}};
+            vs[9] = {{-6.0f, 0.0f}};
             b2ChainShape shape;
             shape.CreateLoop(vs, 10);
             ground->CreateFixture(&shape, 0.0f);
@@ -125,7 +125,7 @@ public:
         // Square character 1
         {
             b2BodyDef bd;
-            bd.position.Set(-3.0f, 8.0f);
+            bd.position = {{3.0f, 8.0f}};
             bd.type = b2BodyType::DYNAMIC_BODY;
             bd.fixedRotation = true;
             bd.allowSleep = false;
@@ -144,7 +144,7 @@ public:
         // Square character 2
         {
             b2BodyDef bd;
-            bd.position.Set(-5.0f, 5.0f);
+            bd.position = {{5.0f, 5.0f}};
             bd.type = b2BodyType::DYNAMIC_BODY;
             bd.fixedRotation = true;
             bd.allowSleep = false;
@@ -163,7 +163,7 @@ public:
         // Hexagon character
         {
             b2BodyDef bd;
-            bd.position.Set(-5.0f, 8.0f);
+            bd.position = {{5.0f, 8.0f}};
             bd.type = b2BodyType::DYNAMIC_BODY;
             bd.fixedRotation = true;
             bd.allowSleep = false;
@@ -175,7 +175,7 @@ public:
             b2Vec2 vertices[6];
             for (auto& vertice : vertices)
             {
-                vertice.Set(0.5f * cosf(angle), 0.5f * sinf(angle));
+                vertice = {{0.5f * cosf(angle), 0.5f * sinf(angle)}};
                 angle += delta;
             }
 
@@ -191,7 +191,7 @@ public:
         // Circle character
         {
             b2BodyDef bd;
-            bd.position.Set(3.0f, 5.0f);
+            bd.position = {{3.0f, 5.0f}};
             bd.type = b2BodyType::DYNAMIC_BODY;
             bd.fixedRotation = true;
             bd.allowSleep = false;
@@ -199,7 +199,7 @@ public:
             b2Body* body = m_world->CreateBody(&bd);
 
             b2CircleShape shape;
-            shape.m_radius = 0.5f;
+            shape.SetRadius( 0.5f);
 
             b2FixtureDef fd;
             fd.shape = &shape;
@@ -210,14 +210,14 @@ public:
         // Circle character
         {
             b2BodyDef bd;
-            bd.position.Set(-7.0f, 6.0f);
+            bd.position = {{7.0f, 6.0f}};
             bd.type = b2BodyType::DYNAMIC_BODY;
             bd.allowSleep = false;
 
             m_character = m_world->CreateBody(&bd);
 
             b2CircleShape shape;
-            shape.m_radius = 0.25f;
+            shape.SetRadius( 0.25f);
 
             b2FixtureDef fd;
             fd.shape = &shape;
@@ -230,16 +230,16 @@ public:
     void Step(Settings* settings) override
     {
         b2Vec2 v = m_character->GetLinearVelocity();
-        v.x = -5.0f;
+        v[b2VecX] = -5.0f;
         m_character->SetLinearVelocity(v);
 
         Test::Step(settings);
-        g_debugDraw.DrawString(5, m_textLine, "This tests various character collision shapes.");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "This tests various character collision shapes.");
         m_textLine += DRAW_STRING_NEW_LINE;
-        g_debugDraw.DrawString(5, m_textLine,
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}},
                                "Limitation: square and hexagon can snag on aligned boxes.");
         m_textLine += DRAW_STRING_NEW_LINE;
-        g_debugDraw.DrawString(5, m_textLine,
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}},
                                "Feature: edge chains have smooth collision inside and out.");
         m_textLine += DRAW_STRING_NEW_LINE;
     }

@@ -26,12 +26,12 @@ public:
     {
         {
             m_polygonA.SetAsBox(0.2f, 0.4f);
-            m_transformA.Set(b2Vec2(0.0f, 0.0f), 0.0f);
+            m_transformA.Set({{0.0f, 0.0f}}, 0.0f);
         }
 
         {
             m_polygonB.SetAsBox(0.5f, 0.5f);
-            m_positionB.Set(19.345284f, 1.5632932f);
+            m_positionB = {{19.345284f, 1.5632932f}};
             m_angleB = 1.9160721f;
             m_transformB.Set(m_positionB, m_angleB);
         }
@@ -50,26 +50,27 @@ public:
         b2CollidePolygons(&manifold, &m_polygonA, m_transformA, &m_polygonB, m_transformB);
 
         b2WorldManifold worldManifold;
-        worldManifold.Initialize(&manifold, m_transformA, m_polygonA.m_radius, m_transformB,
-                                 m_polygonB.m_radius);
+        worldManifold.Initialize(&manifold, m_transformA, m_polygonA.GetRadius(), m_transformB,
+                                 m_polygonB.GetRadius());
 
-        g_debugDraw.DrawString(5, m_textLine, "point count = %d", manifold.pointCount);
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "point count = %d", manifold.pointCount);
         m_textLine += DRAW_STRING_NEW_LINE;
 
         {
             b2Color color(0.9f, 0.9f, 0.9f);
-            b2Vec2 v[MAX_POLYGON_VERTICES];
-            for (int32_t i = 0; i < m_polygonA.m_count; ++i)
+            std::vector<b2Vec2> v;
+            for (const auto& vec : m_polygonA.GetVertices())
             {
-                v[i] = b2Mul(m_transformA, m_polygonA.m_vertices[i]);
+                v.push_back(b2Mul(m_transformA, vec));
             }
-            g_debugDraw.DrawPolygon(v, m_polygonA.m_count, color);
+            g_debugDraw.DrawPolygon(v, color);
 
-            for (int32_t i = 0; i < m_polygonB.m_count; ++i)
+            v.clear();
+            for (const auto& vec : m_polygonB.GetVertices())
             {
-                v[i] = b2Mul(m_transformB, m_polygonB.m_vertices[i]);
+                v.push_back(b2Mul(m_transformB, vec));
             }
-            g_debugDraw.DrawPolygon(v, m_polygonB.m_count, color);
+            g_debugDraw.DrawPolygon(v, color);
         }
 
         for (int32_t i = 0; i < manifold.pointCount; ++i)
@@ -82,27 +83,27 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_A:
-                m_positionB.x -= 0.1f;
+            case 'a':
+                m_positionB[b2VecX] -= 0.1f;
                 break;
 
-            case GLFW_KEY_D:
-                m_positionB.x += 0.1f;
+            case 'd':
+                m_positionB[b2VecX] += 0.1f;
                 break;
 
-            case GLFW_KEY_S:
-                m_positionB.y -= 0.1f;
+            case 's':
+                m_positionB[b2VecY] -= 0.1f;
                 break;
 
-            case GLFW_KEY_W:
-                m_positionB.y += 0.1f;
+            case 'w':
+                m_positionB[b2VecY] += 0.1f;
                 break;
 
-            case GLFW_KEY_Q:
+            case 'q':
                 m_angleB += 0.1f * B2_PI;
                 break;
 
-            case GLFW_KEY_E:
+            case 'e':
                 m_angleB -= 0.1f * B2_PI;
                 break;
         }

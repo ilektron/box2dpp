@@ -26,6 +26,7 @@ constexpr int TILES_COUNT = 20;
 
 class Tiles : public Test
 {
+public:
     Tiles()
     {
         m_fixtureCount = 0;
@@ -34,43 +35,43 @@ class Tiles : public Test
         {
             float32 a = 0.5f;
             b2BodyDef bd;
-            bd.position.y = -a;
+            bd.position[b2VecY] = -a;
             b2Body* ground = m_world->CreateBody(&bd);
 
 #if 1
             int32_t N = 200;
             int32_t M = 10;
             b2Vec2 position;
-            position.y = 0.0f;
+            position[b2VecY] = 0.0f;
             for (int32_t j = 0; j < M; ++j)
             {
-                position.x = -N * a;
+                position[b2VecX] = -N * a;
                 for (int32_t i = 0; i < N; ++i)
                 {
                     b2PolygonShape shape;
                     shape.SetAsBox(a, a, position, 0.0f);
                     ground->CreateFixture(&shape, 0.0f);
                     ++m_fixtureCount;
-                    position.x += 2.0f * a;
+                    position[b2VecX] += 2.0f * a;
                 }
-                position.y -= 2.0f * a;
+                position[b2VecY] -= 2.0f * a;
             }
 #else
             int32_t N = 200;
             int32_t M = 10;
             b2Vec2 position;
-            position.x = -N * a;
+            position[b2VecX] = -N * a;
             for (int32_t i = 0; i < N; ++i)
             {
-                position.y = 0.0f;
+            position[b2VecY] = 0.0f;
                 for (int32_t j = 0; j < M; ++j)
                 {
                     b2PolygonShape shape;
                     shape.SetAsBox(a, a, position, 0.0f);
                     ground->CreateFixture(&shape, 0.0f);
-                    position.y -= 2.0f * a;
+                    position[b2VecY] -= 2.0f * a;
                 }
-                position.x += 2.0f * a;
+                position[b2VecX] += 2.0f * a;
             }
 #endif
         }
@@ -80,10 +81,10 @@ class Tiles : public Test
             b2PolygonShape shape;
             shape.SetAsBox(a, a);
 
-            b2Vec2 x(-7.0f, 0.75f);
+            b2Vec2 x{{-7.0f, 0.75f}};
             b2Vec2 y;
-            b2Vec2 deltaX(0.5625f, 1.25f);
-            b2Vec2 deltaY(1.125f, 0.0f);
+            b2Vec2 deltaX{{0.5625f, 1.25f}};
+            b2Vec2 deltaY{{1.125f, 0.0f}};
 
             for (int32_t i = 0; i < TILES_COUNT; ++i)
             {
@@ -124,13 +125,13 @@ class Tiles : public Test
         int32_t leafCount = cm.m_broadPhase.GetProxyCount();
         int32_t minimumNodeCount = 2 * leafCount - 1;
         float32 minimumHeight = ceilf(logf(float32(minimumNodeCount)) / logf(2.0f));
-        g_debugDraw.DrawString(5, m_textLine, "dynamic tree height = %d, min = %d", height,
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "dynamic tree height = %d, min = %d", height,
                                int32_t(minimumHeight));
         m_textLine += DRAW_STRING_NEW_LINE;
 
         Test::Step(settings);
 
-        g_debugDraw.DrawString(5, m_textLine, "create time = %6.2f ms, fixture count = %d",
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "create time = %6.2f ms, fixture count = %d",
                                m_createTime, m_fixtureCount);
         m_textLine += DRAW_STRING_NEW_LINE;
 

@@ -36,23 +36,23 @@ public:
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
             bd.allowSleep = false;
-            bd.position.Set(0.0f, 10.0f);
+            bd.position = {{0.0f, 10.0f}};
             b2Body* body = m_world->CreateBody(&bd);
 
             b2PolygonShape shape;
-            shape.SetAsBox(0.5f, 10.0f, b2Vec2(10.0f, 0.0f), 0.0);
+            shape.SetAsBox(0.5f, 10.0f, {{10.0f, 0.0f}}, 0.0);
             body->CreateFixture(&shape, 5.0f);
-            shape.SetAsBox(0.5f, 10.0f, b2Vec2(-10.0f, 0.0f), 0.0);
+            shape.SetAsBox(0.5f, 10.0f, {{-10.0f, 0.0f}}, 0.0);
             body->CreateFixture(&shape, 5.0f);
-            shape.SetAsBox(10.0f, 0.5f, b2Vec2(0.0f, 10.0f), 0.0);
+            shape.SetAsBox(10.0f, 0.5f, {{0.0f, 10.0f}}, 0.0);
             body->CreateFixture(&shape, 5.0f);
-            shape.SetAsBox(10.0f, 0.5f, b2Vec2(0.0f, -10.0f), 0.0);
+            shape.SetAsBox(10.0f, 0.5f, {{0.0f, -10.0f}}, 0.0);
             body->CreateFixture(&shape, 5.0f);
 
             b2RevoluteJointDef jd;
             jd.bodyA = ground;
             jd.bodyB = body;
-            jd.localAnchorA.Set(0.0f, 10.0f);
+            jd.localAnchorA = {{0.0f, 10.0f}};
             jd.localAnchorB = {{0.0f, 0.0f}};
             jd.referenceAngle = 0.0f;
             jd.motorSpeed = 0.05f * B2_PI;
@@ -72,7 +72,7 @@ public:
         {
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(0.0f, 10.0f);
+            bd.position = {{0.0f, 10.0f}};
             b2Body* body = m_world->CreateBody(&bd);
 
             b2PolygonShape shape;
