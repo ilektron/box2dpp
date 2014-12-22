@@ -32,7 +32,7 @@ public:
     b2EdgeShape();
 
     /// Set this as an isolated edge.
-    void Set(const b2Vec2& v1, const b2Vec2& v2);
+    void Set(b2Vec2 v1, b2Vec2 v2);
 
     /// Implement b2Shape.
     b2Shape* Clone(b2BlockAllocator* allocator) const override;

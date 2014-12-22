@@ -30,7 +30,7 @@ public:
             ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+            shape.Set({{-40.0f, 0.0f}}, {{40.0f, 0.0f}});
 
             b2FixtureDef fd;
             fd.shape = &shape;
@@ -41,22 +41,22 @@ public:
 
         {
             b2CircleShape shape;
-            shape.m_radius = 0.5f;
+            shape.SetRadius( 0.5f);
 
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
 
             b2RevoluteJointDef rjd;
 
-            bd.position.Set(-10.0f, 20.0f);
+            bd.position = {{10.0f, 20.0f}};
             b2Body* body = m_world->CreateBody(&bd);
             body->CreateFixture(&shape, 5.0f);
 
             float32 w = 100.0f;
             body->SetAngularVelocity(w);
-            body->SetLinearVelocity(b2Vec2(-8.0f * w, 0.0f));
+            body->SetLinearVelocity({{-8.0f * w, 0.0f}});
 
-            rjd.Initialize(ground, body, b2Vec2(-10.0f, 12.0f));
+            rjd.Initialize(ground, body, {{-10.0f, 12.0f}});
             rjd.motorSpeed = 1.0f * B2_PI;
             rjd.maxMotorTorque = 10000.0f;
             rjd.enableMotor = false;
@@ -70,11 +70,11 @@ public:
 
         {
             b2CircleShape circle_shape;
-            circle_shape.m_radius = 3.0f;
+            circle_shape.SetRadius( 3.0f);
 
             b2BodyDef circle_bd;
             circle_bd.type = b2BodyType::DYNAMIC_BODY;
-            circle_bd.position.Set(5.0f, 30.0f);
+            circle_bd.position = {{5.0f, 30.0f}};
 
             b2FixtureDef fd;
             fd.density = 5.0f;
@@ -85,17 +85,17 @@ public:
             m_ball->CreateFixture(&fd);
 
             b2PolygonShape polygon_shape;
-            polygon_shape.SetAsBox(10.0f, 0.2f, b2Vec2(-10.0f, 0.0f), 0.0f);
+            polygon_shape.SetAsBox(10.0f, 0.2f, {{-10.0f, 0.0f}}, 0.0f);
 
             b2BodyDef polygon_bd;
-            polygon_bd.position.Set(20.0f, 10.0f);
+            polygon_bd.position = {{20.0f, 10.0f}};
             polygon_bd.type = b2BodyType::DYNAMIC_BODY;
             polygon_bd.bullet = true;
             b2Body* polygon_body = m_world->CreateBody(&polygon_bd);
             polygon_body->CreateFixture(&polygon_shape, 2.0f);
 
             b2RevoluteJointDef rjd;
-            rjd.Initialize(ground, polygon_body, b2Vec2(20.0f, 10.0f));
+            rjd.Initialize(ground, polygon_body, {{20.0f, 10.0f}});
             rjd.lowerAngle = -0.25f * B2_PI;
             rjd.upperAngle = 0.0f * B2_PI;
             rjd.enableLimit = true;
@@ -110,9 +110,9 @@ public:
 
             b2PolygonShape polyShape;
             b2Vec2 verts[3];
-            verts[0].Set(17.63f, 36.31f);
-            verts[1].Set(17.52f, 36.69f);
-            verts[2].Set(17.19f, 36.36f);
+            verts[0] = {{17.63f, 36.31f}};
+            verts[1] = {{17.52f, 36.69f}};
+            verts[2] = {{17.19f, 36.36f}};
             polyShape.Set(verts, 3);
 
             b2FixtureDef polyFixtureDef;
@@ -127,11 +127,11 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_L:
+            case 'l':
                 m_joint->EnableLimit(!m_joint->IsLimitEnabled());
                 break;
 
-            case GLFW_KEY_M:
+            case 'm':
                 m_joint->EnableMotor(!m_joint->IsMotorEnabled());
                 break;
         }
@@ -140,16 +140,16 @@ public:
     void Step(Settings* settings) override
     {
         Test::Step(settings);
-        g_debugDraw.DrawString(5, m_textLine, "Keys: (l) limits, (m) motor");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Keys: (l) limits, (m) motor");
         m_textLine += DRAW_STRING_NEW_LINE;
 
         // if (m_stepCount == 360)
         //{
-        //	m_ball->SetTransform(b2Vec2(0.0f, 0.5f), 0.0f);
+        //	m_ball->SetTransform({{0.0f, 0.5f}}, 0.0f);
         //}
 
         // float32 torque1 = m_joint1->GetMotorTorque();
-        // g_debugDraw.DrawString(5, m_textLine, "Motor Torque = %4.0f, %4.0f : Motor Force =
+        // g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Motor Torque = %4.0f, %4.0f : Motor Force =
         // %4.0f", (float) torque1, (float) torque2, (float) force3);
         // m_textLine += DRAW_STRING_NEW_LINE;
     }

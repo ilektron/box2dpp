@@ -28,8 +28,8 @@ public:
             b2BodyDef bd;
             b2Body* ground = m_world->CreateBody(&bd);
 
-            b2Vec2 v1(-10.0f, 0.0f), v2(-7.0f, -2.0f), v3(-4.0f, 0.0f);
-            b2Vec2 v4(0.0f, 0.0f), v5(4.0f, 0.0f), v6(7.0f, 2.0f), v7(10.0f, 0.0f);
+            b2Vec2 v1{{-10.0f, 0.0f}}, v2{{-7.0f, -2.0f}}, v3{{-4.0f, 0.0f}};
+            b2Vec2 v4{{0.0f, 0.0f}}, v5{{4.0f, 0.0f}}, v6{{7.0f, 2.0f}}, v7{{10.0f, 0.0f}};
 
             b2EdgeShape shape;
 
@@ -75,12 +75,12 @@ public:
         {
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(-0.5f, 0.6f);
+            bd.position = {{0.5f, 0.6f}};
             bd.allowSleep = false;
             b2Body* body = m_world->CreateBody(&bd);
 
             b2CircleShape shape;
-            shape.m_radius = 0.5f;
+            shape.SetRadius( 0.5f);
 
             body->CreateFixture(&shape, 1.0f);
         }
@@ -88,7 +88,7 @@ public:
         {
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(1.0f, 0.6f);
+            bd.position = {{1.0f, 0.6f}};
             bd.allowSleep = false;
             b2Body* body = m_world->CreateBody(&bd);
 

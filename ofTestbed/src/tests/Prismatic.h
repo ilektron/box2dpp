@@ -31,7 +31,7 @@ public:
             ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+            shape.Set({{-40.0f, 0.0f}}, {{40.0f, 0.0f}});
             ground->CreateFixture(&shape, 0.0f);
         }
 
@@ -41,7 +41,7 @@ public:
 
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(-10.0f, 10.0f);
+            bd.position = {{10.0f, 10.0f}};
             bd.angle = 0.5f * B2_PI;
             bd.allowSleep = false;
             b2Body* body = m_world->CreateBody(&bd);
@@ -50,12 +50,12 @@ public:
             b2PrismaticJointDef pjd;
 
             // Bouncy limit
-            b2Vec2 axis(2.0f, 1.0f);
-            axis.Normalize();
-            pjd.Initialize(ground, body, b2Vec2(0.0f, 0.0f), axis);
+            b2Vec2 axis{{2.0f, 1.0f}};
+            Normalize(axis);
+            pjd.Initialize(ground, body, {{0.0f, 0.0f}}, axis);
 
             // Non-bouncy limit
-            // pjd.Initialize(ground, body, b2Vec2(-10.0f, 10.0f), b2Vec2(1.0f, 0.0f));
+            // pjd.Initialize(ground, body, {{-10.0f, 10.0f}}, {{1.0f, 0.0f}});
 
             pjd.motorSpeed = 10.0f;
             pjd.maxMotorForce = 10000.0f;
@@ -72,15 +72,15 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_L:
+            case 'l':
                 m_joint->EnableLimit(!m_joint->IsLimitEnabled());
                 break;
 
-            case GLFW_KEY_M:
+            case 'm':
                 m_joint->EnableMotor(!m_joint->IsMotorEnabled());
                 break;
 
-            case GLFW_KEY_S:
+            case 's':
                 m_joint->SetMotorSpeed(-m_joint->GetMotorSpeed());
                 break;
         }
@@ -89,10 +89,10 @@ public:
     void Step(Settings* settings) override
     {
         Test::Step(settings);
-        g_debugDraw.DrawString(5, m_textLine, "Keys: (l) limits, (m) motors, (s) speed");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Keys: (l) limits, (m) motors, (s) speed");
         m_textLine += DRAW_STRING_NEW_LINE;
         float32 force = m_joint->GetMotorForce(settings->hz);
-        g_debugDraw.DrawString(5, m_textLine, "Motor Force = %4.0f", (float)force);
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Motor Force = %4.0f", (float)force);
         m_textLine += DRAW_STRING_NEW_LINE;
     }
 

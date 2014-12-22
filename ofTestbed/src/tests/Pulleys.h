@@ -35,16 +35,16 @@ public:
             ground = m_world->CreateBody(&bd);
 
             b2EdgeShape edge;
-            edge.Set(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+            edge.Set({{-40.0f, 0.0f}}, {{40.0f, 0.0f}});
             // ground->CreateFixture(&shape, 0.0f);
 
             b2CircleShape circle;
-            circle.m_radius = 2.0f;
+            circle.SetRadius( 2.0f);
 
-            circle.m_p.Set(-10.0f, y + b + L);
+            circle.m_p = {{-10.0f, y + b + L}};
             ground->CreateFixture(&circle, 0.0f);
 
-            circle.m_p.Set(10.0f, y + b + L);
+            circle.m_p = {{10.0f, y + b + L}};
             ground->CreateFixture(&circle, 0.0f);
         }
 
@@ -56,19 +56,19 @@ public:
             bd.type = b2BodyType::DYNAMIC_BODY;
 
             // bd.fixedRotation = true;
-            bd.position.Set(-10.0f, y);
+            bd.position = {{-10.0f, y}};
             b2Body* body1 = m_world->CreateBody(&bd);
             body1->CreateFixture(&shape, 5.0f);
 
-            bd.position.Set(10.0f, y);
+            bd.position = {{10.0f, y}};
             b2Body* body2 = m_world->CreateBody(&bd);
             body2->CreateFixture(&shape, 5.0f);
 
             b2PulleyJointDef pulleyDef;
-            b2Vec2 anchor1(-10.0f, y + b);
-            b2Vec2 anchor2(10.0f, y + b);
-            b2Vec2 groundAnchor1(-10.0f, y + b + L);
-            b2Vec2 groundAnchor2(10.0f, y + b + L);
+            b2Vec2 anchor1{{-10.0f, y + b}};
+            b2Vec2 anchor2{{10.0f, y + b}};
+            b2Vec2 groundAnchor1{{-10.0f, y + b + L}};
+            b2Vec2 groundAnchor2{{10.0f, y + b + L}};
             pulleyDef.Initialize(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2,
                                  1.5f);
 
@@ -82,7 +82,7 @@ public:
 
         float32 ratio = m_joint1->GetRatio();
         float32 L = m_joint1->GetCurrentLengthA() + ratio * m_joint1->GetCurrentLengthB();
-        g_debugDraw.DrawString(5, m_textLine, "L1 + %4.2f * L2 = %4.2f", (float)ratio, (float)L);
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "L1 + %4.2f * L2 = %4.2f", (float)ratio, (float)L);
         m_textLine += DRAW_STRING_NEW_LINE;
     }
 

@@ -34,26 +34,26 @@ public:
             b2EdgeShape shape;
 
             // Floor
-            shape.Set(b2Vec2(-10.0f, 0.0f), b2Vec2(10.0f, 0.0f));
+            shape.Set({{-10.0f, 0.0f}}, {{10.0f, 0.0f}});
             ground->CreateFixture(&shape, 0.0f);
 
             // Left wall
-            shape.Set(b2Vec2(-10.0f, 0.0f), b2Vec2(-10.0f, 20.0f));
+            shape.Set({{-10.0f, 0.0f}}, {{-10.0f, 20.0f}});
             ground->CreateFixture(&shape, 0.0f);
 
             // Right wall
-            shape.Set(b2Vec2(10.0f, 0.0f), b2Vec2(10.0f, 20.0f));
+            shape.Set({{10.0f, 0.0f}}, {{10.0f, 20.0f}});
             ground->CreateFixture(&shape, 0.0f);
 
             // Roof
-            shape.Set(b2Vec2(-10.0f, 20.0f), b2Vec2(10.0f, 20.0f));
+            shape.Set({{-10.0f, 20.0f}}, {{10.0f, 20.0f}});
             ground->CreateFixture(&shape, 0.0f);
         }
 
         float32 radius = 0.5f;
         b2CircleShape shape;
         shape.m_p = {{0.0f, 0.0f}};
-        shape.m_radius = radius;
+        shape.SetRadius( radius);
 
         b2FixtureDef fd;
         fd.shape = &shape;
@@ -66,15 +66,15 @@ public:
             {
                 b2BodyDef bd;
                 bd.type = b2BodyType::DYNAMIC_BODY;
-                bd.position.Set(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
-                                (2.0f * i + 1.0f) * radius);
+                bd.position = {{-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
+                                (2.0f * i + 1.0f) * radius}};
                 b2Body* body = m_world->CreateBody(&bd);
 
                 body->CreateFixture(&fd);
             }
         }
 
-        m_world->SetGravity(b2Vec2(0.0f, 0.0f));
+        m_world->SetGravity({{0.0f, 0.0f}});
     }
 
     void CreateCircle()
@@ -82,14 +82,14 @@ public:
         float32 radius = 2.0f;
         b2CircleShape shape;
         shape.m_p = {{0.0f, 0.0f}};
-        shape.m_radius = radius;
+        shape.SetRadius( radius);
 
         b2FixtureDef fd;
         fd.shape = &shape;
         fd.density = 1.0f;
         fd.friction = 0.0f;
 
-        b2Vec2 p(RandomFloat(), 3.0f + RandomFloat());
+        b2Vec2 p{{RandomFloat(), 3.0f + RandomFloat()}};
         b2BodyDef bd;
         bd.type = b2BodyType::DYNAMIC_BODY;
         bd.position = p;
@@ -103,7 +103,7 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_C:
+            case 'c':
                 CreateCircle();
                 break;
         }
@@ -145,13 +145,13 @@ public:
             }
 
             b2Vec2 p = b->GetPosition();
-            if (p.x <= -10.0f || 10.0f <= p.x || p.y <= 0.0f || 20.0f <= p.y)
+            if (p[b2VecX] <= -10.0f || 10.0f <= p[b2VecX] || p[b2VecY] <= 0.0f || 20.0f <= p[b2VecY])
             {
-                p.x += 0.0f;
+                p[b2VecX] += 0.0f;
             }
         }
 
-        g_debugDraw.DrawString(5, m_textLine, "Press 'c' to create a circle.");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Press 'c' to create a circle.");
         m_textLine += DRAW_STRING_NEW_LINE;
     }
 

@@ -57,16 +57,14 @@ public:
             case b2Shape::e_polygon:
             {
                 b2PolygonShape* poly = (b2PolygonShape*)fixture->GetShape();
-                int32_t vertexCount = poly->m_count;
-                b2Assert(vertexCount <= MAX_POLYGON_VERTICES);
-                b2Vec2 vertices[MAX_POLYGON_VERTICES];
+                std::vector<b2Vec2> vertices;
 
-                for (int32_t i = 0; i < vertexCount; ++i)
+                for (const auto& vec : poly->GetVertices())
                 {
-                    vertices[i] = b2Mul(xf, poly->m_vertices[i]);
+                    vertices.push_back(b2Mul(xf, vec));
                 }
 
-                g_debugDraw->DrawPolygon(vertices, vertexCount, color);
+                g_debugDraw->DrawPolygon(vertices, color);
             }
             break;
 
@@ -117,23 +115,23 @@ public:
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+            shape.Set({{-40.0f, 0.0f}}, {{40.0f, 0.0f}});
             ground->CreateFixture(&shape, 0.0f);
         }
 
         {
             b2Vec2 vertices[3];
-            vertices[0].Set(-0.5f, 0.0f);
-            vertices[1].Set(0.5f, 0.0f);
-            vertices[2].Set(0.0f, 1.5f);
+            vertices[0] = {{-0.5f, 0.0f}};
+            vertices[1] = {{0.5f, 0.0f}};
+            vertices[2] = {{0.0f, 1.5f}};
             m_polygons[0].Set(vertices, 3);
         }
 
         {
             b2Vec2 vertices[3];
-            vertices[0].Set(-0.1f, 0.0f);
-            vertices[1].Set(0.1f, 0.0f);
-            vertices[2].Set(0.0f, 1.5f);
+            vertices[0] = {{-0.1f, 0.0f}};
+            vertices[1] = {{0.1f, 0.0f}};
+            vertices[2] = {{0.0f, 1.5f}};
             m_polygons[1].Set(vertices, 3);
         }
 
@@ -143,14 +141,14 @@ public:
             float32 s = b2Sqrt(2.0f) * b;
 
             b2Vec2 vertices[8];
-            vertices[0].Set(0.5f * s, 0.0f);
-            vertices[1].Set(0.5f * w, b);
-            vertices[2].Set(0.5f * w, b + s);
-            vertices[3].Set(0.5f * s, w);
-            vertices[4].Set(-0.5f * s, w);
-            vertices[5].Set(-0.5f * w, b + s);
-            vertices[6].Set(-0.5f * w, b);
-            vertices[7].Set(-0.5f * s, 0.0f);
+            vertices[0] = {{0.5f * s, 0.0f}};
+            vertices[1] = {{0.5f * w, b}};
+            vertices[2] = {{0.5f * w, b + s}};
+            vertices[3] = {{0.5f * s, w}};
+            vertices[4] = {{-0.5f * s, w}};
+            vertices[5] = {{-0.5f * w, b + s}};
+            vertices[6] = {{-0.5f * w, b}};
+            vertices[7] = {{-0.5f * s, 0.0f}};
 
             m_polygons[2].Set(vertices, 8);
         }
@@ -160,7 +158,7 @@ public:
         }
 
         {
-            m_circle.m_radius = 0.5f;
+            m_circle.SetRadius( 0.5f);
         }
 
         m_bodyIndex = 0;
@@ -179,7 +177,7 @@ public:
         bd.type = b2BodyType::DYNAMIC_BODY;
 
         float32 x = RandomFloat(-2.0f, 2.0f);
-        bd.position.Set(x, 10.0f);
+        bd.position = {{x, 10.0f}};
         bd.angle = RandomFloat(-B2_PI, B2_PI);
 
         if (index == 4)
@@ -227,15 +225,15 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_1:
-            case GLFW_KEY_2:
-            case GLFW_KEY_3:
-            case GLFW_KEY_4:
-            case GLFW_KEY_5:
-                Create(key - GLFW_KEY_1);
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+                Create(key - '1');
                 break;
 
-            case GLFW_KEY_A:
+            case 'a':
                 for (int32_t i = 0; i < POLY_SHAPES_MAX_BODIES; i += 2)
                 {
                     if (m_bodies[i])
@@ -246,7 +244,7 @@ public:
                 }
                 break;
 
-            case GLFW_KEY_D:
+            case 'd':
                 DestroyBody();
                 break;
         }
@@ -257,8 +255,8 @@ public:
         Test::Step(settings);
 
         PolyShapesCallback callback;
-        callback.m_circle.m_radius = 2.0f;
-        callback.m_circle.m_p.Set(0.0f, 1.1f);
+        callback.m_circle.SetRadius( 2.0f);
+        callback.m_circle.m_p = {{0.0f, 1.1f}};
         callback.m_transform.SetIdentity();
         callback.g_debugDraw = &g_debugDraw;
 
@@ -268,13 +266,13 @@ public:
         m_world->QueryAABB(&callback, aabb);
 
         b2Color color(0.4f, 0.7f, 0.8f);
-        g_debugDraw.DrawCircle(callback.m_circle.m_p, callback.m_circle.m_radius, color);
+        g_debugDraw.DrawCircle(callback.m_circle.m_p, callback.m_circle.GetRadius(), color);
 
-        g_debugDraw.DrawString(5, m_textLine, "Press 1-5 to drop stuff");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Press 1-5 to drop stuff");
         m_textLine += DRAW_STRING_NEW_LINE;
-        g_debugDraw.DrawString(5, m_textLine, "Press 'a' to (de)activate some bodies");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Press 'a' to (de)activate some bodies");
         m_textLine += DRAW_STRING_NEW_LINE;
-        g_debugDraw.DrawString(5, m_textLine, "Press 'd' to destroy a body");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Press 'd' to destroy a body");
         m_textLine += DRAW_STRING_NEW_LINE;
     }
 

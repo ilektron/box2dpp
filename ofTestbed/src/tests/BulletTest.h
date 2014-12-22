@@ -31,18 +31,18 @@ public:
 
             b2EdgeShape edge;
 
-            edge.Set(b2Vec2(-10.0f, 0.0f), b2Vec2(10.0f, 0.0f));
+            edge.Set({{-10.0f, 0.0f}}, {{10.0f, 0.0f}});
             body->CreateFixture(&edge, 0.0f);
 
             b2PolygonShape shape;
-            shape.SetAsBox(0.2f, 1.0f, b2Vec2(0.5f, 1.0f), 0.0f);
+            shape.SetAsBox(0.2f, 1.0f, {{0.5f, 1.0f}}, 0.0f);
             body->CreateFixture(&shape, 0.0f);
         }
 
         {
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(0.0f, 4.0f);
+            bd.position = {{0.0f, 4.0f}};
 
             b2PolygonShape box;
             box.SetAsBox(2.0f, 0.1f);
@@ -54,25 +54,25 @@ public:
 
             // m_x = RandomFloat(-1.0f, 1.0f);
             m_x = 0.20352793f;
-            bd.position.Set(m_x, 10.0f);
+            bd.position = {{m_x, 10.0f}};
             bd.bullet = true;
 
             m_bullet = m_world->CreateBody(&bd);
             m_bullet->CreateFixture(&box, 100.0f);
 
-            m_bullet->SetLinearVelocity(b2Vec2(0.0f, -50.0f));
+            m_bullet->SetLinearVelocity({{0.0f, -50.0f}});
         }
     }
 
     void Launch()
     {
-        m_body->SetTransform(b2Vec2(0.0f, 4.0f), 0.0f);
+        m_body->SetTransform({{0.0f, 4.0f}}, 0.0f);
         m_body->SetLinearVelocity(b2Vec2_zero);
         m_body->SetAngularVelocity(0.0f);
 
         m_x = RandomFloat(-1.0f, 1.0f);
-        m_bullet->SetTransform(b2Vec2(m_x, 10.0f), 0.0f);
-        m_bullet->SetLinearVelocity(b2Vec2(0.0f, -50.0f));
+        m_bullet->SetTransform({{m_x, 10.0f}}, 0.0f);
+        m_bullet->SetLinearVelocity({{0.0f, -50.0f}});
         m_bullet->SetAngularVelocity(0.0f);
 
         extern int32_t b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
@@ -100,7 +100,7 @@ public:
 
         if (b2_gjkCalls > 0)
         {
-            g_debugDraw.DrawString(5, m_textLine,
+            g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}},
                                    "gjk calls = %d, ave gjk iters = %3.1f, max gjk iters = %d",
                                    b2_gjkCalls, b2_gjkIters / float32(b2_gjkCalls), b2_gjkMaxIters);
             m_textLine += DRAW_STRING_NEW_LINE;
@@ -109,11 +109,11 @@ public:
         if (b2_toiCalls > 0)
         {
             g_debugDraw.DrawString(
-                5, m_textLine, "toi calls = %d, ave toi iters = %3.1f, max toi iters = %d",
+                {{5.0f, static_cast<float>(m_textLine)}}, "toi calls = %d, ave toi iters = %3.1f, max toi iters = %d",
                 b2_toiCalls, b2_toiIters / float32(b2_toiCalls), b2_toiMaxRootIters);
             m_textLine += DRAW_STRING_NEW_LINE;
 
-            g_debugDraw.DrawString(5, m_textLine,
+            g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}},
                                    "ave toi root iters = %3.1f, max toi root iters = %d",
                                    b2_toiRootIters / float32(b2_toiCalls), b2_toiMaxRootIters);
             m_textLine += DRAW_STRING_NEW_LINE;

@@ -31,11 +31,11 @@ public:
 
             b2EdgeShape edge;
 
-            edge.Set(b2Vec2(-10.0f, 0.0f), b2Vec2(10.0f, 0.0f));
+            edge.Set({{-10.0f, 0.0f}}, {{10.0f, 0.0f}});
             body->CreateFixture(&edge, 0.0f);
 
             b2PolygonShape shape;
-            shape.SetAsBox(0.2f, 1.0f, b2Vec2(0.5f, 1.0f), 0.0f);
+            shape.SetAsBox(0.2f, 1.0f, {{0.5f, 1.0f}}, 0.0f);
             body->CreateFixture(&shape, 0.0f);
         }
 
@@ -43,7 +43,7 @@ public:
         {
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(0.0f, 20.0f);
+            bd.position = {{0.0f, 20.0f}};
             // bd.angle = 0.1f;
 
             b2PolygonShape shape;
@@ -54,7 +54,7 @@ public:
 
             m_angularVelocity = RandomFloat(-50.0f, 50.0f);
             // m_angularVelocity = 46.661274f;
-            m_body->SetLinearVelocity(b2Vec2(0.0f, -100.0f));
+            m_body->SetLinearVelocity({{0.0f, -100.0f}});
             m_body->SetAngularVelocity(m_angularVelocity);
         }
 #else
@@ -66,14 +66,14 @@ public:
 
             b2CircleShape shape;
             shape.m_p = {{0.0f, 0.0f}};
-            shape.m_radius = 0.5f;
+            shape.SetRadius( 0.5f);
             body->CreateFixture(&shape, 1.0f);
 
             bd.bullet = true;
-            bd.position.Set(0.0f, 10.0f);
+            bd.position = {{0.0f, 10.0f}};
             body = m_world->CreateBody(&bd);
             body->CreateFixture(&shape, 1.0f);
-            body->SetLinearVelocity(b2Vec2(0.0f, -100.0f));
+            body->SetLinearVelocity({{0.0f, -100.0f}});
         }
 #endif
 
@@ -110,9 +110,9 @@ public:
         b2_toiTime = 0.0f;
         b2_toiMaxTime = 0.0f;
 
-        m_body->SetTransform(b2Vec2(0.0f, 20.0f), 0.0f);
+        m_body->SetTransform({{0.0f, 20.0f}}, 0.0f);
         m_angularVelocity = RandomFloat(-50.0f, 50.0f);
-        m_body->SetLinearVelocity(b2Vec2(0.0f, -100.0f));
+        m_body->SetLinearVelocity({{0.0f, -100.0f}});
         m_body->SetAngularVelocity(m_angularVelocity);
     }
 
@@ -124,7 +124,7 @@ public:
 
         if (b2_gjkCalls > 0)
         {
-            g_debugDraw.DrawString(5, m_textLine,
+            g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}},
                                    "gjk calls = %d, ave gjk iters = %3.1f, max gjk iters = %d",
                                    b2_gjkCalls, b2_gjkIters / float32(b2_gjkCalls), b2_gjkMaxIters);
             m_textLine += DRAW_STRING_NEW_LINE;
@@ -136,16 +136,16 @@ public:
 
         if (b2_toiCalls > 0)
         {
-            g_debugDraw.DrawString(5, m_textLine,
+            g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}},
                                    "toi calls = %d, ave [max] toi iters = %3.1f [%d]", b2_toiCalls,
                                    b2_toiIters / float32(b2_toiCalls), b2_toiMaxRootIters);
             m_textLine += DRAW_STRING_NEW_LINE;
 
-            g_debugDraw.DrawString(5, m_textLine, "ave [max] toi root iters = %3.1f [%d]",
+            g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "ave [max] toi root iters = %3.1f [%d]",
                                    b2_toiRootIters / float32(b2_toiCalls), b2_toiMaxRootIters);
             m_textLine += DRAW_STRING_NEW_LINE;
 
-            g_debugDraw.DrawString(5, m_textLine, "ave [max] toi time = %.1f [%.1f] (microseconds)",
+            g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "ave [max] toi time = %.1f [%.1f] (microseconds)",
                                    1000.0f * b2_toiTime / float32(b2_toiCalls),
                                    1000.0f * b2_toiMaxTime);
             m_textLine += DRAW_STRING_NEW_LINE;

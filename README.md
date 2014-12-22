@@ -19,3 +19,12 @@ Efforts in improving Box2D library
 
 ofxBox2DBasic using box2d11
    Use cmake for openFrameworks
+
+
+regex replacements
+1.
+    \bb2Vec2\(\W*([0-9.f\-]+\W*,\W*[0-9.f\-]+)\)
+    {{\1}}
+2.
+        \b\.Set\(\W*([0-9.f\-]+\W*,\W*[0-9.f\-]+)\)
+    = {{\1}}

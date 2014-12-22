@@ -27,8 +27,8 @@ b2DynamicTree::b2DynamicTree()
 
     m_nodeCapacity = 16;
     m_nodeCount = 0;
-    m_nodes = (b2TreeNode*)b2Alloc(m_nodeCapacity * sizeof(b2TreeNode));
-    memset(m_nodes, 0, m_nodeCapacity * sizeof(b2TreeNode));
+    m_nodes.reserve(m_nodeCapacity);
+    memset(&m_nodes[0], 0, m_nodeCapacity * sizeof(b2TreeNode));
 
     // Build a linked list for the free list.
     for (int32_t i = 0; i < m_nodeCapacity - 1; ++i)
@@ -48,7 +48,7 @@ b2DynamicTree::b2DynamicTree()
 b2DynamicTree::~b2DynamicTree()
 {
     // This frees the entire tree in one shot.
-    b2Free(m_nodes);
+//     b2Free(m_nodes);
 }
 
 // Allocate a node from the pool. Grow the pool if necessary.
@@ -60,12 +60,10 @@ int32_t b2DynamicTree::AllocateNode()
         b2Assert(m_nodeCount == m_nodeCapacity);
 
         // The free list is empty. Rebuild a bigger pool.
-        b2TreeNode* oldNodes = m_nodes;
+//         b2TreeNode* oldNodes = m_nodes;
         m_nodeCapacity *= 2;
-        m_nodes = (b2TreeNode*)b2Alloc(m_nodeCapacity * sizeof(b2TreeNode));
-        memcpy(m_nodes, oldNodes, m_nodeCount * sizeof(b2TreeNode));
-        b2Free(oldNodes);
-
+        m_nodes.reserve(m_nodeCapacity);
+        
         // Build a linked list for the free list. The parent
         // pointer becomes the "next" pointer.
         for (int32_t i = m_nodeCount; i < m_nodeCapacity - 1; ++i)
@@ -380,7 +378,7 @@ int32_t b2DynamicTree::Balance(int32_t iA)
 {
     b2Assert(iA != NULL_NODE);
 
-    b2TreeNode* A = m_nodes + iA;
+    b2TreeNode* A = &m_nodes[iA];
     if (A->IsLeaf() || A->height < 2)
     {
         return iA;
@@ -391,8 +389,8 @@ int32_t b2DynamicTree::Balance(int32_t iA)
     b2Assert(0 <= iB && iB < m_nodeCapacity);
     b2Assert(0 <= iC && iC < m_nodeCapacity);
 
-    b2TreeNode* B = m_nodes + iB;
-    b2TreeNode* C = m_nodes + iC;
+    b2TreeNode* B = &m_nodes[iB];
+    b2TreeNode* C = &m_nodes[iC];
 
     int32_t balance = C->height - B->height;
 
@@ -401,8 +399,8 @@ int32_t b2DynamicTree::Balance(int32_t iA)
     {
         int32_t iF = C->child1;
         int32_t iG = C->child2;
-        b2TreeNode* F = m_nodes + iF;
-        b2TreeNode* G = m_nodes + iG;
+        b2TreeNode* F = &m_nodes[iF];
+        b2TreeNode* G = &m_nodes[iG];
         b2Assert(0 <= iF && iF < m_nodeCapacity);
         b2Assert(0 <= iG && iG < m_nodeCapacity);
 
@@ -461,8 +459,8 @@ int32_t b2DynamicTree::Balance(int32_t iA)
     {
         int32_t iD = B->child1;
         int32_t iE = B->child2;
-        b2TreeNode* D = m_nodes + iD;
-        b2TreeNode* E = m_nodes + iE;
+        b2TreeNode* D = &m_nodes[iD];
+        b2TreeNode* E = &m_nodes[iE];
         b2Assert(0 <= iD && iD < m_nodeCapacity);
         b2Assert(0 <= iE && iE < m_nodeCapacity);
 
@@ -537,13 +535,13 @@ float32 b2DynamicTree::GetAreaRatio() const
         return 0.0f;
     }
 
-    const b2TreeNode* root = m_nodes + m_root;
+    const b2TreeNode* root = &m_nodes[m_root];
     float32 rootArea = root->aabb.GetPerimeter();
 
     float32 totalArea = 0.0f;
     for (int32_t i = 0; i < m_nodeCapacity; ++i)
     {
-        const b2TreeNode* node = m_nodes + i;
+        const b2TreeNode* node = &m_nodes[i];
         if (node->height < 0)
         {
             // Free node in pool
@@ -560,7 +558,7 @@ float32 b2DynamicTree::GetAreaRatio() const
 int32_t b2DynamicTree::ComputeHeight(int32_t nodeId) const
 {
     b2Assert(0 <= nodeId && nodeId < m_nodeCapacity);
-    b2TreeNode* node = m_nodes + nodeId;
+    auto node = &m_nodes[nodeId];
 
     if (node->IsLeaf())
     {
@@ -590,7 +588,7 @@ void b2DynamicTree::ValidateStructure(int32_t index) const
         b2Assert(m_nodes[index].parent == NULL_NODE);
     }
 
-    const b2TreeNode* node = m_nodes + index;
+    const b2TreeNode* node = &m_nodes[index];
 
     int32_t child1 = node->child1;
     int32_t child2 = node->child2;
@@ -620,7 +618,7 @@ void b2DynamicTree::ValidateMetrics(int32_t index) const
         return;
     }
 
-    const b2TreeNode* node = m_nodes + index;
+    const b2TreeNode* node = &m_nodes[index];
 
     int32_t child1 = node->child1;
     int32_t child2 = node->child2;
@@ -676,7 +674,7 @@ int32_t b2DynamicTree::GetMaxBalance() const
     int32_t maxBalance = 0;
     for (int32_t i = 0; i < m_nodeCapacity; ++i)
     {
-        const b2TreeNode* node = m_nodes + i;
+        const b2TreeNode* node = &m_nodes[i];
         if (node->height <= 1)
         {
             continue;
@@ -744,11 +742,11 @@ void b2DynamicTree::RebuildBottomUp()
 
         int32_t index1 = nodes[iMin];
         int32_t index2 = nodes[jMin];
-        b2TreeNode* child1 = m_nodes + index1;
-        b2TreeNode* child2 = m_nodes + index2;
+        b2TreeNode* child1 = &m_nodes[index1];
+        b2TreeNode* child2 = &m_nodes[index2];
 
         int32_t parentIndex = AllocateNode();
-        b2TreeNode* parent = m_nodes + parentIndex;
+        b2TreeNode* parent = &m_nodes[parentIndex];
         parent->child1 = index1;
         parent->child2 = index2;
         parent->height = 1 + b2Max(child1->height, child2->height);

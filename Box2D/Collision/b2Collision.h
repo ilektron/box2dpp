@@ -172,6 +172,9 @@ struct b2RayCastOutput
 /// An axis aligned bounding box.
 struct b2AABB
 {
+    b2Vec2 lowerBound;  ///< the lower vertex
+    b2Vec2 upperBound;  ///< the upper vertex
+    
     /// Verify that the bounds are sorted.
     bool IsValid() const;
 
@@ -211,16 +214,21 @@ struct b2AABB
     /// Does this aabb contain the provided AABB.
     bool Contains(const b2AABB& aabb) const
     {
-        bool result = lowerBound <= aabb.lowerBound
-            && aabb.upperBound <= upperBound;
+//         bool result = lowerBound <= aabb.lowerBound
+//             && aabb.upperBound <= upperBound;
+            
+        bool result = true;
+        result = result && lowerBound[b2VecX] <= aabb.lowerBound[b2VecX];
+        result = result && lowerBound[b2VecY] <= aabb.lowerBound[b2VecY];
+        result = result && aabb.upperBound[b2VecX] <= upperBound[b2VecX];
+        result = result && aabb.upperBound[b2VecY] <= upperBound[b2VecY];
             
         return result;
     }
 
     bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input) const;
-
-    b2Vec2 lowerBound;  ///< the lower vertex
-    b2Vec2 upperBound;  ///< the upper vertex
+    
+    b2AABB() : lowerBound{{0.0f, 0.0f}}, upperBound{{0.0f, 0.0f}} {}
 };
 
 /// Compute the collision manifold between two circles.

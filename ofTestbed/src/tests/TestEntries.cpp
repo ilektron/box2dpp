@@ -22,7 +22,7 @@ namespace box2d
 
 using namespace box2d;
 
-#include "../Framework/Test.h"
+#include "../Test.h"
 
 #include "AddPair.h"
 #include "ApplyForce.h"
@@ -77,7 +77,7 @@ using namespace box2d;
 #include "VerticalStack.h"
 #include "Web.h"
 
-TestEntry g_testEntries[] = {{"Tiles", Tiles::Create},
+std::vector<TestEntry> g_testEntries = {{"Tiles", Tiles::Create},
                              {"Heavy on Light", HeavyOnLight::Create},
                              {"Heavy on Light Two", HeavyOnLightTwo::Create},
                              {"Vertical Stack", VerticalStack::Create},
@@ -128,5 +128,4 @@ TestEntry g_testEntries[] = {{"Tiles", Tiles::Create},
                              {"Dynamic Tree", DynamicTreeTest::Create},
                              {"Sensor Test", SensorTest::Create},
                              {"Varying Friction", VaryingFriction::Create},
-                             {"Add Pair Stress Test", AddPair::Create},
-                             {nullptr, nullptr}};
+                             {"Add Pair Stress Test", AddPair::Create}};

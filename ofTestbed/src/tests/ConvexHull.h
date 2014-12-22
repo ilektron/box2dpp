@@ -32,8 +32,8 @@ public:
 
     void Generate()
     {
-        b2Vec2 lowerBound(-8.0f, -8.0f);
-        b2Vec2 upperBound(8.0f, 8.0f);
+        b2Vec2 lowerBound{{-8.0f, -8.0f}};
+        b2Vec2 upperBound{{8.0f, 8.0f}};
 
         for (auto& elem : m_points)
         {
@@ -42,7 +42,7 @@ public:
 
             // Clamp onto a square to help create collinearities.
             // This will stress the convex hull algorithm.
-            b2Vec2 v(x, y);
+            b2Vec2 v{{x, y}};
             v = b2Clamp(v, lowerBound, upperBound);
             elem = v;
         }
@@ -59,11 +59,11 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_A:
+            case 'a':
                 m_auto = !m_auto;
                 break;
 
-            case GLFW_KEY_G:
+            case 'g':
                 Generate();
                 break;
         }
@@ -76,15 +76,15 @@ public:
         b2PolygonShape shape;
         shape.Set(m_points, m_count);
 
-        g_debugDraw.DrawString(5, m_textLine, "Press g to generate a new random convex hull");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Press g to generate a new random convex hull");
         m_textLine += DRAW_STRING_NEW_LINE;
 
-        g_debugDraw.DrawPolygon(shape.m_vertices, shape.m_count, b2Color(0.9f, 0.9f, 0.9f));
+        g_debugDraw.DrawPolygon(shape.GetVertices(), b2Color(0.9f, 0.9f, 0.9f));
 
         for (int32_t i = 0; i < m_count; ++i)
         {
             g_debugDraw.DrawPoint(m_points[i], 3.0f, b2Color(0.3f, 0.9f, 0.3f));
-            g_debugDraw.DrawString(m_points[i] + b2Vec2(0.05f, 0.05f), "%d", i);
+            g_debugDraw.DrawString(m_points[i] + b2Vec2{{0.05f, 0.05f}}, "%d", i);
         }
 
         if (shape.Validate() == false)

@@ -31,12 +31,12 @@ public:
         // Create ground body.
         {
             b2BodyDef bodyDef;
-            bodyDef.position.Set(0.0f, 20.0f);
+            bodyDef.position = {{0.0f, 20.0f}};
             ground = m_world->CreateBody(&bodyDef);
         }
 
         float32 a = 0.5f;
-        b2Vec2 h(0.0f, a);
+        b2Vec2 h{{0.0f, a}};
 
         b2Body* root = AddNode(ground, b2Vec2_zero, 0, 3.0f, a);
 
@@ -52,7 +52,7 @@ public:
                     float32 a)
     {
         float32 density = 20.0f;
-        b2Vec2 h(0.0f, a);
+        b2Vec2 h{{0.0f, a}};
 
         b2Vec2 p = parent->GetPosition() + localAnchor - h;
 
@@ -70,8 +70,8 @@ public:
             return body;
         }
 
-        b2Vec2 a1 = b2Vec2(offset, -a);
-        b2Vec2 a2 = b2Vec2(-offset, -a);
+        b2Vec2 a1{{offset, -a}};
+        b2Vec2 a2{{-offset, -a}};
         b2Body* body1 = AddNode(body, a1, depth + 1, 0.5f * offset, a);
         b2Body* body2 = AddNode(body, a2, depth + 1, 0.5f * offset, a);
 

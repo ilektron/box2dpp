@@ -20,10 +20,12 @@
 #define TEST_H
 
 #include <box2d11/Box2D/Box2D.h>
-#include "ofxDebugDraw.h"
+#include "ofxB2Draw.h"
 
 #include <stdlib.h>
 
+using box2d::b2Vec2;
+using box2d::b2AABB;
 using box2d::float32;
 using box2d::b2Fixture;
 using box2d::b2PointState;
@@ -42,7 +44,7 @@ struct Settings;
 typedef Test* TestCreateFcn();
 
 #define RAND_LIMIT 32767
-#define DRAW_STRING_NEW_LINE 16
+#define DRAW_STRING_NEW_LINE 16.0f
 
 /// Random number in range [-1,1]
 inline float32 RandomFloat()
@@ -111,17 +113,17 @@ struct Settings
 
 struct TestEntry
 {
-    const char* name;
+    std::string name;
     TestCreateFcn* createFcn;
 };
 
-extern TestEntry g_testEntries[];
+extern std::vector<TestEntry> g_testEntries;
 // This is called when a joint in the world is implicitly destroyed
 // because an attached body is destroyed. This gives us a chance to
 // nullify the mouse joint.
 class DestructionListener : public box2d::b2DestructionListener
 {
-   public:
+public:
     void SayGoodbye(b2Fixture* fixture) override
     {
         B2_NOT_USED(fixture);
@@ -147,12 +149,13 @@ struct ContactPoint
 
 class Test : public box2d::b2ContactListener
 {
-   public:
+public:
     Test();
     virtual ~Test();
 
-    void DrawTitle(const char* string);
+    void DrawTitle(std::string title);
     virtual void Step(Settings* settings);
+    virtual void Draw(Settings* settings);
     virtual void Keyboard(int key)
     {
         B2_NOT_USED(key);
@@ -195,7 +198,7 @@ class Test : public box2d::b2ContactListener
 
     void ShiftOrigin(const b2Vec2& newOrigin);
 
-   protected:
+protected:
     friend class DestructionListener;
     friend class BoundaryListener;
     friend class ContactListener;

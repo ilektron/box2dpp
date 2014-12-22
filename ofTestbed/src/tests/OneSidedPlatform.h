@@ -37,14 +37,14 @@ public:
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-20.0f, 0.0f), b2Vec2(20.0f, 0.0f));
+            shape.Set({{-20.0f, 0.0f}}, {{20.0f, 0.0f}});
             ground->CreateFixture(&shape, 0.0f);
         }
 
         // Platform
         {
             b2BodyDef bd;
-            bd.position.Set(0.0f, 10.0f);
+            bd.position = {{0.0f, 10.0f}};
             b2Body* body = m_world->CreateBody(&bd);
 
             b2PolygonShape shape;
@@ -59,15 +59,15 @@ public:
         {
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(0.0f, 12.0f);
+            bd.position = {{0.0f, 12.0f}};
             b2Body* body = m_world->CreateBody(&bd);
 
             m_radius = 0.5f;
             b2CircleShape shape;
-            shape.m_radius = m_radius;
+            shape.SetRadius( m_radius);
             m_character = body->CreateFixture(&shape, 20.0f);
 
-            body->SetLinearVelocity(b2Vec2(0.0f, -50.0f));
+            body->SetLinearVelocity({{0.0f, -50.0f}});
 
             m_state = e_unknown;
         }
@@ -93,7 +93,7 @@ public:
 #if 1
         b2Vec2 position = m_character->GetBody()->GetPosition();
 
-        if (position.y < m_top + m_radius - 3.0f * LINEAR_SLOP)
+        if (position[b2VecY] < m_top + m_radius - 3.0f * LINEAR_SLOP)
         {
             contact->SetEnabled(false);
         }
@@ -109,11 +109,11 @@ public:
     void Step(Settings* settings) override
     {
         Test::Step(settings);
-        g_debugDraw.DrawString(5, m_textLine, "Press: (c) create a shape, (d) destroy a shape.");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Press: (c) create a shape, (d) destroy a shape.");
         m_textLine += DRAW_STRING_NEW_LINE;
 
         b2Vec2 v = m_character->GetBody()->GetLinearVelocity();
-        g_debugDraw.DrawString(5, m_textLine, "Character Linear Velocity: %f", v.y);
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Character Linear Velocity: %f", v[b2VecY]);
         m_textLine += DRAW_STRING_NEW_LINE;
     }
 

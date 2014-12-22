@@ -1211,13 +1211,13 @@ void b2World::DrawDebugData()
                 {
                     b2FixtureProxy* proxy = f->m_proxies + i;
                     b2AABB aabb = bp->GetFatAABB(proxy->proxyId);
-                    b2Vec2 vs[4];
+                    std::vector<b2Vec2> vs(4);
                     vs[0] = {{aabb.lowerBound[b2VecX], aabb.lowerBound[b2VecY]}};
                     vs[1] = {{aabb.upperBound[b2VecX], aabb.lowerBound[b2VecY]}};
                     vs[2] = {{aabb.upperBound[b2VecX], aabb.upperBound[b2VecY]}};
                     vs[3] = {{aabb.lowerBound[b2VecX], aabb.upperBound[b2VecY]}};
 
-                    g_debugDraw->DrawPolygon(vs, 4, color);
+                    g_debugDraw->DrawPolygon(vs, color);
                 }
             }
         }

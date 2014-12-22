@@ -34,10 +34,10 @@ public:
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+            shape.Set({{-40.0f, 0.0f}}, {{40.0f, 0.0f}});
             ground->CreateFixture(&shape, 0.0f);
 
-            shape.Set(b2Vec2(20.0f, 0.0f), b2Vec2(20.0f, 20.0f));
+            shape.Set({{20.0f, 0.0f}}, {{20.0f, 20.0f}});
             ground->CreateFixture(&shape, 0.0f);
         }
 
@@ -66,7 +66,7 @@ public:
                 float32 x = 0.0f;
                 // float32 x = RandomFloat(-0.02f, 0.02f);
                 // float32 x = i % 2 == 0 ? -0.01f : 0.01f;
-                bd.position.Set(xs[j] + x, 0.55f + 1.1f * i);
+                bd.position = {{xs[j] + x, 0.55f + 1.1f * i}};
                 b2Body* body = m_world->CreateBody(&bd);
 
                 m_bodies[n] = body;
@@ -82,7 +82,7 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_COMMA:
+            case ',':
                 if (m_bullet != nullptr)
                 {
                     m_world->DestroyBody(m_bullet);
@@ -91,7 +91,7 @@ public:
 
                 {
                     b2CircleShape shape;
-                    shape.m_radius = 0.25f;
+                    shape.SetRadius( 0.25f);
 
                     b2FixtureDef fd;
                     fd.shape = &shape;
@@ -101,16 +101,16 @@ public:
                     b2BodyDef bd;
                     bd.type = b2BodyType::DYNAMIC_BODY;
                     bd.bullet = true;
-                    bd.position.Set(-31.0f, 5.0f);
+                    bd.position = {{31.0f, 5.0f}};
 
                     m_bullet = m_world->CreateBody(&bd);
                     m_bullet->CreateFixture(&fd);
 
-                    m_bullet->SetLinearVelocity(b2Vec2(400.0f, 0.0f));
+                    m_bullet->SetLinearVelocity({{400.0f, 0.0f}});
                 }
                 break;
 
-            case GLFW_KEY_B:
+            case 'b':
                 g_blockSolve = !g_blockSolve;
                 break;
         }
@@ -119,9 +119,9 @@ public:
     void Step(Settings* settings) override
     {
         Test::Step(settings);
-        g_debugDraw.DrawString(5, m_textLine, "Press: (,) to launch a bullet.");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Press: (,) to launch a bullet.");
         m_textLine += DRAW_STRING_NEW_LINE;
-        g_debugDraw.DrawString(5, m_textLine, "Blocksolve = %d", g_blockSolve);
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Blocksolve = %d", g_blockSolve);
         // if (m_stepCount == 300)
         //{
         //	if (m_bullet != NULL)
@@ -132,7 +132,7 @@ public:
 
         //	{
         //		b2CircleShape shape;
-        //		shape.m_radius = 0.25f;
+        //		shape.SetRadius( 0.25f);
 
         //		b2FixtureDef fd;
         //		fd.shape = &shape;
@@ -142,12 +142,12 @@ public:
         //		b2BodyDef bd;
         //		bd.type = b2BodyType::DYNAMIC_BODY;
         //		bd.bullet = true;
-        //		bd.position.Set(-31.0f, 5.0f);
+        //		bd.position = {{31.0f, 5.0f}};
 
         //		m_bullet = m_world->CreateBody(&bd);
         //		m_bullet->CreateFixture(&fd);
 
-        //		m_bullet->SetLinearVelocity(b2Vec2(400.0f, 0.0f));
+        //		m_bullet->SetLinearVelocity({{400.0f, 0.0f}});
         //	}
         //}
     }

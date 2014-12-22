@@ -153,7 +153,7 @@ private:
 
     int32_t m_root;
 
-    b2TreeNode* m_nodes;
+    std::vector<b2TreeNode> m_nodes;
     int32_t m_nodeCount;
     int32_t m_nodeCapacity;
 
@@ -192,7 +192,7 @@ inline void b2DynamicTree::Query(T* callback, const b2AABB& aabb) const
             continue;
         }
 
-        const b2TreeNode* node = m_nodes + nodeId;
+        const b2TreeNode* node = &m_nodes[nodeId];
 
         if (b2TestOverlap(node->aabb, aabb))
         {
@@ -251,7 +251,7 @@ inline void b2DynamicTree::RayCast(T* callback, const b2RayCastInput& input) con
             continue;
         }
 
-        const b2TreeNode* node = m_nodes + nodeId;
+        const b2TreeNode* node = &m_nodes[nodeId];
 
         if (b2TestOverlap(node->aabb, segmentAABB) == false)
         {

@@ -38,7 +38,7 @@ public:
             ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+            shape.Set({{-40.0f, 0.0f}}, {{40.0f, 0.0f}});
             ground->CreateFixture(&shape, 0.0f);
         }
 
@@ -58,20 +58,20 @@ public:
 
             const int32_t N = 10;
             const float32 y = 15.0f;
-            m_ropeDef.localAnchorA.Set(0.0f, y);
+            m_ropeDef.localAnchorA = {{0.0f, y}};
 
             b2Body* prevBody = ground;
             for (int32_t i = 0; i < N; ++i)
             {
                 b2BodyDef bd;
                 bd.type = b2BodyType::DYNAMIC_BODY;
-                bd.position.Set(0.5f + 1.0f * i, y);
+                bd.position = {{0.5f + 1.0f * i, y}};
                 if (i == N - 1)
                 {
                     shape.SetAsBox(1.5f, 1.5f);
                     fd.density = 100.0f;
                     fd.filter.categoryBits = 0x0002;
-                    bd.position.Set(1.0f * i, y);
+                    bd.position = {{1.0f * i, y}};
                     bd.angularDamping = 0.4f;
                 }
 
@@ -79,7 +79,7 @@ public:
 
                 body->CreateFixture(&fd);
 
-                b2Vec2 anchor(float32(i), y);
+                b2Vec2 anchor{{float32(i), y}};
                 jd.Initialize(prevBody, body, anchor);
                 m_world->CreateJoint(&jd);
 
@@ -103,7 +103,7 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_J:
+            case 'j':
                 if (m_rope)
                 {
                     m_world->DestroyJoint(m_rope);
@@ -120,15 +120,15 @@ public:
     void Step(Settings* settings) override
     {
         Test::Step(settings);
-        g_debugDraw.DrawString(5, m_textLine, "Press (j) to toggle the rope joint.");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Press (j) to toggle the rope joint.");
         m_textLine += DRAW_STRING_NEW_LINE;
         if (m_rope)
         {
-            g_debugDraw.DrawString(5, m_textLine, "Rope ON");
+            g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Rope ON");
         }
         else
         {
-            g_debugDraw.DrawString(5, m_textLine, "Rope OFF");
+            g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Rope OFF");
         }
         m_textLine += DRAW_STRING_NEW_LINE;
     }

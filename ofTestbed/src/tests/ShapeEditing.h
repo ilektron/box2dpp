@@ -29,17 +29,17 @@ public:
             b2Body* ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+            shape.Set({{-40.0f, 0.0f}}, {{40.0f, 0.0f}});
             ground->CreateFixture(&shape, 0.0f);
         }
 
         b2BodyDef bd;
         bd.type = b2BodyType::DYNAMIC_BODY;
-        bd.position.Set(0.0f, 10.0f);
+        bd.position = {{0.0f, 10.0f}};
         m_body = m_world->CreateBody(&bd);
 
         b2PolygonShape shape;
-        shape.SetAsBox(4.0f, 4.0f, b2Vec2(0.0f, 0.0f), 0.0f);
+        shape.SetAsBox(4.0f, 4.0f, {{0.0f, 0.0f}}, 0.0f);
         m_fixture1 = m_body->CreateFixture(&shape, 10.0f);
 
         m_fixture2 = nullptr;
@@ -51,18 +51,18 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_C:
+            case 'c':
                 if (m_fixture2 == nullptr)
                 {
                     b2CircleShape shape;
-                    shape.m_radius = 3.0f;
-                    shape.m_p.Set(0.5f, -4.0f);
+                    shape.SetRadius( 3.0f);
+                    shape.m_p = {{0.5f, -4.0f}};
                     m_fixture2 = m_body->CreateFixture(&shape, 10.0f);
                     m_body->SetAwake(true);
                 }
                 break;
 
-            case GLFW_KEY_D:
+            case 'd':
                 if (m_fixture2 != nullptr)
                 {
                     m_body->DestroyFixture(m_fixture2);
@@ -71,7 +71,7 @@ public:
                 }
                 break;
 
-            case GLFW_KEY_S:
+            case 's':
                 if (m_fixture2 != nullptr)
                 {
                     m_sensor = !m_sensor;
@@ -84,9 +84,9 @@ public:
     void Step(Settings* settings) override
     {
         Test::Step(settings);
-        g_debugDraw.DrawString(5, m_textLine, "Press: (c) create a shape, (d) destroy a shape.");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Press: (c) create a shape, (d) destroy a shape.");
         m_textLine += DRAW_STRING_NEW_LINE;
-        g_debugDraw.DrawString(5, m_textLine, "sensor = %d", m_sensor);
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "sensor = %d", m_sensor);
         m_textLine += DRAW_STRING_NEW_LINE;
     }
 

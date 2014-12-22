@@ -33,11 +33,11 @@ public:
             ground = m_world->CreateBody(&bd);
 
             b2Vec2 vs[5];
-            vs[0].Set(0.0f, -2.0f);
-            vs[1].Set(8.0f, 6.0f);
-            vs[2].Set(8.0f, 20.0f);
-            vs[3].Set(-8.0f, 20.0f);
-            vs[4].Set(-8.0f, 6.0f);
+            vs[0] = {{0.0f, -2.0f}};
+            vs[1] = {{8.0f, 6.0f}};
+            vs[2] = {{8.0f, 20.0f}};
+            vs[3] = {{-8.0f, 20.0f}};
+            vs[4] = {{-8.0f, 6.0f}};
 
             b2ChainShape loop;
             loop.CreateLoop(vs, 5);
@@ -49,7 +49,7 @@ public:
 
         // Flippers
         {
-            b2Vec2 p1(-2.0f, 0.0f), p2(2.0f, 0.0f);
+            b2Vec2 p1{{-2.0f, 0.0f}}, p2{{2.0f, 0.0f}};
 
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
@@ -95,14 +95,14 @@ public:
         // Circle character
         {
             b2BodyDef bd;
-            bd.position.Set(1.0f, 15.0f);
+            bd.position = {{1.0f, 15.0f}};
             bd.type = b2BodyType::DYNAMIC_BODY;
             bd.bullet = true;
 
             m_ball = m_world->CreateBody(&bd);
 
             b2CircleShape shape;
-            shape.m_radius = 0.2f;
+            shape.SetRadius( 0.2f);
 
             b2FixtureDef fd;
             fd.shape = &shape;
@@ -128,7 +128,7 @@ public:
 
         Test::Step(settings);
 
-        g_debugDraw.DrawString(5, m_textLine, "Press 'a' to control the flippers");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Press 'a' to control the flippers");
         m_textLine += DRAW_STRING_NEW_LINE;
     }
 
@@ -136,7 +136,7 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_A:
+            case 'a':
                 m_button = true;
                 break;
         }
@@ -146,7 +146,7 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_A:
+            case 'a':
                 m_button = false;
                 break;
         }

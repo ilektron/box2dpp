@@ -31,7 +31,7 @@ public:
 
         for (int32_t i = 0; i < N; ++i)
         {
-            vertices[i].Set(0.0f, 20.0f - 0.25f * i);
+            vertices[i] = {{0.0f, 20.0f - 0.25f * i}};
             masses[i] = 1.0f;
         }
         masses[0] = 0.0f;
@@ -40,7 +40,7 @@ public:
         b2RopeDef def;
         def.vertices = vertices;
         def.count = N;
-        def.gravity.Set(0.0f, -10.0f);
+        def.gravity = {{0.0f, -10.0f}};
         def.masses = masses;
         def.damping = 0.1f;
         def.k2 = 1.0f;
@@ -83,9 +83,9 @@ public:
 
         m_rope.Draw(&m_debugDraw);
 
-        m_debugDraw.DrawString(5, m_textLine, "Press (q,e) to adjust target angle");
+        m_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Press (q,e) to adjust target angle");
         m_textLine += DRAW_STRING_NEW_LINE;
-        m_debugDraw.DrawString(5, m_textLine, "Target angle = %g degrees", m_angle * 180.0f / B2_PI);
+        m_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Target angle = %g degrees", m_angle * 180.0f / B2_PI);
         m_textLine += DRAW_STRING_NEW_LINE;
     }
 

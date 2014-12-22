@@ -31,7 +31,7 @@ public:
         // Ground body
         {
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-50.0f, 0.0f), b2Vec2(50.0f, 0.0f));
+            shape.Set({{-50.0f, 0.0f}}, {{50.0f, 0.0f}});
 
             b2FixtureDef sd;
             sd.shape = &shape;
@@ -60,7 +60,7 @@ public:
 
         b2BodyDef triangleBodyDef;
         triangleBodyDef.type = b2BodyType::DYNAMIC_BODY;
-        triangleBodyDef.position.Set(RandomFloat(xLo, xHi), RandomFloat(yLo, yHi));
+        triangleBodyDef.position = {{RandomFloat(xLo, xHi), RandomFloat(yLo, yHi)}};
 
         b2Body* body1 = m_world->CreateBody(&triangleBodyDef);
         body1->CreateFixture(&triangleShapeDef);
@@ -71,7 +71,7 @@ public:
         vertices[2] *= 2.0f;
         polygon.Set(vertices, 3);
 
-        triangleBodyDef.position.Set(RandomFloat(xLo, xHi), RandomFloat(yLo, yHi));
+        triangleBodyDef.position = {{RandomFloat(xLo, xHi), RandomFloat(yLo, yHi)}};
 
         b2Body* body2 = m_world->CreateBody(&triangleBodyDef);
         body2->CreateFixture(&triangleShapeDef);
@@ -85,21 +85,21 @@ public:
 
         b2BodyDef boxBodyDef;
         boxBodyDef.type = b2BodyType::DYNAMIC_BODY;
-        boxBodyDef.position.Set(RandomFloat(xLo, xHi), RandomFloat(yLo, yHi));
+        boxBodyDef.position = {{RandomFloat(xLo, xHi), RandomFloat(yLo, yHi)}};
 
         b2Body* body3 = m_world->CreateBody(&boxBodyDef);
         body3->CreateFixture(&boxShapeDef);
 
         // Large box (recycle definitions)
         polygon.SetAsBox(2.0f, 1.0f);
-        boxBodyDef.position.Set(RandomFloat(xLo, xHi), RandomFloat(yLo, yHi));
+        boxBodyDef.position = {{RandomFloat(xLo, xHi), RandomFloat(yLo, yHi)}};
 
         b2Body* body4 = m_world->CreateBody(&boxBodyDef);
         body4->CreateFixture(&boxShapeDef);
 
         // Small circle
         b2CircleShape circle;
-        circle.m_radius = 1.0f;
+        circle.SetRadius( 1.0f);
 
         b2FixtureDef circleShapeDef;
         circleShapeDef.shape = &circle;
@@ -107,14 +107,14 @@ public:
 
         b2BodyDef circleBodyDef;
         circleBodyDef.type = b2BodyType::DYNAMIC_BODY;
-        circleBodyDef.position.Set(RandomFloat(xLo, xHi), RandomFloat(yLo, yHi));
+        circleBodyDef.position = {{RandomFloat(xLo, xHi), RandomFloat(yLo, yHi)}};
 
         b2Body* body5 = m_world->CreateBody(&circleBodyDef);
         body5->CreateFixture(&circleShapeDef);
 
         // Large circle
-        circle.m_radius *= 2.0f;
-        circleBodyDef.position.Set(RandomFloat(xLo, xHi), RandomFloat(yLo, yHi));
+        circle.SetRadius( 2.0f);
+        circleBodyDef.position = {{RandomFloat(xLo, xHi), RandomFloat(yLo, yHi)}};
 
         b2Body* body6 = m_world->CreateBody(&circleBodyDef);
         body6->CreateFixture(&circleShapeDef);

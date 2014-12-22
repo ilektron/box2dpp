@@ -62,7 +62,7 @@ public:
                 float32 y2 = 2.0f * cosf(x2 / 10.0f * B2_PI);
 
                 b2EdgeShape shape;
-                shape.Set(b2Vec2(x1, y1), b2Vec2(x2, y2));
+                shape.Set({{x1, y1}}, {{x2, y2}});
                 ground->CreateFixture(&shape, 0.0f);
 
                 x1 = x2;
@@ -72,17 +72,17 @@ public:
 
         {
             b2Vec2 vertices[3];
-            vertices[0].Set(-0.5f, 0.0f);
-            vertices[1].Set(0.5f, 0.0f);
-            vertices[2].Set(0.0f, 1.5f);
+            vertices[0] = {{-0.5f, 0.0f}};
+            vertices[1] = {{0.5f, 0.0f}};
+            vertices[2] = {{0.0f, 1.5f}};
             m_polygons[0].Set(vertices, 3);
         }
 
         {
             b2Vec2 vertices[3];
-            vertices[0].Set(-0.1f, 0.0f);
-            vertices[1].Set(0.1f, 0.0f);
-            vertices[2].Set(0.0f, 1.5f);
+            vertices[0] = {{-0.1f, 0.0f}};
+            vertices[1] = {{0.1f, 0.0f}};
+            vertices[2] = {{0.0f, 1.5f}};
             m_polygons[1].Set(vertices, 3);
         }
 
@@ -92,14 +92,14 @@ public:
             float32 s = b2Sqrt(2.0f) * b;
 
             b2Vec2 vertices[8];
-            vertices[0].Set(0.5f * s, 0.0f);
-            vertices[1].Set(0.5f * w, b);
-            vertices[2].Set(0.5f * w, b + s);
-            vertices[3].Set(0.5f * s, w);
-            vertices[4].Set(-0.5f * s, w);
-            vertices[5].Set(-0.5f * w, b + s);
-            vertices[6].Set(-0.5f * w, b);
-            vertices[7].Set(-0.5f * s, 0.0f);
+            vertices[0] = {{0.5f * s, 0.0f}};
+            vertices[1] = {{0.5f * w, b}};
+            vertices[2] = {{0.5f * w, b + s}};
+            vertices[3] = {{0.5f * s, w}};
+            vertices[4] = {{-0.5f * s, w}};
+            vertices[5] = {{-0.5f * w, b + s}};
+            vertices[6] = {{-0.5f * w, b}};
+            vertices[7] = {{-0.5f * s, 0.0f}};
 
             m_polygons[2].Set(vertices, 8);
         }
@@ -109,7 +109,7 @@ public:
         }
 
         {
-            m_circle.m_radius = 0.5f;
+            m_circle.SetRadius( 0.5f);
         }
 
         m_bodyIndex = 0;
@@ -130,7 +130,7 @@ public:
 
         float32 x = RandomFloat(-10.0f, 10.0f);
         float32 y = RandomFloat(10.0f, 20.0f);
-        bd.position.Set(x, y);
+        bd.position = {{x, y}};
         bd.angle = RandomFloat(-B2_PI, B2_PI);
         bd.type = b2BodyType::DYNAMIC_BODY;
 
@@ -178,15 +178,15 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_1:
-            case GLFW_KEY_2:
-            case GLFW_KEY_3:
-            case GLFW_KEY_4:
-            case GLFW_KEY_5:
-                Create(key - GLFW_KEY_1);
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+                Create(key - '1');
                 break;
 
-            case GLFW_KEY_D:
+            case 'd':
                 DestroyBody();
                 break;
         }
@@ -197,12 +197,12 @@ public:
         bool advanceRay = settings->pause == 0 || settings->singleStep;
 
         Test::Step(settings);
-        g_debugDraw.DrawString(5, m_textLine, "Press 1-5 to drop stuff");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Press 1-5 to drop stuff");
         m_textLine += DRAW_STRING_NEW_LINE;
 
         float32 L = 25.0f;
-        b2Vec2 point1(0.0f, 10.0f);
-        b2Vec2 d(L * cosf(m_angle), -L * b2Abs(sinf(m_angle)));
+        b2Vec2 point1{{0.0f, 10.0f}};
+        b2Vec2 d{{L * cosf(m_angle), -L * std::abs(sinf(m_angle))}};
         b2Vec2 point2 = point1 + d;
 
         EdgeShapesCallback callback;

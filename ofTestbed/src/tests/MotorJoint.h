@@ -33,7 +33,7 @@ public:
             ground = m_world->CreateBody(&bd);
 
             b2EdgeShape shape;
-            shape.Set(b2Vec2(-20.0f, 0.0f), b2Vec2(20.0f, 0.0f));
+            shape.Set({{-20.0f, 0.0f}}, {{20.0f, 0.0f}});
 
             b2FixtureDef fd;
             fd.shape = &shape;
@@ -45,7 +45,7 @@ public:
         {
             b2BodyDef bd;
             bd.type = b2BodyType::DYNAMIC_BODY;
-            bd.position.Set(0.0f, 8.0f);
+            bd.position = {{0.0f, 8.0f}};
             b2Body* body = m_world->CreateBody(&bd);
 
             b2PolygonShape shape;
@@ -72,7 +72,7 @@ public:
     {
         switch (key)
         {
-            case GLFW_KEY_S:
+            case 's':
                 m_go = !m_go;
                 break;
         }
@@ -86,8 +86,8 @@ public:
         }
 
         b2Vec2 linearOffset;
-        linearOffset.x = 6.0f * sinf(2.0f * m_time);
-        linearOffset.y = 8.0f + 4.0f * sinf(1.0f * m_time);
+        linearOffset[b2VecX] = 6.0f * sinf(2.0f * m_time);
+        linearOffset[b2VecY] = 8.0f + 4.0f * sinf(1.0f * m_time);
 
         float32 angularOffset = 4.0f * m_time;
 
@@ -97,7 +97,7 @@ public:
         g_debugDraw.DrawPoint(linearOffset, 4.0f, b2Color(0.9f, 0.9f, 0.9f));
 
         Test::Step(settings);
-        g_debugDraw.DrawString(5, m_textLine, "Keys: (s) pause");
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Keys: (s) pause");
         m_textLine += 15;
     }
 
