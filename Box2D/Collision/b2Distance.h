@@ -27,8 +27,12 @@ namespace box2d
 {
 class b2Shape;
 
-extern int32_t b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
-
+struct b2GJKState
+{
+    static int32_t b2_gjkCalls;
+    static int32_t b2_gjkIters;
+    static int32_t b2_gjkMaxIters;
+};
 /// A distance proxy is used by the GJK algorithm.
 /// It encapsulates any shape.
 struct b2DistanceProxy

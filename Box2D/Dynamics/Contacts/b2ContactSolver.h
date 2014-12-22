@@ -26,8 +26,6 @@
 namespace box2d
 {
     
-extern bool g_blockSolve = true;
-    
 class b2Contact;
 class b2Body;
 class b2StackAllocator;
@@ -108,6 +106,8 @@ public:
     b2ContactVelocityConstraint* m_velocityConstraints;
     b2Contact** m_contacts;
     int m_count;
+    
+    static bool m_blockSolve;
 };
 }
 

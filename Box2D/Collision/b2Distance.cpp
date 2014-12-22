@@ -24,11 +24,9 @@
 
 using namespace box2d;
 
-namespace box2d 
-{
-    // GJK using Voronoi regions (Christer Ericson) and Barycentric coordinates.
-    int32_t b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
-}
+int32_t b2GJKState::b2_gjkCalls = 0;
+int32_t b2GJKState::b2_gjkIters = 0;
+int32_t b2GJKState::b2_gjkMaxIters = 0;
 
 void b2DistanceProxy::Set(const b2Shape* shape, int32_t index)
 {
@@ -448,7 +446,7 @@ void b2Simplex::Solve3()
 void box2d::b2Distance(b2DistanceOutput* output, b2SimplexCache* cache,
                        const b2DistanceInput* input)
 {
-    ++b2_gjkCalls;
+    ++b2GJKState::b2_gjkCalls;
 
     const b2DistanceProxy* proxyA = &input->proxyA;
     const b2DistanceProxy* proxyB = &input->proxyB;
@@ -543,7 +541,7 @@ void box2d::b2Distance(b2DistanceOutput* output, b2SimplexCache* cache,
 
         // Iteration count is equated to the number of support point calls.
         ++iter;
-        ++b2_gjkIters;
+        ++b2GJKState::b2_gjkIters;
 
         // Check for duplicate support points. This is the main termination
         // criteria.
@@ -567,7 +565,7 @@ void box2d::b2Distance(b2DistanceOutput* output, b2SimplexCache* cache,
         ++simplex.m_count;
     }
 
-    b2_gjkMaxIters = b2Max(b2_gjkMaxIters, iter);
+    b2GJKState::b2_gjkMaxIters = b2Max(b2GJKState::b2_gjkMaxIters, iter);
 
     // Prepare output.
     simplex.GetWitnessPoints(&output->pointA, &output->pointB);
