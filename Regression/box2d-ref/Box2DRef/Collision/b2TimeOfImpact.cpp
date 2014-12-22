@@ -25,6 +25,9 @@
 
 #include <stdio.h>
 
+namespace box2dref
+{
+
 float32 b2_toiTime, b2_toiMaxTime;
 int32 b2_toiCalls, b2_toiIters, b2_toiMaxIters;
 int32 b2_toiRootIters, b2_toiMaxRootIters;
@@ -483,4 +486,5 @@ void b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 	float32 time = timer.GetMilliseconds();
 	b2_toiMaxTime = b2Max(b2_toiMaxTime, time);
 	b2_toiTime += time;
+}
 }

@@ -21,6 +21,9 @@
 #include <Box2DRef/Common/b2Settings.h>
 #include <string.h>
 
+namespace box2dref
+{
+
 /// This is a growable LIFO stack with an initial capacity of N.
 /// If the stack size exceeds the initial capacity, the heap is used
 /// to increase the size of the stack.
@@ -80,6 +83,6 @@ private:
 	int32 m_count;
 	int32 m_capacity;
 };
-
+}
 
 #endif

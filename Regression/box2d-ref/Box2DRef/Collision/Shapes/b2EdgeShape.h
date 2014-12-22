@@ -21,6 +21,9 @@
 
 #include <Box2DRef/Collision/Shapes/b2Shape.h>
 
+namespace box2dref
+{
+
 /// A line segment (edge) shape. These can be connected in chains or loops
 /// to other edge shapes. The connectivity information is used to ensure
 /// correct contact normals.
@@ -69,6 +72,7 @@ inline b2EdgeShape::b2EdgeShape()
 	m_vertex3.y = 0.0f;
 	m_hasVertex0 = false;
 	m_hasVertex3 = false;
+}
 }
 
 #endif

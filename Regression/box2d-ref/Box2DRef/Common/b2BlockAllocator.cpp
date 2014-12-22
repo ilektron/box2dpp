@@ -21,6 +21,9 @@
 #include <string.h>
 #include <stddef.h>
 
+namespace box2dref
+{
+
 int32 b2BlockAllocator::s_blockSizes[b2_blockSizes] = 
 {
 	16,		// 0
@@ -212,4 +215,6 @@ void b2BlockAllocator::Clear()
 	memset(m_chunks, 0, m_chunkSpace * sizeof(b2Chunk));
 
 	memset(m_freeLists, 0, sizeof(m_freeLists));
+}
+
 }

@@ -26,6 +26,8 @@
 #include <Box2DRef/Dynamics/b2WorldCallbacks.h>
 #include <Box2DRef/Dynamics/b2TimeStep.h>
 
+namespace box2dref
+{
 struct b2AABB;
 struct b2BodyDef;
 struct b2Color;
@@ -350,5 +352,5 @@ inline const b2Profile& b2World::GetProfile() const
 {
 	return m_profile;
 }
-
+}
 #endif

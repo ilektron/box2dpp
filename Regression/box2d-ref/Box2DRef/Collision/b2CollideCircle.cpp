@@ -20,6 +20,8 @@
 #include <Box2DRef/Collision/Shapes/b2CircleShape.h>
 #include <Box2DRef/Collision/Shapes/b2PolygonShape.h>
 
+namespace box2dref
+{
 void b2CollideCircles(
 	b2Manifold* manifold,
 	const b2CircleShape* circleA, const b2Transform& xfA,
@@ -151,4 +153,6 @@ void b2CollidePolygonAndCircle(
 		manifold->points[0].localPoint = circleB->m_p;
 		manifold->points[0].id.key = 0;
 	}
+}
+
 }

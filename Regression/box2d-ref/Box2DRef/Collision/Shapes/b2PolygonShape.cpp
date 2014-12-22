@@ -19,6 +19,9 @@
 #include <Box2DRef/Collision/Shapes/b2PolygonShape.h>
 #include <new>
 
+namespace box2dref
+{
+
 b2Shape* b2PolygonShape::Clone(b2BlockAllocator* allocator) const
 {
 	void* mem = allocator->Allocate(sizeof(b2PolygonShape));
@@ -464,4 +467,5 @@ bool b2PolygonShape::Validate() const
 	}
 
 	return true;
+}
 }

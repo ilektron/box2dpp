@@ -21,6 +21,9 @@
 #include <new>
 #include <string.h>
 
+namespace box2dref
+{
+
 b2ChainShape::~b2ChainShape()
 {
 	Clear();
@@ -190,4 +193,7 @@ void b2ChainShape::ComputeMass(b2MassData* massData, float32 density) const
 	massData->mass = 0.0f;
 	massData->center.SetZero();
 	massData->I = 0.0f;
+}
+
+    
 }

@@ -21,6 +21,9 @@
 
 #include <Box2DRef/Dynamics/Joints/b2Joint.h>
 
+namespace box2dref
+{
+
 /// Gear joint definition. This definition requires two existing
 /// revolute or prismatic joints (any combination will work).
 struct b2GearJointDef : public b2JointDef
@@ -122,4 +125,5 @@ protected:
 	float32 m_mass;
 };
 
+}
 #endif

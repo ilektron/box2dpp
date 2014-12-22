@@ -19,6 +19,8 @@
 #include <Box2DRef/Rope/b2Rope.h>
 #include <Box2DRef/Common/b2Draw.h>
 
+namespace box2dref
+{
 b2Rope::b2Rope()
 {
 	m_count = 0;
@@ -256,4 +258,5 @@ void b2Rope::Draw(b2Draw* draw) const
 	{
 		draw->DrawSegment(m_ps[i], m_ps[i+1], c);
 	}
+}
 }

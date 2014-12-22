@@ -19,6 +19,9 @@
 #include <Box2DRef/Collision/Shapes/b2CircleShape.h>
 #include <new>
 
+namespace box2dref
+{
+
 b2Shape* b2CircleShape::Clone(b2BlockAllocator* allocator) const
 {
 	void* mem = allocator->Allocate(sizeof(b2CircleShape));
@@ -96,4 +99,5 @@ void b2CircleShape::ComputeMass(b2MassData* massData, float32 density) const
 
 	// inertia about the local origin
 	massData->I = massData->mass * (0.5f * m_radius * m_radius + b2Dot(m_p, m_p));
+}
 }

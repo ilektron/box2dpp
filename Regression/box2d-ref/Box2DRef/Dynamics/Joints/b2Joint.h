@@ -21,6 +21,8 @@
 
 #include <Box2DRef/Common/b2Math.h>
 
+namespace box2dref
+{
 class b2Body;
 class b2Joint;
 struct b2SolverData;
@@ -221,6 +223,7 @@ inline void b2Joint::SetUserData(void* data)
 inline bool b2Joint::GetCollideConnected() const
 {
 	return m_collideConnected;
+}
 }
 
 #endif

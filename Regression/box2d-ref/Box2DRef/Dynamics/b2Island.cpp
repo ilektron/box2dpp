@@ -27,6 +27,8 @@
 #include <Box2DRef/Common/b2StackAllocator.h>
 #include <Box2DRef/Common/b2Timer.h>
 
+namespace box2dref
+{
 /*
 Position Correction Notes
 =========================
@@ -536,4 +538,5 @@ void b2Island::Report(const b2ContactVelocityConstraint* constraints)
 
 		m_listener->PostSolve(c, &impulse);
 	}
+}
 }

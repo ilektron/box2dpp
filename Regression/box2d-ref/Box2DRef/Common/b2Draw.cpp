@@ -18,6 +18,9 @@
 
 #include <Box2DRef/Common/b2Draw.h>
 
+namespace box2dref
+{
+    
 b2Draw::b2Draw()
 {
 	m_drawFlags = 0;
@@ -41,4 +44,5 @@ void b2Draw::AppendFlags(uint32 flags)
 void b2Draw::ClearFlags(uint32 flags)
 {
 	m_drawFlags &= ~flags;
+}
 }

@@ -20,6 +20,8 @@
 #include <Box2DRef/Dynamics/b2Body.h>
 #include <Box2DRef/Dynamics/b2TimeStep.h>
 
+namespace box2dref
+{
 // Linear constraint (point-to-line)
 // d = p2 - p1 = x2 + r2 - x1 - r1
 // C = dot(perp, d)
@@ -626,4 +628,5 @@ void b2PrismaticJoint::Dump()
 	b2Log("  jd.motorSpeed = %.15lef;\n", m_motorSpeed);
 	b2Log("  jd.maxMotorForce = %.15lef;\n", m_maxMotorForce);
 	b2Log("  joints[%d] = m_world->CreateJoint(&jd);\n", m_index);
+}
 }

@@ -18,6 +18,8 @@
 
 #include <Box2DRef/Collision/Shapes/b2EdgeShape.h>
 #include <new>
+namespace box2dref
+{
 
 void b2EdgeShape::Set(const b2Vec2& v1, const b2Vec2& v2)
 {
@@ -135,4 +137,5 @@ void b2EdgeShape::ComputeMass(b2MassData* massData, float32 density) const
 	massData->mass = 0.0f;
 	massData->center = 0.5f * (m_vertex1 + m_vertex2);
 	massData->I = 0.0f;
+}
 }

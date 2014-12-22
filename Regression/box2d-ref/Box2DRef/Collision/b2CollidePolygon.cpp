@@ -19,6 +19,9 @@
 #include <Box2DRef/Collision/b2Collision.h>
 #include <Box2DRef/Collision/Shapes/b2PolygonShape.h>
 
+namespace box2dref
+{
+
 // Find the max separation between poly1 and poly2 using edge normals from poly1.
 static float32 b2FindMaxSeparation(int32* edgeIndex,
 								 const b2PolygonShape* poly1, const b2Transform& xf1,
@@ -236,4 +239,5 @@ void b2CollidePolygons(b2Manifold* manifold,
 	}
 
 	manifold->pointCount = pointCount;
+}
 }

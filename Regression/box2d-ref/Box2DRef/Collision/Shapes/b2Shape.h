@@ -23,6 +23,9 @@
 #include <Box2DRef/Common/b2Math.h>
 #include <Box2DRef/Collision/b2Collision.h>
 
+namespace box2dref
+{
+
 /// This holds the mass data computed for a shape.
 struct b2MassData
 {
@@ -98,4 +101,5 @@ inline b2Shape::Type b2Shape::GetType() const
 	return m_type;
 }
 
+}
 #endif

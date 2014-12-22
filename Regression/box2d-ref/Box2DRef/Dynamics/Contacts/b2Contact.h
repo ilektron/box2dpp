@@ -24,6 +24,9 @@
 #include <Box2DRef/Collision/Shapes/b2Shape.h>
 #include <Box2DRef/Dynamics/b2Fixture.h>
 
+namespace box2dref
+{
+    
 class b2Body;
 class b2Contact;
 class b2Fixture;
@@ -345,5 +348,5 @@ inline float32 b2Contact::GetTangentSpeed() const
 {
 	return m_tangentSpeed;
 }
-
+}
 #endif

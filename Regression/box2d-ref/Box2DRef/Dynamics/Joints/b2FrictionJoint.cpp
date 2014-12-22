@@ -20,6 +20,9 @@
 #include <Box2DRef/Dynamics/b2Body.h>
 #include <Box2DRef/Dynamics/b2TimeStep.h>
 
+namespace box2dref
+{
+
 // Point-to-point constraint
 // Cdot = v2 - v1
 //      = v2 + cross(w2, r2) - v1 - cross(w1, r1)
@@ -248,4 +251,5 @@ void b2FrictionJoint::Dump()
 	b2Log("  jd.maxForce = %.15lef;\n", m_maxForce);
 	b2Log("  jd.maxTorque = %.15lef;\n", m_maxTorque);
 	b2Log("  joints[%d] = m_world->CreateJoint(&jd);\n", m_index);
+}
 }

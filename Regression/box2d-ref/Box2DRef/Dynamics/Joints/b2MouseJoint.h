@@ -21,6 +21,9 @@
 
 #include <Box2DRef/Dynamics/Joints/b2Joint.h>
 
+namespace box2dref
+{
+
 /// Mouse joint definition. This requires a world target point,
 /// tuning parameters, and the time step.
 struct b2MouseJointDef : public b2JointDef
@@ -125,5 +128,6 @@ protected:
 	b2Mat22 m_mass;
 	b2Vec2 m_C;
 };
+}
 
 #endif

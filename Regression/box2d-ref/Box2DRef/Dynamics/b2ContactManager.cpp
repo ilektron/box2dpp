@@ -22,6 +22,8 @@
 #include <Box2DRef/Dynamics/b2WorldCallbacks.h>
 #include <Box2DRef/Dynamics/Contacts/b2Contact.h>
 
+namespace box2dref
+{
 b2ContactFilter b2_defaultFilter;
 b2ContactListener b2_defaultListener;
 
@@ -293,4 +295,5 @@ void b2ContactManager::AddPair(void* proxyUserDataA, void* proxyUserDataB)
 	}
 
 	++m_contactCount;
+}
 }

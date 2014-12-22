@@ -22,6 +22,10 @@
 #include <Box2DRef/Common/b2Math.h>
 #include <limits.h>
 
+
+namespace box2dref
+{
+    
 /// @file
 /// Structures and functions used for computing contact points, distance
 /// queries, and TOI queries.
@@ -272,6 +276,7 @@ inline bool b2TestOverlap(const b2AABB& a, const b2AABB& b)
 		return false;
 
 	return true;
+}
 }
 
 #endif

@@ -23,6 +23,8 @@
 #include <Box2DRef/Collision/Shapes/b2Shape.h>
 #include <memory>
 
+namespace box2dref
+{
 class b2Fixture;
 class b2Joint;
 class b2Contact;
@@ -856,5 +858,5 @@ inline const b2World* b2Body::GetWorld() const
 {
 	return m_world;
 }
-
+}
 #endif

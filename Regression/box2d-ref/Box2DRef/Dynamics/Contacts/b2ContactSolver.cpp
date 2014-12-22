@@ -26,6 +26,9 @@
 
 #define B2REF_DEBUG_SOLVER 0
 
+namespace box2dref
+{
+
 bool g_blockSolve = true;
 
 struct b2ContactPositionConstraint
@@ -835,4 +838,5 @@ bool b2ContactSolver::SolveTOIPositionConstraints(int32 toiIndexA, int32 toiInde
 	// We can't expect minSpeparation >= -b2_linearSlop because we don't
 	// push the separation above -b2_linearSlop.
 	return minSeparation >= -1.5f * b2_linearSlop;
+}
 }

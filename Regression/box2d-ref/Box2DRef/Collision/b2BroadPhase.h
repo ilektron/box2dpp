@@ -24,6 +24,9 @@
 #include <Box2DRef/Collision/b2DynamicTree.h>
 #include <algorithm>
 
+namespace box2dref
+{
+
 struct b2Pair
 {
 	int32 proxyIdA;
@@ -252,6 +255,7 @@ inline void b2BroadPhase::RayCast(T* callback, const b2RayCastInput& input) cons
 inline void b2BroadPhase::ShiftOrigin(const b2Vec2& newOrigin)
 {
 	m_tree.ShiftOrigin(newOrigin);
+}
 }
 
 #endif

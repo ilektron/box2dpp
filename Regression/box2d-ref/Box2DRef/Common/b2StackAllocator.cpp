@@ -19,6 +19,8 @@
 #include <Box2DRef/Common/b2StackAllocator.h>
 #include <Box2DRef/Common/b2Math.h>
 
+namespace box2dref
+{
 b2StackAllocator::b2StackAllocator()
 {
 	m_index = 0;
@@ -80,4 +82,5 @@ void b2StackAllocator::Free(void* p)
 int32 b2StackAllocator::GetMaxAllocation() const
 {
 	return m_maxAllocation;
+}
 }

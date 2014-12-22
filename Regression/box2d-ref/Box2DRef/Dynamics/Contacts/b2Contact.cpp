@@ -34,6 +34,9 @@
 #include <Box2DRef/Dynamics/b2Fixture.h>
 #include <Box2DRef/Dynamics/b2World.h>
 
+namespace box2dref
+{
+
 b2ContactRegister b2Contact::s_registers[b2Shape::e_typeCount][b2Shape::e_typeCount];
 bool b2Contact::s_initialized = false;
 
@@ -244,4 +247,6 @@ void b2Contact::Update(b2ContactListener* listener)
 	{
 		listener->PreSolve(this, &oldManifold);
 	}
+}
+
 }

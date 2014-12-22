@@ -20,6 +20,8 @@
 #include <Box2DRef/Dynamics/b2Body.h>
 #include <Box2DRef/Dynamics/b2TimeStep.h>
 
+namespace box2dref
+{
 
 // Limit:
 // C = norm(pB - pA) - L
@@ -238,4 +240,5 @@ void b2RopeJoint::Dump()
 	b2Log("  jd.localAnchorB.Set(%.15lef, %.15lef);\n", m_localAnchorB.x, m_localAnchorB.y);
 	b2Log("  jd.maxLength = %.15lef;\n", m_maxLength);
 	b2Log("  joints[%d] = m_world->CreateJoint(&jd);\n", m_index);
+}
 }

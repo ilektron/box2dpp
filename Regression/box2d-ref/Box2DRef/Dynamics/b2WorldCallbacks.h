@@ -21,6 +21,8 @@
 
 #include <Box2DRef/Common/b2Settings.h>
 
+namespace box2dref
+{
 struct b2Vec2;
 struct b2Transform;
 class b2Fixture;
@@ -151,5 +153,5 @@ public:
 	virtual float32 ReportFixture(	b2Fixture* fixture, const b2Vec2& point,
 									const b2Vec2& normal, float32 fraction) = 0;
 };
-
+}
 #endif

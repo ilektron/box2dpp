@@ -21,6 +21,8 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+namespace box2dref
+{
 b2Version b2_version = {2, 3, 2};
 
 // Memory allocators. Modify these to use your own allocator.
@@ -41,4 +43,5 @@ void b2Log(const char* string, ...)
 	va_start(args, string);
 	vprintf(string, args);
 	va_end(args);
+}
 }

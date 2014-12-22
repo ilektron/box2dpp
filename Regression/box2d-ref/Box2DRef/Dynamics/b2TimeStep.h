@@ -21,6 +21,8 @@
 
 #include <Box2DRef/Common/b2Math.h>
 
+namespace box2dref
+{
 /// Profiling data. Times are in milliseconds.
 struct b2Profile
 {
@@ -66,5 +68,5 @@ struct b2SolverData
 	b2Position* positions;
 	b2Velocity* velocities;
 };
-
+}
 #endif

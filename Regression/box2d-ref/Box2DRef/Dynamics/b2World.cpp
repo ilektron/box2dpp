@@ -34,6 +34,8 @@
 #include <Box2DRef/Common/b2Timer.h>
 #include <new>
 
+namespace box2dref
+{
 b2World::b2World(const b2Vec2& gravity)
 {
 	m_destructionListener = NULL;
@@ -1336,4 +1338,5 @@ void b2World::Dump()
 	b2Log("b2Free(bodies);\n");
 	b2Log("joints = NULL;\n");
 	b2Log("bodies = NULL;\n");
+}
 }

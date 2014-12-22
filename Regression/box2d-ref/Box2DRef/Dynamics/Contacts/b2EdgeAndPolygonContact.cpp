@@ -22,6 +22,9 @@
 
 #include <new>
 
+namespace box2dref
+{
+
 b2Contact* b2EdgeAndPolygonContact::Create(b2Fixture* fixtureA, int32, b2Fixture* fixtureB, int32, b2BlockAllocator* allocator)
 {
 	void* mem = allocator->Allocate(sizeof(b2EdgeAndPolygonContact));
@@ -46,4 +49,5 @@ void b2EdgeAndPolygonContact::Evaluate(b2Manifold* manifold, const b2Transform& 
 	b2CollideEdgeAndPolygon(	manifold,
 								(b2EdgeShape*)m_fixtureA->GetShape(), xfA,
 								(b2PolygonShape*)m_fixtureB->GetShape(), xfB);
+}
 }

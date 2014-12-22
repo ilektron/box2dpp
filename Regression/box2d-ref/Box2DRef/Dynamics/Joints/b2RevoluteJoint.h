@@ -21,6 +21,8 @@
 
 #include <Box2DRef/Dynamics/Joints/b2Joint.h>
 
+namespace box2dref
+{
 /// Revolute joint definition. This requires defining an
 /// anchor point where the bodies are joined. The definition
 /// uses local anchor points so that the initial configuration
@@ -200,5 +202,5 @@ inline float32 b2RevoluteJoint::GetMotorSpeed() const
 {
 	return m_motorSpeed;
 }
-
+}
 #endif

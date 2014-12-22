@@ -21,6 +21,8 @@
 
 #include <Box2DRef/Dynamics/Joints/b2Joint.h>
 
+namespace box2dref
+{
 const float32 b2_minPulleyLength = 2.0f;
 
 /// Pulley joint definition. This requires two ground anchors,
@@ -148,5 +150,5 @@ protected:
 	float32 m_invIB;
 	float32 m_mass;
 };
-
+}
 #endif

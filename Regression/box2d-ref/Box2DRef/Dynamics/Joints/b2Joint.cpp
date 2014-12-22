@@ -34,6 +34,9 @@
 
 #include <new>
 
+namespace box2dref
+{
+
 b2Joint* b2Joint::Create(const b2JointDef* def, b2BlockAllocator* allocator)
 {
 	b2Joint* joint = NULL;
@@ -208,4 +211,5 @@ b2Joint::b2Joint(const b2JointDef* def)
 bool b2Joint::IsActive() const
 {
 	return m_bodyA->IsActive() && m_bodyB->IsActive();
+}
 }

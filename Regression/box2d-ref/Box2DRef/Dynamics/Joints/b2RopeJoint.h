@@ -21,6 +21,8 @@
 
 #include <Box2DRef/Dynamics/Joints/b2Joint.h>
 
+namespace box2dref
+{
 /// Rope joint definition. This requires two body anchor points and
 /// a maximum lengths.
 /// Note: by default the connected objects will not collide.
@@ -110,5 +112,5 @@ protected:
 	float32 m_mass;
 	b2LimitState m_state;
 };
-
+}
 #endif

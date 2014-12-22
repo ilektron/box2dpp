@@ -21,6 +21,8 @@
 
 #include <Box2DRef/Collision/Shapes/b2Shape.h>
 
+namespace box2dref
+{
 /// A circle shape.
 class b2CircleShape : public b2Shape
 {
@@ -86,6 +88,7 @@ inline const b2Vec2& b2CircleShape::GetVertex(int32 index) const
 	B2_NOT_USED(index);
 	b2Assert(index == 0);
 	return m_p;
+}
 }
 
 #endif

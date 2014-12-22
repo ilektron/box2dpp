@@ -23,11 +23,14 @@
 #include <assert.h>
 #include <float.h>
 
+
+namespace box2dref
+{
 #ifndef B2_NOT_USED
 #define B2_NOT_USED(x) ((void)(x))
 #endif
 
-inline bool b2Assert(bool A) { assert(A); }
+inline void b2Assert(bool A) { assert(A); }
 
 typedef signed char	int8;
 typedef signed short int16;
@@ -150,5 +153,6 @@ struct b2Version
 
 /// Current version.
 extern b2Version b2_version;
+}
 
 #endif

@@ -18,6 +18,9 @@
 
 #include <Box2DRef/Common/b2Math.h>
 
+namespace box2dref
+{
+
 const b2Vec2 b2Vec2_zero(0.0f, 0.0f);
 
 /// Solve A * x = b, where b is a column vector. This is more efficient
@@ -91,4 +94,5 @@ void b2Mat33::GetSymInverse33(b2Mat33* M) const
 	M->ez.x = M->ex.z;
 	M->ez.y = M->ey.z;
 	M->ez.z = det * (a11 * a22 - a12 * a12);
+}
 }

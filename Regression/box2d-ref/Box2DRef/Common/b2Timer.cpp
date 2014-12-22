@@ -18,6 +18,9 @@
 
 #include <Box2DRef/Common/b2Timer.h>
 
+namespace box2dref
+{
+
 #if defined(_WIN32)
 
 float64 b2Timer::s_invFrequency = 0.0f;
@@ -99,3 +102,5 @@ float32 b2Timer::GetMilliseconds() const
 }
 
 #endif
+
+}

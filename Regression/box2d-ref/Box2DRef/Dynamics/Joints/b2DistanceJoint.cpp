@@ -20,6 +20,9 @@
 #include <Box2DRef/Dynamics/b2Body.h>
 #include <Box2DRef/Dynamics/b2TimeStep.h>
 
+namespace box2dref
+{
+
 // 1-D constrained system
 // m (v2 - v1) = lambda
 // v2 + (beta/h) * x1 + gamma * lambda = 0, gamma has units of inverse mass.
@@ -257,4 +260,5 @@ void b2DistanceJoint::Dump()
 	b2Log("  jd.frequencyHz = %.15lef;\n", m_frequencyHz);
 	b2Log("  jd.dampingRatio = %.15lef;\n", m_dampingRatio);
 	b2Log("  joints[%d] = m_world->CreateJoint(&jd);\n", m_index);
+}
 }

@@ -22,6 +22,7 @@
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Collision/b2Collision.h>
 #include <Box2D/Collision/Shapes/b2Shape.h>
+#include <Box2D/Collision/b2DynamicTree.h>
 
 namespace box2d
 {
@@ -99,6 +100,8 @@ struct b2FixtureProxy
     b2Fixture* fixture;
     int32_t childIndex;
     int32_t proxyId;
+    
+    b2FixtureProxy() : childIndex(NULL_NODE), proxyId(NULL_NODE) {}
 };
 
 /// A fixture is used to attach a shape to a body for collision detection. A fixture
@@ -205,6 +208,7 @@ protected:
     friend class b2ContactManager;
 
     b2Fixture();
+    ~b2Fixture() = default;
 
     // We need separation create/destroy functions from the constructor/destructor because
     // the destructor cannot access the allocator (no destructor arguments allowed by C++).

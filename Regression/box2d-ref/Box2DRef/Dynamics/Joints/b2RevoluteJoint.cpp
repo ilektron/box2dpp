@@ -20,6 +20,8 @@
 #include <Box2DRef/Dynamics/b2Body.h>
 #include <Box2DRef/Dynamics/b2TimeStep.h>
 
+namespace box2dref
+{
 // Point-to-point constraint
 // C = p2 - p1
 // Cdot = v2 - v1
@@ -499,4 +501,5 @@ void b2RevoluteJoint::Dump()
 	b2Log("  jd.motorSpeed = %.15lef;\n", m_motorSpeed);
 	b2Log("  jd.maxMotorTorque = %.15lef;\n", m_maxMotorTorque);
 	b2Log("  joints[%d] = m_world->CreateJoint(&jd);\n", m_index);
+}
 }

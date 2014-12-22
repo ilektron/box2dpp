@@ -20,6 +20,9 @@
 #include <Box2DRef/Dynamics/b2Body.h>
 #include <Box2DRef/Dynamics/b2TimeStep.h>
 
+namespace box2dref
+{
+
 // Pulley:
 // length1 = norm(p1 - s1)
 // length2 = norm(p2 - s2)
@@ -345,4 +348,5 @@ void b2PulleyJoint::ShiftOrigin(const b2Vec2& newOrigin)
 {
 	m_groundAnchorA -= newOrigin;
 	m_groundAnchorB -= newOrigin;
+}
 }

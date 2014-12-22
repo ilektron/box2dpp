@@ -22,6 +22,8 @@
 #include <Box2DRef/Dynamics/Contacts/b2Contact.h>
 #include <Box2DRef/Dynamics/Joints/b2Joint.h>
 
+namespace box2dref
+{
 b2Body::b2Body(const b2BodyDef* bd, b2World* world)
 {
 	b2Assert(bd->position.IsValid());
@@ -546,4 +548,5 @@ void b2Body::Dump()
 		b2Log("  }\n");
 	}
 	b2Log("}\n");
+}
 }

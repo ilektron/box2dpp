@@ -23,6 +23,8 @@
 #include <Box2DRef/Collision/b2Collision.h>
 #include <Box2DRef/Collision/Shapes/b2Shape.h>
 
+namespace box2dref
+{
 class b2BlockAllocator;
 class b2Body;
 class b2BroadPhase;
@@ -341,5 +343,5 @@ inline const b2AABB& b2Fixture::GetAABB(int32 childIndex) const
 	b2Assert(0 <= childIndex && childIndex < m_proxyCount);
 	return m_proxies[childIndex].aabb;
 }
-
+}
 #endif

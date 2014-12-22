@@ -22,6 +22,9 @@
 #include <Box2DRef/Collision/b2Collision.h>
 #include <Box2DRef/Common/b2GrowableStack.h>
 
+
+namespace box2dref
+{
 #define b2_nullNode (-1)
 
 /// A node in the dynamic tree. The client does not interact with this directly.
@@ -284,6 +287,7 @@ inline void b2DynamicTree::RayCast(T* callback, const b2RayCastInput& input) con
 			stack.Push(node->child2);
 		}
 	}
+}
 }
 
 #endif

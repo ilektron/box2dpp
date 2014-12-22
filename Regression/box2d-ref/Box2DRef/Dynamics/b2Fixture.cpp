@@ -27,6 +27,8 @@
 #include <Box2DRef/Collision/b2Collision.h>
 #include <Box2DRef/Common/b2BlockAllocator.h>
 
+namespace box2dref
+{
 b2Fixture::b2Fixture()
 {
 	m_userData = NULL;
@@ -300,4 +302,5 @@ void b2Fixture::Dump(int32 bodyIndex)
 	b2Log("    fd.shape = &shape;\n");
 	b2Log("\n");
 	b2Log("    bodies[%d]->CreateFixture(&fd);\n", bodyIndex);
+}
 }

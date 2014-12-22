@@ -22,6 +22,8 @@
 #include <Box2DRef/Collision/Shapes/b2PolygonShape.h>
 
 
+namespace box2dref
+{
 // Compute contact points for edge versus circle.
 // This accounts for edge connectivity.
 void b2CollideEdgeAndCircle(b2Manifold* manifold,
@@ -695,4 +697,5 @@ void b2CollideEdgeAndPolygon(	b2Manifold* manifold,
 {
 	b2EPCollider collider;
 	collider.Collide(manifold, edgeA, xfA, polygonB, xfB);
+}
 }
