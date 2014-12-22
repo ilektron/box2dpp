@@ -26,14 +26,18 @@
 #include <stdio.h>
 
 using namespace box2d;
+    
+
+float32 b2TOIState::b2_toiTime = 0;
+float32 b2TOIState::b2_toiMaxTime = 0;
+int32_t b2TOIState::b2_toiCalls = 0;
+int32_t b2TOIState::b2_toiIters = 0;
+int32_t b2TOIState::b2_toiMaxIters = 0;
+int32_t b2TOIState::b2_toiRootIters = 0;
+int32_t b2TOIState::b2_toiMaxRootIters = 0;
 
 namespace
 {
-    
-    float32 b2_toiTime, b2_toiMaxTime;
-    int32_t b2_toiCalls, b2_toiIters, b2_toiMaxIters;
-    int32_t b2_toiRootIters, b2_toiMaxRootIters;
-
     //
     struct b2SeparationFunction
     {
@@ -261,7 +265,7 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 {
     b2Timer timer;
 
-    ++b2_toiCalls;
+    ++b2TOIState::b2_toiCalls;
 
     output->state = b2TOIOutput::e_unknown;
     output->t = input->tMax;
@@ -429,7 +433,7 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
                 }
 
                 ++rootIterCount;
-                ++b2_toiRootIters;
+                ++b2TOIState::b2_toiRootIters;
 
                 float32 s = fcn.Evaluate(indexA, indexB, t);
 
@@ -458,7 +462,7 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
                 }
             }
 
-            b2_toiMaxRootIters = b2Max(b2_toiMaxRootIters, rootIterCount);
+            b2TOIState::b2_toiMaxRootIters = b2Max(b2TOIState::b2_toiMaxRootIters, rootIterCount);
 
             ++pushBackIter;
 
@@ -469,7 +473,7 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
         }
 
         ++iter;
-        ++b2_toiIters;
+        ++b2TOIState::b2_toiIters;
 
         if (done)
         {
@@ -485,9 +489,9 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
         }
     }
 
-    b2_toiMaxIters = b2Max(b2_toiMaxIters, iter);
+    b2TOIState::b2_toiMaxIters = b2Max(b2TOIState::b2_toiMaxIters, iter);
 
     float32 time = timer.GetMilliseconds();
-    b2_toiMaxTime = b2Max(b2_toiMaxTime, time);
-    b2_toiTime += time;
+    b2TOIState::b2_toiMaxTime = b2Max(b2TOIState::b2_toiMaxTime, time);
+    b2TOIState::b2_toiTime += time;
 }

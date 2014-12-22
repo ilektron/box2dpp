@@ -19,8 +19,6 @@
 #ifndef VERTICAL_STACK_H
 #define VERTICAL_STACK_H
 
-extern bool g_blockSolve;
-
 constexpr int VERTICAL_STACK_COLUMN_COUNT = 1;
 constexpr int VERTICAL_STACK_ROW_COUNT = 1;
 
@@ -111,7 +109,7 @@ public:
                 break;
 
             case 'b':
-                g_blockSolve = !g_blockSolve;
+                b2ContactSolver::m_blockSolve = !b2ContactSolver::m_blockSolve;
                 break;
         }
     }
@@ -121,7 +119,7 @@ public:
         Test::Step(settings);
         g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Press: (,) to launch a bullet.");
         m_textLine += DRAW_STRING_NEW_LINE;
-        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Blocksolve = %d", g_blockSolve);
+        g_debugDraw.DrawString({{5.0f, static_cast<float>(m_textLine)}}, "Blocksolve = %d", b2ContactSolver::m_blockSolve);
         // if (m_stepCount == 300)
         //{
         //	if (m_bullet != NULL)

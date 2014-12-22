@@ -75,13 +75,9 @@ public:
         m_bullet->SetLinearVelocity({{0.0f, -50.0f}});
         m_bullet->SetAngularVelocity(0.0f);
 
-        extern int32_t box2d::b2_gjkCalls, box2d::b2_gjkIters, box2d::b2_gjkMaxIters;
-        extern int32_t box2d::b2_toiCalls, box2d::b2_toiIters, box2d::b2_toiMaxIters;
-        extern int32_t box2d::b2_toiRootIters, box2d::b2_toiMaxRootIters;
-
-        b2_gjkCalls = 0;
-        b2_gjkIters = 0;
-        b2_gjkMaxIters = 0;
+        b2GJKState::b2_gjkCalls = 0;
+        b2GJKState::b2_gjkIters = 0;
+        b2GJKState::b2_gjkMaxIters = 0;
 
         b2_toiCalls = 0;
         b2_toiIters = 0;
@@ -94,9 +90,9 @@ public:
     {
         Test::Step(settings);
 
-        extern int32_t b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
-        extern int32_t b2_toiCalls, b2_toiIters;
-        extern int32_t b2_toiRootIters, b2_toiMaxRootIters;
+//         extern int32_t b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
+//         extern int32_t b2_toiCalls, b2_toiIters;
+//         extern int32_t b2_toiRootIters, b2_toiMaxRootIters;
 
         if (b2_gjkCalls > 0)
         {
@@ -106,7 +102,7 @@ public:
             m_textLine += DRAW_STRING_NEW_LINE;
         }
 
-        if (b2_toiCalls > 0)
+        if (b2GJKState::b2_toiCalls > 0)
         {
             g_debugDraw.DrawString(
                 {{5.0f, static_cast<float>(m_textLine)}}, "toi calls = %d, ave toi iters = %3.1f, max toi iters = %d",
