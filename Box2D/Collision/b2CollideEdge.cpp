@@ -155,73 +155,78 @@ void box2d::b2CollideEdgeAndCircle(b2Manifold* manifold, const b2EdgeShape* edge
     manifold->points[0].localPoint = circleB->m_p;
 }
 
-// This structure is used to keep track of the best separating axis.
-struct b2EPAxis
+namespace 
 {
-    enum Type
+
+    // This structure is used to keep track of the best separating axis.
+    struct b2EPAxis
     {
-        e_unknown,
-        e_edgeA,
-        e_edgeB
+        enum Type
+        {
+            e_unknown,
+            e_edgeA,
+            e_edgeB
+        };
+
+        Type type;
+        int32_t index;
+        float32 separation;
     };
 
-    Type type;
-    int32_t index;
-    float32 separation;
-};
-
-// This holds polygon B expressed in frame A.
-struct b2TempPolygon
-{
-    b2Vec2 vertices[MAX_POLYGON_VERTICES];
-    b2Vec2 normals[MAX_POLYGON_VERTICES];
-    int32_t count;
-};
-
-// Reference face used for clipping
-struct b2ReferenceFace
-{
-    int32_t i1, i2;
-
-    b2Vec2 v1, v2;
-
-    b2Vec2 normal;
-
-    b2Vec2 sideNormal1;
-    float32 sideOffset1;
-
-    b2Vec2 sideNormal2;
-    float32 sideOffset2;
-};
-
-// This class collides and edge and a polygon, taking into account edge
-// adjacency.
-struct b2EPCollider
-{
-    void Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const b2Transform& xfA,
-                 const b2PolygonShape* polygonB, const b2Transform& xfB);
-    b2EPAxis ComputeEdgeSeparation();
-    b2EPAxis ComputePolygonSeparation();
-
-    enum VertexType
+    // This holds polygon B expressed in frame A.
+    struct b2TempPolygon
     {
-        e_isolated,
-        e_concave,
-        e_convex
+        b2Vec2 vertices[MAX_POLYGON_VERTICES];
+        b2Vec2 normals[MAX_POLYGON_VERTICES];
+        int32_t count;
     };
 
-    b2TempPolygon m_polygonB;
+    // Reference face used for clipping
+    struct b2ReferenceFace
+    {
+        int32_t i1, i2;
 
-    b2Transform m_xf;
-    b2Vec2 m_centroidB;
-    b2Vec2 m_v0, m_v1, m_v2, m_v3;
-    b2Vec2 m_normal0, m_normal1, m_normal2;
-    b2Vec2 m_normal;
-    VertexType m_type1, m_type2;
-    b2Vec2 m_lowerLimit, m_upperLimit;
-    float32 m_radius;
-    bool m_front;
-};
+        b2Vec2 v1, v2;
+
+        b2Vec2 normal;
+
+        b2Vec2 sideNormal1;
+        float32 sideOffset1;
+
+        b2Vec2 sideNormal2;
+        float32 sideOffset2;
+    };
+
+    // This class collides and edge and a polygon, taking into account edge
+    // adjacency.
+    struct b2EPCollider
+    {
+        void Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const b2Transform& xfA,
+                    const b2PolygonShape* polygonB, const b2Transform& xfB);
+        b2EPAxis ComputeEdgeSeparation();
+        b2EPAxis ComputePolygonSeparation();
+
+        enum VertexType
+        {
+            e_isolated,
+            e_concave,
+            e_convex
+        };
+
+        b2TempPolygon m_polygonB;
+
+        b2Transform m_xf;
+        b2Vec2 m_centroidB;
+        b2Vec2 m_v0, m_v1, m_v2, m_v3;
+        b2Vec2 m_normal0, m_normal1, m_normal2;
+        b2Vec2 m_normal;
+        VertexType m_type1, m_type2;
+        b2Vec2 m_lowerLimit, m_upperLimit;
+        float32 m_radius;
+        bool m_front;
+    };
+
+}
 
 // Algorithm:
 // 1. Classify v1 and v2

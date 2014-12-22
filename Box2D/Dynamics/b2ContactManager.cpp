@@ -24,8 +24,11 @@
 
 using namespace box2d;
 
-b2ContactFilter b2_defaultFilter;
-b2ContactListener b2_defaultListener;
+namespace box2d
+{
+    b2ContactFilter b2_defaultFilter;
+    b2ContactListener b2_defaultListener;
+}
 
 b2ContactManager::b2ContactManager()
 {
