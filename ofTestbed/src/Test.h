@@ -155,6 +155,7 @@ public:
 
     void DrawTitle(std::string title);
     virtual void Step(Settings* settings);
+    virtual void Draw(Settings* settings);
     virtual void Keyboard(int key)
     {
         B2_NOT_USED(key);

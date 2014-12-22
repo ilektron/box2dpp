@@ -77,7 +77,7 @@ OF_ROOT = /home/stephen/personal/openFrameworks
 # add a runtime path to search for those shared libraries, since they aren't 
 # incorporated directly into the final executable application binary.
 # TODO: should this be a default setting?
-# PROJECT_LDFLAGS=-Wl,-rpath=./libs
+PROJECT_LDFLAGS= -fsanitize=memory 
 
 ################################################################################
 # PROJECT DEFINES
@@ -105,7 +105,7 @@ OF_ROOT = /home/stephen/personal/openFrameworks
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_CFLAGS = 
+PROJECT_CFLAGS = -fsanitize=memory -fPIC
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS
@@ -129,7 +129,7 @@ OF_ROOT = /home/stephen/personal/openFrameworks
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
 PROJECT_OPTIMIZATION_CFLAGS_RELEASE = 
-PROJECT_OPTIMIZATION_CFLAGS_DEBUG = -g
+PROJECT_OPTIMIZATION_CFLAGS_DEBUG = -g -fsanitize=memory -fPIC
 
 ################################################################################
 # PROJECT COMPILERS

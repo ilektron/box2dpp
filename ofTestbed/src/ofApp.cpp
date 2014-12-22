@@ -56,15 +56,6 @@ static void sRestart()
 static void sSimulate()
 {
     test->Step(&settings);
-    test->DrawTitle(g_testEntries[testIndex].name);
-    
-    if (testSelection != testIndex)
-    {
-        testIndex = testSelection;
-        test = std::unique_ptr<Test>(g_testEntries[testIndex].createFcn());
-        g_debugDraw.SetZoom(1.0f);
-        g_debugDraw.SetCenter({{0.0f, 20.0f}});
-    }
 }
 
 //
@@ -174,6 +165,11 @@ ofApp::ofApp() : m_hide_gui(false), m_draw_box2d_debug(true)
 //--------------------------------------------------------------
 void ofApp::setup()
 {
+    sResizeWindow(APP_WIDTH, APP_HEIGHT);
+    
+    g_debugDraw.SetZoom(1.0f);
+    g_debugDraw.SetCenter({{0.0f, 20.0f}});
+    
     ofSetVerticalSync(true);
     
     //-------------------------------------------------------------------------------------------------------
@@ -274,6 +270,8 @@ void ofApp::update()
     auto current_time = std::chrono::high_resolution_clock::now();
     std::chrono::duration<float> time_step = current_time - last_time;
     last_time = current_time;
+    
+    sSimulate();
 
 //     constexpr int32_t velocityIterations = 8;  // how strongly to correct velocity
 //     constexpr int32_t positionIterations = 3;  // how strongly to correct position
@@ -296,35 +294,7 @@ void ofApp::draw()
 
     // Arrange the view for a normal math based coordinate system with positive up and 0, 0 at the
     // bottom middle of the screen
-    ofTranslate(APP_WIDTH / 2.0f, APP_HEIGHT);
-    ofScale(1, -1);  // Flip Y
-// 
-//     ofPushStyle();
-//     ofSetColor(255, 0, 0, 255);
-//     ofFill();
-//     ofDrawCircle(0, 0, 1);
-//     ofPopStyle();
-// 
-    ofScale(OFXB2DBASIC_WORLD_SCALE, OFXB2DBASIC_WORLD_SCALE, 1.0f);
-//     if (filled)
-//     {
-//         ofFill();
-//     }
-//     else
-//     {
-//         ofNoFill();
-//     }
-
-    // 	ofSetColor(color);
-    // 	if(twoCircles)
-    // 	{
-    // 		ofDrawCircle(center->x-radius*.5, center->y, radius );
-    // 		ofDrawCircle(center->x+radius*.5, center->y, radius );
-    // 	}
-    // 	else
-    // 	{
-    // 		ofDrawCircle((ofVec2f)center, radius );
-    // 	}
+    
 
     // auto draw?
     // should the gui control hiding?
@@ -332,15 +302,18 @@ void ofApp::draw()
     {
         gui.draw();
     }
+    
+    test->Draw(&settings);
 
-//     glPushMatrix();
-//     glEnable(GL_BLEND);
-//     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//     m_world->DrawDebugData();
-//     glPopMatrix();
+    test->DrawTitle(g_testEntries[testIndex].name);
 
-
-    sSimulate();
+    if (testSelection != testIndex)
+    {
+        testIndex = testSelection;
+        test = std::unique_ptr<Test>(g_testEntries[testIndex].createFcn());
+        g_debugDraw.SetZoom(1.0f);
+        g_debugDraw.SetCenter({{0.0f, 20.0f}});
+    }
 }
 
 //--------------------------------------------------------------

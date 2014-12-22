@@ -27,8 +27,10 @@
 using namespace box2d;
 
 #define B2_DEBUG_SOLVER 0
-
-bool g_blockSolve = true;
+namespace
+{
+    bool g_blockSolve = true;
+}
 
 b2ContactSolver::b2ContactSolver(b2ContactSolverDef* def)
 {
