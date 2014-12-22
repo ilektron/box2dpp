@@ -27,10 +27,8 @@
 using namespace box2d;
 
 #define B2_DEBUG_SOLVER 0
-namespace
-{
-    bool g_blockSolve = true;
-}
+
+bool b2ContactSolver::m_blockSolve = true;
 
 b2ContactSolver::b2ContactSolver(b2ContactSolverDef* def)
 {
@@ -206,7 +204,7 @@ void b2ContactSolver::InitializeVelocityConstraints()
         }
 
         // If we have two points, then prepare the block solver.
-        if (vc->pointCount == 2 && g_blockSolve)
+        if (vc->pointCount == 2 && m_blockSolve)
         {
             b2VelocityConstraintPoint* vcp1 = vc->points + 0;
             b2VelocityConstraintPoint* vcp2 = vc->points + 1;
@@ -334,7 +332,7 @@ void b2ContactSolver::SolveVelocityConstraints()
         }
 
         // Solve normal constraints
-        if (pointCount == 1 || g_blockSolve == false)
+        if (pointCount == 1 || m_blockSolve == false)
         {
             for (int32_t i = 0; i < pointCount; ++i)
             {
