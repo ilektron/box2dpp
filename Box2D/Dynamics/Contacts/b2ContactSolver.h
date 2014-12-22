@@ -25,6 +25,9 @@
 
 namespace box2d
 {
+    
+extern bool g_blockSolve = true;
+    
 class b2Contact;
 class b2Body;
 class b2StackAllocator;

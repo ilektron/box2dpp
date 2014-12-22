@@ -24,6 +24,11 @@
 
 namespace box2d
 {
+    
+    extern float32 b2_toiTime, b2_toiMaxTime;
+    extern int32_t b2_toiCalls, b2_toiIters, b2_toiMaxIters;
+    extern int32_t b2_toiRootIters, b2_toiMaxRootIters;
+    
 /// Input parameters for b2TimeOfImpact
 struct b2TOIInput
 {

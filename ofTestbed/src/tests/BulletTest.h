@@ -75,9 +75,9 @@ public:
         m_bullet->SetLinearVelocity({{0.0f, -50.0f}});
         m_bullet->SetAngularVelocity(0.0f);
 
-        extern int32_t b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
-        extern int32_t b2_toiCalls, b2_toiIters, b2_toiMaxIters;
-        extern int32_t b2_toiRootIters, b2_toiMaxRootIters;
+        extern int32_t box2d::b2_gjkCalls, box2d::b2_gjkIters, box2d::b2_gjkMaxIters;
+        extern int32_t box2d::b2_toiCalls, box2d::b2_toiIters, box2d::b2_toiMaxIters;
+        extern int32_t box2d::b2_toiRootIters, box2d::b2_toiMaxRootIters;
 
         b2_gjkCalls = 0;
         b2_gjkIters = 0;
