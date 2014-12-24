@@ -19,11 +19,13 @@
 #include <Box2DRef/Collision/b2Collision.h>
 #include <Box2DRef/Collision/Shapes/b2PolygonShape.h>
 
+#include <iostream>
+
 namespace box2dref
 {
 
 // Find the max separation between poly1 and poly2 using edge normals from poly1.
-static float32 b2FindMaxSeparation(int32* edgeIndex,
+float32 b2FindMaxSeparation(int32* edgeIndex,
 								 const b2PolygonShape* poly1, const b2Transform& xf1,
 								 const b2PolygonShape* poly2, const b2Transform& xf2)
 {
@@ -64,7 +66,7 @@ static float32 b2FindMaxSeparation(int32* edgeIndex,
 	return maxSeparation;
 }
 
-static void b2FindIncidentEdge(b2ClipVertex c[2],
+void b2FindIncidentEdge(b2ClipVertex c[2],
 							 const b2PolygonShape* poly1, const b2Transform& xf1, int32 edge1,
 							 const b2PolygonShape* poly2, const b2Transform& xf2)
 {
@@ -174,7 +176,7 @@ void b2CollidePolygons(b2Manifold* manifold,
 	b2Vec2 v12 = vertices1[iv2];
 
 	b2Vec2 localTangent = v12 - v11;
-	localTangent.Normalize();
+    localTangent.Normalize();
 	
 	b2Vec2 localNormal = b2Cross(localTangent, 1.0f);
 	b2Vec2 planePoint = 0.5f * (v11 + v12);
@@ -186,7 +188,7 @@ void b2CollidePolygons(b2Manifold* manifold,
 	v12 = b2Mul(xf1, v12);
 
 	// Face offset.
-	float32 frontOffset = b2Dot(normal, v11);
+    float32 frontOffset = b2Dot(normal, v11);
 
 	// Side offsets, extended by polytope skin thickness.
 	float32 sideOffset1 = -b2Dot(tangent, v11) + totalRadius;
@@ -201,24 +203,26 @@ void b2CollidePolygons(b2Manifold* manifold,
 	np = b2ClipSegmentToLine(clipPoints1, incidentEdge, -tangent, sideOffset1, iv1);
 
 	if (np < 2)
-		return;
+    {
+        return;
+    }
 
 	// Clip to negative box side 1
 	np = b2ClipSegmentToLine(clipPoints2, clipPoints1,  tangent, sideOffset2, iv2);
 
 	if (np < 2)
-	{
+    {
 		return;
 	}
 
 	// Now clipPoints2 contains the clipped points.
 	manifold->localNormal = localNormal;
 	manifold->localPoint = planePoint;
-
+    
 	int32 pointCount = 0;
 	for (int32 i = 0; i < b2_maxManifoldPoints; ++i)
-	{
-		float32 separation = b2Dot(normal, clipPoints2[i].v) - frontOffset;
+    {
+        float32 separation = b2Dot(normal, clipPoints2[i].v) - frontOffset;
 
 		if (separation <= totalRadius)
 		{

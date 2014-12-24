@@ -60,15 +60,15 @@ constexpr int b2VecX = 0;
 constexpr int b2VecY = 1;
 constexpr int b2VecZ = 2;
 
-inline b2Vec2& operator-(b2Vec2& vec)
-{
-    for (auto& f : vec)
-    {
-        f = -f;
-    }
-    
-    return vec;
-}
+// inline b2Vec2& operator-(b2Vec2& vec)
+// {
+//     for (auto& f : vec)
+//     {
+//         f = -f;
+//     }
+//     
+//     return vec;
+// }
 
 // inline b2Vec2&& operator-(b2Vec2&& vec)
 // {
@@ -81,6 +81,17 @@ inline b2Vec2& operator-(b2Vec2& vec)
 // }
 
 inline b2Vec2 operator-(const b2Vec2& vec)
+{
+    b2Vec2 ret;
+    for (unsigned int i = 0; i < vec.size(); ++i)
+    {
+        ret[i] = -vec[i];
+    }
+    
+    return ret;
+}
+
+inline b2Vec2 Negate(const b2Vec2& vec)
 {
     b2Vec2 ret;
     for (unsigned int i = 0; i < vec.size(); ++i)

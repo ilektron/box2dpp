@@ -83,9 +83,9 @@ std::vector<std::pair<box2dref::b2Vec2, float>> runHelloWorldRef()
         box2dref::b2Vec2 position = body->GetPosition();
         box2dref::float32 angle = body->GetAngle();
         
-        printf("%d %4.2f %4.2f %4.2f\n", i, position.x, position.y, angle);
         points.push_back(std::make_pair(body->GetPosition(), body->GetAngle()));
-        printf("%d %4.2f %4.2f %4.2f\n", i, groundBody->GetPosition().x, groundBody->GetPosition().y, groundBody->GetAngle());
+//         printf("%d %4.2f %4.2f %4.2f\n", i, position.x, position.y, angle);
+//         printf("%d %4.2f %4.2f %4.2f\n", i, groundBody->GetPosition().x, groundBody->GetPosition().y, groundBody->GetAngle());
     }
     
     return points;
@@ -163,11 +163,325 @@ std::vector<std::pair<box2d::b2Vec2, float>> runHelloWorld()
         box2d::float32 angle = body->GetAngle();
         points.push_back(std::make_pair(position, angle));
         
-        printf("%d %4.2f %4.2f %4.2f\n", i, position[box2d::b2VecX], position[box2d::b2VecY], angle);
-        printf("%d %4.2f %4.2f %4.2f\n", i, groundBody->GetPosition()[box2d::b2VecX], groundBody->GetPosition()[box2d::b2VecY], groundBody->GetAngle());
+//         printf("%d %4.2f %4.2f %4.2f\n", i, position[box2d::b2VecX], position[box2d::b2VecY], angle);
+//         printf("%d %4.2f %4.2f %4.2f\n", i, groundBody->GetPosition()[box2d::b2VecX], groundBody->GetPosition()[box2d::b2VecY], groundBody->GetAngle());
     }
     
     return points;
+}
+
+static void compareB2Vec2(const box2d::b2Vec2& vec, const box2dref::b2Vec2& vecref)
+{
+    EXPECT_FLOAT_EQ(vec[0], vecref.x);
+    EXPECT_FLOAT_EQ(vec[1], vecref.y);
+}
+
+static void compareB2Manifold(const box2d::b2Manifold& manifold, const box2dref::b2Manifold& manifoldref)
+{
+    compareB2Vec2(manifold.localNormal, manifoldref.localNormal);
+    compareB2Vec2(manifold.localPoint, manifoldref.localPoint);
+    ASSERT_EQ(manifold.pointCount, manifoldref.pointCount);
+    for (int i = 0; i < manifold.pointCount; ++i)
+    {
+        compareB2Vec2(manifold.points[i].localPoint, manifoldref.points[i].localPoint);
+//         EXPECT_FLOAT_EQ(manifold.points[i].normalImpulse, manifoldref.points[i].normalImpulse);
+//         EXPECT_FLOAT_EQ(manifold.points[i].tangentImpulse, manifoldref.points[i].tangentImpulse);
+    }
+}
+
+static bool compareShape(const box2d::b2Shape& shape, const box2dref::b2Shape& shaperef)
+{
+    bool ret = false;
+    
+    EXPECT_EQ((int)shape.GetType(), (int)shaperef.m_type);
+    EXPECT_FLOAT_EQ(shape.GetRadius(), shaperef.m_radius);
+    
+    return ret;
+}
+
+static bool compareBody(const box2d::b2Body& body, const box2dref::b2Body& bodyref)
+{
+    bool ret = false;
+    
+    EXPECT_FLOAT_EQ(body.GetAngle(), bodyref.GetAngle());
+    EXPECT_FLOAT_EQ(body.GetAngularDamping(), bodyref.GetAngularDamping());
+    EXPECT_FLOAT_EQ(body.GetAngularVelocity(), bodyref.GetAngularVelocity());
+    EXPECT_FLOAT_EQ(body.GetGravityScale(), bodyref.GetGravityScale());
+    EXPECT_FLOAT_EQ(body.GetLinearDamping(), bodyref.GetLinearDamping());
+    compareB2Vec2(body.GetPosition(), bodyref.GetPosition());
+    EXPECT_FLOAT_EQ(body.GetAngularVelocity(), bodyref.GetAngularVelocity());
+//     EXPECT_EQ(body.GetContactList(), bodyref.GetContactList());
+    EXPECT_EQ((int)body.GetType(), bodyref.GetType());
+    compareB2Vec2(body.GetWorldCenter(), bodyref.GetWorldCenter());
+    EXPECT_EQ(body.IsActive(), bodyref.IsActive());
+    EXPECT_EQ(body.IsAwake(), bodyref.IsAwake());
+    EXPECT_EQ(body.IsBullet(), bodyref.IsBullet());
+//     EXPECT_EQ(body.GetAngularDamping(), bodyref.GetAngularDamping());
+//     EXPECT_EQ(body.GetAngularDamping(), bodyref.GetAngularDamping());
+//     EXPECT_EQ(body.GetAngularDamping(), bodyref.GetAngularDamping());
+//     EXPECT_EQ(body.GetAngularDamping(), bodyref.GetAngularDamping());
+    
+    return ret;
+}
+
+TEST(Math, b2Vec2Invert)
+{
+    box2d::b2Vec2 vec{{-1.0f, 0.12345f}};
+    box2dref::b2Vec2 vecref(-1.0f, 0.12345f);
+    
+    vec = box2d::Negate(vec);
+    compareB2Vec2(vec, -vecref);
+}
+
+TEST(ChainShape, Construction)
+{
+    box2d::b2ChainShape chain;
+    box2dref::b2ChainShape chainref;
+    
+    compareShape(chain, chainref);
+    EXPECT_EQ(chain.GetChildCount(), chainref.GetChildCount());
+}
+
+TEST(EdgeShape, Construction)
+{
+    box2d::b2EdgeShape edge;
+    box2dref::b2EdgeShape edgeref;
+    
+    compareShape(edge, edgeref);
+}
+
+TEST(EdgeShape, Body)
+{
+    box2d::b2Vec2 gravity{{0, -9.8}};
+    box2d::b2World world(gravity);
+    box2d::b2BodyDef bd;
+    box2d::b2Body* ground = world.CreateBody(&bd);
+    
+    box2d::b2EdgeShape shape;
+    shape.Set({{-40.0f, 0.0f}}, {{40.0f, 0.0f}});
+    ground->CreateFixture(&shape, 0.0f);
+    
+    shape.Set({{20.0f, 0.0f}}, {{20.0f, 20.0f}});
+    ground->CreateFixture(&shape, 0.0f);
+    
+    box2dref::b2Vec2 gravityref(0, -9.8);
+    box2dref::b2World worldref(gravityref);
+    box2dref::b2BodyDef bdref;
+    box2dref::b2Body* groundref = worldref.CreateBody(&bdref);
+    
+    box2dref::b2EdgeShape shaperef;
+    shaperef.Set(box2dref::b2Vec2(-40.0f, 0.0f), box2dref::b2Vec2(40.0f, 0.0f));
+    groundref->CreateFixture(&shaperef, 0.0f);
+    
+    shaperef.Set(box2dref::b2Vec2(20.0f, 0.0f), box2dref::b2Vec2(20.0f, 20.0f));
+    groundref->CreateFixture(&shaperef, 0.0f);
+    
+    compareBody(*ground, *groundref);
+}
+
+TEST(PolygonShape, Construction)
+{
+    box2d::b2PolygonShape polygon;
+    box2dref::b2PolygonShape polygonref;
+    
+    compareShape(polygon, polygonref);
+}
+
+TEST(CircleShape, Construction)
+{
+    box2d::b2CircleShape circle;
+    box2dref::b2CircleShape circleref;
+    
+    compareShape(circle, circleref);
+}
+
+TEST(Body, Construction)
+{
+}
+/*
+/// Compute the collision manifold between two circles.
+void b2CollideCircles(b2Manifold* manifold,
+                      const b2CircleShape* circleA, const b2Transform& xfA,
+                      const b2CircleShape* circleB, const b2Transform& xfB);
+
+/// Compute the collision manifold between a polygon and a circle.
+void b2CollidePolygonAndCircle(b2Manifold* manifold,
+                               const b2PolygonShape* polygonA, const b2Transform& xfA,
+                               const b2CircleShape* circleB, const b2Transform& xfB);
+
+/// Compute the collision manifold between two polygons.
+void b2CollidePolygons(b2Manifold* manifold,
+                       const b2PolygonShape* polygonA, const b2Transform& xfA,
+                       const b2PolygonShape* polygonB, const b2Transform& xfB);
+
+/// Compute the collision manifold between an edge and a circle.
+void b2CollideEdgeAndCircle(b2Manifold* manifold,
+                            const b2EdgeShape* polygonA, const b2Transform& xfA,
+                            const b2CircleShape* circleB, const b2Transform& xfB);
+
+/// Compute the collision manifold between an edge and a circle.
+void b2CollideEdgeAndPolygon(b2Manifold* manifold,
+                             const b2EdgeShape* edgeA, const b2Transform& xfA,
+                             const b2PolygonShape* circleB, const b2Transform& xfB);
+
+/// Clipping for contact manifolds.
+int32 b2ClipSegmentToLine(b2ClipVertex vOut[2], const b2ClipVertex vIn[2],
+                          const b2Vec2& normal, float32 offset, int32 vertexIndexA);
+
+/// Determine if two generic shapes overlap.
+bool b2TestOverlap( const b2Shape* shapeA, int32 indexA,
+                    const b2Shape* shapeB, int32 indexB,
+                    const b2Transform& xfA, const b2Transform& xfB);
+*/
+TEST(Collision, Testb2CollideCirclesTouching)
+{
+    box2d::b2Manifold manifold;
+    {
+        box2d::b2CircleShape circle1, circle2;
+        box2d::b2Transform xf1, xf2;
+        circle1.SetRadius(1.0f);
+        circle2.SetRadius(1.0f);
+        xf1.Set({{1.0f, 0.0f}}, 1.0f);
+        xf2.Set({{-1.0f, 0.0f}}, 1.0f);
+        box2d::b2CollideCircles(&manifold, &circle1, xf1, &circle2, xf2);
+    }
+    
+    box2dref::b2Manifold manifoldref;
+    {
+        box2dref::b2CircleShape circle1, circle2;
+        box2dref::b2Transform xf1, xf2;
+        circle1.m_radius = 1.0f;
+        circle2.m_radius = 1.0f;
+        xf1.Set(box2dref::b2Vec2(0.0f, 0.0f), 1.0f);
+        xf2.Set(box2dref::b2Vec2(-1.0f, 0.0f), 1.0f);
+        box2dref::b2CollideCircles(&manifoldref, &circle1, xf1, &circle2, xf2);
+    }
+    
+    compareB2Manifold(manifold, manifoldref);
+}
+
+TEST(Collision, Testb2FindMaxSeparation)
+{
+    float distance = 0.0f;
+    int32_t edge = 0;
+    
+    {
+        box2d::b2PolygonShape poly1, poly2;
+        box2d::b2Transform xf1, xf2;
+        poly1.SetAsBox(1.0f, 1.0f);
+        poly2.SetAsBox(1.0f, 1.0f);
+        xf1.Set({{2.0f, 0.0f}}, 1.0f);
+        xf2.Set({{-1.0f, 0.0f}}, 1.0f);
+        distance = box2d::b2FindMaxSeparation(&edge, &poly1, xf1, &poly2, xf2);
+    }
+    
+    float distanceref = 0.0f;
+    int32_t edgeref = 0;
+    {
+        box2dref::b2PolygonShape poly1, poly2;
+        box2dref::b2Transform xf1, xf2;
+        poly1.SetAsBox(1.0f, 1.0f);
+        poly2.SetAsBox(1.0f, 1.0f);
+        xf1.Set(box2dref::b2Vec2(2.0f, 0.0f), 1.0f);
+        xf2.Set(box2dref::b2Vec2(-1.0f, 0.0f), 1.0f);
+        distanceref = box2dref::b2FindMaxSeparation(&edgeref, &poly1, xf1, &poly2, xf2);
+    }
+    
+    EXPECT_EQ(edge, edgeref);
+    EXPECT_FLOAT_EQ(distance, distanceref);
+    
+}
+
+TEST(Collision, Testb2FindMaxSeparationOverlap)
+{
+    float distance = 0.0f;
+    int32_t edge = 0;
+    
+    {
+        box2d::b2PolygonShape poly1, poly2;
+        box2d::b2Transform xf1, xf2;
+        poly1.SetAsBox(1.0f, 1.0f);
+        poly2.SetAsBox(1.0f, 1.0f);
+        xf1.Set({{1.0f, 0.0f}}, 1.0f);
+        xf2.Set({{-1.0f, 0.0f}}, 1.0f);
+        distance = box2d::b2FindMaxSeparation(&edge, &poly1, xf1, &poly2, xf2);
+    }
+    
+    float distanceref = 0.0f;
+    int32_t edgeref = 0;
+    {
+        box2dref::b2PolygonShape poly1, poly2;
+        box2dref::b2Transform xf1, xf2;
+        poly1.SetAsBox(1.0f, 1.0f);
+        poly2.SetAsBox(1.0f, 1.0f);
+        xf1.Set(box2dref::b2Vec2(1.0f, 0.0f), 1.0f);
+        xf2.Set(box2dref::b2Vec2(-1.0f, 0.0f), 1.0f);
+        distanceref = box2dref::b2FindMaxSeparation(&edgeref, &poly1, xf1, &poly2, xf2);
+    }
+    
+    EXPECT_EQ(edge, edgeref);
+    EXPECT_FLOAT_EQ(distance, distanceref);
+}
+
+TEST(Collision, Testb2FindIncidentEdge)
+{
+    
+    std::array<box2d::b2ClipVertex, 2> incidentEdge;
+    {
+        box2d::b2PolygonShape poly1, poly2;
+        box2d::b2Transform xf1, xf2;
+        poly1.SetAsBox(1.0f, 1.0f);
+        poly2.SetAsBox(1.0f, 1.0f);
+        xf1.Set({{1.0f, 0.0f}}, 0.0f);
+        xf2.Set({{-1.0f, 0.0f}}, 0.0f);
+        int32_t edge = 0;
+        float separation = box2d::b2FindMaxSeparation(&edge, &poly1, xf1, &poly2, xf2);
+        box2d::b2FindIncidentEdge(incidentEdge, &poly1, xf1, edge, &poly2, xf2);
+    }
+    
+    box2dref::b2ClipVertex incidentEdgeRef[2];
+    {
+        box2dref::b2PolygonShape poly1, poly2;
+        box2dref::b2Transform xf1, xf2;
+        poly1.SetAsBox(1.0f, 1.0f);
+        poly2.SetAsBox(1.0f, 1.0f);
+        xf1.Set(box2dref::b2Vec2(1.0f, 0.0f), 0.0f);
+        xf2.Set(box2dref::b2Vec2(-1.0f, 0.0f), 0.0f);
+        int32_t edge = 0;
+        float separation = box2dref::b2FindMaxSeparation(&edge, &poly1, xf1, &poly2, xf2);
+        box2dref::b2FindIncidentEdge(incidentEdgeRef, &poly1, xf1, edge, &poly2, xf2);
+    }
+    
+    compareB2Vec2(incidentEdge[0].v, incidentEdgeRef[0].v);
+    compareB2Vec2(incidentEdge[1].v, incidentEdgeRef[1].v);
+//     EXPECT_FLOAT_EQ(distance, distanceref);
+}
+
+TEST(Collision, Testb2CollidePolygonsTouching)
+{
+    box2d::b2Manifold manifold;
+    {
+        box2d::b2PolygonShape poly1, poly2;
+        box2d::b2Transform xf1, xf2;
+        poly1.SetAsBox(1.0f, 1.0f);
+        poly2.SetAsBox(1.0f, 1.0f);
+        xf1.Set({{1.0f, 0.0f}}, 1.0f);
+        xf2.Set({{-1.0f, 0.0f}}, 1.0f);
+        box2d::b2CollidePolygons(&manifold, &poly1, xf1, &poly2, xf2);
+    }
+    
+    box2dref::b2Manifold manifoldref;
+    {
+        box2dref::b2PolygonShape poly1, poly2;
+        box2dref::b2Transform xf1, xf2;
+        poly1.SetAsBox(1.0f, 1.0f);
+        poly2.SetAsBox(1.0f, 1.0f);
+        xf1.Set(box2dref::b2Vec2(1.0f, 0.0f), 1.0f);
+        xf2.Set(box2dref::b2Vec2(-1.0f, 0.0f), 1.0f);
+        box2dref::b2CollidePolygons(&manifoldref, &poly1, xf1, &poly2, xf2);
+    }
+    
+    compareB2Manifold(manifold, manifoldref);
 }
 
 TEST_F(b2RegressionTest, TestTest)

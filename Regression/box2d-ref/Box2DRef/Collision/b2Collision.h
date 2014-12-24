@@ -277,6 +277,17 @@ inline bool b2TestOverlap(const b2AABB& a, const b2AABB& b)
 
 	return true;
 }
+
+// --------------- Previously Static ----------------
+
+// Find the max separation between poly1 and poly2 using edge normals from poly1.
+float32 b2FindMaxSeparation(int32* edgeIndex,
+                                   const b2PolygonShape* poly1, const b2Transform& xf1,
+                                   const b2PolygonShape* poly2, const b2Transform& xf2);
+
+void b2FindIncidentEdge(b2ClipVertex c[2],
+                        const b2PolygonShape* poly1, const b2Transform& xf1, int32 edge1,
+                        const b2PolygonShape* poly2, const b2Transform& xf2);
 }
 
 #endif

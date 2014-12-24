@@ -20,12 +20,13 @@
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 #include <array>
+#include <iostream>
 
 using namespace box2d;
 
 // Find the max separation between poly1 and poly2 using edge normals from
 // poly1.
-static float32 b2FindMaxSeparation(int32_t* edgeIndex, const b2PolygonShape* poly1,
+float32 box2d::b2FindMaxSeparation(int32_t* edgeIndex, const b2PolygonShape* poly1,
                                    const b2Transform& xf1, const b2PolygonShape* poly2,
                                    const b2Transform& xf2)
 {
@@ -64,7 +65,7 @@ static float32 b2FindMaxSeparation(int32_t* edgeIndex, const b2PolygonShape* pol
     return maxSeparation;
 }
 
-static void b2FindIncidentEdge(std::array<b2ClipVertex, 2>& c, const b2PolygonShape* poly1,
+void box2d::b2FindIncidentEdge(std::array<b2ClipVertex, 2>& c, const b2PolygonShape* poly1,
                                const b2Transform& xf1, int32_t edge1, const b2PolygonShape* poly2,
                                const b2Transform& xf2)
 {
@@ -138,7 +139,7 @@ void box2d::b2CollidePolygons(b2Manifold* manifold, const b2PolygonShape* polyA,
     int32_t edge1;  // reference edge
     uint8_t flip;
     const float32 k_tol = 0.1f * LINEAR_SLOP;
-
+    
     if (separationB > separationA + k_tol)
     {
         poly1 = polyB;
@@ -173,7 +174,7 @@ void box2d::b2CollidePolygons(b2Manifold* manifold, const b2PolygonShape* polyA,
 
     b2Vec2 localTangent = v12 - v11;
     Normalize(localTangent);
-
+    
     b2Vec2 localNormal = b2Cross(localTangent, 1.0f);
     b2Vec2 planePoint = 0.5f * (v11 + v12);
 
@@ -213,7 +214,7 @@ void box2d::b2CollidePolygons(b2Manifold* manifold, const b2PolygonShape* polyA,
     // Now clipPoints2 contains the clipped points.
     manifold->localNormal = localNormal;
     manifold->localPoint = planePoint;
-
+    
     int32_t pointCount = 0;
     for (auto& elem : clipPoints2)
     {
