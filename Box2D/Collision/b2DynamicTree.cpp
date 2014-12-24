@@ -18,6 +18,7 @@
 
 #include <Box2D/Collision/b2DynamicTree.h>
 #include <string.h>
+#include <iostream>
 
 using namespace box2d;
 
@@ -27,8 +28,11 @@ b2DynamicTree::b2DynamicTree()
 
     m_nodeCapacity = 16;
     m_nodeCount = 0;
-    m_nodes.reserve(m_nodeCapacity);
-    memset(&m_nodes[0], 0, m_nodeCapacity * sizeof(b2TreeNode));
+    for (int i = 0; i < m_nodeCapacity; ++i)
+    {
+        m_nodes.emplace_back();
+    }
+    m_nodeCapacity = m_nodes.size();
 
     // Build a linked list for the free list.
     for (int32_t i = 0; i < m_nodeCapacity - 1; ++i)
@@ -61,8 +65,11 @@ int32_t b2DynamicTree::AllocateNode()
 
         // The free list is empty. Rebuild a bigger pool.
 //         b2TreeNode* oldNodes = m_nodes;
-        m_nodeCapacity *= 2;
-        m_nodes.reserve(m_nodeCapacity);
+        for (int i = 0; i < m_nodeCapacity; ++i)
+        {
+            m_nodes.emplace_back();
+        }
+        m_nodeCapacity = m_nodes.size();
         
         // Build a linked list for the free list. The parent
         // pointer becomes the "next" pointer.
@@ -176,7 +183,7 @@ bool b2DynamicTree::MoveProxy(int32_t proxyId, const b2AABB& aabb, const b2Vec2&
 void b2DynamicTree::InsertLeaf(int32_t leaf)
 {
     ++m_insertionCount;
-
+    
     if (m_root == NULL_NODE)
     {
         m_root = leaf;
@@ -256,10 +263,11 @@ void b2DynamicTree::InsertLeaf(int32_t leaf)
     }
 
     int32_t sibling = index;
-
+    
     // Create a new parent.
     int32_t oldParent = m_nodes[sibling].parent;
     int32_t newParent = AllocateNode();
+    
     m_nodes[newParent].parent = oldParent;
     m_nodes[newParent].userData = nullptr;
     m_nodes[newParent].aabb.Combine(leafAABB, m_nodes[sibling].aabb);

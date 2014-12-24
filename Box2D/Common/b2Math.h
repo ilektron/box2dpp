@@ -635,7 +635,9 @@ struct b2Rot
 struct b2Transform
 {
     /// The default constructor does nothing.
-    b2Transform()
+    b2Transform() :
+        p{{0,0}},
+        q(0.0f)
     {
     }
 

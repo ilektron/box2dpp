@@ -39,8 +39,6 @@ struct b2TreeNode
     /// Enlarged AABB
     b2AABB aabb;
 
-    void* userData;
-
     union
     {
         int32_t parent;
@@ -52,6 +50,10 @@ struct b2TreeNode
 
     // leaf = 0, free node = -1
     int32_t height;
+    
+    void* userData;
+    
+    b2TreeNode() : aabb(), parent(0), child1(0), child2(0), height(0), userData(nullptr) {}
 };
 
 /// A dynamic AABB tree broad-phase, inspired by Nathanael Presson's btDbvt.
