@@ -1,2 +1,0 @@
-ofxGui
-ofxBox2DBasic
