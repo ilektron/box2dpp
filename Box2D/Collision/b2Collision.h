@@ -23,6 +23,7 @@
 #include <limits.h>
 
 #include <array>
+#include <iostream>
 
 namespace box2d
 {
@@ -228,7 +229,8 @@ struct b2AABB
 
     bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input) const;
     
-    b2AABB() : lowerBound{{0.0f, 0.0f}}, upperBound{{0.0f, 0.0f}} {}
+    b2AABB() : lowerBound{{0.0f, 0.0f}}, upperBound{{0.0f, 0.0f}} {/*std::cout << "ctor" << std::endl;*/}
+    b2AABB(const b2AABB& other) : lowerBound(other.lowerBound), upperBound(other.upperBound) {/*std::cout << "copy ctor" << std::endl;*/}
 };
 
 /// Compute the collision manifold between two circles.

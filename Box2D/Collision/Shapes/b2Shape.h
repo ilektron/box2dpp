@@ -58,7 +58,7 @@ private:
     float32 m_radius;
 
 public:
-    b2Shape() = default;
+    b2Shape();
     b2Shape(Type type, float32 radius);
 
     virtual ~b2Shape() = default;
@@ -103,7 +103,12 @@ public:
     void SetRadius(float32 radius);
 };
 
-inline b2Shape::b2Shape(b2Shape::Type type, float32 radius) : m_type(type)
+inline b2Shape::b2Shape() : m_type(e_circle), m_radius(0.01f)
+{
+    std::cout << "Default shape ctor" << std::endl;
+}
+
+inline b2Shape::b2Shape(b2Shape::Type type, float32 radius) : m_type(type), m_radius(radius)
 {
 }
 
