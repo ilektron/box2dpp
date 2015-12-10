@@ -53,7 +53,7 @@ void b2PolygonShape::SetAsBox(float32 hx, float32 hy, const b2Vec2& center, floa
     xf.q.Set(angle);
 
     // Transform vertices and normals.
-    for (int32_t i = 0; i < m_vertices.size(); ++i)
+    for (std::size_t i = 0; i < m_vertices.size(); ++i)
     {
         m_vertices[i] = b2Mul(xf, m_vertices[i]);
         m_normals[i] = b2Mul(xf.q, m_normals[i]);
@@ -86,7 +86,7 @@ static b2Vec2 ComputeCentroid(const std::vector<b2Vec2>& vs)
 
     const float32 inv3 = 1.0f / 3.0f;
 
-    for (int32_t i = 0; i < vs.size(); ++i)
+    for (std::size_t i = 0; i < vs.size(); ++i)
     {
         // Triangle vertices.
         b2Vec2 p1 = pRef;
@@ -248,9 +248,9 @@ bool b2PolygonShape::TestPoint(const b2Transform& xf, const b2Vec2& p) const
 {
     b2Vec2 pLocal = b2MulT(xf.q, p - xf.p);
 
-    for (int32_t i = 0; i < m_normals.size(); ++i)
+    for (std::size_t i = 0; i < m_normals.size(); ++i)
     {
-        float32 dot = b2Dot(m_normals[i], pLocal - m_vertices[i]);
+        auto dot = b2Dot(m_normals[i], pLocal - m_vertices[i]);
         if (dot > 0.0f)
         {
             return false;
@@ -274,7 +274,7 @@ bool b2PolygonShape::RayCast(b2RayCastOutput* output, const b2RayCastInput& inpu
 
     int32_t index = -1;
 
-    for (int32_t i = 0; i < m_normals.size(); ++i)
+    for (std::size_t i = 0; i < m_normals.size(); ++i)
     {
         // p = p1 + a * d
         // dot(normal, p - v) = 0
@@ -339,9 +339,9 @@ void b2PolygonShape::ComputeAABB(b2AABB* aabb, const b2Transform& xf, int32_t ch
     b2Vec2 lower = b2Mul(xf, m_vertices[0]);
     b2Vec2 upper = lower;
 
-    for (int32_t i = 1; i < m_vertices.size(); ++i)
+    for (const auto& vertex : m_vertices)
     {
-        b2Vec2 v = b2Mul(xf, m_vertices[i]);
+        auto v = b2Mul(xf, vertex);
         lower = b2Min(lower, v);
         upper = b2Max(upper, v);
     }
@@ -389,15 +389,15 @@ void b2PolygonShape::ComputeMass(b2MassData* massData, float32 density) const
     b2Vec2 s{{0.0f, 0.0f}};
 
     // This code would put the reference point inside the polygon.
-    for (int32_t i = 0; i < m_vertices.size(); ++i)
+    for (const auto& vertex : m_vertices)
     {
-        s += m_vertices[i];
+        s += vertex;
     }
     s *= 1.0f / m_vertices.size();
 
     const float32 k_inv3 = 1.0f / 3.0f;
 
-    for (int32_t i = 0; i < m_vertices.size(); ++i)
+    for (std::size_t i = 0; i < m_vertices.size(); ++i)
     {
         // Triangle vertices.
         b2Vec2 e1 = m_vertices[i] - s;
@@ -438,14 +438,14 @@ void b2PolygonShape::ComputeMass(b2MassData* massData, float32 density) const
 
 bool b2PolygonShape::Validate() const
 {
-    for (int32_t i = 0; i < m_vertices.size(); ++i)
+    for (std::size_t i = 0; i < m_vertices.size(); ++i)
     {
-        int32_t i1 = i;
-        int32_t i2 = i < m_vertices.size() - 1 ? i1 + 1 : 0;
+        auto i1 = i;
+        auto i2 = i < m_vertices.size() - 1 ? i1 + 1 : 0;
         b2Vec2 p = m_vertices[i1];
         b2Vec2 e = m_vertices[i2] - p;
 
-        for (int32_t j = 0; j < m_vertices.size(); ++j)
+        for (std::size_t j = 0; j < m_vertices.size(); ++j)
         {
             if (j == i1 || j == i2)
             {

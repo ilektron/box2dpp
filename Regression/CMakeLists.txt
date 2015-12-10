@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.8.11)
-project (box2d11_regression)
+project (box2dpp_regression)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -g") 
 

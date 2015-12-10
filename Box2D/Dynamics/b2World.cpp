@@ -1075,9 +1075,9 @@ void b2World::DrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color
             b2PolygonShape* poly = (b2PolygonShape*)fixture->GetShape();
             std::vector<b2Vec2> vertices = poly->GetVertices();
 
-            for (int32_t i = 0; i < vertices.size(); ++i)
+            for (auto& vertex : vertices)
             {
-                vertices[i] = b2Mul(xf, vertices[i]);
+                vertex = b2Mul(xf, vertex);
             }
 
             g_debugDraw->DrawSolidPolygon(vertices, color);

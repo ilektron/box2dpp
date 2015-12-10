@@ -437,7 +437,7 @@ void b2EPCollider::Collide(b2Manifold* manifold, const b2EdgeShape* edgeA, const
     // Get polygonB in frameA
     auto vBs = polygonB->GetVertices();
     m_polygonB.count = vBs.size();
-    for (int32_t i = 0; i < vBs.size(); ++i)
+    for (std::size_t i = 0; i < vBs.size(); ++i)
     {
         m_polygonB.vertices[i] = b2Mul(m_xf, vBs[i]);
         m_polygonB.normals[i] = b2Mul(m_xf.q, vBs[i]);

@@ -60,13 +60,13 @@ void box2d::b2CollidePolygonAndCircle(b2Manifold* manifold, const b2PolygonShape
     b2Vec2 cLocal = b2MulT(xfA, c);
 
     // Find the min separating edge.
-    int32_t normalIndex = 0;
+    std::size_t normalIndex = 0;
     float32 separation = -MAX_FLOAT;
     float32 radius = polygonA->GetRadius() + circleB->GetRadius();
     auto vertices = polygonA->GetVertices();
     auto normals = polygonA->GetNormals();
 
-    for (int32_t i = 0; i < vertices.size(); ++i)
+    for (std::size_t i = 0; i < vertices.size(); ++i)
     {
         float32 s = b2Dot(normals[i], cLocal - vertices[i]);
 
@@ -84,8 +84,8 @@ void box2d::b2CollidePolygonAndCircle(b2Manifold* manifold, const b2PolygonShape
     }
 
     // Vertices that subtend the incident face.
-    int32_t vertIndex1 = normalIndex;
-    int32_t vertIndex2 = vertIndex1 + 1 < vertices.size() ? vertIndex1 + 1 : 0;
+    auto vertIndex1 = normalIndex;
+    auto vertIndex2 = vertIndex1 + 1 < vertices.size() ? vertIndex1 + 1 : 0;
     b2Vec2 v1 = vertices[vertIndex1];
     b2Vec2 v2 = vertices[vertIndex2];
 

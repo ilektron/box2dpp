@@ -37,7 +37,7 @@ float32 box2d::b2FindMaxSeparation(int32_t* edgeIndex, const b2PolygonShape* pol
 
     int32_t bestIndex = 0;
     float32 maxSeparation = -MAX_FLOAT;
-    for (int32_t i = 0; i < v1s.size(); ++i)
+    for (std::size_t i = 0; i < v1s.size(); ++i)
     {
         // Get poly1 normal in frame2.
         b2Vec2 n = b2Mul(xf.q, n1s[i]);
@@ -45,7 +45,7 @@ float32 box2d::b2FindMaxSeparation(int32_t* edgeIndex, const b2PolygonShape* pol
 
         // Find deepest point for normal i.
         float32 si = MAX_FLOAT;
-        for (int32_t j = 0; j < v2s.size(); ++j)
+        for (std::size_t j = 0; j < v2s.size(); ++j)
         {
             float32 sij = b2Dot(n, v2s[j] - v1);
             if (sij < si)
@@ -80,9 +80,9 @@ void box2d::b2FindIncidentEdge(std::array<b2ClipVertex, 2>& c, const b2PolygonSh
     b2Vec2 normal1 = b2MulT(xf2.q, b2Mul(xf1.q, normals1[edge1]));
 
     // Find the incident edge on poly2.
-    int32_t index = 0;
+    std::size_t index = 0;
     float32 minDot = MAX_FLOAT;
-    for (int32_t i = 0; i < normals2.size(); ++i)
+    for (std::size_t i = 0; i < normals2.size(); ++i)
     {
         float32 dot = b2Dot(normal1, normals2[i]);
         if (dot < minDot)
@@ -93,8 +93,8 @@ void box2d::b2FindIncidentEdge(std::array<b2ClipVertex, 2>& c, const b2PolygonSh
     }
 
     // Build the clip vertices for the incident edge.
-    int32_t i1 = index;
-    int32_t i2 = i1 + 1 < normals2.size() ? i1 + 1 : 0;
+    auto i1 = index;
+    auto i2 = i1 + 1 < normals2.size() ? i1 + 1 : 0;
 
     c[0].v = b2Mul(xf2, vertices2[i1]);
     c[0].id.cf.indexA = (uint8_t)edge1;
@@ -136,7 +136,7 @@ void box2d::b2CollidePolygons(b2Manifold* manifold, const b2PolygonShape* polyA,
     const b2PolygonShape* poly1;  // reference polygon
     const b2PolygonShape* poly2;  // incident polygon
     b2Transform xf1, xf2;
-    int32_t edge1;  // reference edge
+    std::size_t edge1;  // reference edge
     uint8_t flip;
     const float32 k_tol = 0.1f * LINEAR_SLOP;
     
@@ -166,8 +166,8 @@ void box2d::b2CollidePolygons(b2Manifold* manifold, const b2PolygonShape* polyA,
 
     auto vertices1 = poly1->GetVertices();
 
-    int32_t iv1 = edge1;
-    int32_t iv2 = edge1 + 1 < vertices1.size() ? edge1 + 1 : 0;
+    auto iv1 = edge1;
+    auto iv2 = edge1 + 1 < vertices1.size() ? edge1 + 1 : 0;
 
     b2Vec2 v11 = vertices1[iv1];
     b2Vec2 v12 = vertices1[iv2];

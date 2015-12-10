@@ -1,6 +1,6 @@
 Efforts in improving Box2D library
 
-- x Create b2 or b2d11 namespace
+- x Create b2 or b2dpp namespace
 - x clang-format
 - x clang-modernize
   - ranged for loops
