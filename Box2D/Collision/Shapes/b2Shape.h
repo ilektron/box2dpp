@@ -29,13 +29,13 @@ namespace box2d
 struct b2MassData
 {
     /// The mass of the shape, usually in kilograms.
-    float32 mass;
+    float mass;
 
     /// The position of the shape's centroid relative to the shape's origin.
-    b2Vec2 center;
+    b2Vec<float, 2> center;
 
     /// The rotational inertia of the shape about the local origin.
-    float32 I;
+    float I;
 };
 
 /// A shape is used for collision detection. You can create a shape however you like.
@@ -55,11 +55,11 @@ public:
 
 private:
     Type m_type;
-    float32 m_radius;
+    float m_radius;
 
 public:
     b2Shape();
-    b2Shape(Type type, float32 radius);
+    b2Shape(Type type, float radius);
 
     virtual ~b2Shape() = default;
 
@@ -76,7 +76,7 @@ public:
     /// Test a point for containment in this shape. This only works for convex shapes.
     /// @param xf the shape world transform.
     /// @param p a point in world coordinates.
-    virtual bool TestPoint(const b2Transform& xf, const b2Vec2& p) const = 0;
+    virtual bool TestPoint(const b2Transform& xf, const b2Vec<float, 2>& p) const = 0;
 
     /// Cast a ray against a child shape.
     /// @param output the ray-cast results.
@@ -96,11 +96,11 @@ public:
     /// The inertia tensor is computed about the local origin.
     /// @param massData returns the mass data for this shape.
     /// @param density the density in kilograms per meter squared.
-    virtual void ComputeMass(b2MassData* massData, float32 density) const = 0;
+    virtual void ComputeMass(b2MassData* massData, float density) const = 0;
 
     // Get/Setters for m_radius
-    float32 GetRadius() const;
-    void SetRadius(float32 radius);
+    float GetRadius() const;
+    void SetRadius(float radius);
 };
 
 inline b2Shape::b2Shape() : m_type(e_circle), m_radius(0.01f)
@@ -108,7 +108,7 @@ inline b2Shape::b2Shape() : m_type(e_circle), m_radius(0.01f)
     std::cout << "Default shape ctor" << std::endl;
 }
 
-inline b2Shape::b2Shape(b2Shape::Type type, float32 radius) : m_type(type), m_radius(radius)
+inline b2Shape::b2Shape(b2Shape::Type type, float radius) : m_type(type), m_radius(radius)
 {
 }
 
@@ -117,12 +117,12 @@ inline b2Shape::Type b2Shape::GetType() const
     return m_type;
 }
 
-inline float32 b2Shape::GetRadius() const
+inline float b2Shape::GetRadius() const
 {
     return m_radius;
 }
 
-inline void b2Shape::SetRadius(float32 radius)
+inline void b2Shape::SetRadius(float radius)
 {
     m_radius = radius;
 }

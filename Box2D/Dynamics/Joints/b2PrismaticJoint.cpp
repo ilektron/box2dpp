@@ -89,8 +89,8 @@ using namespace box2d;
 // Now compute impulse to be applied:
 // df = f2 - f1
 
-void b2PrismaticJointDef::Initialize(b2Body* bA, b2Body* bB, const b2Vec2& anchor,
-                                     const b2Vec2& axis)
+void b2PrismaticJointDef::Initialize(b2Body* bA, b2Body* bB, const b2Vec<float, 2>& anchor,
+                                     const b2Vec<float, 2>& axis)
 {
     bodyA = bA;
     bodyB = bB;
@@ -105,11 +105,11 @@ b2PrismaticJoint::b2PrismaticJoint(const b2PrismaticJointDef* def) : b2Joint(def
     m_localAnchorA = def->localAnchorA;
     m_localAnchorB = def->localAnchorB;
     m_localXAxisA = def->localAxisA;
-    Normalize(m_localXAxisA);
+    m_localXAxisA.Normalize();
     m_localYAxisA = b2Cross(1.0f, m_localXAxisA);
     m_referenceAngle = def->referenceAngle;
 
-    m_impulse.Set(0.0f, 0.0f, 0.0f);
+    m_impulse = {0.0f, 0.0f, 0.0f};
     m_motorMass = 0.0f;
     m_motorImpulse = 0.0f;
 
@@ -136,25 +136,25 @@ void b2PrismaticJoint::InitVelocityConstraints(const b2SolverData& data)
     m_invIA = m_bodyA->m_invI;
     m_invIB = m_bodyB->m_invI;
 
-    b2Vec2 cA = data.positions[m_indexA].c;
-    float32 aA = data.positions[m_indexA].a;
-    b2Vec2 vA = data.velocities[m_indexA].v;
-    float32 wA = data.velocities[m_indexA].w;
+    b2Vec<float, 2> cA = data.positions[m_indexA].c;
+    float aA = data.positions[m_indexA].a;
+    b2Vec<float, 2> vA = data.velocities[m_indexA].v;
+    float wA = data.velocities[m_indexA].w;
 
-    b2Vec2 cB = data.positions[m_indexB].c;
-    float32 aB = data.positions[m_indexB].a;
-    b2Vec2 vB = data.velocities[m_indexB].v;
-    float32 wB = data.velocities[m_indexB].w;
+    b2Vec<float, 2> cB = data.positions[m_indexB].c;
+    float aB = data.positions[m_indexB].a;
+    b2Vec<float, 2> vB = data.velocities[m_indexB].v;
+    float wB = data.velocities[m_indexB].w;
 
     b2Rot qA(aA), qB(aB);
 
     // Compute the effective masses.
-    b2Vec2 rA = b2Mul(qA, m_localAnchorA - m_localCenterA);
-    b2Vec2 rB = b2Mul(qB, m_localAnchorB - m_localCenterB);
-    b2Vec2 d = (cB - cA) + rB - rA;
+    b2Vec<float, 2> rA = b2Mul(qA, m_localAnchorA - m_localCenterA);
+    b2Vec<float, 2> rB = b2Mul(qB, m_localAnchorB - m_localCenterB);
+    b2Vec<float, 2> d = (cB - cA) + rB - rA;
 
-    float32 mA = m_invMassA, mB = m_invMassB;
-    float32 iA = m_invIA, iB = m_invIB;
+    float mA = m_invMassA, mB = m_invMassB;
+    float iA = m_invIA, iB = m_invIB;
 
     // Compute motor Jacobian and effective mass.
     {
@@ -176,27 +176,27 @@ void b2PrismaticJoint::InitVelocityConstraints(const b2SolverData& data)
         m_s1 = b2Cross(d + rA, m_perp);
         m_s2 = b2Cross(rB, m_perp);
 
-        float32 k11 = mA + mB + iA * m_s1 * m_s1 + iB * m_s2 * m_s2;
-        float32 k12 = iA * m_s1 + iB * m_s2;
-        float32 k13 = iA * m_s1 * m_a1 + iB * m_s2 * m_a2;
-        float32 k22 = iA + iB;
+        float k11 = mA + mB + iA * m_s1 * m_s1 + iB * m_s2 * m_s2;
+        float k12 = iA * m_s1 + iB * m_s2;
+        float k13 = iA * m_s1 * m_a1 + iB * m_s2 * m_a2;
+        float k22 = iA + iB;
         if (k22 == 0.0f)
         {
             // For bodies with fixed rotation.
             k22 = 1.0f;
         }
-        float32 k23 = iA * m_a1 + iB * m_a2;
-        float32 k33 = mA + mB + iA * m_a1 * m_a1 + iB * m_a2 * m_a2;
+        float k23 = iA * m_a1 + iB * m_a2;
+        float k33 = mA + mB + iA * m_a1 * m_a1 + iB * m_a2 * m_a2;
 
-        m_K.ex.Set(k11, k12, k13);
-        m_K.ey.Set(k12, k22, k23);
-        m_K.ez.Set(k13, k23, k33);
+        m_K.ex = {k11, k12, k13};
+        m_K.ey = {k12, k22, k23};
+        m_K.ez = {k13, k23, k33};
     }
 
     // Compute motor and limit terms.
     if (m_enableLimit)
     {
-        float32 jointTranslation = b2Dot(m_axis, d);
+        float jointTranslation = b2Dot(m_axis, d);
         if (std::abs(m_upperTranslation - m_lowerTranslation) < 2.0f * LINEAR_SLOP)
         {
             m_limitState = b2LimitState::EQUAL_LIMITS;
@@ -206,7 +206,7 @@ void b2PrismaticJoint::InitVelocityConstraints(const b2SolverData& data)
             if (m_limitState != b2LimitState::AT_LOWER_LIMIT)
             {
                 m_limitState = b2LimitState::AT_LOWER_LIMIT;
-                m_impulse.z = 0.0f;
+                m_impulse[b2VecZ] = 0.0f;
             }
         }
         else if (jointTranslation >= m_upperTranslation)
@@ -214,19 +214,19 @@ void b2PrismaticJoint::InitVelocityConstraints(const b2SolverData& data)
             if (m_limitState != b2LimitState::AT_UPPER_LIMIT)
             {
                 m_limitState = b2LimitState::AT_UPPER_LIMIT;
-                m_impulse.z = 0.0f;
+                m_impulse[b2VecZ] = 0.0f;
             }
         }
         else
         {
             m_limitState = b2LimitState::INACTIVE_LIMIT;
-            m_impulse.z = 0.0f;
+            m_impulse[b2VecZ] = 0.0f;
         }
     }
     else
     {
         m_limitState = b2LimitState::INACTIVE_LIMIT;
-        m_impulse.z = 0.0f;
+        m_impulse[b2VecZ] = 0.0f;
     }
 
     if (m_enableMotor == false)
@@ -240,9 +240,9 @@ void b2PrismaticJoint::InitVelocityConstraints(const b2SolverData& data)
         m_impulse *= data.step.dtRatio;
         m_motorImpulse *= data.step.dtRatio;
 
-        b2Vec2 P = m_impulse.x * m_perp + (m_motorImpulse + m_impulse.z) * m_axis;
-        float32 LA = m_impulse.x * m_s1 + m_impulse.y + (m_motorImpulse + m_impulse.z) * m_a1;
-        float32 LB = m_impulse.x * m_s2 + m_impulse.y + (m_motorImpulse + m_impulse.z) * m_a2;
+        b2Vec<float, 2> P = m_impulse[b2VecX] * m_perp + (m_motorImpulse + m_impulse[b2VecZ]) * m_axis;
+        float LA = m_impulse[b2VecX] * m_s1 + m_impulse[b2VecY] + (m_motorImpulse + m_impulse[b2VecZ]) * m_a1;
+        float LB = m_impulse[b2VecX] * m_s2 + m_impulse[b2VecY] + (m_motorImpulse + m_impulse[b2VecZ]) * m_a2;
 
         vA -= mA * P;
         wA -= iA * LA;
@@ -252,7 +252,7 @@ void b2PrismaticJoint::InitVelocityConstraints(const b2SolverData& data)
     }
     else
     {
-        m_impulse.Set(0.0f, 0.0f, 0.0f);
+        m_impulse = {0.0f, 0.0f, 0.0f};
         m_motorImpulse = 0.0f;
     }
 
@@ -264,27 +264,27 @@ void b2PrismaticJoint::InitVelocityConstraints(const b2SolverData& data)
 
 void b2PrismaticJoint::SolveVelocityConstraints(const b2SolverData& data)
 {
-    b2Vec2 vA = data.velocities[m_indexA].v;
-    float32 wA = data.velocities[m_indexA].w;
-    b2Vec2 vB = data.velocities[m_indexB].v;
-    float32 wB = data.velocities[m_indexB].w;
+    b2Vec<float, 2> vA = data.velocities[m_indexA].v;
+    float wA = data.velocities[m_indexA].w;
+    b2Vec<float, 2> vB = data.velocities[m_indexB].v;
+    float wB = data.velocities[m_indexB].w;
 
-    float32 mA = m_invMassA, mB = m_invMassB;
-    float32 iA = m_invIA, iB = m_invIB;
+    float mA = m_invMassA, mB = m_invMassB;
+    float iA = m_invIA, iB = m_invIB;
 
     // Solve linear motor constraint.
     if (m_enableMotor && m_limitState != b2LimitState::EQUAL_LIMITS)
     {
-        float32 Cdot = b2Dot(m_axis, vB - vA) + m_a2 * wB - m_a1 * wA;
-        float32 impulse = m_motorMass * (m_motorSpeed - Cdot);
-        float32 oldImpulse = m_motorImpulse;
-        float32 maxImpulse = data.step.dt * m_maxMotorForce;
+        float Cdot = b2Dot(m_axis, vB - vA) + m_a2 * wB - m_a1 * wA;
+        float impulse = m_motorMass * (m_motorSpeed - Cdot);
+        float oldImpulse = m_motorImpulse;
+        float maxImpulse = data.step.dt * m_maxMotorForce;
         m_motorImpulse = b2Clamp(m_motorImpulse + impulse, -maxImpulse, maxImpulse);
         impulse = m_motorImpulse - oldImpulse;
 
-        b2Vec2 P = impulse * m_axis;
-        float32 LA = impulse * m_a1;
-        float32 LB = impulse * m_a2;
+        b2Vec<float, 2> P = impulse * m_axis;
+        float LA = impulse * m_a1;
+        float LB = impulse * m_a2;
 
         vA -= mA * P;
         wA -= iA * LA;
@@ -293,41 +293,41 @@ void b2PrismaticJoint::SolveVelocityConstraints(const b2SolverData& data)
         wB += iB * LB;
     }
 
-    b2Vec2 Cdot1;
+    b2Vec<float, 2> Cdot1;
     Cdot1[b2VecX] = b2Dot(m_perp, vB - vA) + m_s2 * wB - m_s1 * wA;
     Cdot1[b2VecY] = wB - wA;
 
     if (m_enableLimit && m_limitState != b2LimitState::INACTIVE_LIMIT)
     {
         // Solve prismatic and limit constraint in block form.
-        float32 Cdot2;
+        float Cdot2;
         Cdot2 = b2Dot(m_axis, vB - vA) + m_a2 * wB - m_a1 * wA;
-        b2Vec3 Cdot(Cdot1[b2VecX], Cdot1[b2VecY], Cdot2);
+        b2Vec<float, 3> Cdot(Cdot1[b2VecX], Cdot1[b2VecY], Cdot2);
 
-        b2Vec3 f1 = m_impulse;
-        b2Vec3 df = m_K.Solve33(-Cdot);
+        b2Vec<float, 3> f1 = m_impulse;
+        b2Vec<float, 3> df = m_K.Solve33(-Cdot);
         m_impulse += df;
 
         if (m_limitState == b2LimitState::AT_LOWER_LIMIT)
         {
-            m_impulse.z = b2Max(m_impulse.z, 0.0f);
+            m_impulse[b2VecZ] = b2Max(m_impulse[b2VecZ], 0.0f);
         }
         else if (m_limitState == b2LimitState::AT_UPPER_LIMIT)
         {
-            m_impulse.z = b2Min(m_impulse.z, 0.0f);
+            m_impulse[b2VecZ] = b2Min(m_impulse[b2VecZ], 0.0f);
         }
 
         // f2(1:2) = invK(1:2,1:2) * (-Cdot(1:2) - K(1:2,3) * (f2(3) - f1(3))) + f1(1:2)
-        b2Vec2 b = -Cdot1 - (m_impulse.z - f1.z) * b2Vec2{{m_K.ez.x, m_K.ez.y}};
-        b2Vec2 f2r = m_K.Solve22(b) + b2Vec2{{f1.x, f1.y}};
-        m_impulse.x = f2r[b2VecX];
-        m_impulse.y = f2r[b2VecY];
+        b2Vec<float, 2> b = -Cdot1 - (m_impulse[b2VecZ] - f1[b2VecZ]) * b2Vec<float, 2>{{m_K.ez[b2VecX], m_K.ez[b2VecY]}};
+        b2Vec<float, 2> f2r = m_K.Solve22(b) + b2Vec<float, 2>{{f1[b2VecX], f1[b2VecY]}};
+        m_impulse[b2VecX] = f2r[b2VecX];
+        m_impulse[b2VecY] = f2r[b2VecY];
 
         df = m_impulse - f1;
 
-        b2Vec2 P = df.x * m_perp + df.z * m_axis;
-        float32 LA = df.x * m_s1 + df.y + df.z * m_a1;
-        float32 LB = df.x * m_s2 + df.y + df.z * m_a2;
+        b2Vec<float, 2> P = df[b2VecX] * m_perp + df[b2VecZ] * m_axis;
+        float LA = df[b2VecX] * m_s1 + df[b2VecY] + df[b2VecZ] * m_a1;
+        float LB = df[b2VecX] * m_s2 + df[b2VecY] + df[b2VecZ] * m_a2;
 
         vA -= mA * P;
         wA -= iA * LA;
@@ -338,13 +338,13 @@ void b2PrismaticJoint::SolveVelocityConstraints(const b2SolverData& data)
     else
     {
         // Limit is inactive, just solve the prismatic constraint in block form.
-        b2Vec2 df = m_K.Solve22(-Cdot1);
-        m_impulse.x += df[b2VecX];
-        m_impulse.y += df[b2VecY];
+        b2Vec<float, 2> df = m_K.Solve22(-Cdot1);
+        m_impulse[b2VecX] += df[b2VecX];
+        m_impulse[b2VecY] += df[b2VecY];
 
-        b2Vec2 P = df[b2VecX] * m_perp;
-        float32 LA = df[b2VecX] * m_s1 + df[b2VecY];
-        float32 LB = df[b2VecX] * m_s2 + df[b2VecY];
+        b2Vec<float, 2> P = df[b2VecX] * m_perp;
+        float LA = df[b2VecX] * m_s1 + df[b2VecY];
+        float LB = df[b2VecX] * m_s2 + df[b2VecY];
 
         vA -= mA * P;
         wA -= iA * LA;
@@ -361,42 +361,42 @@ void b2PrismaticJoint::SolveVelocityConstraints(const b2SolverData& data)
 
 bool b2PrismaticJoint::SolvePositionConstraints(const b2SolverData& data)
 {
-    b2Vec2 cA = data.positions[m_indexA].c;
-    float32 aA = data.positions[m_indexA].a;
-    b2Vec2 cB = data.positions[m_indexB].c;
-    float32 aB = data.positions[m_indexB].a;
+    b2Vec<float, 2> cA = data.positions[m_indexA].c;
+    float aA = data.positions[m_indexA].a;
+    b2Vec<float, 2> cB = data.positions[m_indexB].c;
+    float aB = data.positions[m_indexB].a;
 
     b2Rot qA(aA), qB(aB);
 
-    float32 mA = m_invMassA, mB = m_invMassB;
-    float32 iA = m_invIA, iB = m_invIB;
+    float mA = m_invMassA, mB = m_invMassB;
+    float iA = m_invIA, iB = m_invIB;
 
     // Compute fresh Jacobians
-    b2Vec2 rA = b2Mul(qA, m_localAnchorA - m_localCenterA);
-    b2Vec2 rB = b2Mul(qB, m_localAnchorB - m_localCenterB);
-    b2Vec2 d = cB + rB - cA - rA;
+    b2Vec<float, 2> rA = b2Mul(qA, m_localAnchorA - m_localCenterA);
+    b2Vec<float, 2> rB = b2Mul(qB, m_localAnchorB - m_localCenterB);
+    b2Vec<float, 2> d = cB + rB - cA - rA;
 
-    b2Vec2 axis = b2Mul(qA, m_localXAxisA);
-    float32 a1 = b2Cross(d + rA, axis);
-    float32 a2 = b2Cross(rB, axis);
-    b2Vec2 perp = b2Mul(qA, m_localYAxisA);
+    b2Vec<float, 2> axis = b2Mul(qA, m_localXAxisA);
+    float a1 = b2Cross(d + rA, axis);
+    float a2 = b2Cross(rB, axis);
+    b2Vec<float, 2> perp = b2Mul(qA, m_localYAxisA);
 
-    float32 s1 = b2Cross(d + rA, perp);
-    float32 s2 = b2Cross(rB, perp);
+    float s1 = b2Cross(d + rA, perp);
+    float s2 = b2Cross(rB, perp);
 
-    b2Vec3 impulse;
-    b2Vec2 C1;
+    b2Vec<float, 3> impulse;
+    b2Vec<float, 2> C1;
     C1[b2VecX] = b2Dot(perp, d);
     C1[b2VecY] = aB - aA - m_referenceAngle;
 
-    float32 linearError = std::abs(C1[b2VecX]);
-    float32 angularError = std::abs(C1[b2VecY]);
+    float linearError = std::abs(C1[b2VecX]);
+    float angularError = std::abs(C1[b2VecY]);
 
     bool active = false;
-    float32 C2 = 0.0f;
+    float C2 = 0.0f;
     if (m_enableLimit)
     {
-        float32 translation = b2Dot(axis, d);
+        float translation = b2Dot(axis, d);
         if (std::abs(m_upperTranslation - m_lowerTranslation) < 2.0f * LINEAR_SLOP)
         {
             // Prevent large angular corrections
@@ -424,35 +424,35 @@ bool b2PrismaticJoint::SolvePositionConstraints(const b2SolverData& data)
 
     if (active)
     {
-        float32 k11 = mA + mB + iA * s1 * s1 + iB * s2 * s2;
-        float32 k12 = iA * s1 + iB * s2;
-        float32 k13 = iA * s1 * a1 + iB * s2 * a2;
-        float32 k22 = iA + iB;
+        float k11 = mA + mB + iA * s1 * s1 + iB * s2 * s2;
+        float k12 = iA * s1 + iB * s2;
+        float k13 = iA * s1 * a1 + iB * s2 * a2;
+        float k22 = iA + iB;
         if (k22 == 0.0f)
         {
             // For fixed rotation
             k22 = 1.0f;
         }
-        float32 k23 = iA * a1 + iB * a2;
-        float32 k33 = mA + mB + iA * a1 * a1 + iB * a2 * a2;
+        float k23 = iA * a1 + iB * a2;
+        float k33 = mA + mB + iA * a1 * a1 + iB * a2 * a2;
 
         b2Mat33 K;
-        K.ex.Set(k11, k12, k13);
-        K.ey.Set(k12, k22, k23);
-        K.ez.Set(k13, k23, k33);
+        K.ex = {k11, k12, k13};
+        K.ey = {k12, k22, k23};
+        K.ez = {k13, k23, k33};
 
-        b2Vec3 C;
-        C.x = C1[b2VecX];
-        C.y = C1[b2VecY];
-        C.z = C2;
+        b2Vec<float, 3> C;
+        C[b2VecX] = C1[b2VecX];
+        C[b2VecY] = C1[b2VecY];
+        C[b2VecZ] = C2;
 
         impulse = K.Solve33(-C);
     }
     else
     {
-        float32 k11 = mA + mB + iA * s1 * s1 + iB * s2 * s2;
-        float32 k12 = iA * s1 + iB * s2;
-        float32 k22 = iA + iB;
+        float k11 = mA + mB + iA * s1 * s1 + iB * s2 * s2;
+        float k12 = iA * s1 + iB * s2;
+        float k22 = iA + iB;
         if (k22 == 0.0f)
         {
             k22 = 1.0f;
@@ -462,15 +462,15 @@ bool b2PrismaticJoint::SolvePositionConstraints(const b2SolverData& data)
         K.ex = {{k11, k12}};
         K.ey = {{k12, k22}};
 
-        b2Vec2 impulse1 = K.Solve(-C1);
-        impulse.x = impulse1[b2VecX];
-        impulse.y = impulse1[b2VecY];
-        impulse.z = 0.0f;
+        b2Vec<float, 2> impulse1 = K.Solve(-C1);
+        impulse[b2VecX] = impulse1[b2VecX];
+        impulse[b2VecY] = impulse1[b2VecY];
+        impulse[b2VecZ] = 0.0f;
     }
 
-    b2Vec2 P = impulse.x * perp + impulse.z * axis;
-    float32 LA = impulse.x * s1 + impulse.y + impulse.z * a1;
-    float32 LB = impulse.x * s2 + impulse.y + impulse.z * a2;
+    b2Vec<float, 2> P = impulse[b2VecX] * perp + impulse[b2VecZ] * axis;
+    float LA = impulse[b2VecX] * s1 + impulse[b2VecY] + impulse[b2VecZ] * a1;
+    float LB = impulse[b2VecX] * s2 + impulse[b2VecY] + impulse[b2VecZ] * a2;
 
     cA -= mA * P;
     aA -= iA * LA;
@@ -485,55 +485,55 @@ bool b2PrismaticJoint::SolvePositionConstraints(const b2SolverData& data)
     return linearError <= LINEAR_SLOP && angularError <= ANGULAR_SLOP;
 }
 
-b2Vec2 b2PrismaticJoint::GetAnchorA() const
+b2Vec<float, 2> b2PrismaticJoint::GetAnchorA() const
 {
     return m_bodyA->GetWorldPoint(m_localAnchorA);
 }
 
-b2Vec2 b2PrismaticJoint::GetAnchorB() const
+b2Vec<float, 2> b2PrismaticJoint::GetAnchorB() const
 {
     return m_bodyB->GetWorldPoint(m_localAnchorB);
 }
 
-b2Vec2 b2PrismaticJoint::GetReactionForce(float32 inv_dt) const
+b2Vec<float, 2> b2PrismaticJoint::GetReactionForce(float inv_dt) const
 {
-    return inv_dt * (m_impulse.x * m_perp + (m_motorImpulse + m_impulse.z) * m_axis);
+    return inv_dt * (m_impulse[b2VecX] * m_perp + (m_motorImpulse + m_impulse[b2VecZ]) * m_axis);
 }
 
-float32 b2PrismaticJoint::GetReactionTorque(float32 inv_dt) const
+float b2PrismaticJoint::GetReactionTorque(float inv_dt) const
 {
-    return inv_dt * m_impulse.y;
+    return inv_dt * m_impulse[b2VecY];
 }
 
-float32 b2PrismaticJoint::GetJointTranslation() const
+float b2PrismaticJoint::GetJointTranslation() const
 {
-    b2Vec2 pA = m_bodyA->GetWorldPoint(m_localAnchorA);
-    b2Vec2 pB = m_bodyB->GetWorldPoint(m_localAnchorB);
-    b2Vec2 d = pB - pA;
-    b2Vec2 axis = m_bodyA->GetWorldVector(m_localXAxisA);
+    b2Vec<float, 2> pA = m_bodyA->GetWorldPoint(m_localAnchorA);
+    b2Vec<float, 2> pB = m_bodyB->GetWorldPoint(m_localAnchorB);
+    b2Vec<float, 2> d = pB - pA;
+    b2Vec<float, 2> axis = m_bodyA->GetWorldVector(m_localXAxisA);
 
-    float32 translation = b2Dot(d, axis);
+    float translation = b2Dot(d, axis);
     return translation;
 }
 
-float32 b2PrismaticJoint::GetJointSpeed() const
+float b2PrismaticJoint::GetJointSpeed() const
 {
     b2Body* bA = m_bodyA;
     b2Body* bB = m_bodyB;
 
-    b2Vec2 rA = b2Mul(bA->m_xf.q, m_localAnchorA - bA->m_sweep.localCenter);
-    b2Vec2 rB = b2Mul(bB->m_xf.q, m_localAnchorB - bB->m_sweep.localCenter);
-    b2Vec2 p1 = bA->m_sweep.c + rA;
-    b2Vec2 p2 = bB->m_sweep.c + rB;
-    b2Vec2 d = p2 - p1;
-    b2Vec2 axis = b2Mul(bA->m_xf.q, m_localXAxisA);
+    b2Vec<float, 2> rA = b2Mul(bA->m_xf.q, m_localAnchorA - bA->m_sweep.localCenter);
+    b2Vec<float, 2> rB = b2Mul(bB->m_xf.q, m_localAnchorB - bB->m_sweep.localCenter);
+    b2Vec<float, 2> p1 = bA->m_sweep.c + rA;
+    b2Vec<float, 2> p2 = bB->m_sweep.c + rB;
+    b2Vec<float, 2> d = p2 - p1;
+    b2Vec<float, 2> axis = b2Mul(bA->m_xf.q, m_localXAxisA);
 
-    b2Vec2 vA = bA->m_linearVelocity;
-    b2Vec2 vB = bB->m_linearVelocity;
-    float32 wA = bA->m_angularVelocity;
-    float32 wB = bB->m_angularVelocity;
+    b2Vec<float, 2> vA = bA->m_linearVelocity;
+    b2Vec<float, 2> vB = bB->m_linearVelocity;
+    float wA = bA->m_angularVelocity;
+    float wB = bB->m_angularVelocity;
 
-    float32 speed =
+    float speed =
         b2Dot(d, b2Cross(wA, axis)) + b2Dot(axis, vB + b2Cross(wB, rB) - vA - b2Cross(wA, rA));
     return speed;
 }
@@ -550,21 +550,21 @@ void b2PrismaticJoint::EnableLimit(bool flag)
         m_bodyA->SetAwake(true);
         m_bodyB->SetAwake(true);
         m_enableLimit = flag;
-        m_impulse.z = 0.0f;
+        m_impulse[b2VecZ] = 0.0f;
     }
 }
 
-float32 b2PrismaticJoint::GetLowerLimit() const
+float b2PrismaticJoint::GetLowerLimit() const
 {
     return m_lowerTranslation;
 }
 
-float32 b2PrismaticJoint::GetUpperLimit() const
+float b2PrismaticJoint::GetUpperLimit() const
 {
     return m_upperTranslation;
 }
 
-void b2PrismaticJoint::SetLimits(float32 lower, float32 upper)
+void b2PrismaticJoint::SetLimits(float lower, float upper)
 {
     b2Assert(lower <= upper);
     if (lower != m_lowerTranslation || upper != m_upperTranslation)
@@ -573,7 +573,7 @@ void b2PrismaticJoint::SetLimits(float32 lower, float32 upper)
         m_bodyB->SetAwake(true);
         m_lowerTranslation = lower;
         m_upperTranslation = upper;
-        m_impulse.z = 0.0f;
+        m_impulse[b2VecZ] = 0.0f;
     }
 }
 
@@ -589,21 +589,21 @@ void b2PrismaticJoint::EnableMotor(bool flag)
     m_enableMotor = flag;
 }
 
-void b2PrismaticJoint::SetMotorSpeed(float32 speed)
+void b2PrismaticJoint::SetMotorSpeed(float speed)
 {
     m_bodyA->SetAwake(true);
     m_bodyB->SetAwake(true);
     m_motorSpeed = speed;
 }
 
-void b2PrismaticJoint::SetMaxMotorForce(float32 force)
+void b2PrismaticJoint::SetMaxMotorForce(float force)
 {
     m_bodyA->SetAwake(true);
     m_bodyB->SetAwake(true);
     m_maxMotorForce = force;
 }
 
-float32 b2PrismaticJoint::GetMotorForce(float32 inv_dt) const
+float b2PrismaticJoint::GetMotorForce(float inv_dt) const
 {
     return inv_dt * m_motorImpulse;
 }

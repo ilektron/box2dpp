@@ -54,9 +54,9 @@ enum class b2LimitState
 
 struct b2Jacobian
 {
-    b2Vec2 linear;
-    float32 angularA;
-    float32 angularB;
+    b2Vec<float, 2> linear;
+    float angularA;
+    float angularB;
 };
 
 /// A joint edge is used to connect bodies and joints together
@@ -115,16 +115,16 @@ public:
     b2Body* GetBodyB();
 
     /// Get the anchor point on bodyA in world coordinates.
-    virtual b2Vec2 GetAnchorA() const = 0;
+    virtual b2Vec<float, 2> GetAnchorA() const = 0;
 
     /// Get the anchor point on bodyB in world coordinates.
-    virtual b2Vec2 GetAnchorB() const = 0;
+    virtual b2Vec<float, 2> GetAnchorB() const = 0;
 
     /// Get the reaction force on bodyB at the joint anchor in Newtons.
-    virtual b2Vec2 GetReactionForce(float32 inv_dt) const = 0;
+    virtual b2Vec<float, 2> GetReactionForce(float inv_dt) const = 0;
 
     /// Get the reaction torque on bodyB in N*m.
-    virtual float32 GetReactionTorque(float32 inv_dt) const = 0;
+    virtual float GetReactionTorque(float inv_dt) const = 0;
 
     /// Get the next joint the world joint list.
     b2Joint* GetNext();
@@ -151,7 +151,7 @@ public:
     }
 
     /// Shift the origin for any points stored in world coordinates.
-    virtual void ShiftOrigin(const b2Vec2& newOrigin)
+    virtual void ShiftOrigin(const b2Vec<float, 2>& newOrigin)
     {
         B2_NOT_USED(newOrigin);
     }

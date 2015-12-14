@@ -28,13 +28,13 @@ void box2d::b2CollideCircles(b2Manifold* manifold, const b2CircleShape* circleA,
 {
     manifold->pointCount = 0;
 
-    b2Vec2 pA = b2Mul(xfA, circleA->m_p);
-    b2Vec2 pB = b2Mul(xfB, circleB->m_p);
+    b2Vec<float, 2> pA = b2Mul(xfA, circleA->m_p);
+    b2Vec<float, 2> pB = b2Mul(xfB, circleB->m_p);
 
-    b2Vec2 d = pB - pA;
-    float32 distSqr = b2Dot(d, d);
-    float32 rA = circleA->GetRadius(), rB = circleB->GetRadius();
-    float32 radius = rA + rB;
+    b2Vec<float, 2> d = pB - pA;
+    float distSqr = b2Dot(d, d);
+    float rA = circleA->GetRadius(), rB = circleB->GetRadius();
+    float radius = rA + rB;
     if (distSqr > radius * radius)
     {
         return;
@@ -56,19 +56,19 @@ void box2d::b2CollidePolygonAndCircle(b2Manifold* manifold, const b2PolygonShape
     manifold->pointCount = 0;
 
     // Compute circle position in the frame of the polygon.
-    b2Vec2 c = b2Mul(xfB, circleB->m_p);
-    b2Vec2 cLocal = b2MulT(xfA, c);
+    b2Vec<float, 2> c = b2Mul(xfB, circleB->m_p);
+    b2Vec<float, 2> cLocal = b2MulT(xfA, c);
 
     // Find the min separating edge.
     std::size_t normalIndex = 0;
-    float32 separation = -MAX_FLOAT;
-    float32 radius = polygonA->GetRadius() + circleB->GetRadius();
+    float separation = -MAX_FLOAT;
+    float radius = polygonA->GetRadius() + circleB->GetRadius();
     auto vertices = polygonA->GetVertices();
     auto normals = polygonA->GetNormals();
 
     for (std::size_t i = 0; i < vertices.size(); ++i)
     {
-        float32 s = b2Dot(normals[i], cLocal - vertices[i]);
+        float s = b2Dot(normals[i], cLocal - vertices[i]);
 
         if (s > radius)
         {
@@ -86,8 +86,8 @@ void box2d::b2CollidePolygonAndCircle(b2Manifold* manifold, const b2PolygonShape
     // Vertices that subtend the incident face.
     auto vertIndex1 = normalIndex;
     auto vertIndex2 = vertIndex1 + 1 < vertices.size() ? vertIndex1 + 1 : 0;
-    b2Vec2 v1 = vertices[vertIndex1];
-    b2Vec2 v2 = vertices[vertIndex2];
+    b2Vec<float, 2> v1 = vertices[vertIndex1];
+    b2Vec<float, 2> v2 = vertices[vertIndex2];
 
     // If the center is inside the polygon ...
     if (separation < EPSILON)
@@ -102,8 +102,8 @@ void box2d::b2CollidePolygonAndCircle(b2Manifold* manifold, const b2PolygonShape
     }
 
     // Compute barycentric coordinates
-    float32 u1 = b2Dot(cLocal - v1, v2 - v1);
-    float32 u2 = b2Dot(cLocal - v2, v1 - v2);
+    float u1 = b2Dot(cLocal - v1, v2 - v1);
+    float u2 = b2Dot(cLocal - v2, v1 - v2);
     if (u1 <= 0.0f)
     {
         if (b2DistanceSquared(cLocal, v1) > radius * radius)
@@ -114,7 +114,7 @@ void box2d::b2CollidePolygonAndCircle(b2Manifold* manifold, const b2PolygonShape
         manifold->pointCount = 1;
         manifold->type = b2Manifold::e_faceA;
         manifold->localNormal = cLocal - v1;
-        Normalize(manifold->localNormal);
+        manifold->localNormal.Normalize();
         manifold->localPoint = v1;
         manifold->points[0].localPoint = circleB->m_p;
         manifold->points[0].id.key = 0;
@@ -129,15 +129,15 @@ void box2d::b2CollidePolygonAndCircle(b2Manifold* manifold, const b2PolygonShape
         manifold->pointCount = 1;
         manifold->type = b2Manifold::e_faceA;
         manifold->localNormal = cLocal - v2;
-        Normalize(manifold->localNormal);
+        manifold->localNormal.Normalize();
         manifold->localPoint = v2;
         manifold->points[0].localPoint = circleB->m_p;
         manifold->points[0].id.key = 0;
     }
     else
     {
-        b2Vec2 faceCenter = 0.5f * (v1 + v2);
-        float32 separation = b2Dot(cLocal - faceCenter, normals[vertIndex1]);
+        b2Vec<float, 2> faceCenter = 0.5f * (v1 + v2);
+        float separation = b2Dot(cLocal - faceCenter, normals[vertIndex1]);
         if (separation > radius)
         {
             return;

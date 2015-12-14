@@ -45,7 +45,7 @@ class b2World
 public:
     /// Construct a world object.
     /// @param gravity the world gravity vector.
-    b2World(const b2Vec2& gravity);
+    b2World(const b2Vec<float, 2>& gravity);
 
     /// Destruct the world. All physics entities are destroyed and all heap memory is released.
     ~b2World();
@@ -93,7 +93,7 @@ public:
     /// @param timeStep the amount of time to simulate, this should not vary.
     /// @param velocityIterations for the velocity constraint solver.
     /// @param positionIterations for the position constraint solver.
-    void Step(float32 timeStep, int32_t velocityIterations, int32_t positionIterations);
+    void Step(float timeStep, int32_t velocityIterations, int32_t positionIterations);
 
     /// Manually clear the force buffer on all bodies. By default, forces are cleared automatically
     /// after each call to Step. The default behavior is modified by calling SetAutoClearForces.
@@ -120,7 +120,7 @@ public:
     /// @param callback a user implemented callback class.
     /// @param point1 the ray starting point
     /// @param point2 the ray ending point
-    void RayCast(b2RayCastCallback* callback, const b2Vec2& point1, const b2Vec2& point2) const;
+    void RayCast(b2RayCastCallback* callback, const b2Vec<float, 2>& point1, const b2Vec<float, 2>& point2) const;
 
     /// Get the world body list. With the returned body, use b2Body::GetNext to get
     /// the next body in the world list. A NULL body indicates the end of the list.
@@ -199,13 +199,13 @@ public:
 
     /// Get the quality metric of the dynamic tree. The smaller the better.
     /// The minimum is 1.
-    float32 GetTreeQuality() const;
+    float GetTreeQuality() const;
 
     /// Change the global gravity vector.
-    void SetGravity(const b2Vec2& gravity);
+    void SetGravity(const b2Vec<float, 2>& gravity);
 
     /// Get the global gravity vector.
-    b2Vec2 GetGravity() const;
+    b2Vec<float, 2> GetGravity() const;
 
     /// Is the world locked (in the middle of a time step).
     bool IsLocked() const;
@@ -219,7 +219,7 @@ public:
     /// Shift the world origin. Useful for large worlds.
     /// The body shift formula is: position -= newOrigin
     /// @param newOrigin the new origin with respect to the old origin
-    void ShiftOrigin(const b2Vec2& newOrigin);
+    void ShiftOrigin(const b2Vec<float, 2>& newOrigin);
 
     /// Get the contact manager for testing.
     const b2ContactManager& GetContactManager() const;
@@ -264,7 +264,7 @@ private:
     int32_t m_bodyCount;
     int32_t m_jointCount;
 
-    b2Vec2 m_gravity;
+    b2Vec<float, 2> m_gravity;
     bool m_allowSleep;
 
     b2DestructionListener* m_destructionListener;
@@ -272,7 +272,7 @@ private:
 
     // This is used to compute the time step ratio to
     // support a variable time step.
-    float32 m_inv_dt0;
+    float m_inv_dt0;
 
     // These are for debugging the solver.
     bool m_warmStarting;
@@ -329,12 +329,12 @@ inline int32_t b2World::GetContactCount() const
     return m_contactManager.m_contactCount;
 }
 
-inline void b2World::SetGravity(const b2Vec2& gravity)
+inline void b2World::SetGravity(const b2Vec<float, 2>& gravity)
 {
     m_gravity = gravity;
 }
 
-inline b2Vec2 b2World::GetGravity() const
+inline b2Vec<float, 2> b2World::GetGravity() const
 {
     return m_gravity;
 }

@@ -86,10 +86,10 @@ namespace box2d
 {
 struct b2SimplexVertex
 {
-    b2Vec2 wA;       // support point in proxyA
-    b2Vec2 wB;       // support point in proxyB
-    b2Vec2 w;        // wB - wA
-    float32 a;       // barycentric coordinate for closest point
+    b2Vec<float, 2> wA;       // support point in proxyA
+    b2Vec<float, 2> wB;       // support point in proxyB
+    b2Vec<float, 2> w;        // wB - wA
+    float a;       // barycentric coordinate for closest point
     int32_t indexA;  // wA index
     int32_t indexB;  // wB index
 };
@@ -110,8 +110,8 @@ struct b2Simplex
             b2SimplexVertex* v = vertices + i;
             v->indexA = cache->indexA[i];
             v->indexB = cache->indexB[i];
-            b2Vec2 wALocal = proxyA->GetVertex(v->indexA);
-            b2Vec2 wBLocal = proxyB->GetVertex(v->indexB);
+            b2Vec<float, 2> wALocal = proxyA->GetVertex(v->indexA);
+            b2Vec<float, 2> wBLocal = proxyB->GetVertex(v->indexB);
             v->wA = b2Mul(transformA, wALocal);
             v->wB = b2Mul(transformB, wBLocal);
             v->w = v->wB - v->wA;
@@ -122,8 +122,8 @@ struct b2Simplex
         // old metric then flush the simplex.
         if (m_count > 1)
         {
-            float32 metric1 = cache->metric;
-            float32 metric2 = GetMetric();
+            float metric1 = cache->metric;
+            float metric2 = GetMetric();
             if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < EPSILON)
             {
                 // Reset the simplex.
@@ -137,8 +137,8 @@ struct b2Simplex
             b2SimplexVertex* v = vertices + 0;
             v->indexA = 0;
             v->indexB = 0;
-            b2Vec2 wALocal = proxyA->GetVertex(0);
-            b2Vec2 wBLocal = proxyB->GetVertex(0);
+            b2Vec<float, 2> wALocal = proxyA->GetVertex(0);
+            b2Vec<float, 2> wBLocal = proxyB->GetVertex(0);
             v->wA = b2Mul(transformA, wALocal);
             v->wB = b2Mul(transformB, wBLocal);
             v->w = v->wB - v->wA;
@@ -159,7 +159,7 @@ struct b2Simplex
         }
     }
 
-    b2Vec2 GetSearchDirection() const
+    b2Vec<float, 2> GetSearchDirection() const
     {
         switch (m_count)
         {
@@ -168,8 +168,8 @@ struct b2Simplex
 
             case 2:
             {
-                b2Vec2 e12 = m_v2.w - m_v1.w;
-                float32 sgn = b2Cross(e12, -m_v1.w);
+                b2Vec<float, 2> e12 = m_v2.w - m_v1.w;
+                float sgn = b2Cross(e12, -m_v1.w);
                 if (sgn > 0.0f)
                 {
                     // Origin is left of e12.
@@ -188,7 +188,7 @@ struct b2Simplex
         }
     }
 
-    b2Vec2 GetClosestPoint() const
+    b2Vec<float, 2> GetClosestPoint() const
     {
         switch (m_count)
         {
@@ -211,7 +211,7 @@ struct b2Simplex
         }
     }
 
-    void GetWitnessPoints(b2Vec2* pA, b2Vec2* pB) const
+    void GetWitnessPoints(b2Vec<float, 2>* pA, b2Vec<float, 2>* pB) const
     {
         switch (m_count)
         {
@@ -240,7 +240,7 @@ struct b2Simplex
         }
     }
 
-    float32 GetMetric() const
+    float GetMetric() const
     {
         switch (m_count)
         {
@@ -297,12 +297,12 @@ struct b2Simplex
 // a2 = d12_2 / d12
 void b2Simplex::Solve2()
 {
-    b2Vec2 w1 = m_v1.w;
-    b2Vec2 w2 = m_v2.w;
-    b2Vec2 e12 = w2 - w1;
+    b2Vec<float, 2> w1 = m_v1.w;
+    b2Vec<float, 2> w2 = m_v2.w;
+    b2Vec<float, 2> e12 = w2 - w1;
 
     // w1 region
-    float32 d12_2 = -b2Dot(w1, e12);
+    float d12_2 = -b2Dot(w1, e12);
     if (d12_2 <= 0.0f)
     {
         // a2 <= 0, so we clamp it to 0
@@ -312,7 +312,7 @@ void b2Simplex::Solve2()
     }
 
     // w2 region
-    float32 d12_1 = b2Dot(w2, e12);
+    float d12_1 = b2Dot(w2, e12);
     if (d12_1 <= 0.0f)
     {
         // a1 <= 0, so we clamp it to 0
@@ -323,7 +323,7 @@ void b2Simplex::Solve2()
     }
 
     // Must be in e12 region.
-    float32 inv_d12 = 1.0f / (d12_1 + d12_2);
+    float inv_d12 = 1.0f / (d12_1 + d12_2);
     m_v1.a = d12_1 * inv_d12;
     m_v2.a = d12_2 * inv_d12;
     m_count = 2;
@@ -336,46 +336,46 @@ void b2Simplex::Solve2()
 // - inside the triangle
 void b2Simplex::Solve3()
 {
-    b2Vec2 w1 = m_v1.w;
-    b2Vec2 w2 = m_v2.w;
-    b2Vec2 w3 = m_v3.w;
+    b2Vec<float, 2> w1 = m_v1.w;
+    b2Vec<float, 2> w2 = m_v2.w;
+    b2Vec<float, 2> w3 = m_v3.w;
 
     // Edge12
     // [1      1     ][a1] = [1]
     // [w1.e12 w2.e12][a2] = [0]
     // a3 = 0
-    b2Vec2 e12 = w2 - w1;
-    float32 w1e12 = b2Dot(w1, e12);
-    float32 w2e12 = b2Dot(w2, e12);
-    float32 d12_1 = w2e12;
-    float32 d12_2 = -w1e12;
+    b2Vec<float, 2> e12 = w2 - w1;
+    float w1e12 = b2Dot(w1, e12);
+    float w2e12 = b2Dot(w2, e12);
+    float d12_1 = w2e12;
+    float d12_2 = -w1e12;
 
     // Edge13
     // [1      1     ][a1] = [1]
     // [w1.e13 w3.e13][a3] = [0]
     // a2 = 0
-    b2Vec2 e13 = w3 - w1;
-    float32 w1e13 = b2Dot(w1, e13);
-    float32 w3e13 = b2Dot(w3, e13);
-    float32 d13_1 = w3e13;
-    float32 d13_2 = -w1e13;
+    b2Vec<float, 2> e13 = w3 - w1;
+    float w1e13 = b2Dot(w1, e13);
+    float w3e13 = b2Dot(w3, e13);
+    float d13_1 = w3e13;
+    float d13_2 = -w1e13;
 
     // Edge23
     // [1      1     ][a2] = [1]
     // [w2.e23 w3.e23][a3] = [0]
     // a1 = 0
-    b2Vec2 e23 = w3 - w2;
-    float32 w2e23 = b2Dot(w2, e23);
-    float32 w3e23 = b2Dot(w3, e23);
-    float32 d23_1 = w3e23;
-    float32 d23_2 = -w2e23;
+    b2Vec<float, 2> e23 = w3 - w2;
+    float w2e23 = b2Dot(w2, e23);
+    float w3e23 = b2Dot(w3, e23);
+    float d23_1 = w3e23;
+    float d23_2 = -w2e23;
 
     // Triangle123
-    float32 n123 = b2Cross(e12, e13);
+    float n123 = b2Cross(e12, e13);
 
-    float32 d123_1 = n123 * b2Cross(w2, w3);
-    float32 d123_2 = n123 * b2Cross(w3, w1);
-    float32 d123_3 = n123 * b2Cross(w1, w2);
+    float d123_1 = n123 * b2Cross(w2, w3);
+    float d123_2 = n123 * b2Cross(w3, w1);
+    float d123_3 = n123 * b2Cross(w1, w2);
 
     // w1 region
     if (d12_2 <= 0.0f && d13_2 <= 0.0f)
@@ -388,7 +388,7 @@ void b2Simplex::Solve3()
     // e12
     if (d12_1 > 0.0f && d12_2 > 0.0f && d123_3 <= 0.0f)
     {
-        float32 inv_d12 = 1.0f / (d12_1 + d12_2);
+        float inv_d12 = 1.0f / (d12_1 + d12_2);
         m_v1.a = d12_1 * inv_d12;
         m_v2.a = d12_2 * inv_d12;
         m_count = 2;
@@ -398,7 +398,7 @@ void b2Simplex::Solve3()
     // e13
     if (d13_1 > 0.0f && d13_2 > 0.0f && d123_2 <= 0.0f)
     {
-        float32 inv_d13 = 1.0f / (d13_1 + d13_2);
+        float inv_d13 = 1.0f / (d13_1 + d13_2);
         m_v1.a = d13_1 * inv_d13;
         m_v3.a = d13_2 * inv_d13;
         m_count = 2;
@@ -427,7 +427,7 @@ void b2Simplex::Solve3()
     // e23
     if (d23_1 > 0.0f && d23_2 > 0.0f && d123_1 <= 0.0f)
     {
-        float32 inv_d23 = 1.0f / (d23_1 + d23_2);
+        float inv_d23 = 1.0f / (d23_1 + d23_2);
         m_v2.a = d23_1 * inv_d23;
         m_v3.a = d23_2 * inv_d23;
         m_count = 2;
@@ -436,7 +436,7 @@ void b2Simplex::Solve3()
     }
 
     // Must be in triangle123
-    float32 inv_d123 = 1.0f / (d123_1 + d123_2 + d123_3);
+    float inv_d123 = 1.0f / (d123_1 + d123_2 + d123_3);
     m_v1.a = d123_1 * inv_d123;
     m_v2.a = d123_2 * inv_d123;
     m_v3.a = d123_3 * inv_d123;
@@ -467,8 +467,8 @@ void box2d::b2Distance(b2DistanceOutput* output, b2SimplexCache* cache,
     int32_t saveA[3], saveB[3];
     int32_t saveCount = 0;
 
-    float32 distanceSqr1 = MAX_FLOAT;
-    float32 distanceSqr2 = distanceSqr1;
+    float distanceSqr1 = MAX_FLOAT;
+    float distanceSqr2 = distanceSqr1;
 
     // Main iteration loop.
     int32_t iter = 0;
@@ -506,8 +506,8 @@ void box2d::b2Distance(b2DistanceOutput* output, b2SimplexCache* cache,
         }
 
         // Compute closest point.
-        b2Vec2 p = simplex.GetClosestPoint();
-        distanceSqr2 = LengthSquared(p);
+        b2Vec<float, 2> p = simplex.GetClosestPoint();
+        distanceSqr2 = p.LengthSquared();
 
         // Ensure progress
         if (distanceSqr2 >= distanceSqr1)
@@ -517,10 +517,10 @@ void box2d::b2Distance(b2DistanceOutput* output, b2SimplexCache* cache,
         distanceSqr1 = distanceSqr2;
 
         // Get search direction.
-        b2Vec2 d = simplex.GetSearchDirection();
+        b2Vec<float, 2> d = simplex.GetSearchDirection();
 
         // Ensure the search direction is numerically fit.
-        if (LengthSquared(d) < EPSILON * EPSILON)
+        if (d.LengthSquared() < EPSILON * EPSILON)
         {
             // The origin is probably contained by a line segment
             // or triangle. Thus the shapes are overlapped.
@@ -578,16 +578,16 @@ void box2d::b2Distance(b2DistanceOutput* output, b2SimplexCache* cache,
     // Apply radii if requested.
     if (input->useRadii)
     {
-        float32 rA = proxyA->m_radius;
-        float32 rB = proxyB->m_radius;
+        float rA = proxyA->m_radius;
+        float rB = proxyB->m_radius;
 
         if (output->distance > rA + rB && output->distance > EPSILON)
         {
             // Shapes are still no overlapped.
             // Move the witness points to the outer surface.
             output->distance -= rA + rB;
-            b2Vec2 normal = output->pointB - output->pointA;
-            Normalize(normal);
+            b2Vec<float, 2> normal = output->pointB - output->pointA;
+            normal.Normalize();
             output->pointA += rA * normal;
             output->pointB -= rB * normal;
         }
@@ -595,7 +595,7 @@ void box2d::b2Distance(b2DistanceOutput* output, b2SimplexCache* cache,
         {
             // Shapes are overlapped when radii are considered.
             // Move the witness points to the middle.
-            b2Vec2 p = 0.5f * (output->pointA + output->pointB);
+            b2Vec<float, 2> p = 0.5f * (output->pointA + output->pointB);
             output->pointA = p;
             output->pointB = p;
             output->distance = 0.0f;

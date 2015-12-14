@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 project(Box2D)
 
@@ -8,7 +8,7 @@ else(UNIX)
 	set(BOX2D_INSTALL_BY_DEFAULT OFF)
 endif(UNIX)
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++14") 
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 
 #SET(CMAKE_CXX_COMPILER clang++-3.6)

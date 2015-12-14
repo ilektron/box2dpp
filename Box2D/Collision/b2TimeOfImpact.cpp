@@ -28,8 +28,8 @@
 using namespace box2d;
     
 
-float32 b2TOIState::b2_toiTime = 0;
-float32 b2TOIState::b2_toiMaxTime = 0;
+float b2TOIState::b2_toiTime = 0;
+float b2TOIState::b2_toiMaxTime = 0;
 int32_t b2TOIState::b2_toiCalls = 0;
 int32_t b2TOIState::b2_toiIters = 0;
 int32_t b2TOIState::b2_toiMaxIters = 0;
@@ -50,9 +50,9 @@ namespace
 
         // TODO_ERIN might not need to return the separation
 
-        float32 Initialize(const b2SimplexCache* cache, const b2DistanceProxy* proxyA,
+        float Initialize(const b2SimplexCache* cache, const b2DistanceProxy* proxyA,
                         const b2Sweep& sweepA, const b2DistanceProxy* proxyB, const b2Sweep& sweepB,
-                        float32 t1)
+                        float t1)
         {
             m_proxyA = proxyA;
             m_proxyB = proxyB;
@@ -69,32 +69,32 @@ namespace
             if (count == 1)
             {
                 m_type = e_points;
-                b2Vec2 localPointA = m_proxyA->GetVertex(cache->indexA[0]);
-                b2Vec2 localPointB = m_proxyB->GetVertex(cache->indexB[0]);
-                b2Vec2 pointA = b2Mul(xfA, localPointA);
-                b2Vec2 pointB = b2Mul(xfB, localPointB);
+                b2Vec<float, 2> localPointA = m_proxyA->GetVertex(cache->indexA[0]);
+                b2Vec<float, 2> localPointB = m_proxyB->GetVertex(cache->indexB[0]);
+                b2Vec<float, 2> pointA = b2Mul(xfA, localPointA);
+                b2Vec<float, 2> pointB = b2Mul(xfB, localPointB);
                 m_axis = pointB - pointA;
-                float32 s = Normalize(m_axis);
+                float s = m_axis.Normalize();
                 return s;
             }
             else if (cache->indexA[0] == cache->indexA[1])
             {
                 // Two points on B and one on A.
                 m_type = e_faceB;
-                b2Vec2 localPointB1 = proxyB->GetVertex(cache->indexB[0]);
-                b2Vec2 localPointB2 = proxyB->GetVertex(cache->indexB[1]);
+                b2Vec<float, 2> localPointB1 = proxyB->GetVertex(cache->indexB[0]);
+                b2Vec<float, 2> localPointB2 = proxyB->GetVertex(cache->indexB[1]);
 
                 m_axis = b2Cross(localPointB2 - localPointB1, 1.0f);
-                Normalize(m_axis);
-                b2Vec2 normal = b2Mul(xfB.q, m_axis);
+                m_axis.Normalize();
+                b2Vec<float, 2> normal = b2Mul(xfB.q, m_axis);
 
                 m_localPoint = 0.5f * (localPointB1 + localPointB2);
-                b2Vec2 pointB = b2Mul(xfB, m_localPoint);
+                b2Vec<float, 2> pointB = b2Mul(xfB, m_localPoint);
 
-                b2Vec2 localPointA = proxyA->GetVertex(cache->indexA[0]);
-                b2Vec2 pointA = b2Mul(xfA, localPointA);
+                b2Vec<float, 2> localPointA = proxyA->GetVertex(cache->indexA[0]);
+                b2Vec<float, 2> pointA = b2Mul(xfA, localPointA);
 
-                float32 s = b2Dot(pointA - pointB, normal);
+                float s = b2Dot(pointA - pointB, normal);
                 if (s < 0.0f)
                 {
                     m_axis = -m_axis;
@@ -106,20 +106,20 @@ namespace
             {
                 // Two points on A and one or two points on B.
                 m_type = e_faceA;
-                b2Vec2 localPointA1 = m_proxyA->GetVertex(cache->indexA[0]);
-                b2Vec2 localPointA2 = m_proxyA->GetVertex(cache->indexA[1]);
+                b2Vec<float, 2> localPointA1 = m_proxyA->GetVertex(cache->indexA[0]);
+                b2Vec<float, 2> localPointA2 = m_proxyA->GetVertex(cache->indexA[1]);
 
                 m_axis = b2Cross(localPointA2 - localPointA1, 1.0f);
-                Normalize(m_axis);
-                b2Vec2 normal = b2Mul(xfA.q, m_axis);
+                m_axis.Normalize();
+                b2Vec<float, 2> normal = b2Mul(xfA.q, m_axis);
 
                 m_localPoint = 0.5f * (localPointA1 + localPointA2);
-                b2Vec2 pointA = b2Mul(xfA, m_localPoint);
+                b2Vec<float, 2> pointA = b2Mul(xfA, m_localPoint);
 
-                b2Vec2 localPointB = m_proxyB->GetVertex(cache->indexB[0]);
-                b2Vec2 pointB = b2Mul(xfB, localPointB);
+                b2Vec<float, 2> localPointB = m_proxyB->GetVertex(cache->indexB[0]);
+                b2Vec<float, 2> pointB = b2Mul(xfB, localPointB);
 
-                float32 s = b2Dot(pointB - pointA, normal);
+                float s = b2Dot(pointB - pointA, normal);
                 if (s < 0.0f)
                 {
                     m_axis = -m_axis;
@@ -130,7 +130,7 @@ namespace
         }
 
         //
-        float32 FindMinSeparation(int32_t* indexA, int32_t* indexB, float32 t) const
+        float FindMinSeparation(int32_t* indexA, int32_t* indexB, float t) const
         {
             b2Transform xfA, xfB;
             m_sweepA.GetTransform(&xfA, t);
@@ -140,53 +140,53 @@ namespace
             {
                 case e_points:
                 {
-                    b2Vec2 axisA = b2MulT(xfA.q, m_axis);
-                    b2Vec2 axisB = b2MulT(xfB.q, -m_axis);
+                    b2Vec<float, 2> axisA = b2MulT(xfA.q, m_axis);
+                    b2Vec<float, 2> axisB = b2MulT(xfB.q, -m_axis);
 
                     *indexA = m_proxyA->GetSupport(axisA);
                     *indexB = m_proxyB->GetSupport(axisB);
 
-                    b2Vec2 localPointA = m_proxyA->GetVertex(*indexA);
-                    b2Vec2 localPointB = m_proxyB->GetVertex(*indexB);
+                    b2Vec<float, 2> localPointA = m_proxyA->GetVertex(*indexA);
+                    b2Vec<float, 2> localPointB = m_proxyB->GetVertex(*indexB);
 
-                    b2Vec2 pointA = b2Mul(xfA, localPointA);
-                    b2Vec2 pointB = b2Mul(xfB, localPointB);
+                    b2Vec<float, 2> pointA = b2Mul(xfA, localPointA);
+                    b2Vec<float, 2> pointB = b2Mul(xfB, localPointB);
 
-                    float32 separation = b2Dot(pointB - pointA, m_axis);
+                    float separation = b2Dot(pointB - pointA, m_axis);
                     return separation;
                 }
 
                 case e_faceA:
                 {
-                    b2Vec2 normal = b2Mul(xfA.q, m_axis);
-                    b2Vec2 pointA = b2Mul(xfA, m_localPoint);
+                    b2Vec<float, 2> normal = b2Mul(xfA.q, m_axis);
+                    b2Vec<float, 2> pointA = b2Mul(xfA, m_localPoint);
 
-                    b2Vec2 axisB = b2MulT(xfB.q, -normal);
+                    b2Vec<float, 2> axisB = b2MulT(xfB.q, -normal);
 
                     *indexA = -1;
                     *indexB = m_proxyB->GetSupport(axisB);
 
-                    b2Vec2 localPointB = m_proxyB->GetVertex(*indexB);
-                    b2Vec2 pointB = b2Mul(xfB, localPointB);
+                    b2Vec<float, 2> localPointB = m_proxyB->GetVertex(*indexB);
+                    b2Vec<float, 2> pointB = b2Mul(xfB, localPointB);
 
-                    float32 separation = b2Dot(pointB - pointA, normal);
+                    float separation = b2Dot(pointB - pointA, normal);
                     return separation;
                 }
 
                 case e_faceB:
                 {
-                    b2Vec2 normal = b2Mul(xfB.q, m_axis);
-                    b2Vec2 pointB = b2Mul(xfB, m_localPoint);
+                    b2Vec<float, 2> normal = b2Mul(xfB.q, m_axis);
+                    b2Vec<float, 2> pointB = b2Mul(xfB, m_localPoint);
 
-                    b2Vec2 axisA = b2MulT(xfA.q, -normal);
+                    b2Vec<float, 2> axisA = b2MulT(xfA.q, -normal);
 
                     *indexB = -1;
                     *indexA = m_proxyA->GetSupport(axisA);
 
-                    b2Vec2 localPointA = m_proxyA->GetVertex(*indexA);
-                    b2Vec2 pointA = b2Mul(xfA, localPointA);
+                    b2Vec<float, 2> localPointA = m_proxyA->GetVertex(*indexA);
+                    b2Vec<float, 2> pointA = b2Mul(xfA, localPointA);
 
-                    float32 separation = b2Dot(pointA - pointB, normal);
+                    float separation = b2Dot(pointA - pointB, normal);
                     return separation;
                 }
 
@@ -199,7 +199,7 @@ namespace
         }
 
         //
-        float32 Evaluate(int32_t indexA, int32_t indexB, float32 t) const
+        float Evaluate(int32_t indexA, int32_t indexB, float t) const
         {
             b2Transform xfA, xfB;
             m_sweepA.GetTransform(&xfA, t);
@@ -209,37 +209,37 @@ namespace
             {
                 case e_points:
                 {
-                    b2Vec2 localPointA = m_proxyA->GetVertex(indexA);
-                    b2Vec2 localPointB = m_proxyB->GetVertex(indexB);
+                    b2Vec<float, 2> localPointA = m_proxyA->GetVertex(indexA);
+                    b2Vec<float, 2> localPointB = m_proxyB->GetVertex(indexB);
 
-                    b2Vec2 pointA = b2Mul(xfA, localPointA);
-                    b2Vec2 pointB = b2Mul(xfB, localPointB);
-                    float32 separation = b2Dot(pointB - pointA, m_axis);
+                    b2Vec<float, 2> pointA = b2Mul(xfA, localPointA);
+                    b2Vec<float, 2> pointB = b2Mul(xfB, localPointB);
+                    float separation = b2Dot(pointB - pointA, m_axis);
 
                     return separation;
                 }
 
                 case e_faceA:
                 {
-                    b2Vec2 normal = b2Mul(xfA.q, m_axis);
-                    b2Vec2 pointA = b2Mul(xfA, m_localPoint);
+                    b2Vec<float, 2> normal = b2Mul(xfA.q, m_axis);
+                    b2Vec<float, 2> pointA = b2Mul(xfA, m_localPoint);
 
-                    b2Vec2 localPointB = m_proxyB->GetVertex(indexB);
-                    b2Vec2 pointB = b2Mul(xfB, localPointB);
+                    b2Vec<float, 2> localPointB = m_proxyB->GetVertex(indexB);
+                    b2Vec<float, 2> pointB = b2Mul(xfB, localPointB);
 
-                    float32 separation = b2Dot(pointB - pointA, normal);
+                    float separation = b2Dot(pointB - pointA, normal);
                     return separation;
                 }
 
                 case e_faceB:
                 {
-                    b2Vec2 normal = b2Mul(xfB.q, m_axis);
-                    b2Vec2 pointB = b2Mul(xfB, m_localPoint);
+                    b2Vec<float, 2> normal = b2Mul(xfB.q, m_axis);
+                    b2Vec<float, 2> pointB = b2Mul(xfB, m_localPoint);
 
-                    b2Vec2 localPointA = m_proxyA->GetVertex(indexA);
-                    b2Vec2 pointA = b2Mul(xfA, localPointA);
+                    b2Vec<float, 2> localPointA = m_proxyA->GetVertex(indexA);
+                    b2Vec<float, 2> pointA = b2Mul(xfA, localPointA);
 
-                    float32 separation = b2Dot(pointA - pointB, normal);
+                    float separation = b2Dot(pointA - pointB, normal);
                     return separation;
                 }
 
@@ -253,8 +253,8 @@ namespace
         const b2DistanceProxy* m_proxyB;
         b2Sweep m_sweepA, m_sweepB;
         Type m_type;
-        b2Vec2 m_localPoint;
-        b2Vec2 m_axis;
+        b2Vec<float, 2> m_localPoint;
+        b2Vec<float, 2> m_axis;
     };
 
 }
@@ -281,14 +281,14 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
     sweepA.Normalize();
     sweepB.Normalize();
 
-    float32 tMax = input->tMax;
+    float tMax = input->tMax;
 
-    float32 totalRadius = proxyA->m_radius + proxyB->m_radius;
-    float32 target = b2Max(LINEAR_SLOP, totalRadius - 3.0f * LINEAR_SLOP);
-    float32 tolerance = 0.25f * LINEAR_SLOP;
+    float totalRadius = proxyA->m_radius + proxyB->m_radius;
+    float target = b2Max(LINEAR_SLOP, totalRadius - 3.0f * LINEAR_SLOP);
+    float tolerance = 0.25f * LINEAR_SLOP;
     b2Assert(target > tolerance);
 
-    float32 t1 = 0.0f;
+    float t1 = 0.0f;
     const int32_t k_maxIterations = 20;  // TODO_ERIN b2Settings
     int32_t iter = 0;
 
@@ -339,17 +339,17 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 		// Dump the curve seen by the root finder
 		{
 			const int32_t N = 100;
-			float32 dx = 1.0f / N;
-			float32 xs[N+1];
-			float32 fs[N+1];
+			float dx = 1.0f / N;
+			float xs[N+1];
+			float fs[N+1];
 
-			float32 x = 0.0f;
+			float x = 0.0f;
 
 			for (int32_t i = 0; i <= N; ++i)
 			{
 				sweepA.GetTransform(&xfA, x);
 				sweepB.GetTransform(&xfB, x);
-				float32 f = fcn.Evaluate(xfA, xfB) - target;
+				float f = fcn.Evaluate(xfA, xfB) - target;
 
 				printf("%g %g\n", x, f);
 
@@ -365,13 +365,13 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
         // resolving the deepest point. This loop is bounded by the number of
         // vertices.
         bool done = false;
-        float32 t2 = tMax;
+        float t2 = tMax;
         int32_t pushBackIter = 0;
         for (;;)
         {
             // Find the deepest point at t2. Store the witness point indices.
             int32_t indexA, indexB;
-            float32 s2 = fcn.FindMinSeparation(&indexA, &indexB, t2);
+            float s2 = fcn.FindMinSeparation(&indexA, &indexB, t2);
 
             // Is the final configuration separated?
             if (s2 > target + tolerance)
@@ -392,7 +392,7 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
             }
 
             // Compute the initial separation of the witness points.
-            float32 s1 = fcn.Evaluate(indexA, indexB, t1);
+            float s1 = fcn.Evaluate(indexA, indexB, t1);
 
             // Check for initial overlap. This might happen if the root finder
             // runs out of iterations.
@@ -416,11 +416,11 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 
             // Compute 1D root of: f(x) - target = 0
             int32_t rootIterCount = 0;
-            float32 a1 = t1, a2 = t2;
+            float a1 = t1, a2 = t2;
             for (;;)
             {
                 // Use a mix of the secant rule and bisection.
-                float32 t;
+                float t;
                 if (rootIterCount & 1)
                 {
                     // Secant rule to improve convergence.
@@ -435,7 +435,7 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
                 ++rootIterCount;
                 ++b2TOIState::b2_toiRootIters;
 
-                float32 s = fcn.Evaluate(indexA, indexB, t);
+                float s = fcn.Evaluate(indexA, indexB, t);
 
                 if (std::abs(s - target) < tolerance)
                 {
@@ -491,7 +491,7 @@ void box2d::b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 
     b2TOIState::b2_toiMaxIters = b2Max(b2TOIState::b2_toiMaxIters, iter);
 
-    float32 time = timer.GetMilliseconds();
+    float time = timer.GetMilliseconds();
     b2TOIState::b2_toiMaxTime = b2Max(b2TOIState::b2_toiMaxTime, time);
     b2TOIState::b2_toiTime += time;
 }

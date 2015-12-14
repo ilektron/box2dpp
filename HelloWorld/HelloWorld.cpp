@@ -33,7 +33,7 @@ int main(int argc, char** argv)
     B2_NOT_USED(argv);
 
     // Define the gravity vector.
-    b2Vec2 gravity{{0.0f, -10.0f}};
+    b2Vec<float, 2> gravity{{0.0f, -10.0f}};
 
     // Construct a world object, which will hold and simulate the rigid bodies.
     b2World world(gravity);
@@ -82,7 +82,7 @@ int main(int argc, char** argv)
     // Prepare for simulation. Typically we use a time step of 1/60 of a
     // second (60Hz) and 10 iterations. This provides a high quality simulation
     // in most game scenarios.
-    float32 timeStep = 1.0f / 60.0f;
+    float timeStep = 1.0f / 60.0f;
     int32_t velocityIterations = 6;
     int32_t positionIterations = 2;
 
@@ -94,8 +94,8 @@ int main(int argc, char** argv)
         world.Step(timeStep, velocityIterations, positionIterations);
 
         // Now print the position and angle of the body.
-        b2Vec2 position = body->GetPosition();
-        float32 angle = body->GetAngle();
+        b2Vec<float, 2> position = body->GetPosition();
+        float angle = body->GetAngle();
 
         printf("%4.2f %4.2f %4.2f\n", position[b2VecX], position[b2VecY], angle);
     }

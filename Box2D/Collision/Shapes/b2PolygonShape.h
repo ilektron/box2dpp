@@ -45,22 +45,22 @@ public:
     /// @warning the points may be re-ordered, even if they form a convex polygon
     /// @warning collinear points are handled but not removed. Collinear points
     /// may lead to poor stacking behavior.
-    void Set(const b2Vec2* points, int32_t count);
+    void Set(const b2Vec<float, 2>* points, int32_t count);
 
     /// Build vertices to represent an axis-aligned box centered on the local origin.
     /// @param hx the half-width.
     /// @param hy the half-height.
-    void SetAsBox(float32 hx, float32 hy);
+    void SetAsBox(float hx, float hy);
 
     /// Build vertices to represent an oriented box.
     /// @param hx the half-width.
     /// @param hy the half-height.
     /// @param center the center of the box in local coordinates.
     /// @param angle the rotation of the box in local coordinates.
-    void SetAsBox(float32 hx, float32 hy, const b2Vec2& center, float32 angle);
+    void SetAsBox(float hx, float hy, const b2Vec<float, 2>& center, float angle);
 
     /// @see b2Shape::TestPoint
-    bool TestPoint(const b2Transform& transform, const b2Vec2& p) const override;
+    bool TestPoint(const b2Transform& transform, const b2Vec<float, 2>& p) const override;
 
     /// Implement b2Shape.
     bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input, const b2Transform& transform,
@@ -70,7 +70,7 @@ public:
     void ComputeAABB(b2AABB* aabb, const b2Transform& transform, int32_t childIndex) const override;
 
     /// @see b2Shape::ComputeMass
-    void ComputeMass(b2MassData* massData, float32 density) const override;
+    void ComputeMass(b2MassData* massData, float density) const override;
 
     /// Get the vertex count.
     int32_t GetVertexCount() const
@@ -79,21 +79,21 @@ public:
     }
 
     /// Get a vertex by index.
-    const b2Vec2& GetVertex(int32_t index) const;
-    const b2Vec2& GetCentroid() const;
+    const b2Vec<float, 2>& GetVertex(int32_t index) const;
+    const b2Vec<float, 2>& GetCentroid() const;
 
     /// Validate convexity. This is a very time consuming operation.
     /// @returns true if valid
     bool Validate() const;
     
-    const std::vector<b2Vec2>& GetVertices() const;
-    const std::vector<b2Vec2>& GetNormals() const;
+    const std::vector<b2Vec<float, 2>>& GetVertices() const;
+    const std::vector<b2Vec<float, 2>>& GetNormals() const;
     
 
 private:
-    b2Vec2 m_centroid;
-    std::vector<b2Vec2> m_vertices;
-    std::vector<b2Vec2> m_normals;
+    b2Vec<float, 2> m_centroid;
+    std::vector<b2Vec<float, 2>> m_vertices;
+    std::vector<b2Vec<float, 2>> m_normals;
 };
 
 inline b2PolygonShape::b2PolygonShape() : b2Shape(e_polygon, POLYGON_RADIUS)
@@ -101,22 +101,22 @@ inline b2PolygonShape::b2PolygonShape() : b2Shape(e_polygon, POLYGON_RADIUS)
     m_centroid = {{0.0f, 0.0f}};
 }
 
-inline const b2Vec2& b2PolygonShape::GetVertex(int32_t index) const
+inline const b2Vec<float, 2>& b2PolygonShape::GetVertex(int32_t index) const
 {
     return m_vertices[index];
 }
 
-inline const b2Vec2& b2PolygonShape::GetCentroid() const
+inline const b2Vec<float, 2>& b2PolygonShape::GetCentroid() const
 {
     return m_centroid;
 }
 
-inline const std::vector<b2Vec2>& b2PolygonShape::GetVertices() const
+inline const std::vector<b2Vec<float, 2>>& b2PolygonShape::GetVertices() const
 {
     return m_vertices;
 }
 
-inline const std::vector<b2Vec2>& b2PolygonShape::GetNormals() const
+inline const std::vector<b2Vec<float, 2>>& b2PolygonShape::GetNormals() const
 {
     return m_normals;
 }

@@ -26,8 +26,8 @@ using namespace box2d;
 
 b2Body::b2Body(const b2BodyDef* bd, b2World* world)
 {
-    b2Assert(IsValid(bd->position));
-    b2Assert(IsValid(bd->linearVelocity));
+    b2Assert(bd->position.IsValid());
+    b2Assert(bd->linearVelocity.IsValid());
     b2Assert(b2IsValid(bd->angle));
     b2Assert(b2IsValid(bd->angularVelocity));
     b2Assert(b2IsValid(bd->angularDamping) && bd->angularDamping >= 0.0f);
@@ -204,7 +204,7 @@ b2Fixture* b2Body::CreateFixture(const b2FixtureDef* def)
     return fixture;
 }
 
-b2Fixture* b2Body::CreateFixture(const b2Shape* shape, float32 density)
+b2Fixture* b2Body::CreateFixture(const b2Shape* shape, float density)
 {
     b2FixtureDef def;
     def.shape = shape;
@@ -301,7 +301,7 @@ void b2Body::ResetMassData()
     b2Assert(m_type == b2BodyType::DYNAMIC_BODY);
 
     // Accumulate mass over all fixtures.
-    b2Vec2 localCenter = b2Vec2_zero;
+    b2Vec<float, 2> localCenter = b2Vec2_zero;
     for (b2Fixture* f = m_fixtureList; f; f = f->m_next)
     {
         if (f->m_density == 0.0f)
@@ -343,7 +343,7 @@ void b2Body::ResetMassData()
     }
 
     // Move center of mass.
-    b2Vec2 oldCenter = m_sweep.c;
+    b2Vec<float, 2> oldCenter = m_sweep.c;
     m_sweep.localCenter = localCenter;
     m_sweep.c0 = m_sweep.c = b2Mul(m_xf, m_sweep.localCenter);
 
@@ -384,7 +384,7 @@ void b2Body::SetMassData(const b2MassData* massData)
     }
 
     // Move center of mass.
-    b2Vec2 oldCenter = m_sweep.c;
+    b2Vec<float, 2> oldCenter = m_sweep.c;
     m_sweep.localCenter = massData->center;
     m_sweep.c0 = m_sweep.c = b2Mul(m_xf, m_sweep.localCenter);
 
@@ -415,7 +415,7 @@ bool b2Body::ShouldCollide(const b2Body* other) const
     return true;
 }
 
-void b2Body::SetTransform(const b2Vec2& position, float32 angle)
+void b2Body::SetTransform(const b2Vec<float, 2>& position, float angle)
 {
     b2Assert(m_world->IsLocked() == false);
     if (m_world->IsLocked() == true)

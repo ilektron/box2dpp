@@ -40,23 +40,23 @@ struct b2WeldJointDef : public b2JointDef
 
     /// Initialize the bodies, anchors, and reference angle using a world
     /// anchor point.
-    void Initialize(b2Body* bodyA, b2Body* bodyB, const b2Vec2& anchor);
+    void Initialize(b2Body* bodyA, b2Body* bodyB, const b2Vec<float, 2>& anchor);
 
     /// The local anchor point relative to bodyA's origin.
-    b2Vec2 localAnchorA;
+    b2Vec<float, 2> localAnchorA;
 
     /// The local anchor point relative to bodyB's origin.
-    b2Vec2 localAnchorB;
+    b2Vec<float, 2> localAnchorB;
 
     /// The bodyB angle minus bodyA angle in the reference state (radians).
-    float32 referenceAngle;
+    float referenceAngle;
 
     /// The mass-spring-damper frequency in Hertz. Rotation only.
     /// Disable softness with a value of 0.
-    float32 frequencyHz;
+    float frequencyHz;
 
     /// The damping ratio. 0 = no damping, 1 = critical damping.
-    float32 dampingRatio;
+    float dampingRatio;
 };
 
 /// A weld joint essentially glues two bodies together. A weld joint may
@@ -64,46 +64,46 @@ struct b2WeldJointDef : public b2JointDef
 class b2WeldJoint : public b2Joint
 {
 public:
-    b2Vec2 GetAnchorA() const override;
-    b2Vec2 GetAnchorB() const override;
+    b2Vec<float, 2> GetAnchorA() const override;
+    b2Vec<float, 2> GetAnchorB() const override;
 
-    b2Vec2 GetReactionForce(float32 inv_dt) const override;
-    float32 GetReactionTorque(float32 inv_dt) const override;
+    b2Vec<float, 2> GetReactionForce(float inv_dt) const override;
+    float GetReactionTorque(float inv_dt) const override;
 
     /// The local anchor point relative to bodyA's origin.
-    const b2Vec2& GetLocalAnchorA() const
+    const b2Vec<float, 2>& GetLocalAnchorA() const
     {
         return m_localAnchorA;
     }
 
     /// The local anchor point relative to bodyB's origin.
-    const b2Vec2& GetLocalAnchorB() const
+    const b2Vec<float, 2>& GetLocalAnchorB() const
     {
         return m_localAnchorB;
     }
 
     /// Get the reference angle.
-    float32 GetReferenceAngle() const
+    float GetReferenceAngle() const
     {
         return m_referenceAngle;
     }
 
     /// Set/get frequency in Hz.
-    void SetFrequency(float32 hz)
+    void SetFrequency(float hz)
     {
         m_frequencyHz = hz;
     }
-    float32 GetFrequency() const
+    float GetFrequency() const
     {
         return m_frequencyHz;
     }
 
     /// Set/get damping ratio.
-    void SetDampingRatio(float32 ratio)
+    void SetDampingRatio(float ratio)
     {
         m_dampingRatio = ratio;
     }
-    float32 GetDampingRatio() const
+    float GetDampingRatio() const
     {
         return m_dampingRatio;
     }
@@ -120,28 +120,28 @@ protected:
     void SolveVelocityConstraints(const b2SolverData& data) override;
     bool SolvePositionConstraints(const b2SolverData& data) override;
 
-    float32 m_frequencyHz;
-    float32 m_dampingRatio;
-    float32 m_bias;
+    float m_frequencyHz;
+    float m_dampingRatio;
+    float m_bias;
 
     // Solver shared
-    b2Vec2 m_localAnchorA;
-    b2Vec2 m_localAnchorB;
-    float32 m_referenceAngle;
-    float32 m_gamma;
-    b2Vec3 m_impulse;
+    b2Vec<float, 2> m_localAnchorA;
+    b2Vec<float, 2> m_localAnchorB;
+    float m_referenceAngle;
+    float m_gamma;
+    b2Vec<float, 3> m_impulse;
 
     // Solver temp
     int32_t m_indexA;
     int32_t m_indexB;
-    b2Vec2 m_rA;
-    b2Vec2 m_rB;
-    b2Vec2 m_localCenterA;
-    b2Vec2 m_localCenterB;
-    float32 m_invMassA;
-    float32 m_invMassB;
-    float32 m_invIA;
-    float32 m_invIB;
+    b2Vec<float, 2> m_rA;
+    b2Vec<float, 2> m_rB;
+    b2Vec<float, 2> m_localCenterA;
+    b2Vec<float, 2> m_localCenterB;
+    float m_invMassA;
+    float m_invMassB;
+    float m_invIA;
+    float m_invIB;
     b2Mat33 m_mass;
 };
 }

@@ -32,7 +32,7 @@ public:
     b2EdgeShape();
 
     /// Set this as an isolated edge.
-    void Set(b2Vec2 v1, b2Vec2 v2);
+    void Set(b2Vec<float, 2> v1, b2Vec<float, 2> v2);
 
     /// Implement b2Shape.
     b2Shape* Clone(b2BlockAllocator* allocator) const override;
@@ -41,7 +41,7 @@ public:
     int32_t GetChildCount() const override;
 
     /// @see b2Shape::TestPoint
-    bool TestPoint(const b2Transform& transform, const b2Vec2& p) const override;
+    bool TestPoint(const b2Transform& transform, const b2Vec<float, 2>& p) const override;
 
     /// Implement b2Shape.
     bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input, const b2Transform& transform,
@@ -51,13 +51,13 @@ public:
     void ComputeAABB(b2AABB* aabb, const b2Transform& transform, int32_t childIndex) const override;
 
     /// @see b2Shape::ComputeMass
-    void ComputeMass(b2MassData* massData, float32 density) const override;
+    void ComputeMass(b2MassData* massData, float density) const override;
 
     /// These are the edge vertices
-    b2Vec2 m_vertex1, m_vertex2;
+    b2Vec<float, 2> m_vertex1, m_vertex2;
 
     /// Optional adjacent vertices. These are used for smooth collision.
-    b2Vec2 m_vertex0, m_vertex3;
+    b2Vec<float, 2> m_vertex0, m_vertex3;
     bool m_hasVertex0, m_hasVertex3;
 };
 

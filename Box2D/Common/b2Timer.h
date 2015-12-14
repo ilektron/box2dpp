@@ -35,12 +35,12 @@ public:
     void Reset();
 
     /// Get the time since construction or the last reset.
-    float32 GetMilliseconds() const;
+    float GetMilliseconds() const;
 
 private:
 #if defined(_WIN32)
-    float64 m_start;
-    static float64 s_invFrequency;
+    double m_start;
+    static double s_invFrequency;
 #elif defined(__linux__) || defined(__APPLE__)
     unsigned long m_start_sec;
     unsigned long m_start_usec;

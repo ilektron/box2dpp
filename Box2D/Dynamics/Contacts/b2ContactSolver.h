@@ -32,43 +32,43 @@ class b2StackAllocator;
 // struct b2ContactPositionConstraint;
 struct b2ContactPositionConstraint
 {
-    b2Vec2 localPoints[MAX_MANIFOLD_POINTS];
-    b2Vec2 localNormal;
-    b2Vec2 localPoint;
+    b2Vec<float, 2> localPoints[MAX_MANIFOLD_POINTS];
+    b2Vec<float, 2> localNormal;
+    b2Vec<float, 2> localPoint;
     int32_t indexA;
     int32_t indexB;
-    float32 invMassA, invMassB;
-    b2Vec2 localCenterA, localCenterB;
-    float32 invIA, invIB;
+    float invMassA, invMassB;
+    b2Vec<float, 2> localCenterA, localCenterB;
+    float invIA, invIB;
     b2Manifold::Type type;
-    float32 radiusA, radiusB;
+    float radiusA, radiusB;
     int32_t pointCount;
 };
 
 struct b2VelocityConstraintPoint
 {
-    b2Vec2 rA;
-    b2Vec2 rB;
-    float32 normalImpulse;
-    float32 tangentImpulse;
-    float32 normalMass;
-    float32 tangentMass;
-    float32 velocityBias;
+    b2Vec<float, 2> rA;
+    b2Vec<float, 2> rB;
+    float normalImpulse;
+    float tangentImpulse;
+    float normalMass;
+    float tangentMass;
+    float velocityBias;
 };
 
 struct b2ContactVelocityConstraint
 {
     b2VelocityConstraintPoint points[MAX_MANIFOLD_POINTS];
-    b2Vec2 normal;
+    b2Vec<float, 2> normal;
     b2Mat22 normalMass;
     b2Mat22 K;
     int32_t indexA;
     int32_t indexB;
-    float32 invMassA, invMassB;
-    float32 invIA, invIB;
-    float32 friction;
-    float32 restitution;
-    float32 tangentSpeed;
+    float invMassA, invMassB;
+    float invIA, invIB;
+    float friction;
+    float restitution;
+    float tangentSpeed;
     int32_t pointCount;
     int32_t contactIndex;
 };

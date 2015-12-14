@@ -18,258 +18,20 @@
 
 #ifndef B2_MATH_H
 #define B2_MATH_H
+#pragma once
 
+#include <Box2D/Common/b2MathFunctions.h>
 #include <Box2D/Common/b2Settings.h>
+#include <Box2D/Common/b2Vec.h>
 #include <utility>
 #include <cmath>
 #include <cstring>
 #include <array>
 #include <utility>
+#include <initializer_list>
 
 namespace box2d
 {
-/// This function is used to ensure that a floating point number is not a NaN or infinity.
-inline bool b2IsValid(float32 x)
-{
-    int32_t ix = 0;
-    static_assert(sizeof(x) == sizeof(ix), "Mismatched storage type sizes");
-    memcpy(&ix, &x, sizeof(x));
-    return (ix & 0x7f800000) != 0x7f800000;
-}
-
-/// This is a approximate yet fast inverse square-root.
-inline float32 b2InvSqrt(float32 x)
-{
-    int32_t ix = 0;
-    static_assert(sizeof(x) == sizeof(ix), "Mismatched storage type sizes");
-    memcpy(&ix, &x, sizeof(x));
-
-    float32 xhalf = 0.5f * x;
-    ix = 0x5f3759df - (ix >> 1);
-    memcpy(&x, &ix, sizeof(x));
-    x = x * (1.5f - xhalf * x * x);
-    return x;
-}
-
-#define b2Sqrt(x) sqrtf(x)
-#define b2Atan2(y, x) atan2f(y, x)
-
-typedef std::array<float32, 2> b2Vec2;
-
-constexpr int b2VecX = 0;
-constexpr int b2VecY = 1;
-constexpr int b2VecZ = 2;
-
-// inline b2Vec2& operator-(b2Vec2& vec)
-// {
-//     for (auto& f : vec)
-//     {
-//         f = -f;
-//     }
-//     
-//     return vec;
-// }
-
-// inline b2Vec2&& operator-(b2Vec2&& vec)
-// {
-//     for (auto& f : vec)
-//     {
-//         f = -f;
-//     }
-//     
-//     return std::forward(vec);
-// }
-
-inline b2Vec2 operator-(const b2Vec2& vec)
-{
-    b2Vec2 ret;
-    for (unsigned int i = 0; i < vec.size(); ++i)
-    {
-        ret[i] = -vec[i];
-    }
-    
-    return ret;
-}
-
-inline b2Vec2 Negate(const b2Vec2& vec)
-{
-    b2Vec2 ret;
-    for (unsigned int i = 0; i < vec.size(); ++i)
-    {
-        ret[i] = -vec[i];
-    }
-    
-    return ret;
-}
-
-inline b2Vec2 operator+(const b2Vec2& vec1, const b2Vec2& vec2)
-{
-    b2Vec2 ret;
-    for (unsigned int i = 0; i < vec1.size(); ++i)
-    {
-        ret[i] = vec1[i] + vec2[i];
-    }
-    
-    return ret;
-}
-
-inline b2Vec2 operator-(const b2Vec2& vec1, const b2Vec2& vec2)
-{
-    b2Vec2 ret;
-    for (unsigned int i = 0; i < vec1.size(); ++i)
-    {
-        ret[i] = vec1[i] - vec2[i];
-    }
-    
-    return ret;
-}
-
-inline b2Vec2 operator-(const b2Vec2& vec1, float32 f)
-{
-    b2Vec2 ret;
-    for (unsigned int i = 0; i < vec1.size(); ++i)
-    {
-        ret[i] = vec1[i] - f;
-    }
-    
-    return ret;
-}
-
-inline b2Vec2 operator+(const b2Vec2& vec1, float32 f)
-{
-    b2Vec2 ret;
-    for (unsigned int i = 0; i < vec1.size(); ++i)
-    {
-        ret[i] = vec1[i] + f;
-    }
-    
-    return ret;
-}
-
-inline b2Vec2& operator+=(b2Vec2& vec1, const b2Vec2& vec2)
-{
-    for (unsigned int i = 0; i < vec1.size(); ++i)
-    {
-        vec1[i] += vec2[i];
-    }
-    
-    return vec1;
-}
-
-inline b2Vec2& operator-=(b2Vec2& vec1, const b2Vec2& vec2)
-{
-    for (unsigned int i = 0; i < vec1.size(); ++i)
-    {
-        vec1[i] -= vec2[i];
-    }
-    
-    return vec1;
-}
-
-inline b2Vec2& operator*=(b2Vec2& vec, float32 a)
-{
-    for (auto& f : vec)
-    {
-        f *= a;
-    }
-    
-    return vec;
-}
-
-inline bool operator<=(const b2Vec2& a, const b2Vec2& b)
-{
-    bool ret = a[b2VecX] <= b[b2VecX] && a[b2VecY] <= b[b2VecY];
-    
-    return ret;
-}
-
-inline bool operator>=(const b2Vec2& a, const b2Vec2& b)
-{
-    bool ret = a[b2VecX] >= b[b2VecX] && a[b2VecY] >= b[b2VecY];
-    
-    return ret;
-}
-
-inline bool operator>(const b2Vec2& a, const b2Vec2& b)
-{
-    bool ret = a[b2VecX] > b[b2VecX] && a[b2VecY] > b[b2VecY];
-    
-    return ret;
-}
-
-inline bool operator<(const b2Vec2& a, const b2Vec2& b)
-{
-    bool ret = a[b2VecX] < b[b2VecX] && a[b2VecY] < b[b2VecY];
-    
-    return ret;
-}
-
-inline bool operator<=(const b2Vec2& a, float32 f)
-{
-    bool ret = a[b2VecX] <= f && a[b2VecY] <= f;
-    
-    return ret;
-}
-
-inline bool operator>=(const b2Vec2& a, float32 f)
-{
-    bool ret = a[b2VecX] >= f && a[b2VecY] >= f;
-    
-    return ret;
-}
-
-inline bool operator>(const b2Vec2& a, float32 f)
-{
-    bool ret = a[b2VecX] > f && a[b2VecY] > f;
-    
-    return ret;
-}
-
-inline bool operator<(const b2Vec2& a, float32 f)
-{
-    bool ret = a[b2VecX] < f && a[b2VecY] < f;
-    
-    return ret;
-}
-
-inline float32 LengthSquared(const b2Vec2& vec)
-{
-    float32 ret = vec[b2VecX] * vec[b2VecX] + vec[b2VecY] * vec[b2VecY];
-    return ret;
-}
-
-inline float32 Length(const b2Vec2& vec)
-{
-    float32 ret = b2Sqrt(LengthSquared(vec));
-    return ret;
-}
-
-/// Convert this vector into a unit vector. Returns the length.
-inline float32 Normalize(b2Vec2& vec)
-{
-    float32 length = Length(vec);
-    if (length < EPSILON)
-    {
-        return 0.0f;
-    }
-    float32 invLength = 1.0f / length;
-    vec *= invLength;
-    
-    return length;
-}
-
-/// Does this vector contain finite coordinates?
-inline bool IsValid(const b2Vec2& vec)
-{
-    return b2IsValid(vec[b2VecX]) && b2IsValid(vec[b2VecY]);
-}
-
-/// Get the skew vector such that dot(skew_vec, other) == cross(vec, other)
-inline b2Vec2 Skew(const b2Vec2& vec)
-{
-    b2Vec2 ret = {{-vec[b2VecY], vec[b2VecX]}};
-    return ret;
-}
 
 /// A 2D column vector.
 struct b2Vec2Old
@@ -278,7 +40,7 @@ struct b2Vec2Old
     b2Vec2Old() = default;
 
     /// Construct using coordinates.
-    b2Vec2Old(float32 x, float32 y) : x(x), y(y)
+    b2Vec2Old(float x, float y) : x(x), y(y)
     {
     }
 
@@ -290,7 +52,7 @@ struct b2Vec2Old
     }
 
     /// Set this vector to some specified coordinates.
-    void Set(float32 x_, float32 y_)
+    void Set(float x_, float y_)
     {
         x = x_;
         y = y_;
@@ -305,7 +67,7 @@ struct b2Vec2Old
     }
 
     // Read from and indexed element.
-    float32 operator[](int32_t i) const
+    float operator[](int32_t i) const
     {
         switch (i)
         {
@@ -322,7 +84,7 @@ struct b2Vec2Old
     }
 
     // Write to an indexed element.
-    float32& operator[](int32_t i)
+    float& operator[](int32_t i)
     {
         switch (i)
         {
@@ -341,46 +103,46 @@ struct b2Vec2Old
     /// Add a vector to this vector.
     void operator+=(const b2Vec2Old& v)
     {
-        x += v.x;
-        y += v.y;
+        x += v[b2VecX];
+        y += v[b2VecY];
     }
 
     /// Subtract a vector from this vector.
     void operator-=(const b2Vec2Old& v)
     {
-        x -= v.x;
-        y -= v.y;
+        x -= v[b2VecX];
+        y -= v[b2VecY];
     }
 
     /// Multiply this vector by a scalar.
-    void operator*=(float32 a)
+    void operator*=(float a)
     {
         x *= a;
         y *= a;
     }
 
     /// Get the length of this vector (the norm).
-    float32 Length() const
+    float Length() const
     {
         return b2Sqrt(x * x + y * y);
     }
 
     /// Get the length squared. For performance, use this instead of
-    /// b2Vec2::Length (if possible).
-    float32 LengthSquared() const
+    /// b2Vec<float, 2>::Length (if possible).
+    float LengthSquared() const
     {
         return x * x + y * y;
     }
 
     /// Convert this vector into a unit vector. Returns the length.
-    float32 Normalize()
+    float Normalize()
     {
-        float32 length = Length();
+        float length = Length();
         if (length < EPSILON)
         {
             return 0.0f;
         }
-        float32 invLength = 1.0f / length;
+        float invLength = 1.0f / length;
         x *= invLength;
         y *= invLength;
 
@@ -400,70 +162,7 @@ struct b2Vec2Old
     }
 
     // private:
-    float32 x, y;
-};
-
-/// A 2D column vector with 3 elements.
-struct b2Vec3
-{
-    /// Default constructor does nothing (for performance).
-    b2Vec3() = default;
-
-    /// Construct using coordinates.
-    b2Vec3(float32 x, float32 y, float32 z) : x(x), y(y), z(z)
-    {
-    }
-
-    /// Set this vector to all zeros.
-    void SetZero()
-    {
-        x = 0.0f;
-        y = 0.0f;
-        z = 0.0f;
-    }
-
-    /// Set this vector to some specified coordinates.
-    void Set(float32 x_, float32 y_, float32 z_)
-    {
-        x = x_;
-        y = y_;
-        z = z_;
-    }
-
-    /// Negate this vector.
-    b2Vec3 operator-() const
-    {
-        b2Vec3 v;
-        v.Set(-x, -y, -z);
-        return v;
-    }
-
-    /// Add a vector to this vector.
-    void operator+=(const b2Vec3& v)
-    {
-        x += v.x;
-        y += v.y;
-        z += v.z;
-    }
-
-    /// Subtract a vector from this vector.
-    void operator-=(const b2Vec3& v)
-    {
-        x -= v.x;
-        y -= v.y;
-        z -= v.z;
-    }
-
-    /// Multiply this vector by a scalar.
-    void operator*=(float32 s)
-    {
-        x *= s;
-        y *= s;
-        z *= s;
-    }
-
-    // private:
-    float32 x, y, z;
+    float x, y;
 };
 
 /// A 2-by-2 matrix. Stored in column-major order.
@@ -475,21 +174,21 @@ struct b2Mat22
     }
 
     /// Construct this matrix using columns.
-    b2Mat22(const b2Vec2& c1, const b2Vec2& c2)
+    b2Mat22(const b2Vec<float, 2>& c1, const b2Vec<float, 2>& c2)
     {
         ex = c1;
         ey = c2;
     }
 
     /// Construct this matrix using scalars.
-    b2Mat22(float32 a11, float32 a12, float32 a21, float32 a22)
+    b2Mat22(float a11, float a12, float a21, float a22)
     {
         ex = {{a11, a21}};
         ey = {{a12, a22}};
     }
 
     /// Initialize this matrix using columns.
-    void Set(const b2Vec2& c1, const b2Vec2& c2)
+    void Set(const b2Vec<float, 2>& c1, const b2Vec<float, 2>& c2)
     {
         ex = c1;
         ey = c2;
@@ -511,9 +210,9 @@ struct b2Mat22
 
     b2Mat22 GetInverse() const
     {
-        float32 a = ex[b2VecX], b = ey[b2VecX], c = ex[b2VecY], d = ey[b2VecY];
+        float a = ex[b2VecX], b = ey[b2VecX], c = ex[b2VecY], d = ey[b2VecY];
         b2Mat22 B;
-        float32 det = a * d - b * c;
+        float det = a * d - b * c;
         if (det != 0.0f)
         {
             det = 1.0f / det;
@@ -527,22 +226,22 @@ struct b2Mat22
 
     /// Solve A * x = b, where b is a column vector. This is more efficient
     /// than computing the inverse in one-shot cases.
-    b2Vec2 Solve(const b2Vec2& b) const
+    b2Vec<float, 2> Solve(const b2Vec<float, 2>& b) const
     {
-        float32 a11 = ex[b2VecX], a12 = ey[b2VecX], a21 = ex[b2VecY], a22 = ey[b2VecY];
-        float32 det = a11 * a22 - a12 * a21;
+        float a11 = ex[b2VecX], a12 = ey[b2VecX], a21 = ex[b2VecY], a22 = ey[b2VecY];
+        float det = a11 * a22 - a12 * a21;
         if (det != 0.0f)
         {
             det = 1.0f / det;
         }
-        b2Vec2 x;
+        b2Vec<float, 2> x;
         x[b2VecX] = det * (a22 * b[b2VecX] - a12 * b[b2VecY]);
         x[b2VecY] = det * (a11 * b[b2VecY] - a21 * b[b2VecX]);
         return x;
     }
 
     // private:
-    b2Vec2 ex, ey;
+    b2Vec<float, 2> ex, ey;
 };
 
 /// A 3-by-3 matrix. Stored in column-major order.
@@ -554,7 +253,7 @@ struct b2Mat33
     }
 
     /// Construct this matrix using columns.
-    b2Mat33(const b2Vec3& c1, const b2Vec3& c2, const b2Vec3& c3)
+    b2Mat33(const b2Vec<float, 3>& c1, const b2Vec<float, 3>& c2, const b2Vec<float, 3>& c3)
     {
         ex = c1;
         ey = c2;
@@ -564,19 +263,19 @@ struct b2Mat33
     /// Set this matrix to all zeros.
     void SetZero()
     {
-        ex.SetZero();
-        ey.SetZero();
-        ez.SetZero();
+        ex = {};
+        ey = {};
+        ez = {};
     }
 
     /// Solve A * x = b, where b is a column vector. This is more efficient
     /// than computing the inverse in one-shot cases.
-    b2Vec3 Solve33(const b2Vec3& b) const;
+    b2Vec<float, 3> Solve33(const b2Vec<float, 3>& b) const;
 
     /// Solve A * x = b, where b is a column vector. This is more efficient
     /// than computing the inverse in one-shot cases. Solve only the upper
     /// 2-by-2 matrix equation.
-    b2Vec2 Solve22(const b2Vec2& b) const;
+    b2Vec<float, 2> Solve22(const b2Vec<float, 2>& b) const;
 
     /// Get the inverse of this matrix as a 2-by-2.
     /// Returns the zero matrix if singular.
@@ -586,7 +285,7 @@ struct b2Mat33
     /// Returns the zero matrix if singular.
     void GetSymInverse33(b2Mat33* M) const;
 
-    b2Vec3 ex, ey, ez;
+    b2Vec<float, 3> ex, ey, ez;
 };
 
 /// Rotation
@@ -597,7 +296,7 @@ struct b2Rot
     }
 
     /// Initialize from an angle in radians
-    explicit b2Rot(float32 angle)
+    explicit b2Rot(float angle)
     {
         /// TODO_ERIN optimize
         s = sinf(angle);
@@ -605,7 +304,7 @@ struct b2Rot
     }
 
     /// Set using an angle in radians.
-    void Set(float32 angle)
+    void Set(float angle)
     {
         /// TODO_ERIN optimize
         s = sinf(angle);
@@ -620,25 +319,25 @@ struct b2Rot
     }
 
     /// Get the angle in radians
-    float32 GetAngle() const
+    float GetAngle() const
     {
         return b2Atan2(s, c);
     }
 
     /// Get the x-axis
-    b2Vec2 GetXAxis() const
+    b2Vec<float, 2> GetXAxis() const
     {
-        return b2Vec2{{c, s}};
+        return b2Vec<float, 2>{{c, s}};
     }
 
     /// Get the u-axis
-    b2Vec2 GetYAxis() const
+    b2Vec<float, 2> GetYAxis() const
     {
-        return b2Vec2{{-s, c}};
+        return b2Vec<float, 2>{{-s, c}};
     }
 
     /// Sine and cosine
-    float32 s, c;
+    float s, c;
 };
 
 /// A transform contains translation and rotation. It is used to represent
@@ -653,7 +352,7 @@ struct b2Transform
     }
 
     /// Initialize using a position vector and a rotation.
-    b2Transform(b2Vec2 position, b2Rot rotation) : p(std::move(position)), q(std::move(rotation))
+    b2Transform(b2Vec<float, 2> position, b2Rot rotation) : p(std::move(position)), q(std::move(rotation))
     {
     }
 
@@ -665,13 +364,13 @@ struct b2Transform
     }
 
     /// Set this based on the position and angle.
-    void Set(const b2Vec2& position, float32 angle)
+    void Set(const b2Vec<float, 2>& position, float angle)
     {
         p = position;
         q.Set(angle);
     }
 
-    b2Vec2 p;
+    b2Vec<float, 2> p;
     b2Rot q;
 };
 
@@ -683,128 +382,89 @@ struct b2Sweep
 {
     /// Get the interpolated transform at a specific time.
     /// @param beta is a factor in [0,1], where 0 indicates alpha0.
-    void GetTransform(b2Transform* xfb, float32 beta) const;
+    void GetTransform(b2Transform* xfb, float beta) const;
 
     /// Advance the sweep forward, yielding a new initial state.
     /// @param alpha the new initial time.
-    void Advance(float32 alpha);
+    void Advance(float alpha);
 
     /// Normalize the angles.
     void Normalize();
 
-    b2Vec2 localCenter;  ///< local center of mass position
-    b2Vec2 c0, c;        ///< center world positions
-    float32 a0, a;       ///< world angles
+    b2Vec<float, 2> localCenter;  ///< local center of mass position
+    b2Vec<float, 2> c0, c;        ///< center world positions
+    float a0, a;       ///< world angles
 
     /// Fraction of the current time step in the range [0,1]
     /// c0 and a0 are the positions at alpha0.
-    float32 alpha0;
+    float alpha0;
 };
 
 /// Useful constant
-extern const b2Vec2 b2Vec2_zero;
+extern const b2Vec<float, 2> b2Vec2_zero;
 
 /// Perform the dot product on two vectors.
-inline float32 b2Dot(const b2Vec2& a, const b2Vec2& b)
+inline float b2Dot(const b2Vec<float, 2>& a, const b2Vec<float, 2>& b)
 {
     return a[b2VecX] * b[b2VecX] + a[b2VecY] * b[b2VecY];
 }
 
 /// Perform the cross product on two vectors. In 2D this produces a scalar.
-inline float32 b2Cross(const b2Vec2& a, const b2Vec2& b)
+inline float b2Cross(const b2Vec<float, 2>& a, const b2Vec<float, 2>& b)
 {
     return a[b2VecX] * b[b2VecY] - a[b2VecY] * b[b2VecX];
 }
 
 /// Perform the cross product on a vector and a scalar. In 2D this produces
 /// a vector.
-inline b2Vec2 b2Cross(const b2Vec2& a, float32 s)
+inline b2Vec<float, 2> b2Cross(const b2Vec<float, 2>& a, float s)
 {
-    return b2Vec2{{s * a[b2VecY], -s * a[b2VecX]}};
+    return b2Vec<float, 2>{{s * a[b2VecY], -s * a[b2VecX]}};
 }
 
 /// Perform the cross product on a scalar and a vector. In 2D this produces
 /// a vector.
-inline b2Vec2 b2Cross(float32 s, const b2Vec2& a)
+inline b2Vec<float, 2> b2Cross(float s, const b2Vec<float, 2>& a)
 {
-    return b2Vec2{{-s * a[b2VecY], s * a[b2VecX]}};
+    return b2Vec<float, 2>{{-s * a[b2VecY], s * a[b2VecX]}};
 }
 
 /// Multiply a matrix times a vector. If a rotation matrix is provided,
 /// then this transforms the vector from one frame to another.
-inline b2Vec2 b2Mul(const b2Mat22& A, const b2Vec2& v)
+inline b2Vec<float, 2> b2Mul(const b2Mat22& A, const b2Vec<float, 2>& v)
 {
-    return b2Vec2{{A.ex[b2VecX] * v[b2VecX] + A.ey[b2VecX] * v[b2VecY], A.ex[b2VecY] * v[b2VecX] + A.ey[b2VecY] * v[b2VecY]}};
+    return b2Vec<float, 2>{{A.ex[b2VecX] * v[b2VecX] + A.ey[b2VecX] * v[b2VecY], A.ex[b2VecY] * v[b2VecX] + A.ey[b2VecY] * v[b2VecY]}};
 }
 
 /// Multiply a matrix transpose times a vector. If a rotation matrix is provided,
 /// then this transforms the vector from one frame to another (inverse transform).
-inline b2Vec2 b2MulT(const b2Mat22& A, const b2Vec2& v)
+inline b2Vec<float, 2> b2MulT(const b2Mat22& A, const b2Vec<float, 2>& v)
 {
-    return b2Vec2{{b2Dot(v, A.ex), b2Dot(v, A.ey)}};
+    return b2Vec<float, 2>{{b2Dot(v, A.ex), b2Dot(v, A.ey)}};
 }
 
-/// Add two vectors component-wise.
-// inline b2Vec2 operator+(const b2Vec2& a, const b2Vec2& b)
-// {
-//     return b2Vec2{{a[b2VecX] + b[b2VecX], a[b2VecY] + b[b2VecY]}};
-// }
-
-/// Subtract two vectors component-wise.
-// inline b2Vec2 operator-(const b2Vec2& a, const b2Vec2& b)
-// {
-//     return b2Vec2{{a[b2VecX] - b[b2VecX], a[b2VecY] - b[b2VecY]}};
-// }
-
-inline b2Vec2 operator*(float32 s, const b2Vec2& a)
+inline float b2Distance(const b2Vec<float, 2>& a, const b2Vec<float, 2>& b)
 {
-    return b2Vec2{{s * a[b2VecX], s * a[b2VecY]}};
+    b2Vec<float, 2> c = a - b;
+    return c.Length();
 }
 
-inline bool operator==(const b2Vec2& a, const b2Vec2& b)
+inline float b2DistanceSquared(const b2Vec<float, 2>& a, const b2Vec<float, 2>& b)
 {
-    return a[b2VecX] == b[b2VecX] && a[b2VecY] == b[b2VecY];
-}
-
-inline float32 b2Distance(const b2Vec2& a, const b2Vec2& b)
-{
-    b2Vec2 c = a - b;
-    return Length(c);
-}
-
-inline float32 b2DistanceSquared(const b2Vec2& a, const b2Vec2& b)
-{
-    b2Vec2 c = a - b;
+    b2Vec<float, 2> c = a - b;
     return b2Dot(c, c);
 }
 
-inline b2Vec3 operator*(float32 s, const b2Vec3& a)
-{
-    return b2Vec3(s * a.x, s * a.y, s * a.z);
-}
-
-/// Add two vectors component-wise.
-inline b2Vec3 operator+(const b2Vec3& a, const b2Vec3& b)
-{
-    return b2Vec3(a.x + b.x, a.y + b.y, a.z + b.z);
-}
-
-/// Subtract two vectors component-wise.
-inline b2Vec3 operator-(const b2Vec3& a, const b2Vec3& b)
-{
-    return b2Vec3(a.x - b.x, a.y - b.y, a.z - b.z);
-}
-
 /// Perform the dot product on two vectors.
-inline float32 b2Dot(const b2Vec3& a, const b2Vec3& b)
+inline float b2Dot(const b2Vec<float, 3>& a, const b2Vec<float, 3>& b)
 {
-    return a.x * b.x + a.y * b.y + a.z * b.z;
+    return a[b2VecX] * b[b2VecX] + a[b2VecY] * b[b2VecY] + a[b2VecZ] * b[b2VecZ];
 }
 
 /// Perform the cross product on two vectors.
-inline b2Vec3 b2Cross(const b2Vec3& a, const b2Vec3& b)
+inline b2Vec<float, 3> b2Cross(const b2Vec<float, 3>& a, const b2Vec<float, 3>& b)
 {
-    return b2Vec3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+    return b2Vec<float, 3>(a[b2VecY] * b[b2VecZ] - a[b2VecZ] * b[b2VecY], a[b2VecZ] * b[b2VecX] - a[b2VecX] * b[b2VecZ], a[b2VecX] * b[b2VecY] - a[b2VecY] * b[b2VecX]);
 }
 
 inline b2Mat22 operator+(const b2Mat22& A, const b2Mat22& B)
@@ -818,24 +478,24 @@ inline b2Mat22 b2Mul(const b2Mat22& A, const b2Mat22& B)
     return b2Mat22(b2Mul(A, B.ex), b2Mul(A, B.ey));
 }
 
-// A^T * B
+// A^CONTAINER_TYPE * B
 inline b2Mat22 b2MulT(const b2Mat22& A, const b2Mat22& B)
 {
-    b2Vec2 c1{{b2Dot(A.ex, B.ex), b2Dot(A.ey, B.ex)}};
-    b2Vec2 c2{{b2Dot(A.ex, B.ey), b2Dot(A.ey, B.ey)}};
+    b2Vec<float, 2> c1{{b2Dot(A.ex, B.ex), b2Dot(A.ey, B.ex)}};
+    b2Vec<float, 2> c2{{b2Dot(A.ex, B.ey), b2Dot(A.ey, B.ey)}};
     return b2Mat22(c1, c2);
 }
 
 /// Multiply a matrix times a vector.
-inline b2Vec3 b2Mul(const b2Mat33& A, const b2Vec3& v)
+inline b2Vec<float, 3> b2Mul(const b2Mat33& A, const b2Vec<float, 3>& v)
 {
-    return v.x * A.ex + v.y * A.ey + v.z * A.ez;
+    return v[b2VecX] * A.ex + v[b2VecY] * A.ey + v[b2VecZ] * A.ez;
 }
 
 /// Multiply a matrix times a vector.
-inline b2Vec2 b2Mul22(const b2Mat33& A, const b2Vec2& v)
+inline b2Vec<float, 2> b2Mul22(const b2Mat33& A, const b2Vec<float, 2>& v)
 {
-    return b2Vec2{{A.ex.x * v[b2VecX] + A.ey.x * v[b2VecY], A.ex.y * v[b2VecX] + A.ey.y * v[b2VecY]}};
+    return b2Vec<float, 2>{{A.ex[b2VecX] * v[b2VecX] + A.ey[b2VecX] * v[b2VecY], A.ex[b2VecY] * v[b2VecX] + A.ey[b2VecY] * v[b2VecY]}};
 }
 
 /// Multiply two rotations: q * r
@@ -865,33 +525,33 @@ inline b2Rot b2MulT(const b2Rot& q, const b2Rot& r)
 }
 
 /// Rotate a vector
-inline b2Vec2 b2Mul(const b2Rot& q, const b2Vec2& v)
+inline b2Vec<float, 2> b2Mul(const b2Rot& q, const b2Vec<float, 2>& v)
 {
-    return b2Vec2{{q.c * v[b2VecX] - q.s * v[b2VecY], q.s * v[b2VecX] + q.c * v[b2VecY]}};
+    return b2Vec<float, 2>{{q.c * v[b2VecX] - q.s * v[b2VecY], q.s * v[b2VecX] + q.c * v[b2VecY]}};
 }
 
 /// Inverse rotate a vector
-inline b2Vec2 b2MulT(const b2Rot& q, const b2Vec2& v)
+inline b2Vec<float, 2> b2MulT(const b2Rot& q, const b2Vec<float, 2>& v)
 {
-    return b2Vec2{{q.c * v[b2VecX] + q.s * v[b2VecY], -q.s * v[b2VecX] + q.c * v[b2VecY]}};
+    return b2Vec<float, 2>{{q.c * v[b2VecX] + q.s * v[b2VecY], -q.s * v[b2VecX] + q.c * v[b2VecY]}};
 }
 
-inline b2Vec2 b2Mul(const b2Transform& T, const b2Vec2& v)
+inline b2Vec<float, 2> b2Mul(const b2Transform& transform, const b2Vec<float, 2>& v)
 {
-    float32 x = (T.q.c * v[b2VecX] - T.q.s * v[b2VecY]) + T.p[b2VecX];
-    float32 y = (T.q.s * v[b2VecX] + T.q.c * v[b2VecY]) + T.p[b2VecY];
+    float x = (transform.q.c * v[b2VecX] - transform.q.s * v[b2VecY]) + transform.p[b2VecX];
+    float y = (transform.q.s * v[b2VecX] + transform.q.c * v[b2VecY]) + transform.p[b2VecY];
 
-    return b2Vec2{{x, y}};
+    return b2Vec<float, 2>{{x, y}};
 }
 
-inline b2Vec2 b2MulT(const b2Transform& T, const b2Vec2& v)
+inline b2Vec<float, 2> b2MulT(const b2Transform& transform, const b2Vec<float, 2>& v)
 {
-    float32 px = v[b2VecX] - T.p[b2VecX];
-    float32 py = v[b2VecY] - T.p[b2VecY];
-    float32 x = (T.q.c * px + T.q.s * py);
-    float32 y = (-T.q.s * px + T.q.c * py);
+    float px = v[b2VecX] - transform.p[b2VecX];
+    float py = v[b2VecY] - transform.p[b2VecY];
+    float x = (transform.q.c * px + transform.q.s * py);
+    float y = (-transform.q.s * px + transform.q.c * py);
 
-    return b2Vec2{{x, y}};
+    return b2Vec<float, 2>{{x, y}};
 }
 
 // v2 = A.q.Rot(B.q.Rot(v1) + B.p) + A.p
@@ -914,16 +574,16 @@ inline b2Transform b2MulT(const b2Transform& A, const b2Transform& B)
     return C;
 }
 /*
-template <typename T>
-inline T b2Abs(T a)
+template <typename CONTAINER_TYPE>
+inline CONTAINER_TYPE b2Abs(CONTAINER_TYPE a)
 {
 	return std::abs(a);
-//     return a > T(0) ? a : -a;
+//     return a > CONTAINER_TYPE(0) ? a : -a;
 }*/
 
-inline b2Vec2 b2Abs(const b2Vec2& a)
+inline b2Vec<float, 2> b2Abs(const b2Vec<float, 2>& a)
 {
-    return b2Vec2{{std::abs(a[b2VecX]), std::abs(a[b2VecY])}};
+    return b2Vec<float, 2>{{std::abs(a[b2VecX]), std::abs(a[b2VecY])}};
 }
 
 inline b2Mat22 b2Abs(const b2Mat22& A)
@@ -931,43 +591,43 @@ inline b2Mat22 b2Abs(const b2Mat22& A)
     return b2Mat22(b2Abs(A.ex), b2Abs(A.ey));
 }
 
-template <typename T>
-inline T b2Min(T a, T b)
+template <typename TYPE>
+inline TYPE b2Min(TYPE a, TYPE b)
 {
     return a < b ? a : b;
 }
 
-inline b2Vec2 b2Min(const b2Vec2& a, const b2Vec2& b)
+inline b2Vec<float, 2> b2Min(const b2Vec<float, 2>& a, const b2Vec<float, 2>& b)
 {
-    return b2Vec2{{b2Min(a[b2VecX], b[b2VecX]), b2Min(a[b2VecY], b[b2VecY])}};
+    return b2Vec<float, 2>{{b2Min(a[b2VecX], b[b2VecX]), b2Min(a[b2VecY], b[b2VecY])}};
 }
 
-template <typename T>
-inline T b2Max(T a, T b)
+template <typename TYPE>
+inline TYPE b2Max(TYPE a, TYPE b)
 {
     return a > b ? a : b;
 }
 
-inline b2Vec2 b2Max(const b2Vec2& a, const b2Vec2& b)
+inline b2Vec<float, 2> b2Max(const b2Vec<float, 2>& a, const b2Vec<float, 2>& b)
 {
-    return b2Vec2{{b2Max(a[b2VecX], b[b2VecX]), b2Max(a[b2VecY], b[b2VecY])}};
+    return b2Vec<float, 2>{{b2Max(a[b2VecX], b[b2VecX]), b2Max(a[b2VecY], b[b2VecY])}};
 }
 
-template <typename T>
-inline T b2Clamp(T a, T low, T high)
+template <typename TYPE>
+inline TYPE b2Clamp(TYPE a, TYPE low, TYPE high)
 {
     return b2Max(low, b2Min(a, high));
 }
 
-inline b2Vec2 b2Clamp(const b2Vec2& a, const b2Vec2& low, const b2Vec2& high)
+inline b2Vec<float, 2> b2Clamp(const b2Vec<float, 2>& a, const b2Vec<float, 2>& low, const b2Vec<float, 2>& high)
 {
     return b2Max(low, b2Min(a, high));
 }
 
-template <typename T>
-inline void b2Swap(T& a, T& b)
+template <typename TYPE>
+inline void b2Swap(TYPE& a, TYPE& b)
 {
-    T tmp = a;
+    TYPE tmp = a;
     a = b;
     b = tmp;
 }
@@ -994,20 +654,20 @@ inline bool b2IsPowerOfTwo(uint32_t x)
     return result;
 }
 
-inline void b2Sweep::GetTransform(b2Transform* xf, float32 beta) const
+inline void b2Sweep::GetTransform(b2Transform* xf, float beta) const
 {
     xf->p = (1.0f - beta) * c0 + beta * c;
-    float32 angle = (1.0f - beta) * a0 + beta * a;
+    float angle = (1.0f - beta) * a0 + beta * a;
     xf->q.Set(angle);
 
     // Shift to origin
     xf->p -= b2Mul(xf->q, localCenter);
 }
 
-inline void b2Sweep::Advance(float32 alpha)
+inline void b2Sweep::Advance(float alpha)
 {
     b2Assert(alpha0 < 1.0f);
-    float32 beta = (alpha - alpha0) / (1.0f - alpha0);
+    float beta = (alpha - alpha0) / (1.0f - alpha0);
     c0 += beta * (c - c0);
     a0 += beta * (a - a0);
     alpha0 = alpha;
@@ -1016,8 +676,8 @@ inline void b2Sweep::Advance(float32 alpha)
 /// Normalize an angle in radians to be between -pi and pi
 inline void b2Sweep::Normalize()
 {
-    float32 twoPi = 2.0f * B2_PI;
-    float32 d = twoPi * floorf(a0 / twoPi);
+    float twoPi = 2.0f * B2_PI;
+    float d = twoPi * floorf(a0 / twoPi);
     a0 -= d;
     a -= d;
 }

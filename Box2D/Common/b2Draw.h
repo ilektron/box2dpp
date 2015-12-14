@@ -31,17 +31,17 @@ struct b2Color
     b2Color()
     {
     }
-    b2Color(float32 r, float32 g, float32 b, float32 a = 1.0f) : r(r), g(g), b(b), a(a)
+    b2Color(float r, float g, float b, float a = 1.0f) : r(r), g(g), b(b), a(a)
     {
     }
-    void Set(float32 ri, float32 gi, float32 bi, float32 ai = 1.0f)
+    void Set(float ri, float gi, float bi, float ai = 1.0f)
     {
         r = ri;
         g = gi;
         b = bi;
         a = ai;
     }
-    float32 r, g, b, a;
+    float r, g, b, a;
 };
 
 /// Implement and register this class with a b2World to provide debug drawing of physics
@@ -77,21 +77,21 @@ public:
     void ClearFlags(uint32_t flags);
 
     /// Draw a closed polygon provided in CCW order.
-    virtual void DrawPolygon(const std::vector<b2Vec2>& vertices, const b2Color& color) = 0;
+    virtual void DrawPolygon(const std::vector<b2Vec<float, 2>>& vertices, const b2Color& color) = 0;
 
     /// Draw a solid closed polygon provided in CCW order.
-    virtual void DrawSolidPolygon(const std::vector<b2Vec2>& vertices,
+    virtual void DrawSolidPolygon(const std::vector<b2Vec<float, 2>>& vertices,
                                   const b2Color& color) = 0;
 
     /// Draw a circle.
-    virtual void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color) = 0;
+    virtual void DrawCircle(const b2Vec<float, 2>& center, float radius, const b2Color& color) = 0;
 
     /// Draw a solid circle.
-    virtual void DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis,
+    virtual void DrawSolidCircle(const b2Vec<float, 2>& center, float radius, const b2Vec<float, 2>& axis,
                                  const b2Color& color) = 0;
 
     /// Draw a line segment.
-    virtual void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color) = 0;
+    virtual void DrawSegment(const b2Vec<float, 2>& p1, const b2Vec<float, 2>& p2, const b2Color& color) = 0;
 
     /// Draw a transform. Choose your own length scale.
     /// @param xf a transform.

@@ -179,22 +179,22 @@ b2Island::~b2Island()
     m_allocator->Free(m_bodies);
 }
 
-void b2Island::Solve(b2Profile* profile, const b2TimeStep& step, const b2Vec2& gravity,
+void b2Island::Solve(b2Profile* profile, const b2TimeStep& step, const b2Vec<float, 2>& gravity,
                      bool allowSleep)
 {
     b2Timer timer;
 
-    float32 h = step.dt;
+    float h = step.dt;
 
     // Integrate velocities and apply damping. Initialize the body state.
     for (int32_t i = 0; i < m_bodyCount; ++i)
     {
         b2Body* b = m_bodies[i];
 
-        b2Vec2 c = b->m_sweep.c;
-        float32 a = b->m_sweep.a;
-        b2Vec2 v = b->m_linearVelocity;
-        float32 w = b->m_angularVelocity;
+        b2Vec<float, 2> c = b->m_sweep.c;
+        float a = b->m_sweep.a;
+        b2Vec<float, 2> v = b->m_linearVelocity;
+        float w = b->m_angularVelocity;
 
         // Store positions for continuous collision.
         b->m_sweep.c0 = b->m_sweep.c;
@@ -275,23 +275,23 @@ void b2Island::Solve(b2Profile* profile, const b2TimeStep& step, const b2Vec2& g
     // Integrate positions
     for (int32_t i = 0; i < m_bodyCount; ++i)
     {
-        b2Vec2 c = m_positions[i].c;
-        float32 a = m_positions[i].a;
-        b2Vec2 v = m_velocities[i].v;
-        float32 w = m_velocities[i].w;
+        b2Vec<float, 2> c = m_positions[i].c;
+        float a = m_positions[i].a;
+        b2Vec<float, 2> v = m_velocities[i].v;
+        float w = m_velocities[i].w;
 
         // Check for large velocities
-        b2Vec2 translation = h * v;
+        b2Vec<float, 2> translation = h * v;
         if (b2Dot(translation, translation) > MAX_TRANSLATION_SQUARED)
         {
-            float32 ratio = MAX_TRANSLATION / Length(translation);
+            float ratio = MAX_TRANSLATION / translation.Length();
             v *= ratio;
         }
 
-        float32 rotation = h * w;
+        float rotation = h * w;
         if (rotation * rotation > MAX_ROTATION_SQUARED)
         {
-            float32 ratio = MAX_ROTATION / std::abs(rotation);
+            float ratio = MAX_ROTATION / std::abs(rotation);
             w *= ratio;
         }
 
@@ -344,10 +344,10 @@ void b2Island::Solve(b2Profile* profile, const b2TimeStep& step, const b2Vec2& g
 
     if (allowSleep)
     {
-        float32 minSleepTime = MAX_FLOAT;
+        float minSleepTime = MAX_FLOAT;
 
-        constexpr float32 linTolSqr = LINEAR_SLEEP_TOLERANCE * LINEAR_SLEEP_TOLERANCE;
-        constexpr float32 angTolSqr = ANGULAR_SLEEP_TOLERANCE * ANGULAR_SLEEP_TOLERANCE;
+        constexpr float linTolSqr = LINEAR_SLEEP_TOLERANCE * LINEAR_SLEEP_TOLERANCE;
+        constexpr float angTolSqr = ANGULAR_SLEEP_TOLERANCE * ANGULAR_SLEEP_TOLERANCE;
 
         for (int32_t i = 0; i < m_bodyCount; ++i)
         {
@@ -468,28 +468,28 @@ void b2Island::SolveTOI(const b2TimeStep& subStep, int32_t toiIndexA, int32_t to
     // Don't store the TOI contact forces for warm starting
     // because they can be quite large.
 
-    float32 h = subStep.dt;
+    float h = subStep.dt;
 
     // Integrate positions
     for (int32_t i = 0; i < m_bodyCount; ++i)
     {
-        b2Vec2 c = m_positions[i].c;
-        float32 a = m_positions[i].a;
-        b2Vec2 v = m_velocities[i].v;
-        float32 w = m_velocities[i].w;
+        b2Vec<float, 2> c = m_positions[i].c;
+        float a = m_positions[i].a;
+        b2Vec<float, 2> v = m_velocities[i].v;
+        float w = m_velocities[i].w;
 
         // Check for large velocities
-        b2Vec2 translation = h * v;
+        b2Vec<float, 2> translation = h * v;
         if (b2Dot(translation, translation) > MAX_TRANSLATION_SQUARED)
         {
-            float32 ratio = MAX_TRANSLATION / Length(translation);
+            float ratio = MAX_TRANSLATION / translation.Length();
             v *= ratio;
         }
 
-        float32 rotation = h * w;
+        float rotation = h * w;
         if (rotation * rotation > MAX_ROTATION_SQUARED)
         {
-            float32 ratio = MAX_ROTATION / std::abs(rotation);
+            float ratio = MAX_ROTATION / std::abs(rotation);
             w *= ratio;
         }
 

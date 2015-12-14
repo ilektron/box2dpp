@@ -47,7 +47,7 @@ public:
         m_jointCount = 0;
     }
 
-    void Solve(b2Profile* profile, const b2TimeStep& step, const b2Vec2& gravity, bool allowSleep);
+    void Solve(b2Profile* profile, const b2TimeStep& step, const b2Vec<float, 2>& gravity, bool allowSleep);
 
     void SolveTOI(const b2TimeStep& subStep, int32_t toiIndexA, int32_t toiIndexB);
 

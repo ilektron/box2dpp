@@ -20,12 +20,12 @@
 #define B2_WORLD_CALLBACKS_H
 
 #include <Box2D/Common/b2Settings.h>
+#include <Box2D/Common/b2Vec.h>
 #include <array>
 
 namespace box2d
 {
 
-typedef std::array<float, 2> b2Vec2;
 struct b2Transform;
 class b2Fixture;
 class b2Body;
@@ -72,8 +72,8 @@ public:
 /// match up one-to-one with the contact points in b2Manifold.
 struct b2ContactImpulse
 {
-    float32 normalImpulses[MAX_MANIFOLD_POINTS];
-    float32 tangentImpulses[MAX_MANIFOLD_POINTS];
+    float normalImpulses[MAX_MANIFOLD_POINTS];
+    float tangentImpulses[MAX_MANIFOLD_POINTS];
     int32_t count;
 };
 
@@ -168,8 +168,8 @@ public:
     /// @param normal the normal vector at the point of intersection
     /// @return -1 to filter, 0 to terminate, fraction to clip the ray for
     /// closest hit, 1 to continue
-    virtual float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal,
-                                  float32 fraction) = 0;
+    virtual float ReportFixture(b2Fixture* fixture, const b2Vec<float, 2>& point, const b2Vec<float, 2>& normal,
+                                  float fraction) = 0;
 };
 }
 

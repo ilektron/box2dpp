@@ -27,7 +27,7 @@ namespace box2d
 
 struct b2TOIState
 {
-    static float32 b2_toiTime, b2_toiMaxTime;
+    static float b2_toiTime, b2_toiMaxTime;
     static int32_t b2_toiCalls, b2_toiIters, b2_toiMaxIters;
     static int32_t b2_toiRootIters, b2_toiMaxRootIters;
 };
@@ -39,7 +39,7 @@ struct b2TOIInput
     b2DistanceProxy proxyB;
     b2Sweep sweepA;
     b2Sweep sweepB;
-    float32 tMax;  // defines sweep interval [0, tMax]
+    float tMax;  // defines sweep interval [0, tMax]
 };
 
 // Output parameters for b2TimeOfImpact.
@@ -55,7 +55,7 @@ struct b2TOIOutput
     };
 
     State state;
-    float32 t;
+    float t;
 };
 
 /// Compute the upper bound on time before two shapes penetrate. Time is

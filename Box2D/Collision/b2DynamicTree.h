@@ -86,7 +86,7 @@ public:
     /// then the proxy is removed from the tree and re-inserted. Otherwise
     /// the function returns immediately.
     /// @return true if the proxy was re-inserted.
-    bool MoveProxy(int32_t proxyId, const b2AABB& aabb1, const b2Vec2& displacement);
+    bool MoveProxy(int32_t proxyId, const b2AABB& aabb1, const b2Vec<float, 2>& displacement);
 
     /// Get proxy user data.
     /// @return the proxy user data or 0 if the id is invalid.
@@ -128,7 +128,7 @@ public:
     int32_t GetMaxBalance() const;
 
     /// Get the ratio of the sum of the node areas to the root area.
-    float32 GetAreaRatio() const;
+    float GetAreaRatio() const;
 
     /// Build an optimal tree. Very expensive. For testing.
     void RebuildBottomUp();
@@ -136,7 +136,7 @@ public:
     /// Shift the world origin. Useful for large worlds.
     /// The shift formula is: position -= newOrigin
     /// @param newOrigin the new origin with respect to the old origin
-    void ShiftOrigin(const b2Vec2& newOrigin);
+    void ShiftOrigin(const b2Vec<float, 2>& newOrigin);
 
 private:
     int32_t AllocateNode();
@@ -218,25 +218,25 @@ inline void b2DynamicTree::Query(T* callback, const b2AABB& aabb) const
 template <typename T>
 inline void b2DynamicTree::RayCast(T* callback, const b2RayCastInput& input) const
 {
-    b2Vec2 p1 = input.p1;
-    b2Vec2 p2 = input.p2;
-    b2Vec2 r = p2 - p1;
-    b2Assert(LengthSquared(r) > 0.0f);
-    Normalize(r);
+    b2Vec<float, 2> p1 = input.p1;
+    b2Vec<float, 2> p2 = input.p2;
+    b2Vec<float, 2> r = p2 - p1;
+    b2Assert(r.LengthSquared() > 0.0f);
+    r.Normalize();
 
     // v is perpendicular to the segment.
-    b2Vec2 v = b2Cross(1.0f, r);
-    b2Vec2 abs_v = b2Abs(v);
+    b2Vec<float, 2> v = b2Cross(1.0f, r);
+    b2Vec<float, 2> abs_v = b2Abs(v);
 
     // Separating axis for segment (Gino, p80).
     // |dot(v, p1 - c)| > dot(|v|, h)
 
-    float32 maxFraction = input.maxFraction;
+    float maxFraction = input.maxFraction;
 
     // Build a bounding box for the segment.
     b2AABB segmentAABB;
     {
-        b2Vec2 t = p1 + maxFraction * (p2 - p1);
+        b2Vec<float, 2> t = p1 + maxFraction * (p2 - p1);
         segmentAABB.lowerBound = b2Min(p1, t);
         segmentAABB.upperBound = b2Max(p1, t);
     }
@@ -262,9 +262,9 @@ inline void b2DynamicTree::RayCast(T* callback, const b2RayCastInput& input) con
 
         // Separating axis for segment (Gino, p80).
         // |dot(v, p1 - c)| > dot(|v|, h)
-        b2Vec2 c = node->aabb.GetCenter();
-        b2Vec2 h = node->aabb.GetExtents();
-        float32 separation = std::abs(b2Dot(v, p1 - c)) - b2Dot(abs_v, h);
+        b2Vec<float, 2> c = node->aabb.GetCenter();
+        b2Vec<float, 2> h = node->aabb.GetExtents();
+        float separation = std::abs(b2Dot(v, p1 - c)) - b2Dot(abs_v, h);
         if (separation > 0.0f)
         {
             continue;
@@ -277,7 +277,7 @@ inline void b2DynamicTree::RayCast(T* callback, const b2RayCastInput& input) con
             subInput.p2 = input.p2;
             subInput.maxFraction = maxFraction;
 
-            float32 value = callback->RayCastCallback(subInput, nodeId);
+            float value = callback->RayCastCallback(subInput, nodeId);
 
             if (value == 0.0f)
             {
@@ -289,7 +289,7 @@ inline void b2DynamicTree::RayCast(T* callback, const b2RayCastInput& input) con
             {
                 // Update segment bounding box.
                 maxFraction = value;
-                b2Vec2 t = p1 + maxFraction * (p2 - p1);
+                b2Vec<float, 2> t = p1 + maxFraction * (p2 - p1);
                 segmentAABB.lowerBound = b2Min(p1, t);
                 segmentAABB.upperBound = b2Max(p1, t);
             }

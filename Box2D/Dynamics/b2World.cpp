@@ -36,7 +36,7 @@
 
 using namespace box2d;
 
-b2World::b2World(const b2Vec2& gravity)
+b2World::b2World(const b2Vec<float, 2>& gravity)
 {
     m_destructionListener = nullptr;
     g_debugDraw = nullptr;
@@ -601,7 +601,7 @@ void b2World::SolveTOI(const b2TimeStep& step)
     {
         // Find the first TOI.
         b2Contact* minContact = nullptr;
-        float32 minAlpha = 1.0f;
+        float minAlpha = 1.0f;
 
         for (b2Contact* c = m_contactManager.m_contactList; c; c = c->m_next)
         {
@@ -617,7 +617,7 @@ void b2World::SolveTOI(const b2TimeStep& step)
                 continue;
             }
 
-            float32 alpha = 1.0f;
+            float alpha = 1.0f;
             if (c->m_flags & b2Contact::e_toiFlag)
             {
                 // This contact has a valid cached TOI.
@@ -661,7 +661,7 @@ void b2World::SolveTOI(const b2TimeStep& step)
 
                 // Compute the TOI for this contact.
                 // Put the sweeps onto the same time interval.
-                float32 alpha0 = bA->m_sweep.alpha0;
+                float alpha0 = bA->m_sweep.alpha0;
 
                 if (bA->m_sweep.alpha0 < bB->m_sweep.alpha0)
                 {
@@ -691,7 +691,7 @@ void b2World::SolveTOI(const b2TimeStep& step)
                 b2TimeOfImpact(&output, &input);
 
                 // Beta is the fraction of the remaining portion of the .
-                float32 beta = output.t;
+                float beta = output.t;
                 if (output.state == b2TOIOutput::e_touching)
                 {
                     alpha = b2Min(alpha0 + (1.0f - alpha0) * beta, 1.0f);
@@ -894,7 +894,7 @@ void b2World::SolveTOI(const b2TimeStep& step)
     }
 }
 
-void b2World::Step(float32 dt, int32_t velocityIterations, int32_t positionIterations)
+void b2World::Step(float dt, int32_t velocityIterations, int32_t positionIterations)
 {
     b2Timer stepTimer;
 
@@ -993,7 +993,7 @@ void b2World::QueryAABB(b2QueryCallback* callback, const b2AABB& aabb) const
 
 struct b2WorldRayCastWrapper
 {
-    float32 RayCastCallback(const b2RayCastInput& input, int32_t proxyId)
+    float RayCastCallback(const b2RayCastInput& input, int32_t proxyId)
     {
         void* userData = broadPhase->GetUserData(proxyId);
         b2FixtureProxy* proxy = (b2FixtureProxy*)userData;
@@ -1004,8 +1004,8 @@ struct b2WorldRayCastWrapper
 
         if (hit)
         {
-            float32 fraction = output.fraction;
-            b2Vec2 point = (1.0f - fraction) * input.p1 + fraction * input.p2;
+            float fraction = output.fraction;
+            b2Vec<float, 2> point = (1.0f - fraction) * input.p1 + fraction * input.p2;
             return callback->ReportFixture(fixture, point, output.normal, fraction);
         }
 
@@ -1016,7 +1016,7 @@ struct b2WorldRayCastWrapper
     b2RayCastCallback* callback;
 };
 
-void b2World::RayCast(b2RayCastCallback* callback, const b2Vec2& point1, const b2Vec2& point2) const
+void b2World::RayCast(b2RayCastCallback* callback, const b2Vec<float, 2>& point1, const b2Vec<float, 2>& point2) const
 {
     b2WorldRayCastWrapper wrapper;
     wrapper.broadPhase = &m_contactManager.m_broadPhase;
@@ -1036,9 +1036,9 @@ void b2World::DrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color
         {
             b2CircleShape* circle = (b2CircleShape*)fixture->GetShape();
 
-            b2Vec2 center = b2Mul(xf, circle->m_p);
-            float32 radius = circle->GetRadius();
-            b2Vec2 axis = b2Mul(xf.q, b2Vec2{{1.0f, 0.0f}});
+            b2Vec<float, 2> center = b2Mul(xf, circle->m_p);
+            float radius = circle->GetRadius();
+            b2Vec<float, 2> axis = b2Mul(xf.q, b2Vec<float, 2>{{1.0f, 0.0f}});
 
             g_debugDraw->DrawSolidCircle(center, radius, axis, color);
         }
@@ -1047,8 +1047,8 @@ void b2World::DrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color
         case b2Shape::e_edge:
         {
             b2EdgeShape* edge = (b2EdgeShape*)fixture->GetShape();
-            b2Vec2 v1 = b2Mul(xf, edge->m_vertex1);
-            b2Vec2 v2 = b2Mul(xf, edge->m_vertex2);
+            b2Vec<float, 2> v1 = b2Mul(xf, edge->m_vertex1);
+            b2Vec<float, 2> v2 = b2Mul(xf, edge->m_vertex2);
             g_debugDraw->DrawSegment(v1, v2, color);
         }
         break;
@@ -1057,12 +1057,12 @@ void b2World::DrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color
         {
             b2ChainShape* chain = (b2ChainShape*)fixture->GetShape();
             int32_t count = chain->m_count;
-            const b2Vec2* vertices = chain->m_vertices;
+            const b2Vec<float, 2>* vertices = chain->m_vertices;
 
-            b2Vec2 v1 = b2Mul(xf, vertices[0]);
+            b2Vec<float, 2> v1 = b2Mul(xf, vertices[0]);
             for (int32_t i = 1; i < count; ++i)
             {
-                b2Vec2 v2 = b2Mul(xf, vertices[i]);
+                b2Vec<float, 2> v2 = b2Mul(xf, vertices[i]);
                 g_debugDraw->DrawSegment(v1, v2, color);
                 g_debugDraw->DrawCircle(v1, 0.05f, color);
                 v1 = v2;
@@ -1073,7 +1073,7 @@ void b2World::DrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color
         case b2Shape::e_polygon:
         {
             b2PolygonShape* poly = (b2PolygonShape*)fixture->GetShape();
-            std::vector<b2Vec2> vertices = poly->GetVertices();
+            std::vector<b2Vec<float, 2>> vertices = poly->GetVertices();
 
             for (auto& vertex : vertices)
             {
@@ -1095,10 +1095,10 @@ void b2World::DrawJoint(b2Joint* joint)
     b2Body* bodyB = joint->GetBodyB();
     const b2Transform& xf1 = bodyA->GetTransform();
     const b2Transform& xf2 = bodyB->GetTransform();
-    b2Vec2 x1 = xf1.p;
-    b2Vec2 x2 = xf2.p;
-    b2Vec2 p1 = joint->GetAnchorA();
-    b2Vec2 p2 = joint->GetAnchorB();
+    b2Vec<float, 2> x1 = xf1.p;
+    b2Vec<float, 2> x2 = xf2.p;
+    b2Vec<float, 2> p1 = joint->GetAnchorA();
+    b2Vec<float, 2> p2 = joint->GetAnchorB();
 
     b2Color color(0.5f, 0.8f, 0.8f);
 
@@ -1111,8 +1111,8 @@ void b2World::DrawJoint(b2Joint* joint)
         case b2JointType::PULLEY_JOINT:
         {
             b2PulleyJoint* pulley = (b2PulleyJoint*)joint;
-            b2Vec2 s1 = pulley->GetGroundAnchorA();
-            b2Vec2 s2 = pulley->GetGroundAnchorB();
+            b2Vec<float, 2> s1 = pulley->GetGroundAnchorA();
+            b2Vec<float, 2> s2 = pulley->GetGroundAnchorB();
             g_debugDraw->DrawSegment(s1, p1, color);
             g_debugDraw->DrawSegment(s2, p2, color);
             g_debugDraw->DrawSegment(s1, s2, color);
@@ -1186,8 +1186,8 @@ void b2World::DrawDebugData()
             // b2Fixture* fixtureA = c->GetFixtureA();
             // b2Fixture* fixtureB = c->GetFixtureB();
 
-            // b2Vec2 cA = fixtureA->GetAABB().GetCenter();
-            // b2Vec2 cB = fixtureB->GetAABB().GetCenter();
+            // b2Vec<float, 2> cA = fixtureA->GetAABB().GetCenter();
+            // b2Vec<float, 2> cB = fixtureB->GetAABB().GetCenter();
 
             // g_debugDraw->DrawSegment(cA, cB, color);
         }
@@ -1211,7 +1211,7 @@ void b2World::DrawDebugData()
                 {
                     b2FixtureProxy* proxy = f->m_proxies + i;
                     b2AABB aabb = bp->GetFatAABB(proxy->proxyId);
-                    std::vector<b2Vec2> vs(4);
+                    std::vector<b2Vec<float, 2>> vs(4);
                     vs[0] = {{aabb.lowerBound[b2VecX], aabb.lowerBound[b2VecY]}};
                     vs[1] = {{aabb.upperBound[b2VecX], aabb.lowerBound[b2VecY]}};
                     vs[2] = {{aabb.upperBound[b2VecX], aabb.upperBound[b2VecY]}};
@@ -1249,12 +1249,12 @@ int32_t b2World::GetTreeBalance() const
     return m_contactManager.m_broadPhase.GetTreeBalance();
 }
 
-float32 b2World::GetTreeQuality() const
+float b2World::GetTreeQuality() const
 {
     return m_contactManager.m_broadPhase.GetTreeQuality();
 }
 
-void b2World::ShiftOrigin(const b2Vec2& newOrigin)
+void b2World::ShiftOrigin(const b2Vec<float, 2>& newOrigin)
 {
     b2Assert((m_flags & e_locked) == 0);
     if ((m_flags & e_locked) == e_locked)
@@ -1284,7 +1284,7 @@ void b2World::Dump()
         return;
     }
 
-    b2Log("b2Vec2 g(%.15lef, %.15lef);\n", m_gravity[b2VecX], m_gravity[b2VecY]);
+    b2Log("b2Vec<float, 2> g(%.15lef, %.15lef);\n", m_gravity[b2VecX], m_gravity[b2VecY]);
     b2Log("m_world->SetGravity(g);\n");
 
     b2Log("b2Body** bodies = (b2Body**)b2Alloc(%d * sizeof(b2Body*));\n", m_bodyCount);

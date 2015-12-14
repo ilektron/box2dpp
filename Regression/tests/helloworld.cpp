@@ -1,5 +1,6 @@
 #include "helloworld.h"
 #include "gtest/gtest.h"
+#include "test_helpers.hpp"
 #include <iostream>
 #include <vector>
 
@@ -79,25 +80,19 @@ std::vector<std::pair<box2dref::b2Vec2, float>> runHelloWorldRef()
         // It is generally best to keep the time step and iterations fixed.
         world.Step(timeStep, velocityIterations, positionIterations);
         
-        // Now print the position and angle of the body.
-        box2dref::b2Vec2 position = body->GetPosition();
-        box2dref::float32 angle = body->GetAngle();
-        
         points.push_back(std::make_pair(body->GetPosition(), body->GetAngle()));
-//         printf("%d %4.2f %4.2f %4.2f\n", i, position.x, position.y, angle);
-//         printf("%d %4.2f %4.2f %4.2f\n", i, groundBody->GetPosition().x, groundBody->GetPosition().y, groundBody->GetAngle());
     }
     
     return points;
 }
 
-std::vector<std::pair<box2d::b2Vec2, float>> runHelloWorld()
+std::vector<std::pair<box2d::b2Vec<float,2>, float>> runHelloWorld()
 {
     
-    std::vector<std::pair<box2d::b2Vec2, float>> points;
+    std::vector<std::pair<box2d::b2Vec<float,2>, float>> points;
     
     // Define the gravity vector.
-    box2d::b2Vec2 gravity{{0.0f, -10.0f}};
+    box2d::b2Vec<float,2> gravity{{0.0f, -10.0f}};
     
     // Construct a world object, which will hold and simulate the rigid bodies.
     box2d::b2World world(gravity);
@@ -147,7 +142,7 @@ std::vector<std::pair<box2d::b2Vec2, float>> runHelloWorld()
     // Prepare for simulation. Typically we use a time step of 1/60 of a
     // second (60Hz) and 10 iterations. This provides a high quality simulation
     // in most game scenarios.
-    box2d::float32 timeStep = 1.0f / 60.0f;
+    float timeStep = 1.0f / 60.0f;
     int32_t velocityIterations = 6;
     int32_t positionIterations = 2;
     
@@ -159,8 +154,8 @@ std::vector<std::pair<box2d::b2Vec2, float>> runHelloWorld()
         world.Step(timeStep, velocityIterations, positionIterations);
         
         // Now print the position and angle of the body.
-        box2d::b2Vec2 position = body->GetPosition();
-        box2d::float32 angle = body->GetAngle();
+        box2d::b2Vec<float,2> position = body->GetPosition();
+        float angle = body->GetAngle();
         points.push_back(std::make_pair(position, angle));
         
 //         printf("%d %4.2f %4.2f %4.2f\n", i, position[box2d::b2VecX], position[box2d::b2VecY], angle);
@@ -168,69 +163,6 @@ std::vector<std::pair<box2d::b2Vec2, float>> runHelloWorld()
     }
     
     return points;
-}
-
-static void compareB2Vec2(const box2d::b2Vec2& vec, const box2dref::b2Vec2& vecref)
-{
-    EXPECT_FLOAT_EQ(vec[0], vecref.x);
-    EXPECT_FLOAT_EQ(vec[1], vecref.y);
-}
-
-static void compareB2Manifold(const box2d::b2Manifold& manifold, const box2dref::b2Manifold& manifoldref)
-{
-    compareB2Vec2(manifold.localNormal, manifoldref.localNormal);
-    compareB2Vec2(manifold.localPoint, manifoldref.localPoint);
-    ASSERT_EQ(manifold.pointCount, manifoldref.pointCount);
-    for (int i = 0; i < manifold.pointCount; ++i)
-    {
-        compareB2Vec2(manifold.points[i].localPoint, manifoldref.points[i].localPoint);
-//         EXPECT_FLOAT_EQ(manifold.points[i].normalImpulse, manifoldref.points[i].normalImpulse);
-//         EXPECT_FLOAT_EQ(manifold.points[i].tangentImpulse, manifoldref.points[i].tangentImpulse);
-    }
-}
-
-static bool compareShape(const box2d::b2Shape& shape, const box2dref::b2Shape& shaperef)
-{
-    bool ret = false;
-    
-    EXPECT_EQ((int)shape.GetType(), (int)shaperef.m_type);
-    EXPECT_FLOAT_EQ(shape.GetRadius(), shaperef.m_radius);
-    
-    return ret;
-}
-
-static bool compareBody(const box2d::b2Body& body, const box2dref::b2Body& bodyref)
-{
-    bool ret = false;
-    
-    EXPECT_FLOAT_EQ(body.GetAngle(), bodyref.GetAngle());
-    EXPECT_FLOAT_EQ(body.GetAngularDamping(), bodyref.GetAngularDamping());
-    EXPECT_FLOAT_EQ(body.GetAngularVelocity(), bodyref.GetAngularVelocity());
-    EXPECT_FLOAT_EQ(body.GetGravityScale(), bodyref.GetGravityScale());
-    EXPECT_FLOAT_EQ(body.GetLinearDamping(), bodyref.GetLinearDamping());
-    compareB2Vec2(body.GetPosition(), bodyref.GetPosition());
-    EXPECT_FLOAT_EQ(body.GetAngularVelocity(), bodyref.GetAngularVelocity());
-//     EXPECT_EQ(body.GetContactList(), bodyref.GetContactList());
-    EXPECT_EQ((int)body.GetType(), bodyref.GetType());
-    compareB2Vec2(body.GetWorldCenter(), bodyref.GetWorldCenter());
-    EXPECT_EQ(body.IsActive(), bodyref.IsActive());
-    EXPECT_EQ(body.IsAwake(), bodyref.IsAwake());
-    EXPECT_EQ(body.IsBullet(), bodyref.IsBullet());
-//     EXPECT_EQ(body.GetAngularDamping(), bodyref.GetAngularDamping());
-//     EXPECT_EQ(body.GetAngularDamping(), bodyref.GetAngularDamping());
-//     EXPECT_EQ(body.GetAngularDamping(), bodyref.GetAngularDamping());
-//     EXPECT_EQ(body.GetAngularDamping(), bodyref.GetAngularDamping());
-    
-    return ret;
-}
-
-TEST(Math, b2Vec2Invert)
-{
-    box2d::b2Vec2 vec{{-1.0f, 0.12345f}};
-    box2dref::b2Vec2 vecref(-1.0f, 0.12345f);
-    
-    vec = box2d::Negate(vec);
-    compareB2Vec2(vec, -vecref);
 }
 
 TEST(ChainShape, Construction)
@@ -252,7 +184,7 @@ TEST(EdgeShape, Construction)
 
 TEST(EdgeShape, Body)
 {
-    box2d::b2Vec2 gravity{{0, -9.8}};
+    box2d::b2Vec<float,2> gravity{{0, -9.8}};
     box2d::b2World world(gravity);
     box2d::b2BodyDef bd;
     box2d::b2Body* ground = world.CreateBody(&bd);
@@ -326,7 +258,7 @@ void b2CollideEdgeAndPolygon(b2Manifold* manifold,
 
 /// Clipping for contact manifolds.
 int32 b2ClipSegmentToLine(b2ClipVertex vOut[2], const b2ClipVertex vIn[2],
-                          const b2Vec2& normal, float32 offset, int32 vertexIndexA);
+                          const b2Vec2& normal, float offset, int32 vertexIndexA);
 
 /// Determine if two generic shapes overlap.
 bool b2TestOverlap( const b2Shape* shapeA, int32 indexA,
@@ -425,7 +357,7 @@ TEST(Collision, Testb2FindMaxSeparationOverlap)
 
 TEST(Collision, Testb2FindIncidentEdge)
 {
-    
+    float separation{};
     std::array<box2d::b2ClipVertex, 2> incidentEdge;
     {
         box2d::b2PolygonShape poly1, poly2;
@@ -435,10 +367,11 @@ TEST(Collision, Testb2FindIncidentEdge)
         xf1.Set({{1.0f, 0.0f}}, 0.0f);
         xf2.Set({{-1.0f, 0.0f}}, 0.0f);
         int32_t edge = 0;
-        float separation = box2d::b2FindMaxSeparation(&edge, &poly1, xf1, &poly2, xf2);
+        separation = box2d::b2FindMaxSeparation(&edge, &poly1, xf1, &poly2, xf2);
         box2d::b2FindIncidentEdge(incidentEdge, &poly1, xf1, edge, &poly2, xf2);
     }
-    
+
+    float separationRef{};
     box2dref::b2ClipVertex incidentEdgeRef[2];
     {
         box2dref::b2PolygonShape poly1, poly2;
@@ -448,13 +381,13 @@ TEST(Collision, Testb2FindIncidentEdge)
         xf1.Set(box2dref::b2Vec2(1.0f, 0.0f), 0.0f);
         xf2.Set(box2dref::b2Vec2(-1.0f, 0.0f), 0.0f);
         int32_t edge = 0;
-        float separation = box2dref::b2FindMaxSeparation(&edge, &poly1, xf1, &poly2, xf2);
+        separationRef = box2dref::b2FindMaxSeparation(&edge, &poly1, xf1, &poly2, xf2);
         box2dref::b2FindIncidentEdge(incidentEdgeRef, &poly1, xf1, edge, &poly2, xf2);
     }
     
     compareB2Vec2(incidentEdge[0].v, incidentEdgeRef[0].v);
     compareB2Vec2(incidentEdge[1].v, incidentEdgeRef[1].v);
-//     EXPECT_FLOAT_EQ(distance, distanceref);
+    EXPECT_FLOAT_EQ(separation, separationRef);
 }
 
 TEST(Collision, Testb2CollidePolygonsTouching)
@@ -490,7 +423,7 @@ TEST_F(b2RegressionTest, TestTest)
     auto data = runHelloWorld();
     
     ASSERT_EQ(data.size(), dataref.size());
-    for (int i = 0; i < dataref.size(); ++i)
+    for (std::size_t i = 0; i < dataref.size(); ++i)
     {
 //         ASSERT_FLOAT_EQ(dataref[i].first.x, data[i].first[box2d::b2VecX]) << "For i:" << i;
         ASSERT_FLOAT_EQ(dataref[i].first.y, data[i].first[box2d::b2VecY]) << "For i:" << i;
@@ -498,7 +431,3 @@ TEST_F(b2RegressionTest, TestTest)
     }
 }
 
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}

@@ -33,9 +33,6 @@ inline void b2Assert(bool a)
     assert(a);
 }
 
-typedef float float32;
-typedef double float64;
-
 constexpr float MAX_FLOAT = FLT_MAX;
 constexpr float EPSILON = FLT_EPSILON;
 constexpr float B2_PI = M_PI;
