@@ -8,8 +8,15 @@
 
 static void compareB2Vec2(const box2d::b2Vec<float,2>& vec, const box2dref::b2Vec2& vecref)
 {
-    EXPECT_FLOAT_EQ(vec[0], vecref.x);
-    EXPECT_FLOAT_EQ(vec[1], vecref.y);
+    EXPECT_FLOAT_EQ(vecref.x, vec[0]);
+    EXPECT_FLOAT_EQ(vecref.y, vec[1]);
+}
+
+static void compareB2Vec3(const box2d::b2Vec<float,3>& vec, const box2dref::b2Vec3& vecref)
+{
+    EXPECT_FLOAT_EQ(vecref.x, vec[0]);
+    EXPECT_FLOAT_EQ(vecref.y, vec[1]);
+    EXPECT_FLOAT_EQ(vecref.z, vec[2]);
 }
 
 static void compareB2Manifold(const box2d::b2Manifold& manifold, const box2dref::b2Manifold& manifoldref)

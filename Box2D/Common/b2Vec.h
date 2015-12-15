@@ -151,11 +151,11 @@ public:
 
 
     template <typename T>
-    inline auto& operator*=(T&& value)
+    inline auto& operator*=(T&& t)
     {
         for (auto& value : data)
         {
-            value *= value;
+            value *= t;
         }
 
         return *this;
