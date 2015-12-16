@@ -71,16 +71,51 @@ public:
         return data[pos];
     }
 
-    template <typename SCALAR>
-    inline b2Vec<CONTAINER_TYPE,N> operator+(SCALAR v) const
+    template <typename T>
+    inline auto operator*(T&& t) const
     {
-        b2Vec<CONTAINER_TYPE,N> ret;
+        b2Vec<CONTAINER_TYPE, N> ret;
         for (std::size_t i = 0; i < data.size(); ++i)
         {
-            ret[i] = data[i] + v;
+            ret[i] = data[i] * t;
         }
 
         return ret;
+    }
+
+    template <typename T>
+    inline auto& operator*=(T&& t)
+    {
+        for (auto& value : data)
+        {
+            value *= t;
+        }
+
+        return *this;
+    }
+
+    template <typename T>
+    inline auto operator/(T&& t) const
+    {
+        b2Vec<CONTAINER_TYPE, N> ret;
+        for (std::size_t i = 0; i < data.size(); ++i)
+        {
+            ret[i] = data[i] / t;
+        }
+
+        return ret;
+    }
+
+
+    template <typename T>
+    inline auto& operator/=(T&& t)
+    {
+        for (auto& value : data)
+        {
+            value /= t;
+        }
+
+        return *this;
     }
 
     inline auto operator+(const b2Vec<CONTAINER_TYPE,N>& other) const
@@ -89,18 +124,6 @@ public:
         for (std::size_t i = 0; i < data.size(); ++i)
         {
             ret[i] = data[i] + other[i];
-        }
-
-        return ret;
-    }
-
-    template <typename SCALAR>
-    inline b2Vec<CONTAINER_TYPE,N> operator-(SCALAR v) const
-    {
-        b2Vec<CONTAINER_TYPE,N> ret;
-        for (std::size_t i = 0; i < data.size(); ++i)
-        {
-            ret[i] = data[i] - v;
         }
 
         return ret;
@@ -136,45 +159,10 @@ public:
 
         return *this;
     }
-    
-    template <typename T>
-    inline auto operator*(T&& value)
-    {
-        b2Vec<CONTAINER_TYPE, N> ret;
-        for (std::size_t i = 0; i < data.size(); ++i)
-        {
-            ret[i] = data[i] * value;
-        }
-
-        return ret;
-    }
-
-
-    template <typename T>
-    inline auto& operator*=(T&& t)
-    {
-        for (auto& value : data)
-        {
-            value *= t;
-        }
-
-        return *this;
-    }
 
     inline auto operator==(const b2Vec<CONTAINER_TYPE,N>& other)
     {
         bool ret = std::equal(data.begin(), data.end(), other.data.begin(), other.data.end());
-        return ret;
-    }
-
-    inline auto operator-() const
-    {
-        b2Vec<CONTAINER_TYPE,N> ret;
-        for (std::size_t i = 0; i < data.size(); ++i)
-        {
-            ret[i] = -data[i];
-        }
-
         return ret;
     }
 
@@ -194,7 +182,8 @@ public:
         return ret;
     }
 
-    inline auto Negate() const
+
+    inline auto operator-() const
     {
         b2Vec<CONTAINER_TYPE, N> ret;
         for (std::size_t i = 0; i < data.size(); ++i)
@@ -203,6 +192,12 @@ public:
         }
 
         return ret;
+    }
+
+    inline auto Negate() const
+    {
+
+        return -(*this);
     }
 
     /// Convert this vector into a unit vector. Returns the length.
@@ -321,60 +316,25 @@ inline b2Vec<float, 2> Skew(const b2Vec<float, 2>& vec)
 }
 
 
-template <typename CONTAINER_TYPE, std::size_t N>
-inline box2d::b2Vec<CONTAINER_TYPE, N> operator*(float value, const box2d::b2Vec<CONTAINER_TYPE, N>& vec)
+template <typename T, typename CONTAINER_TYPE, std::size_t N>
+inline box2d::b2Vec<CONTAINER_TYPE, N> operator*(T&& t, const box2d::b2Vec<CONTAINER_TYPE, N>& vec)
 {
     box2d::b2Vec<CONTAINER_TYPE, N> ret;
     for (std::size_t i = 0; i < vec.size(); ++i)
     {
-        ret[i] = value * vec[i];
-    }
-
-    return ret;
-}
-
-inline box2d::b2Vec<float, 2ul> operator*(float value, const box2d::b2Vec<float, 2ul>& vec)
-{
-    box2d::b2Vec<float, 2> ret;
-    for (std::size_t i = 0; i < vec.size(); ++i)
-    {
-        ret[i] = value * vec[i];
+        ret[i] = t * vec[i];
     }
 
     return ret;
 }
 
 template <typename T, typename CONTAINER_TYPE, std::size_t N>
-inline auto operator/(T value, const box2d::b2Vec<CONTAINER_TYPE,N>& vec)
+inline auto operator/(T&& t, const box2d::b2Vec<CONTAINER_TYPE,N>& vec)
 {
-    box2d::b2Vec<CONTAINER_TYPE,N> ret;
+    box2d::b2Vec<CONTAINER_TYPE, N> ret;
     for (std::size_t i = 0; i < vec.size(); ++i)
     {
-        ret[i] = value / vec[i];
-    }
-
-    return ret;
-}
-
-template <typename T, typename CONTAINER_TYPE, std::size_t N>
-inline auto operator+(T value, const box2d::b2Vec<CONTAINER_TYPE,N>& vec)
-{
-    box2d::b2Vec<CONTAINER_TYPE,N> ret;
-    for (std::size_t i = 0; i < vec.size(); ++i)
-    {
-        ret[i] = value + vec[i];
-    }
-
-    return ret;
-}
-
-template <typename T, typename CONTAINER_TYPE, std::size_t N>
-inline auto operator-(T value, const box2d::b2Vec<CONTAINER_TYPE,N>& vec)
-{
-    box2d::b2Vec<CONTAINER_TYPE,N> ret;
-    for (std::size_t i = 0; i < vec.size(); ++i)
-    {
-        ret[i] = value - vec[i];
+        ret[i] = t / vec[i];
     }
 
     return ret;

@@ -121,3 +121,29 @@ TEST(Math, b2VecMultiplyScalar)
     vecref3 *= 12333212.0f;
     compareB2Vec3(vec3, vecref3);
 }
+
+TEST(Math, b2VecDivideScalar)
+{
+    {
+        box2d::b2Vec<float, 2> vec{{-1.0f, 0.12345f}};
+        auto result = vec / 1.234f;
+        box2dref::b2Vec2 resultref(vec[0] / 1.234f, vec[1] / 1.234f);
+        compareB2Vec2(result, resultref);
+    }
+
+    {
+        box2d::b2Vec<float, 2> vec{{1.1f, -20.12345f}};
+        box2dref::b2Vec2 vecref(1.1f, -20.12345f);
+        box2dref::b2Vec2 resultref(838.123f / vecref.x, 838.123f / vecref.y);
+        auto result = 838.123f / vec;
+        compareB2Vec2(result, resultref);
+    }
+
+    {
+        box2d::b2Vec<float, 3> vec{{1.1f, -20.12345f, 8888.0f}};
+        box2dref::b2Vec3 vecref(1.1f, -20.12345f, 8888.0f);
+        box2dref::b2Vec3 resultref(vecref.x / 12333212.0f, vecref.y / 12333212.0f, vecref.z / 12333212.0f);
+        vec /= 12333212.0f;
+        compareB2Vec3(vec, resultref);
+    }
+}
