@@ -36,33 +36,22 @@
 
 using namespace box2d;
 
-b2World::b2World(const b2Vec<float, 2>& gravity)
+b2World::b2World(const b2Vec<float, 2>& gravity) :
+    m_flags{e_clearForces},
+    m_bodyList{},
+    m_bodyCount{},
+    m_gravity{gravity},
+    m_allowSleep{true},
+    m_destructionListener{},
+    g_debugDraw{},
+    m_inv_dt0{},
+    m_warmStarting{true},
+    m_continuousPhysics{true},
+    m_subStepping{false},
+    m_stepComplete{true},
+    m_profile{}
 {
-    m_destructionListener = nullptr;
-    g_debugDraw = nullptr;
-
-    m_bodyList = nullptr;
-    m_jointList = nullptr;
-
-    m_bodyCount = 0;
-    m_jointCount = 0;
-
-    m_warmStarting = true;
-    m_continuousPhysics = true;
-    m_subStepping = false;
-
-    m_stepComplete = true;
-
-    m_allowSleep = true;
-    m_gravity = gravity;
-
-    m_flags = e_clearForces;
-
-    m_inv_dt0 = 0.0f;
-
     m_contactManager.m_allocator = &m_blockAllocator;
-
-    memset(&m_profile, 0, sizeof(b2Profile));
 }
 
 b2World::~b2World()
@@ -116,6 +105,8 @@ b2Body* b2World::CreateBody(const b2BodyDef* def)
 
     void* mem = m_blockAllocator.Allocate(sizeof(b2Body));
     auto b = new (mem) b2Body(def, this);
+    m_bodies.emplace_back(def, this);
+    auto b = m_bodies.back();
 
     // Add to world doubly linked list.
     b->m_prev = nullptr;

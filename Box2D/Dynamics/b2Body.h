@@ -857,6 +857,31 @@ inline const b2World* b2Body::GetWorld() const
 {
     return m_world;
 }
+
+
+/// The b2BodyRef class allows tracking bodies in a world through vector reallocations
+class b2BodyRef
+{
+public:
+    b2BodyRef() = delete;
+    b2BodyRef(b2BodyRef other) :
+        m_index{other.m_index},
+        m_bodies{other.m_bodies}
+    {
+    }
+
+    void operator->()
+    {
+        return
+    }
+
+private:
+    friend class b2World;
+    std::size_t m_index;
+    std::vector<b2Body>* m_bodies;
+
+};
+
 }
 
 #endif

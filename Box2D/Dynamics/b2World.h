@@ -282,6 +282,9 @@ private:
     bool m_stepComplete;
 
     b2Profile m_profile;
+
+    std::vector<b2Body> m_bodies;
+    std::vector<b2Joint> m_joints;
 };
 
 inline b2Body* b2World::GetBodyList()

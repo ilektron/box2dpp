@@ -40,6 +40,7 @@ struct b2Manifold;
 class b2DestructionListener
 {
 public:
+    b2DestructionListener() = default;
     virtual ~b2DestructionListener()
     {
     }
